@@ -28,6 +28,16 @@ return {
                 filetype = "caddyfile",
             }
 
+            parser.gotmpl = {
+                install_info = {
+                    url = "https://github.com/ngalaiko/tree-sitter-go-template",
+                    files = { "src/parser.c" },
+                    revision = "45acf03891557b80a45ac1897e2cca2e8b9cf0ff",
+                },
+                filetype = "gotmpl",
+                used_by = { "gohtmltmpl", "gotexttmpl", "gotmpl" },
+            }
+
             -- Python requirements.txt
             parser.requirements = {
                 install_info = {
@@ -71,6 +81,7 @@ return {
                     "gitignore",
                     "go",
                     "gomod",
+                    "gotmpl",
                     "graphql",
                     "hcl",
                     "html",
