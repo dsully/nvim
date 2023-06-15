@@ -25,6 +25,11 @@ vim.filetype.add({
             end
             return "c"
         end,
+        tmpl = function(_, _)
+            if vim.fn.search('{{.\\+}}', 'nw') then
+                return "gotmpl"
+            end
+        end,
     },
     pattern = {
         ["*Caddyfile*"] = "caddyfile",
