@@ -1,0 +1,115 @@
+#!/usr/bin/env fish
+
+# Install various packages that Mason doesn't have.
+
+argparse brew python node golang rust neovim all -- $argv
+
+if set -q _flag_all
+    set _flag_brew
+    set _flag_golang
+    set _flag_node
+    set _flag_python
+    set _flag_rust
+end
+
+# Homebrew and Linuxbrew.
+if set -q _flag_brew && type -q brew
+
+    # teal-ls needs the Lua runtime.
+    set -l packages
+
+    if not type -q lua
+        set -a packages lua
+    end
+
+    switch $OS
+        case Darwin
+            if not type -q java
+                set -a packages openjdk
+            end
+
+            if not type -q terraform
+                set -a packages terraform
+            end
+    end
+
+    if count $packages
+        echo "Installing Homebrew packages.."
+        command brew install $packages
+    end
+end
+
+if set -q _flag_node && type -q volta
+
+    set -l packages
+
+    if not type -q node
+        set -a packages node
+    end
+
+    if not type -q npm-groovy-lint
+        set -a packages npm-groovy-lint
+    end
+
+    if count $packages
+        echo "Installing node packages.."
+        command volta install $packages
+    end
+end
+
+if set -q _flag_python
+    echo "Installing Python packages.."
+
+    if type -q rye
+        for cli in \
+            "black[d]" \
+            frogmouth \
+            pdm \
+            pyupgrade \
+            ruff
+
+            if not type -q $cli
+                command rye install $cli
+            end
+        end
+    else
+        echo "Couldn't find rye. Skipping Python CLI tools."
+        echo "Run: curl -sSf https://rye-up.com/get | bash"
+    end
+end
+
+# Golang tools.
+if set -q _flag_golang && type -q go
+    echo "Installing Go packages.."
+end
+
+# Rust tools.
+if set -q _flag_rust && type -q cargo
+    echo "Installing Rust packages.."
+    command install-rust-tools
+end
+
+switch $OS
+    case Linux
+        set -l packages
+
+        if not type -q sqlite3
+            set -a packages sqlite3 libsqlite3-dev
+        end
+
+        if not type -q java
+            set -a packages openjdk-21-jre-headless
+        end
+
+        if count $packages
+            command sudo apt-get install -y $packages
+        end
+end
+
+# Bootstrap plugins.
+if set -q _flag_neovim
+    echo "Installing Neovim plugins..."
+
+    nvim --headless -c 'Lazy! sync' -c quitall
+    nvim --headless -c TSUpdateSync -c quitall
+end
