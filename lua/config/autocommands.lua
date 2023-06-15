@@ -245,12 +245,9 @@ vim.api.nvim_create_autocmd({ "VimEnter" }, {
                 --
                 -- A partial path almost always comes from git.
                 -- Find the root, then strip off the parent path.
-                local found_root = vim.fs.find(".git", {
-                    limit = 1,
-                    upward = true,
-                }) or { cwd }
+                local root = vim.fn.systemlist('git rev-parse --show-toplevel')[1] or cwd
 
-                fqfn = vim.fs.dirname(found_root[1]) .. "/" .. path
+                fqfn = root .. "/" .. path
 
                 if vim.uv.fs_stat(fqfn) then
                     path = fqfn
