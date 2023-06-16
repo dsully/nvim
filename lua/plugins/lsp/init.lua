@@ -47,6 +47,7 @@ local servers = {
         })
     end,
     gopls = {
+        filetypes = { "go", "gomod", "gowork" },
         init_options = {
             usePlaceholders = true,
         },
