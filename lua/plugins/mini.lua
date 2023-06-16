@@ -28,6 +28,17 @@ return {
         opts = true,
     },
     {
+        "echasnovski/mini.hipatterns",
+        config = function()
+            require("mini.hipatterns").setup({
+                highlighters = {
+                    hex_color = require("mini.hipatterns").gen_highlighter.hex_color(),
+                },
+            })
+        end,
+        event = "BufReadPre",
+    },
+    {
         "echasnovski/mini.surround",
         config = function()
             require("mini.surround").setup({
