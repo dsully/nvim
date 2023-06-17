@@ -106,7 +106,7 @@ vim.api.nvim_create_autocmd({ "BufWritePre" }, {
 
 vim.api.nvim_create_autocmd({ "BufReadPre", "FileReadPre" }, {
     callback = function(args)
-        if vim.uv.fs_stat(args.file).size < 1024 * 512 then
+        if vim.uv.fs_stat(args.file).size < vim.g.large_file_size then
             return
         end
 
@@ -245,7 +245,7 @@ vim.api.nvim_create_autocmd({ "VimEnter" }, {
                 --
                 -- A partial path almost always comes from git.
                 -- Find the root, then strip off the parent path.
-                local root = vim.fn.systemlist('git rev-parse --show-toplevel')[1] or cwd
+                local root = vim.fn.systemlist("git rev-parse --show-toplevel")[1] or cwd
 
                 fqfn = root .. "/" .. path
 

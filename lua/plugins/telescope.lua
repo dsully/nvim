@@ -79,15 +79,18 @@ return {
                     sort_mru = true,
                 },
                 find_files = {
+                    find_command = { "fd", "--type", "f", "--color", "never", "--no-require-git", "--strip-cwd-prefix" },
+                    sorting_strategy = "ascending",
                     hidden = false,
                     prompt_prefix = "   ",
                 },
                 git_files = {
-                    hidden = false,
+                    hidden = true,
                     prompt_prefix = "   ",
                     show_untracked = true,
                 },
                 live_grep = {
+                    find_command = { "rg", "--color", "never", "--no-require-git", "--sort", "--trim" },
                     prompt_prefix = "   ",
                 },
                 oldfiles = {
@@ -109,7 +112,6 @@ return {
         local use_git_root = false
 
         local function root()
-
             if use_git_root then
                 return vim.trim(vim.system({ "git", "rev-parse", "--show-toplevel" }, { cwd = vim.uv.cwd() }):wait().stdout)
             end
