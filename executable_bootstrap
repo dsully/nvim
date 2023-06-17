@@ -15,12 +15,7 @@ end
 # Homebrew and Linuxbrew.
 if set -q _flag_brew && type -q brew
 
-    # teal-ls needs the Lua runtime.
     set -l packages
-
-    if not type -q lua
-        set -a packages lua
-    end
 
     switch $OS
         case Darwin

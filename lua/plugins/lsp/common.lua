@@ -168,6 +168,7 @@ end
 M.find_root = function()
     local root_patterns = {
         ".null-ls-root",
+        ".stylua.toml",
         "configure",
         "package.json",
         "pyproject.toml",

@@ -6,7 +6,9 @@ return {
             "K",
             function()
                 --
-                if vim.bo.filetype == "rust" and package.loaded["rust-tools.hover_actions"] ~= nil then
+                if vim.bo.filetype == "vim" or vim.bo.filetype == "help" then
+                    vim.cmd.help({ vim.fn.expand("<cword>"), mods = { emsg_silent = true } })
+                elseif vim.bo.filetype == "rust" and package.loaded["rust-tools.hover_actions"] ~= nil then
                     require("rust-tools.hover_actions").hover_actions()
                 elseif vim.fs.basename(vim.api.nvim_buf_get_name(0)) == "Cargo.toml" then
                     require("crates").show_popup()

@@ -86,6 +86,7 @@ vim.g.border = "single"
 
 -- Flag for disabling null-ls and others for large files.
 vim.g.large_file = false
+vim.g.large_file_size = 1024 * 512
 
 -- Load clipboard.vim faster.
 -- This assumes I have my Linux versions of pbcopy/pbpaste.

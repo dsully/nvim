@@ -7,8 +7,6 @@ return {
             -- Ref: https://github.com/lewis6991/gitsigns.nvim/pull/438
             _extmark_signs = true,
             _inline2 = true,
-            _threaded_diff = true,
-
             preview_config = {
                 border = vim.g.border,
             },
