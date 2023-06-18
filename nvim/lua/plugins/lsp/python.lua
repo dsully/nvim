@@ -1,0 +1,257 @@
+local M = {}
+
+local ruff_prefixes = { "TAE", "PIE" }
+
+local ruff_default_config = {
+    enabled = true,
+    select = {
+        "A",
+        "B",
+        "E",
+        "F",
+        "W",
+        "C4",
+        "FA",
+        "PT",
+        "UP",
+        "ARG",
+        "DTZ",
+        "EXE",
+        "FLY",
+        "ICN",
+        "INP",
+        "ISC",
+        "PIE",
+        "PYI",
+        "RET",
+        "RSE",
+        "RUF",
+        "SIM",
+        "SLF",
+        "TRY",
+        "YTT",
+        "G003",
+        "G201",
+        "G202",
+        "ASYNC",
+    },
+    ignore = {
+        "B904",
+        "E501",
+        "ISC001",
+        "RET501",
+        "TRY003",
+        "TRY200",
+    },
+}
+
+local function exclude_ignores(table)
+    return vim.tbl_filter(function(str)
+        for _, prefix in ipairs(ruff_prefixes) do
+            if string.sub(str, 1, #prefix) == prefix then
+                return false
+            end
+        end
+        return true
+    end, table)
+end
+
+local find_file = function(filename)
+    local opts_d = { stop = vim.uv.cwd(), type = "file" }
+    local opts_u = vim.tbl_extend("force", opts_d, { upward = true })
+
+    return vim.fs.find(filename, opts_d)[1] or vim.fs.find(filename, opts_u)[1]
+end
+
+local black_args_from_pyproject = function()
+    -- Make sure we have the treesitter parser for TOML.
+    require("nvim-treesitter")
+
+    local args = {}
+    local config_file = find_file("pyproject.toml")
+
+    if config_file == nil or vim.uv.fs_stat(config_file) == nil then
+        return args
+    end
+
+    local lines = {}
+    for line in io.lines(config_file) do
+        lines[#lines + 1] = line
+    end
+
+    local query = vim.treesitter.query.parse(
+        "toml",
+        [[
+            (table
+              (dotted_key) @dotkey (#eq? @dotkey "tool.black")
+              (pair
+                (bare_key) @barekey (#eq? @barekey "line-length")
+                (integer) @length
+              )
+            )
+        ]]
+    )
+
+    local config_buffer = vim.api.nvim_create_buf(false, true)
+
+    vim.api.nvim_buf_set_lines(config_buffer, 0, -1, false, lines)
+
+    local root = vim.treesitter.get_parser(config_buffer, "toml", {}):parse()[1]:root()
+
+    for id, node in query:iter_captures(root, config_buffer, 0, -1) do
+        if query.captures[id] == "length" then
+            table.insert(args, "--line-length")
+            table.insert(args, vim.treesitter.get_node_text(node, config_buffer))
+        end
+    end
+
+    vim.api.nvim_buf_delete(config_buffer, {})
+
+    return args
+end
+
+local black_args_from_build_gradle = function()
+    local args = {}
+    local config_file = find_file("build.gradle")
+
+    if config_file == nil or vim.uv.fs_stat(config_file) == nil then
+        return args
+    end
+
+    local matches = {
+        ["lineLength"] = "--line-length",
+    }
+
+    for line in io.lines(config_file) do
+        for pattern, arg in pairs(matches) do
+            if line:match(pattern) then
+                table.insert(args, arg)
+                table.insert(args, line:match("%s+(%d+)"))
+            end
+        end
+    end
+
+    return args
+end
+
+-- Extract arguments to pass to blackd/blackd-client
+--
+-- Check build.gradle (work) and pyproject.toml.
+M.black_args = function()
+    return black_args_from_pyproject() or black_args_from_build_gradle() or {}
+end
+
+-- null-ls formatter to use blackd-client if it exists.
+M.blackd = function()
+    local null_ls = require("null-ls")
+    local helpers = require("null-ls.helpers")
+
+    return helpers.make_builtin({
+        name = "blackd",
+        method = null_ls.methods.FORMATTING,
+        filetypes = { "python" },
+        generator_opts = {
+            command = "blackd-client",
+            to_stdin = true,
+        },
+        factory = helpers.formatter_factory,
+    })
+end
+
+-- Automate the installation of pylsp modules in it's virtualenv.
+M.mason_post_install = function(pkg)
+    if pkg.name ~= "python-lsp-server" then
+        return
+    end
+
+    local venv = require("mason-registry").get_package("python-lsp-server"):get_install_path() .. "/venv"
+    local job = require("plenary.job")
+
+    job:new({
+        command = venv .. "/bin/pip",
+        args = {
+            "install",
+            "-U",
+            "--disable-pip-version-check",
+            "pylsp-mypy",
+            "python-lsp-ruff",
+        },
+        cwd = venv,
+        env = { VIRTUAL_ENV = venv },
+        on_exit = function()
+            vim.notify("Finished installing pylsp modules.")
+        end,
+        on_start = function()
+            vim.notify("Installing pylsp modules...")
+        end,
+    }):start()
+end
+
+-- Config for pylsp-ruff as a Lua table.
+M.ruff_config = function()
+
+    -- If a pyproject exists and has a ruff config, use that.
+    local pyproject = find_file("pyproject.toml")
+
+    if pyproject ~= nil and vim.uv.fs_stat(pyproject) ~= nil then
+        for line in io.lines(pyproject) do
+            if line:match("^%[tool.ruff%]") then
+                return nil
+            end
+        end
+    end
+
+    -- Otherwise, extract some config out of setup.cfg if it exists and use some defaults.
+    local config_file = find_file("setup.cfg")
+    local config = vim.tbl_deep_extend("force", {}, ruff_default_config)
+
+    if config_file ~= nil and vim.uv.fs_stat(config_file) ~= nil then
+        local matches = {
+            ["^max%-line%-length"] = "lineLength",
+            ["^ignore%s*="] = "ignore",
+            ["^extend%-ignore%s*="] = "extendIgnore",
+        }
+
+        for line in io.lines(config_file) do
+            for pattern, key in pairs(matches) do
+                if line:match(pattern) then
+                    local match = line:match("%s*=%s*(.*)")
+
+                    if key == "lineLength" then
+                        ---@type number
+                        config[key] = tonumber(match)
+                    else
+                        ---@type string
+                        config["ignore"] = vim.tbl_deep_extend("force", config["ignore"], exclude_ignores(vim.split(match, "%s*,%s*")))
+                    end
+                end
+            end
+        end
+    end
+
+    config["fixable"] = vim.tbl_deep_extend("force", {}, config["select"])
+
+    return config
+end
+
+-- Massage the ruff config into something the CLI can handle.
+M.ruff_args = function()
+    local args = {}
+    local config = M.ruff_config()
+
+    if not config then
+        return nil
+    end
+
+    if config["lineLength"] then
+        table.insert(args, "--line-length=" .. config["lineLength"])
+    end
+
+    table.insert(args, "--select=" .. vim.fn.join(config["select"], ","))
+    table.insert(args, "--fixable=" .. vim.fn.join(config["fixable"], ","))
+    table.insert(args, "--ignore=" .. vim.fn.join(exclude_ignores(config["ignore"]), ","))
+
+    return args
+end
+
+return M
