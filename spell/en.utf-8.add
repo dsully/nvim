@@ -255,3 +255,4 @@ keymap
 cwd
 pbcopy
 pbpaste
+sudo

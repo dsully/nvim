@@ -87,7 +87,7 @@ return {
         -- cmp's config and the following code will make it so that the menu still appears normally, but tab will fallback
         -- to indenting unless a non-whitespace character has actually been typed.
         local has_words_before = function()
-            if vim.api.nvim_buf_get_option(0, "buftype") == "prompt" then
+            if vim.api.nvim_get_option_value("buftype", { buf = 0 }) == "prompt" then
                 return false
             end
             local line, col = unpack(vim.api.nvim_win_get_cursor(0))
@@ -116,9 +116,8 @@ return {
         cmp.setup({
             enabled = function()
                 local context = require("cmp.config.context")
-                local in_prompt = vim.api.nvim_buf_get_option(0, "buftype") == "prompt"
 
-                if in_prompt then
+                if vim.api.nvim_get_option_value("buftype", { buf = 0 }) == "prompt" then
                     return false
                 end
 
@@ -130,7 +129,7 @@ return {
                 ["<C-Space>"] = cmp.mapping.complete(),
                 ["<C-j>"] = cmp.mapping.select_next_item({ behavior = cmp.SelectBehavior.Select }),
                 ["<C-k>"] = cmp.mapping.select_prev_item({ behavior = cmp.SelectBehavior.Select }),
-                ["<CR>"] = cmp.mapping.confirm({ select = true, behavior = cmp.ConfirmBehavior.Replace }),
+                ["<CR>"] = cmp.mapping.confirm({ select = true, behavior = cmp.ConfirmBehavior.Insert }),
                 ["<Tab>"] = cmp.mapping(function(fallback)
                     local luasnip = require("luasnip")
                     local neogen = require("neogen")

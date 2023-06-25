@@ -15,10 +15,10 @@ return {
     { "MTDL9/vim-log-highlighting", event = { "BufReadPre" } },
 
     -- Markdown helper.
-    { "oncomouse/markdown.nvim", config = true, ft = "markdown" },
+    { "oncomouse/markdown.nvim", ft = "markdown", opts = {} },
 
     -- Pattern replacement UI.
-    { "AckslD/muren.nvim", config = true, event = "VeryLazy" },
+    { "AckslD/muren.nvim", event = "VeryLazy", opts = {} },
 
     -- Better % matching.
     {

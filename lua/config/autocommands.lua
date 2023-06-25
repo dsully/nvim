@@ -31,7 +31,7 @@ vim.api.nvim_create_autocmd({ "BufEnter", "BufNew", "FileType" }, {
     desc = "Update format options and folding.",
     callback = function()
         vim.opt_local.formatoptions:remove({ "a", "o", "t" })
-        vim.wo.foldenable = false
+        vim.api.nvim_set_option_value("foldenable", false, { scope = "local", win = 0 })
     end,
 })
 
@@ -135,9 +135,11 @@ vim.api.nvim_create_autocmd({ "BufReadPre", "FileReadPre" }, {
 
         vim.bo.swapfile = false
         vim.bo.undolevels = -1
-        vim.wo.foldmethod = "manual"
-        vim.wo.list = false
-        vim.wo.spell = false
+
+        vim.api.nvim_set_option_value("foldmethod", "manual", { scope = "local", win = 0 })
+        vim.api.nvim_set_option_value("list", false, { scope = "local", win = 0 })
+        vim.api.nvim_set_option_value("spell", false, { scope = "local", win = 0 })
+
         vim.opt.undoreload = 0
     end,
     desc = "Disable features for large files.",

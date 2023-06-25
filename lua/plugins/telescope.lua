@@ -81,7 +81,7 @@ return {
                 find_files = {
                     find_command = { "fd", "--type", "f", "--color", "never", "--no-require-git", "--strip-cwd-prefix" },
                     sorting_strategy = "ascending",
-                    hidden = false,
+                    hidden = true,
                     prompt_prefix = "   ",
                 },
                 git_files = {
