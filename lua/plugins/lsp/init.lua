@@ -112,20 +112,28 @@ local servers = {
                     -- Have the language server to recognize the `vim` global.
                     globals = { "bit", "vim" },
                 },
+                doc = {
+                    privateName = { "^_" },
+                },
                 format = {
                     enable = false,
                 },
                 hint = {
-                    enable = true,
                     arrayIndex = "Disable",
-                    setType = true,
+                    enable = true,
                     paramName = "Disable",
+                    paramType = true,
+                    semicolon = "Disable",
+                    setType = true,
                 },
                 runtime = {
                     version = "Lua 5.1",
                 },
                 telemetry = {
                     enable = false,
+                },
+                type = {
+                    castNumberToInteger = true,
                 },
                 workspace = {
                     checkThirdParty = false,
@@ -203,7 +211,7 @@ local servers = {
     --                 analysis = {
     --                     autoImportCompletions = true,
     --                     autoSearchPaths = true,
-    --                     diagnosticMode = "workspace",
+    --                     diagnosticMode = "openFilesOnly",
     --                     diagnosticSeverityOverrides = {
     --                         reportImportCycles = "none",
     --                         reportMissingImports = "none",
@@ -218,6 +226,7 @@ local servers = {
     --                         functionReturnTypes = true,
     --                     },
     --                     typeCheckingMode = "off", -- off, basic or strict
+    --                     useLibraryCodeForTypes = false,
     --                 },
     --                 disableOrganizeImports = true, -- Use isort or ruff instead.
     --             },
@@ -250,7 +259,7 @@ local servers = {
         require("rust-tools").setup({
             tools = {
                 inlay_hints = {
-                    auto = true,
+                    auto = false,
                 },
                 hover_actions = {
                     auto_focus = true,
@@ -587,8 +596,8 @@ return {
     { "microsoft/python-type-stubs" },
     { "p00f/clangd_extensions.nvim" },
     { "MunifTanjim/rust-tools.nvim" },
-    { "smjonas/inc-rename.nvim", config = true },
+    { "smjonas/inc-rename.nvim", opts = {} },
     { "yioneko/nvim-type-fmt", lazy = false }, -- LSP handler of textDocument/onTypeFormatting for nvim. Sets itself up via an LspAttach autocmd.
-    { "VidocqH/lsp-lens.nvim", config = true, event = "LspAttach" },
-    { "zbirenbaum/neodim", branch = "v2", config = true, event = "LspAttach" },
+    { "VidocqH/lsp-lens.nvim", event = "LspAttach", opts = {} },
+    { "zbirenbaum/neodim", branch = "v2", event = "LspAttach", opts = {} },
 }

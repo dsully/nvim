@@ -19,20 +19,24 @@ M.capabilities = function()
     return vim.json.decode(vim.fn.readfile(path)[1])
 end
 
+M.groups = {
+    code_lens = vim.api.nvim_create_augroup("LSP Code Lens", { clear = false }),
+    inlay_hints = vim.api.nvim_create_augroup("LSP Inlay Hints Refresh", { clear = false }),
+    lsp_highlight = vim.api.nvim_create_augroup("LSP Highlight References", { clear = false }),
+}
+
 M.on_attach = function(client, buffer)
     --
     -- https://github.com/neovim/nvim-lspconfig/wiki/UI-Customization#highlight-symbol-under-cursor
     if client.server_capabilities.documentHighlightProvider then
-        local group = vim.api.nvim_create_augroup("LSP Highlight References for: " .. client.name, {})
-
         vim.api.nvim_create_autocmd({ "CursorHold", "CursorHoldI" }, {
-            group = group,
+            group = M.groups.lsp_highlight,
             buffer = buffer,
             callback = vim.lsp.buf.document_highlight,
         })
 
         vim.api.nvim_create_autocmd({ "CursorMoved" }, {
-            group = group,
+            group = M.groups.lsp_highlight,
             buffer = buffer,
             callback = vim.lsp.buf.clear_references,
         })
@@ -92,7 +96,6 @@ M.on_attach = function(client, buffer)
     end
 
     if client.server_capabilities.codeLensProvider then
-        local group = vim.api.nvim_create_augroup("LSP Code Lens for: " .. client.name, {})
         --
         vim.api.nvim_create_autocmd("LspProgress", {
             desc = "LSP Code Lens Init",
@@ -106,7 +109,7 @@ M.on_attach = function(client, buffer)
                     end
                 end
             end,
-            group = group,
+            group = M.groups.code_lens,
             pattern = "end",
             once = true,
         })
@@ -115,7 +118,7 @@ M.on_attach = function(client, buffer)
             desc = "LSP Code Lens Refresh",
             buffer = buffer,
             callback = vim.lsp.codelens.refresh,
-            group = group,
+            group = M.groups.code_lens,
         })
     end
 
@@ -167,6 +170,7 @@ end
 -- * root pattern of cwd
 M.find_root = function()
     local root_patterns = {
+        ".chezmoiroot",
         ".null-ls-root",
         ".stylua.toml",
         "configure",

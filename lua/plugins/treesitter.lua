@@ -62,6 +62,7 @@ return {
 
             -- Treat Brewfiles as Ruby for syntax highlighting.
             vim.treesitter.language.register("ruby", "Brewfile")
+            vim.treesitter.language.register("bash", "sh")
 
             require("nvim-treesitter.configs").setup({
 
@@ -196,7 +197,7 @@ return {
         event = { "BufReadPost", "BufNewFile" },
     },
 
-    { "IndianBoy42/tree-sitter-just", build = ":TSInstall just", config = true, ft = "just" },
+    { "IndianBoy42/tree-sitter-just", build = ":TSInstall just", ft = "just", opts = {} },
 
     { "RRethy/nvim-treesitter-endwise", event = "InsertEnter" },
     { "yioneko/nvim-yati", event = "InsertEnter" },
