@@ -189,8 +189,6 @@ return {
             LuasnipChoiceNodePassive = { style = "italic" },
             LuasnipChoiceNodeActive = { style = "bold" },
 
-            MasonNormal = { bg = colors.bg1 },
-
             NavicIconsArray = { fg = spec.lsp.Array, bg = colors.gray },
             NavicIconsBoolean = { fg = spec.lsp.Boolean, bg = colors.gray },
             NavicIconsClass = { fg = spec.lsp.Class, bg = colors.gray },
@@ -219,6 +217,17 @@ return {
             NavicIconsVariable = { fg = spec.lsp.Variable, bg = colors.gray },
             NavicSeparator = { fg = colors.cyan, bg = colors.gray },
             NavicText = { fg = colors.white, bg = colors.gray },
+
+            NonText = { fg = colors.white },
+            NormalFloat = { bg = colors.bg1 },
+
+            NoiceFormatProgressDone = { fg = colors.white.bright, bg = colors.bg1 },
+            NoiceFormatProgressTodo = { fg = colors.white.bright, bg = colors.bg1 },
+
+            NoiceLspProgressClient = { fg = colors.blue },
+            NoiceLspProgressSpinner = { fg = colors.cyan.bright },
+
+            NoiceLspProgressTitle = { fg = colors.white.bright },
 
             TelescopeBorder = { fg = colors.gray.base, bg = colors.gray.dim },
             TelescopeNormal = { fg = colors.white.dim, bg = colors.gray.dim },
