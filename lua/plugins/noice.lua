@@ -2,112 +2,176 @@ return {
     "folke/noice.nvim",
     dependencies = { "MunifTanjim/nui.nvim" },
     event = "VeryLazy",
-    opts = {
-        cmdline = {
-            format = {
-                IncRename = { title = " Rename " },
-            },
-        },
-        lsp = {
-            documentation = {
-                enabled = true,
-                view = "hover",
-            },
-            hover = {
-                enabled = true,
-                opts = {
-                    border = {
-                        style = vim.g.border,
-                    },
+    config = function()
+        ---
+        local focused = true
+        vim.api.nvim_create_autocmd("FocusGained", {
+            callback = function()
+                focused = true
+            end,
+        })
+        vim.api.nvim_create_autocmd("FocusLost", {
+            callback = function()
+                focused = false
+            end,
+        })
+
+        vim.api.nvim_create_autocmd("FileType", {
+            pattern = "markdown",
+            callback = function(event)
+                vim.schedule(function()
+                    require("noice.text.markdown").keys(event.buf)
+                end)
+            end,
+        })
+
+        vim.keymap.set("c", "<S-Enter>", function()
+            require("noice").redirect(vim.fn.getcmdline())
+        end, { desc = "Redirect Cmdline" })
+
+        vim.keymap.set("n", "<leader>vd", vim.cmd.NoiceDismiss, { desc = "Dismiss Messages" })
+        vim.keymap.set("n", "<leader>vm", vim.cmd.Noice, { desc = "View Messages" })
+
+        require("noice").setup({
+            cmdline = {
+                format = {
+                    IncRename = { title = " Rename " },
+                    input = { icon = " ", lang = "text", view = "cmdline_popup", title = "" },
+                    read = { pattern = "^:%s*r!", icon = "$", lang = "bash" },
+                    substitute = { pattern = "^:%%?s/", icon = " ", ft = "regex", title = "" },
                 },
             },
-            override = {
-                -- override the default lsp markdown formatter with Noice
-                ["vim.lsp.util.convert_input_to_markdown_lines"] = true,
-                -- override the lsp markdown formatter with Noice
-                ["vim.lsp.util.stylize_markdown"] = true,
-                -- override cmp documentation with Noice (needs the other options to work)
-                ["cmp.entry.get_documentation"] = true,
-            },
-            progress = {
-                enabled = false,
-            },
-            signature = {
-                enabled = true,
-                auto_open = {
+            lsp = {
+                documentation = {
                     enabled = true,
-                    trigger = true, -- Automatically show signature help when typing a trigger character from the LSP
-                    luasnip = true, -- Will open signature help when jumping to Luasnip insert nodes
-                    throttle = 50, -- Debounce lsp signature help request by 50ms
+                    view = "hover",
                 },
-            },
-        },
-        messages = {
-            enabled = false,
-        },
-        notify = {
-            enabled = true,
-        },
-        presets = {
-            bottom_search = true, -- use a classic bottom cmdline for search
-            command_palette = false, -- position the cmdline and popupmenu together
-            long_message_to_split = true, -- long messages will be sent to a split
-            inc_rename = true, -- enables an input dialog for inc-rename.nvim
-            lsp_doc_border = true, -- add a border to hover docs and signature help
-        },
-        routes = {
-            {
-                filter = {
-                    any = {
-                        { find = "No active Snippet" },
-                        { find = "No information available" },
-                        { find = "No signature help available" },
-                        { find = "Running provider" },
-                        { find = "The coroutine failed with this message" },
-                        { find = "^<$" },
-                        { kind = "wmsg" },
+                hover = {
+                    enabled = true,
+                    opts = {
+                        border = {
+                            style = vim.g.border,
+                        },
                     },
                 },
-                opts = {
-                    skip = true,
+                override = {
+                    ["vim.lsp.util.convert_input_to_markdown_lines"] = true,
+                    ["vim.lsp.util.stylize_markdown"] = true,
+                    ["cmp.entry.get_documentation"] = true,
+                },
+                progress = {
+                    enabled = true,
+                },
+                signature = {
+                    enabled = true,
+                    auto_open = {
+                        enabled = true,
+                        trigger = true, -- Automatically show signature help when typing a trigger character from the LSP
+                        luasnip = true, -- Will open signature help when jumping to LuaSnip insert nodes
+                        throttle = 50, -- Debounce lsp signature help request by 50ms
+                    },
                 },
             },
-            {
-                filter = {
-                    event = "msg_show",
-                    kind = "",
-                    find = "written",
-                },
-                opts = { skip = true },
+            messages = {
+                enabled = true, -- enables the Noice messages UI
             },
-        },
-        views = {
-            split = {
-                win_options = {
-                    winhighlight = { Normal = "Normal" },
-                },
+            notify = {
+                enabled = true,
             },
             popupmenu = {
-                relative = "editor",
-                position = {
-                    row = 9,
-                    col = "50%",
-                },
-                size = {
-                    width = 60,
-                    height = 10,
-                },
-                border = {
-                    style = vim.g.border,
-                    padding = { 0, 1 },
-                },
-                win_options = {
-                    winhighlight = {
-                        Normal = "NormalFloat",
-                        FloatBorder = "FloatBorder",
+                enabled = true,
+                backend = "nui",
+            },
+            presets = {
+                bottom_search = true, -- use a classic bottom cmdline for search
+                command_palette = false, -- position the cmdline and popupmenu together
+                long_message_to_split = true, -- long messages will be sent to a split
+                inc_rename = true, -- enables an input dialog for inc-rename.nvim
+                lsp_doc_border = true, -- add a border to hover docs and signature help
+            },
+            redirect = { view = "mini", filter = { event = "msg_show" } },
+            routes = {
+                {
+                    filter = {
+                        any = {
+                            { event = "msg_show", find = "written" },
+                            { event = "msg_show", find = "%d+ lines, %d+ bytes" },
+                            { event = "msg_show", kind = "search_count" },
+                            { event = "msg_show", find = "search hit" },
+                            { event = "msg_show", find = "%d+L, %d+B" },
+                            { event = "msg_show", find = "^Hunk %d+ of %d" },
+                            { event = "msg_show", find = "%d+ change" },
+                            { event = "msg_show", find = "%d+ line" },
+                            { event = "msg_show", find = "%d+ more line" },
+                            { event = "msg_show", find = "^E486:" }, -- Command not found.
+                            { event = "msg_show", find = "^E492:" }, -- Not an editor command.
+                            { event = "msg_show", find = "^E486:" }, -- Pattern not found.
+                            { event = "notify", find = "No information available" },
+                            -- { find = "No active Snippet" },
+                            -- { find = "No signature help available" },
+                            -- { find = "Running provider" },
+                            -- { find = "The coroutine failed with this message" },
+                            -- { find = "^<$" },
+                        },
                     },
+                    opts = { skip = true },
+                },
+                {
+                    -- Search messages.
+                    filter = { find = "^[/?]" },
+                    opts = { skip = true },
+                    view = "cmdline",
+                },
+                {
+                    filter = {
+                        any = {
+                            -- Multiple of 5.
+                            { event = "lsp", find = "[^05]/" },
+                            { event = "lsp", find = "code_action" },
+                            {
+                                event = "lsp",
+                                kind = "progress",
+                                cond = function(message)
+                                    return vim.tbl_contains(require("config.ignored").progress, vim.tbl_get(message.opts, "progress", "client"))
+                                end,
+                            },
+                            { event = "lsp", kind = "progress", find = "cargo clippy" },
+                        },
+                    },
+                    opts = { skip = true },
+                },
+                {
+                    filter = {
+                        cond = function()
+                            return not focused
+                        end,
+                    },
+                    opts = { stop = false },
+                    view = "notify_send",
+                },
+                {
+                    filter = { error = true },
+                    opts = { title = "Error", replace = true, merge = true, level = "error" },
+                    view = "notify",
                 },
             },
-        },
-    },
+            views = {
+                -- popupmenu = {
+                --     relative = "editor",
+                --     position = {
+                --         row = 9,
+                --         col = "50%",
+                --     },
+                --     size = {
+                --         width = 60,
+                --         height = 10,
+                --     },
+                --     border = {
+                --         style = vim.g.border,
+                --         padding = { 0, 1 },
+                --     },
+                -- },
+            },
+        })
+    end,
 }
