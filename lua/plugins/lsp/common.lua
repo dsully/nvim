@@ -58,29 +58,23 @@ M.on_attach = function(client, buffer)
     end
 
     if client.server_capabilities.documentFormattingProvider then
-        local ignored = require("config.ignored")
-
         vim.keymap.set("n", "<space>f", function()
             vim.lsp.buf.format({
-                async = true,
-                bufnr = buffer,
+                bufnr = vim.api.nvim_get_current_buf(),
                 -- Let null-ls handle formatting instead of these language servers.
                 filter = function(c)
-                    return not vim.tbl_contains(ignored.formatters, c.name)
+                    return not vim.tbl_contains(require("config.ignored").formatters, c.name)
                 end,
             })
         end, { desc = "󰛗 Format" })
     end
 
     if client.server_capabilities.inlayHintProvider then
-        vim.keymap.set("n", "<space>i", vim.lsp._inlay_hint.clear, { desc = " Clear Inlay Hints" })
+        vim.keymap.set("n", "<space>i", function()
+            vim.lsp.buf.inlay_hint(buffer, nil)
+        end, { desc = " Toggle Inlay Hints" })
 
-        vim.api.nvim_create_autocmd({ "BufEnter", "InsertLeave", "BufWritePost" }, {
-            desc = "LSP Inlay Hints Refresh",
-            buffer = buffer,
-            callback = vim.lsp._inlay_hint.refresh,
-            group = vim.api.nvim_create_augroup("LSP Inlay Hints Refresh for: " .. client.name, {}),
-        })
+        vim.lsp.buf.inlay_hint(buffer, false)
     end
 
     if client.server_capabilities.codeActionProvider then
@@ -97,27 +91,24 @@ M.on_attach = function(client, buffer)
 
     if client.server_capabilities.codeLensProvider then
         --
-        vim.api.nvim_create_autocmd("LspProgress", {
-            desc = "LSP Code Lens Init",
-            callback = function()
-                for progress in client.progress do
-                    if progress.value and progress.value.kind == "end" then
-                        vim.notify("CodeLens Initialized", vim.log.levels.DEBUG, {
-                            title = "󰅬 LSP",
-                        })
-                        vim.lsp.codelens.refresh()
-                    end
-                end
-            end,
+        vim.api.nvim_create_autocmd({ "BufEnter" }, {
+            desc = "LSP Code Lens Initial",
+            buffer = buffer,
+            callback = vim.lsp.codelens.refresh,
             group = M.groups.code_lens,
-            pattern = "end",
             once = true,
         })
 
-        vim.api.nvim_create_autocmd("BufWritePost", {
+        vim.api.nvim_create_autocmd({ "BufEnter", "InsertLeave", "BufWritePost" }, {
             desc = "LSP Code Lens Refresh",
             buffer = buffer,
             callback = vim.lsp.codelens.refresh,
+            group = M.groups.code_lens,
+        })
+
+        vim.api.nvim_create_autocmd("LspDetach", {
+            buffer = buffer,
+            callback = vim.lsp.codelens.clear,
             group = M.groups.code_lens,
         })
     end
