@@ -40,4 +40,14 @@ return {
         "pyright",
         "tsserver",
     },
+
+    progress = {
+        "copilot",
+        "lua_ls",
+        "ltex",
+        "null-ls",
+        "pylance",
+        "pyright",
+        "ruff_lsp",
+    },
 }
