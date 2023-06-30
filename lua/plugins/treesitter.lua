@@ -84,6 +84,7 @@ return {
                     "gomod",
                     "gotmpl",
                     "graphql",
+                    "groovy",
                     "hcl",
                     "html",
                     "htmldjango",
