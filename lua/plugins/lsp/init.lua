@@ -241,13 +241,15 @@ local servers = {
 
     ruff_lsp = function()
         require("lspconfig").ruff_lsp.setup({
+            capabilities = common.capabilities(),
             init_options = {
                 settings = {
                     args = require("plugins.lsp.python").ruff_args(),
                 },
             },
-            on_attach = function(client)
+            on_attach = function(client, ...)
                 client.server_capabilities.hoverProvider = false
+                common.on_attach(client, ...)
             end,
             root_dir = function(fname)
                 return require("lspconfig.util").root_pattern("pyproject.toml", "setup.cfg", "ruff.toml")(fname)
@@ -366,27 +368,28 @@ local servers = {
     },
 
     tsserver = function()
-        require("typescript").setup({
-            debug = false,
-            disable_commands = false,
-            disable_formatting = true,
-            go_to_source_definition = {
-                fallback = true, -- Fall back to standard LSP definition on failure.
-            },
-            server = {
-                capabilities = common.capabilities(),
-                filetypes = { "javascript", "javascript.jsx", "typescript", "typescript.tsx" },
-                on_attach = common.on_attach,
-                settings = {
-                    completions = {
-                        completeFunctionCalls = true,
-                    },
+        require("typescript-tools").setup({
+            capabilities = common.capabilities(),
+            on_attach = common.on_attach,
+            settings = {
+                tsserver_file_preferences = {
+                    includeInlayEnumMemberValueHints = true,
+                    includeInlayFunctionLikeReturnTypeHints = true,
+                    includeInlayFunctionParameterTypeHints = true,
+                    includeInlayParameterNameHints = "all",
+                    includeInlayParameterNameHintsWhenArgumentMatchesName = true,
+                    includeInlayPropertyDeclarationTypeHints = true,
+                    includeInlayVariableTypeHints = true,
+                    includeInlayVariableTypeHintsWhenTypeMatchesName = false,
+                },
+                tsserver_format_preferences = {
+                    convertTabsToSpaces = true,
+                    indentSize = 2,
+                    trimTrailingWhitespace = false,
+                    semicolons = "insert",
                 },
             },
         })
-
-        -- Inject code actions to null-ls.
-        require("null-ls").register(require("typescript.extensions.null-ls.code-actions"))
     end,
 
     yamlls = function()
@@ -396,6 +399,8 @@ local servers = {
                 kubernetes = { enabled = false },
             },
             lspconfig = {
+                capabilities = common.capabilities(),
+                on_attach = common.on_attach,
                 settings = {
                     yaml = {
                         format = {
@@ -607,9 +612,9 @@ return {
         },
         event = "VeryLazy",
     },
-    { "jose-elias-alvarez/typescript.nvim" },
     { "microsoft/python-type-stubs" },
     { "p00f/clangd_extensions.nvim" },
+    { "pmizio/typescript-tools.nvim" },
     { "smjonas/inc-rename.nvim", opts = {} },
     { "someone-stole-my-name/yaml-companion.nvim" },
     { "yioneko/nvim-type-fmt", lazy = false }, -- LSP handler of textDocument/onTypeFormatting for nvim. Sets itself up via an LspAttach autocmd.
