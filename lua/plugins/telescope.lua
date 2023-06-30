@@ -106,6 +106,7 @@ return {
         telescope.load_extension("noice")
         telescope.load_extension("notify")
         telescope.load_extension("smart_history")
+        telescope.load_extension("yaml_schema")
         telescope.load_extension("zf-native")
     end,
     init = function()
