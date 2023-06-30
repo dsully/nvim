@@ -21,6 +21,9 @@ return {
                 vim.keymap.set("n", "<leader>gp", gs.preview_hunk, { desc = "Preview Git Hunk" })
                 vim.keymap.set("n", "<leader>gU", gs.undo_stage_hunk, { desc = "Undo Git Stage Hunk" })
 
+                vim.keymap.set("n", "<leader>gd", gs.toggle_deleted, { desc = "Git Deleted Toggle" })
+                vim.keymap.set("n", "<leader>gB", gs.toggle_current_line_blame, { desc = "Git Blame Toggle" })
+
                 vim.keymap.set({ "n", "x" }, "<leader>gs", function()
                     gs.stage_hunk({ vim.fn.line("."), vim.fn.line("v") })
                 end, { desc = "Stage Lines(s)" })
