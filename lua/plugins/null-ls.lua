@@ -57,6 +57,7 @@ return {
                     extra_args = { string.format("--config=%s/markdownlint/config.yaml", config) },
                 }),
                 null_ls.builtins.diagnostics.rstcheck,
+                null_ls.builtins.diagnostics.typos,
                 null_ls.builtins.diagnostics.yamllint.with({
                     extra_args = { string.format("--config-file=%s/yamllint.yaml", config) },
                 }),
