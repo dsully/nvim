@@ -198,6 +198,9 @@ vim.api.nvim_create_autocmd({ "BufReadCmd" }, {
 
 vim.api.nvim_create_autocmd({ "BufReadCmd" }, {
     callback = function(args)
+        -- This must be called for LSP and other events to work.
+        vim.cmd.doautocmd("BufReadPre")
+
         -- Trailing colon, i.e. ':lnum[:colnum[:]]'
         local pattern = ":?(%d*:?%d*):?$"
 
@@ -251,13 +254,7 @@ vim.api.nvim_create_autocmd({ "BufReadCmd" }, {
             end
         end
 
-        -- Return early if there's no pattern and the file exists.
-        if pos == nil and fqfn == nil then
-            vim.cmd.doautocmd("BufReadPost")
-            return
-        end
-
-        if vim.uv.fs_stat(path) then
+        if pos ~= nil or fqfn ~= nil and vim.uv.fs_stat(path) then
             vim.cmd.file(path)
             vim.cmd.edit({ bang = true })
 

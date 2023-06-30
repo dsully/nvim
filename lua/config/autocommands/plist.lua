@@ -6,6 +6,7 @@ local M = {
 
 vim.api.nvim_create_autocmd({ "BufReadCmd" }, {
     callback = function(args)
+        vim.cmd.doautocmd("BufReadPre")
         --
         M.read_command(args)
 
@@ -21,6 +22,7 @@ vim.api.nvim_create_autocmd({ "BufReadCmd" }, {
 
 vim.api.nvim_create_autocmd({ "FileReadCmd" }, {
     callback = function(args)
+        vim.cmd.doautocmd("FileReadPre")
         --
         M.read_command(args)
         vim.cmd.doautocmd("FileReadPost " .. args.file)
@@ -29,8 +31,18 @@ vim.api.nvim_create_autocmd({ "FileReadCmd" }, {
     nested = true,
 })
 
-vim.api.nvim_create_autocmd({ "BufWriteCmd", "FileWriteCmd" }, {
+vim.api.nvim_create_autocmd({ "BufWriteCmd" }, {
     callback = function(args)
+        vim.cmd.doautocmd("BufWritePre")
+        M.write_command(args)
+    end,
+    pattern = "*.plist",
+    nested = true,
+})
+
+vim.api.nvim_create_autocmd({ "FileWriteCmd" }, {
+    callback = function(args)
+        vim.cmd.doautocmd("FileWritePre")
         M.write_command(args)
     end,
     pattern = "*.plist",
