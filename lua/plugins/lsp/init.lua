@@ -389,24 +389,49 @@ local servers = {
         require("null-ls").register(require("typescript.extensions.null-ls.code-actions"))
     end,
 
-    yamlls = {
-        before_init = function(_, config)
-            config.settings.yaml.schemas = require("schemastore").json.schemas()
-        end,
-        settings = {
-            -- https://github.com/redhat-developer/vscode-redhat-telemetry#how-to-disable-telemetry-reporting
-            redhat = { telemetry = { enabled = false } },
-            yaml = {
-                completion = true,
-                format = {
-                    enable = true,
-                    singleQuote = false,
-                },
-                hover = true,
-                validate = true,
+    yamlls = function()
+        require("lspconfig").yamlls.setup(require("yaml-companion").setup({
+            builtin_matchers = {
+                cloud_init = { enabled = false },
+                kubernetes = { enabled = false },
             },
-        },
-    },
+            lspconfig = {
+                settings = {
+                    yaml = {
+                        format = {
+                            enable = true,
+                            singleQuote = false,
+                        },
+                        schemas = require("schemastore").json.schemas({
+                            exclude = {
+                                -- Disable these as they conflict with *defaults*.yaml files.
+                                "Ansible Inventory",
+                                "Ansible Playbook",
+                                "Ansible Requirements",
+                                "Ansible Tasks File",
+                                "Ansible Vars File",
+                                "PyProject", -- This has poetry config in it.
+                            },
+                        }),
+                        schemaStore = {
+                            enable = false,
+                        },
+                    },
+                },
+            },
+        }))
+
+        vim.api.nvim_create_user_command("YAMLSchema", function()
+            local schema = require("yaml-companion").get_buf_schema(0)
+
+            if schema.result[1].name ~= "none" then
+                vim.notify(schema.result[1].name)
+            end
+        end, { desc = "Show YAML schema" })
+
+        -- vs = View Schema
+        vim.keymap.set("n", "<leader>vs", vim.cmd.YAMLSchema, { desc = "Show the YAML schema in use" })
+    end,
 }
 
 return {
@@ -592,6 +617,7 @@ return {
     { "microsoft/python-type-stubs" },
     { "p00f/clangd_extensions.nvim" },
     { "smjonas/inc-rename.nvim", opts = {} },
+    { "someone-stole-my-name/yaml-companion.nvim" },
     { "yioneko/nvim-type-fmt", lazy = false }, -- LSP handler of textDocument/onTypeFormatting for nvim. Sets itself up via an LspAttach autocmd.
     { "VidocqH/lsp-lens.nvim", event = "LspAttach", opts = {} },
     { "zbirenbaum/neodim", branch = "v2", event = "LspAttach", opts = {} },
