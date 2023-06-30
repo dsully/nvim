@@ -189,7 +189,6 @@ end
 
 -- Config for pylsp-ruff as a Lua table.
 M.ruff_config = function()
-
     -- If a pyproject exists and has a ruff config, use that.
     local pyproject = find_file("pyproject.toml")
 

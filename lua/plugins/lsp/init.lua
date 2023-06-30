@@ -255,97 +255,93 @@ local servers = {
         })
     end,
 
-    rust_analyzer = function()
-        require("rust-tools").setup({
-            tools = {
-                inlay_hints = {
-                    auto = false,
-                },
-                hover_actions = {
-                    auto_focus = true,
-                },
-            },
-            server = {
-                before_init = function(_, config)
-                    -- Override clippy to run in its own directory to avoid clobbering caches.
-                    local target = "--target-dir=" .. config.root_dir .. "/target/ide-clippy"
+    rust_analyzer = {
+        before_init = function(_, config)
+            -- Override clippy to run in its own directory to avoid clobbering caches.
+            local target = "--target-dir=" .. config.root_dir .. "/target/ide-clippy"
 
-                    table.insert(config.settings["rust-analyzer"].checkOnSave.extraArgs, target)
-                end,
-                capabilities = common.capabilities(),
-                on_attach = function(client, ...)
-                    client.server_capabilities.experimental.hoverActions = true
-                    client.server_capabilities.experimental.hoverRange = true
-                    client.server_capabilities.experimental.serverStatusNotification = true
-                    client.server_capabilities.experimental.snippetTextEdit = true
-                    client.server_capabilities.experimental.codeActionGroup = true
-                    client.server_capabilities.experimental.ssr = true
-                    common.on_attach(client, ...)
-                end,
-                settings = {
-                    -- https://rust-analyzer.github.io/manual.html
-                    ["rust-analyzer"] = {
-                        cargo = {
-                            allFeatures = true,
-                            allTargets = true,
-                            extraEnv = { CARGO_INCREMENTAL = "0" }, -- Use sccache
-                        },
-                        check = {
-                            command = "clippy",
-                            extraArgs = {
-                                "--no-deps",
-                                "--",
-                                "-W",
-                                "correctness",
-                                "-W",
-                                "keyword_idents",
-                                "-W",
-                                "rust_2021_prelude_collisions",
-                                "-W",
-                                "trivial_casts",
-                                "-W",
-                                "trivial_numeric_casts",
-                                "-W",
-                                "unused_lifetimes",
-                            },
-                        },
-                        -- https://github.com/rust-analyzer/rust-analyzer/issues/6835
-                        diagnostics = {
-                            disabled = { "inactive-code", "unresolved-macro-call" },
-                            experimental = { enable = true },
-                        },
-                        files = {
-                            excludeDirs = {
-                                "./assets/",
-                                "./data/",
-                                "./docs/",
-                                "./.vscode/",
-                                "./.git/",
-                            },
-                        },
-                        inlayHints = {
-                            -- Whether to show inlay hints for closure captures.
-                            -- https://rust-analyzer.github.io//thisweek/2023/05/15/changelog-181.html#new-features
-                            closureCaptureHints = { enable = false }, -- default : false
+            table.insert(config.settings["rust-analyzer"].checkOnSave.extraArgs, target)
+        end,
+        on_attach = function(client, ...)
+            client.server_capabilities.experimental.hoverActions = true
+            client.server_capabilities.experimental.hoverRange = true
+            client.server_capabilities.experimental.serverStatusNotification = true
+            client.server_capabilities.experimental.snippetTextEdit = true
+            client.server_capabilities.experimental.codeActionGroup = true
+            client.server_capabilities.experimental.ssr = true
+            common.on_attach(client, ...)
+        end,
+        settings = {
+            -- https://rust-analyzer.github.io/manual.html
+            ["rust-analyzer"] = {
+                cargo = {
+                    allFeatures = true,
+                    allTargets = true,
+                    extraEnv = { CARGO_INCREMENTAL = "0" }, -- Use sccache
+                },
+                check = {
+                    command = "clippy",
+                    extraArgs = {
+                        "--no-deps",
+                        "--",
+                        "-W",
+                        "correctness",
+                        "-W",
+                        "keyword_idents",
+                        "-W",
+                        "rust_2021_prelude_collisions",
+                        "-W",
+                        "trivial_casts",
+                        "-W",
+                        "trivial_numeric_casts",
+                        "-W",
+                        "unused_lifetimes",
+                    },
+                },
+                -- https://github.com/rust-analyzer/rust-analyzer/issues/6835
+                diagnostics = {
+                    disabled = { "inactive-code", "macro-error", "unresolved-macro-call" },
+                    experimental = { enable = true },
+                },
+                files = {
+                    excludeDirs = {
+                        "./assets/",
+                        "./data/",
+                        "./docs/",
+                        "./.vscode/",
+                        "./.git/",
+                    },
+                },
+                inlayHints = {
+                    chainingHints = { enable = false },
 
-                            -- Whether to show inlay type hints for return types of closures.
-                            closureReturnTypeHints = { enable = "with_block" }, --default: "never", options: "always", "never", "with_block"
-                        },
-                        lru = { capacity = 2048 },
-                        procMacro = { enable = true },
-                        workspace = {
-                            symbol = {
-                                search = {
-                                    scope = "workspace_and_dependencies",
-                                },
-                            },
+                    -- Whether to show inlay hints for closure captures.
+                    -- https://rust-analyzer.github.io//thisweek/2023/05/15/changelog-181.html#new-features
+                    closureCaptureHints = { enable = false }, -- default : false
+
+                    -- Whether to show inlay type hints for return types of closures.
+                    closureReturnTypeHints = { enable = "with_block" }, --default: "never", options: "always", "never", "with_block"
+
+                    parameterHints = { enable = false },
+                },
+                lru = { capacity = 2048 },
+                procMacro = { enable = true },
+                references = {
+                    -- Exclude imports from find-all-references.
+                    excludeImports = true,
+                },
+                workspace = {
+                    symbol = {
+                        search = {
+                            kind = "all_symbols",
+                            scope = "workspace_and_dependencies",
                         },
                     },
                 },
-                standalone = false,
             },
-        })
-    end,
+        },
+        standalone = false,
+    },
 
     taplo = {
         settings = {
@@ -595,7 +591,6 @@ return {
     { "jose-elias-alvarez/typescript.nvim" },
     { "microsoft/python-type-stubs" },
     { "p00f/clangd_extensions.nvim" },
-    { "MunifTanjim/rust-tools.nvim" },
     { "smjonas/inc-rename.nvim", opts = {} },
     { "yioneko/nvim-type-fmt", lazy = false }, -- LSP handler of textDocument/onTypeFormatting for nvim. Sets itself up via an LspAttach autocmd.
     { "VidocqH/lsp-lens.nvim", event = "LspAttach", opts = {} },
