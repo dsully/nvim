@@ -75,7 +75,6 @@ return {
                         "graphql",
                         "html",
                         "markdown",
-                        "yaml",
                     },
                 }),
                 null_ls.builtins.formatting.shfmt.with({
