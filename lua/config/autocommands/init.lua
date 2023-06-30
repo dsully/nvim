@@ -1,4 +1,6 @@
 --
+require("config.autocommands.plist")
+
 vim.api.nvim_create_autocmd({ "FocusGained", "TermClose", "TermLeave" }, {
     command = "checktime",
     desc = "Check if we need to reload the file when it changed.",
@@ -194,95 +196,76 @@ vim.api.nvim_create_autocmd({ "BufReadCmd" }, {
     nested = true,
 })
 
--- Jump to a row and column if given on the command line.
-vim.api.nvim_create_autocmd({ "VimEnter" }, {
-    callback = function()
-        -- Skip if no arguments were passed.
-        if #vim.v.argv == 2 then
-            return
-        end
-
+vim.api.nvim_create_autocmd({ "BufReadCmd" }, {
+    callback = function(args)
         -- Trailing colon, i.e. ':lnum[:colnum[:]]'
         local pattern = ":?(%d*:?%d*):?$"
 
         local cwd = (vim.uv.cwd() or vim.fn.getcwd()) .. "/"
 
-        local function process(buffer)
-            if not vim.bo[buffer].buflisted then
-                return
-            end
+        -- Strip off any duplicated parent path.
+        local bufname = vim.api.nvim_buf_get_name(args.buf):gsub(cwd, "")
+        local capture = bufname:match(pattern)
+        local pos = nil
+        local fqfn = nil
+        local numeric = false
 
-            -- Strip off any duplicated parent path.
-            local bufname = vim.api.nvim_buf_get_name(buffer):gsub(cwd, "")
-            local capture = bufname:match(pattern)
-            local pos = nil
-            local fqfn = nil
-            local numeric = false
+        -- Skip filenames that are all numbers.
+        if bufname:match("^%d$") then
+            numeric = true
+        end
 
-            -- Skip if the next argument is a +<line>
-            if vim.v.argv[#vim.v.argv]:match("^+%d+") then
-                return
-            end
-
-            -- Skip filenames that are all numbers.
-            if bufname:match("^%d$") then
-                numeric = true
-            end
-
-            if capture and capture ~= "" and not numeric then
-                -- Allow for /path/to/file:<row>:
-                pos = vim.split(capture, ":", {})
-                pos = { tonumber(pos[1]) or 1, tonumber(pos[2] or 0) or 0 }
-            else
-                local row, col = unpack(vim.api.nvim_buf_get_mark(buffer, '"'))
-                if row > 0 and row <= vim.api.nvim_buf_line_count(0) then
-                    pos = { row, col }
-                end
-            end
-
-            local path = numeric and bufname or bufname:gsub(pattern, "")
-
-            -- Look for non-qualified paths that aren't cwd local.
-            if not bufname:match("^[/~]") and bufname:find("/") then
+        -- If the next argument is a +<line>
+        for i, v in ipairs(vim.v.argv) do
+            if v == bufname then
                 --
-                -- A partial path almost always comes from git.
-                -- Find the root, then strip off the parent path.
-                local root = vim.fn.systemlist("git rev-parse --show-toplevel")[1] or cwd
-
-                fqfn = root .. "/" .. path
-
-                if vim.uv.fs_stat(fqfn) then
-                    path = fqfn
+                -- If the next argument is a +<line>
+                if vim.v.argv[i + 1] ~= nil and vim.v.argv[i + 1]:match("^+%d+") then
+                    pos = { tonumber(vim.v.argv[i + 1]:gsub("%+", "") or 0), 0 }
                 end
             end
+        end
 
-            -- Return early if there's no pattern and the file exists.
-            if pos == nil and fqfn == nil then
-                return
+        if capture and capture ~= "" and not numeric and not pos then
+            -- Allow for /path/to/file:<row>:
+            pos = vim.split(capture, ":", {})
+            pos = { tonumber(pos[1]) or 1, tonumber(pos[2] or 0) or 0 }
+        elseif pos == nil and not vim.endswith(bufname, ".plist") then
+            -- If the position wasn't set via the filename, check previous marks.
+            pos = vim.api.nvim_buf_get_mark(0, '"')
+        end
+
+        local path = numeric and bufname or bufname:gsub(pattern, "")
+
+        -- Look for non-qualified paths that aren't cwd local.
+        if not bufname:match("^[/~]") and bufname:find("/") then
+            --
+            -- A partial path almost always comes from git.
+            -- Find the root, then strip off the parent path.
+            local root = vim.fn.systemlist("git rev-parse --show-toplevel")[1] or cwd
+
+            fqfn = root .. "/" .. path
+
+            if vim.uv.fs_stat(fqfn) then
+                path = fqfn
             end
+        end
 
-            -- Clean up the argument list.
-            vim.api.nvim_buf_set_name(buffer, path)
-            vim.bo[buffer].modified = false
+        -- Return early if there's no pattern and the file exists.
+        if pos == nil and fqfn == nil then
+            vim.cmd.doautocmd("BufReadPost")
+            return
+        end
 
-            vim.cmd(".argdelete")
-            vim.cmd.argadd(vim.fn.fnameescape(path))
-
-            if vim.uv.fs_stat(path) then
-                vim.cmd.edit(path)
-            end
+        if vim.uv.fs_stat(path) then
+            vim.cmd.file(path)
+            vim.cmd.edit({ bang = true })
 
             if pos then
-                vim.api.nvim_win_set_cursor(0, pos)
+                vim.api.nvim_buf_set_mark(args.buf, '"', pos[1], pos[2], {})
             end
         end
 
-        for _, b in ipairs(vim.api.nvim_list_bufs()) do
-            process(b)
-        end
-
-        vim.cmd.bfirst()
+        vim.cmd.doautocmd("BufReadPost")
     end,
-    once = true,
-    nested = true,
 })
