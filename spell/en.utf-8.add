@@ -256,3 +256,11 @@ cwd
 pbcopy
 pbpaste
 sudo
+url
+NSGlobal
+PNG
+BMP
+Siri
+plist
+stdout
+Vimscript
