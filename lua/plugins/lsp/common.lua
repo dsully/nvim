@@ -71,10 +71,10 @@ M.on_attach = function(client, buffer)
 
     if client.server_capabilities.inlayHintProvider then
         vim.keymap.set("n", "<space>i", function()
-            vim.lsp.buf.inlay_hint(buffer, nil)
+            vim.lsp.inlay_hint(buffer)
         end, { desc = " Toggle Inlay Hints" })
 
-        vim.lsp.buf.inlay_hint(buffer, false)
+        vim.lsp.inlay_hint(buffer, false)
     end
 
     if client.server_capabilities.codeActionProvider then
@@ -91,24 +91,11 @@ M.on_attach = function(client, buffer)
 
     if client.server_capabilities.codeLensProvider then
         --
-        vim.api.nvim_create_autocmd({ "BufEnter" }, {
-            desc = "LSP Code Lens Initial",
-            buffer = buffer,
-            callback = vim.lsp.codelens.refresh,
-            group = M.groups.code_lens,
-            once = true,
-        })
-
         vim.api.nvim_create_autocmd({ "BufEnter", "InsertLeave", "BufWritePost" }, {
             desc = "LSP Code Lens Refresh",
+            -- call via Vimscript so that errors are silenced
+            command = "silent! lua vim.lsp.codelens.refresh()",
             buffer = buffer,
-            callback = vim.lsp.codelens.refresh,
-            group = M.groups.code_lens,
-        })
-
-        vim.api.nvim_create_autocmd("LspDetach", {
-            buffer = buffer,
-            callback = vim.lsp.codelens.clear,
             group = M.groups.code_lens,
         })
     end
@@ -173,6 +160,7 @@ M.find_root = function()
         "setup.cfg",
         "setup.py",
         "stylua.toml",
+        "Cargo.toml",
     }
 
     ---@type string?
@@ -185,18 +173,20 @@ M.find_root = function()
 
     if path then
         for _, client in pairs(vim.lsp.get_active_clients({ bufnr = 0 })) do
-            local workspace = client.config.workspace_folders
+            if not vim.tbl_contains({ "copilot", "null-ls" }, client.name) then
+                local workspace = client.config.workspace_folders
 
-            local paths = workspace and vim.tbl_map(function(ws)
-                return vim.uri_to_fname(ws.uri)
-            end, workspace) or client.config.root_dir and { client.config.root_dir } or {}
+                local paths = workspace and vim.tbl_map(function(ws)
+                    return vim.uri_to_fname(ws.uri)
+                end, workspace) or client.config.root_dir and { client.config.root_dir } or {}
 
-            for _, p in ipairs(paths) do
-                local r = vim.uv.fs_realpath(p)
+                for _, p in ipairs(paths) do
+                    local r = vim.uv.fs_realpath(p)
 
-                if r then
-                    if path:find(r, 1, true) then
-                        roots[#roots + 1] = r
+                    if r then
+                        if path:find(r, 1, true) then
+                            roots[#roots + 1] = r
+                        end
                     end
                 end
             end
