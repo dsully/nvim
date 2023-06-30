@@ -17,7 +17,7 @@ vim.keymap.set("n", "<C-c>", "<cmd>normal! ciw<cr>a", { desc = "Change in Word" 
 vim.keymap.set("n", "qq", vim.cmd.quitall, { desc = "Quit" })
 vim.keymap.set("n", "qw", vim.cmd.wqall, { desc = "Quit & Write All" })
 vim.keymap.set("n", "q!", function()
-    vim.cmd.quitall("!")
+    vim.cmd.quitall({ bang = true })
 end, { desc = "Quit without saving" })
 
 -- Disable recording / annoying exmode.
