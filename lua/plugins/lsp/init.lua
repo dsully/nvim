@@ -470,34 +470,28 @@ return {
             vim.lsp.set_log_level(vim.log.levels.ERROR)
 
             vim.api.nvim_create_user_command("LspCapabilities", function()
-                local curBuf = vim.api.nvim_get_current_buf()
-                local clients = vim.lsp.get_active_clients({ bufnr = curBuf })
+                local clients = vim.lsp.get_active_clients({ bufnr = vim.api.nvim_get_current_buf() })
+                local lines = {}
 
-                for _, client in pairs(clients) do
+                for i, client in pairs(clients) do
                     if not vim.tbl_contains({ "copilot", "null-ls" }, client.name) then
-                        local capAsList = {}
-                        for key, value in pairs(client.server_capabilities) do
-                            if value and key:find("Provider") then
-                                local capability = key:gsub("Provider$", "")
-                                table.insert(capAsList, "- " .. capability)
-                            end
+                        table.insert(lines, "# " .. client.name:upper())
+                        table.insert(lines, "```lua")
+
+                        for s in vim.inspect(client.server_capabilities):gmatch("[^\r\n]+") do
+                            table.insert(lines, s)
                         end
 
-                        table.sort(capAsList) -- sorts alphabetically
+                        table.insert(lines, "```")
 
-                        local msg = "# " .. client.name .. "\n" .. table.concat(capAsList, "\n")
-
-                        vim.notify(msg, vim.log.levels.INFO, {
-                            on_open = function()
-                                vim.api.nvim_set_option_value("filetype", "markdown", { scope = "local" })
-                            end,
-                            timeout = false,
-                        })
-
-                        vim.fn.setreg("+", "Capabilities = " .. vim.inspect(client.server_capabilities))
+                        if i < #clients then
+                            table.insert(lines, "")
+                        end
                     end
                 end
-            end, {})
+
+                require("helpers.float").open(lines)
+            end, { desc = "Show LSP Capabilities" })
 
             vim.keymap.set("n", "<leader>lc", vim.cmd.LspCapabilities, { desc = "  LSP Capabilities" })
             vim.keymap.set("n", "<leader>li", vim.cmd.LspInfo, { desc = "  LSP Info" })
