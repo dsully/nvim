@@ -2,6 +2,7 @@
 return {
     buffer_types = {
         "Trouble",
+        "gitcommit",
         "help",
         "nofile",
         "quickfix",
