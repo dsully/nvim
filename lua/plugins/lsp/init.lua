@@ -599,10 +599,22 @@ return {
             "MasonToolsUpdate",
         },
         event = "VeryLazy",
-        opts = {
-            ensure_installed = { "gitui", "glow" },
-            run_on_start = false,
-        },
+        config = function()
+            require("mason-tool-installer").setup({
+                auto_update = true,
+                debounce_hours = 24,
+                ensure_installed = {
+                    "codelldb",
+                    "delve",
+                    "gitui",
+                    "glow",
+                },
+            })
+
+            vim.defer_fn(function()
+                require("mason-tool-installer").run_on_start()
+            end, 2000)
+        end,
     },
     {
         "aznhe21/actions-preview.nvim",
