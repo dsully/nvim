@@ -108,6 +108,7 @@ return {
                     "query",
                     "regex",
                     "requirements",
+                    "ron",
                     "rst",
                     "ruby",
                     "rust",
