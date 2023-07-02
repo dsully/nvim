@@ -1,0 +1,14 @@
+[default]
+extend-ignore-identifiers-re = [
+]
+
+[files]
+extend-exclude = [
+]
+
+
+[default.extend-words]
+# Ignore false-positives
+enew = "enew"
+nd = "nd"
+noice = "noice"

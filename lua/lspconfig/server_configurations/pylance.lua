@@ -20,7 +20,7 @@ return {
                 end,
                 description = "Extract Method",
             },
-            PylanceExtractVarible = {
+            PylanceExtractVariable = {
                 function()
                     vim.lsp.buf.execute_command({
                         command = "pylance.extractVariable",
