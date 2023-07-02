@@ -3,15 +3,45 @@ return {
     cmd = "Telescope",
     config = function()
         local actions = require("telescope.actions")
+        local job = require("plenary.job")
+        local previewers = require("telescope.previewers")
         local telescope = require("telescope")
 
         local function dropdown(opts)
             return require("telescope.themes").get_dropdown(opts)
         end
 
+        local new_maker = function(filepath, bufnr, opts)
+            filepath = vim.fn.expand(filepath)
+
+            vim.uv.fs_stat(filepath, function(_, stat)
+                if not stat or stat.size > vim.g.large_file_size then
+                    vim.api.nvim_buf_set_lines(bufnr, 0, -1, false, { "FILE IS TOO LARGE" })
+                    return
+                end
+            end)
+
+            job:new({
+                command = "file",
+                args = { "--mime-type", "-b", filepath },
+                on_exit = function(j)
+                    local mime_type = vim.split(j:result()[1], "/")[1]
+
+                    if mime_type == "text" then
+                        previewers.buffer_previewer_maker(filepath, bufnr, opts or {})
+                    else
+                        vim.schedule(function()
+                            vim.api.nvim_buf_set_lines(bufnr, 0, -1, false, { string.format("--- %s ---", mime_type) })
+                        end)
+                    end
+                end,
+            }):sync()
+        end
+
         telescope.setup({
             defaults = dropdown({
                 borderchars = { "─", "│", "─", "│", "┌", "┐", "┘", "└" },
+                buffer_previewer_maker = new_maker,
                 color_devicons = true,
                 file_ignore_patterns = {
                     "%.DS_Store",
@@ -60,6 +90,7 @@ return {
             }),
             extensions = {
                 file_browser = {
+                    hidden = true,
                     hijack_netrw = true,
                     initial_mode = "normal",
                     prompt_prefix = "    ",
