@@ -51,5 +51,5 @@ return {
             end,
         })
     end,
-    dependencies = { "rafamadriz/friendly-snippets" },
+    -- dependencies = { "rafamadriz/friendly-snippets" },
 }
