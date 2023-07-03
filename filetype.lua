@@ -25,6 +25,17 @@ vim.filetype.add({
             end
             return "c"
         end,
+        tmpl = function(filename, _)
+            if vim.fn.search("{{.\\+}}", "nw") then
+                if filename:find("fish.tmpl") then
+                    return "fish"
+                elseif filename:find("toml.tmpl") then
+                    return "toml"
+                elseif filename:find("yaml.tmpl") then
+                    return "yaml"
+                end
+            end
+        end,
     },
     pattern = {
         ["*Caddyfile*"] = "caddyfile",
