@@ -105,8 +105,8 @@ vim.api.nvim_create_autocmd({ "BufReadCmd" }, {
         end
 
         if pos ~= nil or fqfn ~= nil and vim.uv.fs_stat(path) then
-            vim.cmd.file(path)
-            vim.cmd.edit({ bang = true })
+            pcall(vim.cmd.file, path)
+            pcall(vim.cmd.edit, { bang = true })
 
             if pos then
                 vim.api.nvim_buf_set_mark(args.buf, '"', pos[1], pos[2], {})
