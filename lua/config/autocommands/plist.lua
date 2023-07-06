@@ -4,50 +4,54 @@ local M = {
     mapping = { ["json"] = "json", ["binary"] = "binary1", ["xml"] = "xml1" },
 }
 
-vim.api.nvim_create_autocmd({ "BufReadCmd" }, {
-    callback = function(args)
-        vim.cmd.doautocmd("BufReadPre")
-        --
-        M.read_command(args)
+if vim.g.os == "Darwin" then
 
-        local levels = vim.o.undolevels
-        vim.o.undolevels = -1
-        vim.cmd("silent 1delete")
-        vim.o.undolevels = levels
+    vim.notify("FOO")
+    vim.api.nvim_create_autocmd({ "BufReadCmd" }, {
+        callback = function(args)
+            vim.cmd.doautocmd("BufReadPre")
+            --
+            M.read_command(args)
 
-        vim.cmd.doautocmd("BufReadPost")
-    end,
-    pattern = "*.plist",
-})
+            local levels = vim.o.undolevels
+            vim.o.undolevels = -1
+            vim.cmd("silent 1delete")
+            vim.o.undolevels = levels
 
-vim.api.nvim_create_autocmd({ "FileReadCmd" }, {
-    callback = function(args)
-        vim.cmd.doautocmd("FileReadPre")
-        --
-        M.read_command(args)
-        vim.cmd.doautocmd("FileReadPost " .. args.file)
-    end,
-    pattern = "*.plist",
-    nested = true,
-})
+            vim.cmd.doautocmd("BufReadPost")
+        end,
+        pattern = "*.plist",
+    })
 
-vim.api.nvim_create_autocmd({ "BufWriteCmd" }, {
-    callback = function(args)
-        vim.cmd.doautocmd("BufWritePre")
-        M.write_command(args)
-    end,
-    pattern = "*.plist",
-    nested = true,
-})
+    vim.api.nvim_create_autocmd({ "FileReadCmd" }, {
+        callback = function(args)
+            vim.cmd.doautocmd("FileReadPre")
+            --
+            M.read_command(args)
+            vim.cmd.doautocmd("FileReadPost " .. args.file)
+        end,
+        pattern = "*.plist",
+        nested = true,
+    })
 
-vim.api.nvim_create_autocmd({ "FileWriteCmd" }, {
-    callback = function(args)
-        vim.cmd.doautocmd("FileWritePre")
-        M.write_command(args)
-    end,
-    pattern = "*.plist",
-    nested = true,
-})
+    vim.api.nvim_create_autocmd({ "BufWriteCmd" }, {
+        callback = function(args)
+            vim.cmd.doautocmd("BufWritePre")
+            M.write_command(args)
+        end,
+        pattern = "*.plist",
+        nested = true,
+    })
+
+    vim.api.nvim_create_autocmd({ "FileWriteCmd" }, {
+        callback = function(args)
+            vim.cmd.doautocmd("FileWritePre")
+            M.write_command(args)
+        end,
+        pattern = "*.plist",
+        nested = true,
+    })
+end
 
 M.read_command = function(args)
     --
