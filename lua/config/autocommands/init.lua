@@ -108,7 +108,11 @@ vim.api.nvim_create_autocmd({ "BufReadCmd" }, {
             pcall(vim.cmd.file, path)
             pcall(vim.cmd.edit, { bang = true })
 
-            if pos then
+            -- Make sure we don't try and set marks on a file that already has marks,
+            -- but has changed out from underneath us.
+            local count = vim.api.nvim_buf_line_count(args.buf)
+
+            if pos and count >= pos[1] then
                 vim.api.nvim_buf_set_mark(args.buf, '"', pos[1], pos[2], {})
             end
         end
