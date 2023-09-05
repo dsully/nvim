@@ -6,7 +6,6 @@ local M = {
 
 if vim.g.os == "Darwin" then
 
-    vim.notify("FOO")
     vim.api.nvim_create_autocmd({ "BufReadCmd" }, {
         callback = function(args)
             vim.cmd.doautocmd("BufReadPre")
