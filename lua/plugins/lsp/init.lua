@@ -254,9 +254,9 @@ local servers = {
     --     })
     -- end,
 
-    -- https://docs.rome.tools
+    -- https://github.com/biomejs/biome
     rome = {
-        cmd = { "rome", "lsp-proxy", "--config-path", vim.env.XDG_CONFIG_HOME },
+        cmd = { "biome", "lsp-proxy", "--config-path", vim.env.XDG_CONFIG_HOME },
     },
 
     ruff_lsp = function()
