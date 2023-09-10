@@ -13,9 +13,6 @@ return {
             "TSUpdateSync",
         },
         config = function()
-            -- Use gcc so tree-sitter-just (and others) compile.
-            require("nvim-treesitter.install").compilers = { "gcc", "clang" }
-
             local parser = require("nvim-treesitter.parsers").get_parser_configs()
 
             parser.caddy = {
@@ -92,6 +89,7 @@ return {
                     "ini",
                     "java",
                     "javascript",
+                    "jsdoc",
                     "json",
                     "kdl",
                     "kotlin",
@@ -198,8 +196,6 @@ return {
         end,
         event = { "BufReadPost", "BufNewFile" },
     },
-
-    { "IndianBoy42/tree-sitter-just", build = ":TSInstall just", ft = "just", opts = {} },
 
     { "RRethy/nvim-treesitter-endwise", event = "InsertEnter" },
     { "yioneko/nvim-yati", event = "InsertEnter" },
