@@ -38,15 +38,11 @@ end, { noremap = true, expr = true })
 
 vim.api.nvim_create_autocmd({ "FileType" }, {
     desc = "Keymap for removing backslashes when joining lines.",
-    pattern = { "bash", "fish", "make", "zsh" },
+    pattern = { "bash", "fish", "make", "sh", "zsh" },
     callback = function()
         vim.keymap.set("n", "J", function()
-            local line = vim.fn.getline(".")
-            if vim.endswith(line, [[\]]) then
-                return "$xJ"
-            else
-                return "J"
-            end
+            --
+            return vim.endswith(vim.api.nvim_get_current_line(), [[\]]) and "$xJ" or "J"
         end, { expr = true, desc = "Remove trailing backslash when joining lines." })
     end,
 })
