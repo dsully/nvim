@@ -17,6 +17,9 @@ return {
     -- Justfile, as the treesitter parser is rough.
     { "NoahTheDuke/vim-just", event = { "BufReadPre" } },
 
+    -- Caddy
+    { "isobit/vim-caddyfile", ft = "caddyfile" },
+
     -- Markdown helper.
     { "oncomouse/markdown.nvim", ft = "markdown", opts = {} },
 
