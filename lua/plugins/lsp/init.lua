@@ -670,7 +670,8 @@ return {
                 },
             })
 
-            require("mason-registry"):on("package:install:success", require("plugins.lsp.python").mason_post_install)
+            -- Disable Python module installation of mypy & ruff for now.
+            -- require("mason-registry"):on("package:install:success", require("plugins.lsp.python").mason_post_install)
         end,
     },
     {
