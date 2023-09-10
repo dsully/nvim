@@ -52,7 +52,7 @@ vim.api.nvim_create_autocmd({ "BufReadCmd" }, {
         vim.cmd.doautocmd("BufReadPre")
 
         -- Trailing colon, i.e. ':lnum[:colnum[:]]'
-        local pattern = ":?(%d*:?%d*):?$"
+        local pattern = ":(%d*:?%d*):?$"
 
         local cwd = (vim.uv.cwd() or vim.fn.getcwd()) .. "/"
 
@@ -156,7 +156,7 @@ vim.api.nvim_create_autocmd({ "BufReadPost", "FileReadPost" }, {
 
         vim.notify("File is too large, disabling treesitter, syntax & language servers.")
 
-        for _, client in pairs(vim.lsp.get_active_clients({ bufnr = args.buf })) do
+        for _, client in pairs(vim.lsp.get_clients({ bufnr = args.buf })) do
             pcall(vim.lsp.buf_detach_client, args.buf, client.id)
         end
 
@@ -226,7 +226,7 @@ vim.api.nvim_create_autocmd({ "BufWritePre" }, {
     callback = function(args)
         local path = vim.fs.dirname(args.file)
 
-        if not vim.uv.fs_stat(path) then
+        if path and not vim.uv.fs_stat(path) then
             vim.uv.fs_mkdir(path, 511)
         end
     end,
