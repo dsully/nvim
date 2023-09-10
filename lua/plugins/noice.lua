@@ -3,6 +3,13 @@ return {
     dependencies = { "MunifTanjim/nui.nvim" },
     event = "VeryLazy",
     config = function()
+        local messages = false
+        local mini_row = -2
+
+        if messages then
+            mini_row = -1
+        end
+
         ---
         local focused = true
         vim.api.nvim_create_autocmd("FocusGained", {
@@ -73,7 +80,7 @@ return {
                 },
             },
             messages = {
-                enabled = true, -- enables the Noice messages UI
+                enabled = messages, -- enables the Noice messages UI
             },
             notify = {
                 enabled = true,
@@ -89,24 +96,26 @@ return {
                 inc_rename = true, -- enables an input dialog for inc-rename.nvim
                 lsp_doc_border = true, -- add a border to hover docs and signature help
             },
-            redirect = { view = "mini", filter = { event = "msg_show" } },
             routes = {
                 {
                     filter = {
                         any = {
+                            { event = "msg_show", find = "%d+L, %d+B" }, -- Disable file write notifications.
+                            { event = "msg_show", find = "^E486:" }, -- Pattern not found.
+                            { event = "msg_show", find = "^E492:" }, -- Not an editor command.
+                            { event = "msg_show", find = "%d+ change" }, -- Editor noisiness.
+                            { event = "msg_show", find = "%d+ more line" }, -- Yank / undo noise.
+                            { event = "msg_show", find = "%d+ line. less" }, -- Yank / undo noise.
+                            { event = "msg_show", find = "bufnr=%d client_id=%d doesn't exists" },
+                            { event = "msg_show", find = "%d+ lines yanked" },
+
                             { event = "msg_show", find = "written" },
                             { event = "msg_show", find = "%d+ lines, %d+ bytes" },
                             { event = "msg_show", kind = "search_count" },
                             { event = "msg_show", find = "search hit" },
-                            { event = "msg_show", find = "%d+L, %d+B" },
                             { event = "msg_show", find = "^Hunk %d+ of %d" },
-                            { event = "msg_show", find = "%d+ change" },
+                            { event = "msg_show", find = "%d+ fewer lines" },
                             { event = "msg_show", find = "%d+ line" },
-                            { event = "msg_show", find = "%d+ more line" },
-                            { event = "msg_show", find = "^E486:" }, -- Command not found.
-                            { event = "msg_show", find = "^E492:" }, -- Not an editor command.
-                            { event = "msg_show", find = "^E486:" }, -- Pattern not found.
-                            { event = "notify", find = "No information available" },
                             -- { find = "No active Snippet" },
                             -- { find = "No signature help available" },
                             -- { find = "Running provider" },
@@ -125,7 +134,7 @@ return {
                 {
                     filter = {
                         any = {
-                            -- Multiple of 5.
+                            -- Only show progress on multiple of 5 percent.
                             { event = "lsp", find = "[^05]/" },
                             { event = "lsp", find = "code_action" },
                             {
@@ -156,21 +165,26 @@ return {
                 },
             },
             views = {
-                -- popupmenu = {
-                --     relative = "editor",
-                --     position = {
-                --         row = 9,
-                --         col = "50%",
-                --     },
-                --     size = {
-                --         width = 60,
-                --         height = 10,
-                --     },
-                --     border = {
-                --         style = vim.g.border,
-                --         padding = { 0, 1 },
-                --     },
-                -- },
+                mini = {
+                    position = {
+                        row = mini_row,
+                    },
+                },
+                popupmenu = {
+                    relative = "editor",
+                    position = {
+                        row = 9,
+                        col = "50%",
+                    },
+                    size = {
+                        width = 60,
+                        height = 10,
+                    },
+                    border = {
+                        style = vim.g.border,
+                        padding = { 0, 1 },
+                    },
+                },
             },
         })
     end,
