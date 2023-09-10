@@ -33,20 +33,10 @@ return {
         "vim",
     },
 
-    formatters = {
-        "eslint",
-        "lua_ls",
-        "jsonls",
-        "pylance",
-        "pyright",
-        "tsserver",
-    },
-
     progress = {
         "copilot",
         "lua_ls",
         "ltex",
-        "null-ls",
         "pylance",
         "pyright",
         "ruff_lsp",

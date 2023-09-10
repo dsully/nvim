@@ -6,7 +6,6 @@ return {
         sources = {
             ["copilot"] = { ignore = true },
             ["ltex"] = { ignore = true },
-            ["null-ls"] = { ignore = true },
             ["pylance"] = { ignore = true },
             ["pyright"] = { ignore = true },
             ["ruff_lsp"] = { ignore = true },

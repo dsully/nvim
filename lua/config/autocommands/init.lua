@@ -146,7 +146,6 @@ vim.api.nvim_create_autocmd({ "BufReadPost", "FileReadPost" }, {
 
 vim.api.nvim_create_autocmd({ "BufReadPost", "FileReadPost" }, {
     callback = function(args)
-
         local stat = vim.uv.fs_stat(args.file)
 
         if not stat or stat.size < vim.g.large_file_size then

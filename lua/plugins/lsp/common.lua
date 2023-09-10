@@ -60,18 +60,6 @@ M.on_attach = function(client, buffer)
         vim.keymap.set("n", "gD", vim.lsp.buf.declaration, { desc = "󰁴 Go To Declaration" })
     end
 
-    if client.server_capabilities.documentFormattingProvider then
-        vim.keymap.set("n", "<space>f", function()
-            vim.lsp.buf.format({
-                bufnr = vim.api.nvim_get_current_buf(),
-                -- Let null-ls handle formatting instead of these language servers.
-                filter = function(c)
-                    return not vim.tbl_contains(require("config.ignored").formatters, c.name)
-                end,
-            })
-        end, { desc = "󰛗 Format" })
-    end
-
     if client.server_capabilities.inlayHintProvider then
         vim.keymap.set("n", "<space>i", function()
             vim.lsp.inlay_hint(buffer)
@@ -152,7 +140,6 @@ end
 M.find_root = function()
     local root_patterns = {
         ".chezmoiroot",
-        ".null-ls-root",
         ".stylua.toml",
         "configure",
         "package.json",
@@ -175,8 +162,8 @@ M.find_root = function()
     local cwd = vim.uv.cwd()
 
     if path then
-        for _, client in pairs(vim.lsp.get_active_clients({ bufnr = 0 })) do
-            if not vim.tbl_contains({ "copilot", "null-ls" }, client.name) then
+        for _, client in pairs(vim.lsp.get_clients({ bufnr = 0 })) do
+            if not vim.tbl_contains({ "copilot" }, client.name) then
                 local workspace = client.config.workspace_folders
 
                 local paths = workspace and vim.tbl_map(function(ws)

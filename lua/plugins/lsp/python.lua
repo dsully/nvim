@@ -141,23 +141,6 @@ M.black_args = function()
     return black_args_from_pyproject() or black_args_from_build_gradle() or {}
 end
 
--- null-ls formatter to use blackd-client if it exists.
-M.blackd = function()
-    local null_ls = require("null-ls")
-    local helpers = require("null-ls.helpers")
-
-    return helpers.make_builtin({
-        name = "blackd",
-        method = null_ls.methods.FORMATTING,
-        filetypes = { "python" },
-        generator_opts = {
-            command = "blackd-client",
-            to_stdin = true,
-        },
-        factory = helpers.formatter_factory,
-    })
-end
-
 -- Automate the installation of pylsp modules in it's virtualenv.
 M.mason_post_install = function(pkg)
     if pkg.name ~= "python-lsp-server" then

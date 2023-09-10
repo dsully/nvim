@@ -1,8 +1,26 @@
 local common = require("plugins.lsp.common")
 
+local mason_tools = {
+    "actionlint",
+    "codelldb",
+    "curlylint",
+    "delve",
+    "gitlint",
+    "gitui",
+    "glow",
+    "markdownlint",
+    "rstcheck",
+    "shellcheck",
+    "yamllint",
+}
+
 local servers = {
     bashls = {
         filetypes = { "bash", "sh", "zsh" },
+    },
+    -- https://github.com/biomejs/biome
+    biome = {
+        cmd = { "biome", "lsp-proxy", "--config-path", vim.env.XDG_CONFIG_HOME },
     },
     bufls = {},
     cmake = {},
@@ -254,11 +272,6 @@ local servers = {
     --     })
     -- end,
 
-    -- https://github.com/biomejs/biome
-    rome = {
-        cmd = { "biome", "lsp-proxy", "--config-path", vim.env.XDG_CONFIG_HOME },
-    },
-
     ruff_lsp = function()
         require("lspconfig").ruff_lsp.setup({
             capabilities = common.capabilities(),
@@ -499,11 +512,11 @@ return {
             vim.lsp.set_log_level(vim.log.levels.ERROR)
 
             vim.api.nvim_create_user_command("LspCapabilities", function()
-                local clients = vim.lsp.get_active_clients({ bufnr = vim.api.nvim_get_current_buf() })
+                local clients = vim.lsp.get_clients({ bufnr = vim.api.nvim_get_current_buf() })
                 local lines = {}
 
                 for i, client in pairs(clients) do
-                    if not vim.tbl_contains({ "copilot", "null-ls" }, client.name) then
+                    if not vim.tbl_contains({ "copilot" }, client.name) then
                         table.insert(lines, "# " .. client.name:upper())
                         table.insert(lines, "```lua")
 
@@ -589,14 +602,6 @@ return {
         event = { "BufReadPre", "BufNewFile" },
     },
     {
-        "jay-babu/mason-null-ls.nvim",
-        dependencies = { "mason.nvim", "null-ls.nvim" },
-        event = "VeryLazy",
-        opts = {
-            automatic_installation = true,
-        },
-    },
-    {
         "WhoIsSethDaniel/mason-tool-installer.nvim",
         cmd = {
             "MasonToolsInstall",
@@ -607,12 +612,7 @@ return {
             require("mason-tool-installer").setup({
                 auto_update = true,
                 debounce_hours = 24,
-                ensure_installed = {
-                    "codelldb",
-                    "delve",
-                    "gitui",
-                    "glow",
-                },
+                ensure_installed = mason_tools,
             })
 
             vim.defer_fn(function()
