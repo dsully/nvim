@@ -11,7 +11,7 @@ return {
         {
             "<leader>xx",
             function()
-                vim.cmd.TroubleToggle()
+                require("trouble").toggle()
             end,
             desc = " Trouble",
         },

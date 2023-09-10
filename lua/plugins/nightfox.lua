@@ -108,7 +108,7 @@ return {
         }
 
         local groups = {
-            -- Override some default nordfox colors.
+            -- Override some default Nordfox colors.
             DiagnosticVirtualTextError = { link = "DiagnosticError" },
             DiagnosticVirtualTextWarn = { link = "DiagnosticWarn" },
             DiagnosticVirtualTextInfo = { link = "DiagnosticInfo" },
@@ -150,6 +150,7 @@ return {
 
             CmpDocumentation = { fg = colors.white },
             CmpDocumentationBorder = { fg = colors.gray.bright },
+            CmpGhostText = { link = "Comment" },
             CmpItemAbbr = { fg = colors.white.dim },
             CmpItemKindDefault = { fg = colors.white.dim },
 
