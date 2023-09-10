@@ -14,6 +14,9 @@ return {
     -- Log file syntax highlighting.
     { "MTDL9/vim-log-highlighting", event = { "BufReadPre" } },
 
+    -- Justfile, as the treesitter parser is rough.
+    { "NoahTheDuke/vim-just", event = { "BufReadPre" } },
+
     -- Markdown helper.
     { "oncomouse/markdown.nvim", ft = "markdown", opts = {} },
 
