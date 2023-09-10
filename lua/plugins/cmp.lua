@@ -163,6 +163,9 @@ return {
                 disallow_partial_matching = true,
                 disallow_prefix_unmatching = false,
             },
+            performance = {
+                max_view_entries = 100,
+            },
             preselect = cmp.PreselectMode.Item,
             snippet = {
                 expand = function(args)
@@ -171,8 +174,6 @@ return {
             },
             sorting = {
                 comparators = {
-                    require("copilot_cmp.comparators").prioritize,
-                    require("copilot_cmp.comparators").score,
                     cmp.config.compare.score,
                     cmp.config.compare.exact,
                     function(entry1, entry2)
@@ -199,13 +200,14 @@ return {
                         return priority2 < priority1
                     end,
                     cmp.config.compare.recently_used,
+                    require("copilot_cmp.comparators").prioritize,
+                    require("copilot_cmp.comparators").score,
                 },
                 -- Keep priority weight at 2 for much closer matches to appear above Copilot.
                 -- Set to 1 to make Copilot always appear on top.
-                priority_weight = 1,
+                priority_weight = 2,
             },
             sources = cmp.config.sources({
-                { name = "luasnip", group_index = 1 },
                 {
                     name = "nvim_lsp",
                     -- https://github.com/hrsh7th/nvim-cmp/pull/1067
@@ -215,12 +217,22 @@ return {
                         return not vim.tbl_contains({ "Snippet" }, require("cmp.types").lsp.CompletionItemKind[entry:get_kind()])
                     end,
                     group_index = 1,
+                    priority_weight = 120,
                 },
-                { name = "copilot", group_index = 1 },
-                { name = "async_path" },
+                {
+                    name = "luasnip",
+                    group_index = 1,
+                    priority_weight = 100,
+                },
+                -- { name = "copilot", group_index = 2 },
+                {
+                    name = "async_path",
+                    group_index = 1,
+                    priority_weight = 90,
+                },
                 {
                     name = "buffer",
-                    group_index = 2,
+                    group_index = 3,
                     keyword_length = 5,
                     option = {
                         -- Complete from visible buffers, as opposed to just the current buffer.
@@ -232,6 +244,7 @@ return {
                             return vim.tbl_keys(buffers)
                         end,
                     },
+                    priority_weight = 50,
                 },
             }),
             view = {
