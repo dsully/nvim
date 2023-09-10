@@ -84,7 +84,7 @@ vim.g.os = vim.uv.os_uname().sysname
 -- Preferences
 vim.g.border = "single"
 
--- Flag for disabling null-ls and others for large files.
+-- Flag for disabling language servers for large files.
 vim.g.large_file = false
 vim.g.large_file_size = 1024 * 512
 
