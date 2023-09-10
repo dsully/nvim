@@ -152,6 +152,8 @@ return {
             CmpDocumentationBorder = { fg = colors.gray.bright },
             CmpGhostText = { link = "Comment" },
             CmpItemAbbr = { fg = colors.white.dim },
+            CmpItemAbbrMatch = { fg = colors.blue.base, bg = "NONE", style = "bold" },
+            CmpItemAbbrMatchFuzzy = { fg = colors.blue.base, bg = "NONE", style = "bold" },
             CmpItemKindDefault = { fg = colors.white.dim },
 
             CmpItemMenu = { fg = colors.magenta },
