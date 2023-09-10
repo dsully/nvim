@@ -93,8 +93,11 @@ return {
                             end
 
                             params.newName = input
-                            local handler = client.handlers["textDocument/rename"] or vim.lsp.handlers["textDocument/rename"]
-                            client.request("textDocument/rename", params, handler, ctx.bufnr)
+
+                            if client then
+                                local handler = client.handlers["textDocument/rename"] or vim.lsp.handlers["textDocument/rename"]
+                                client.request("textDocument/rename", params, handler, ctx.bufnr)
+                            end
                         end)
                     end
                 end
