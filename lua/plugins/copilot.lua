@@ -7,7 +7,7 @@ return {
             c = true,
             cpp = true,
             fish = true,
-            got = true,
+            go = true,
             html = true,
             java = true,
             javascript = true,
