@@ -125,7 +125,7 @@ return {
                             return " " .. (status.message or "")
                         end,
                         cond = function()
-                            return #vim.lsp.get_active_clients({ name = "copilot", bufnr = 0 }) > 0
+                            return #vim.lsp.get_clients({ name = "copilot", bufnr = 0 }) > 0
                         end,
                         color = function()
                             local function highlight(name)

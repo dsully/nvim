@@ -1,5 +1,6 @@
 return {
     "SmiteshP/nvim-navic",
+    event = "VeryLazy",
     init = function()
         vim.g.navic_silence = true
     end,
