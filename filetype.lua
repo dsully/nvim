@@ -39,7 +39,9 @@ vim.filetype.add({
     },
     pattern = {
         ["*Caddyfile*"] = "caddyfile",
-        [".*requirements*.in"] = "requirements",
-        [".*requirements*.txt"] = "requirements",
+        [".*/.github/workflows/.*%.yaml"] = "yaml.ghaction",
+        [".*/.github/workflows/.*%.yml"] = "yaml.ghaction",
+        [".*requirements%.in"] = "requirements",
+        [".*requirements%.txt"] = "requirements",
     },
 })
