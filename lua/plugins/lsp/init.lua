@@ -436,7 +436,14 @@ local servers = {
                 kubernetes = { enabled = false },
             },
             lspconfig = {
-                capabilities = common.capabilities(),
+                capabilities = vim.tbl_extend("force", common.capabilities(), {
+                    textDocument = {
+                        foldingRange = {
+                            dynamicRegistration = false,
+                            lineFoldingOnly = true,
+                        },
+                    },
+                }),
                 on_attach = common.on_attach,
                 settings = {
                     yaml = {
@@ -458,6 +465,7 @@ local servers = {
                         schemaStore = {
                             enable = false,
                         },
+                        validate = true,
                     },
                 },
             },
