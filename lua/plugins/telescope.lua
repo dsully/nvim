@@ -110,7 +110,7 @@ return {
                     sort_mru = true,
                 },
                 find_files = {
-                    find_command = { "fd", "--type", "f", "--color", "never", "--no-require-git", "--strip-cwd-prefix" },
+                    find_command = { "fd", "--type", "f", "--color", "never", "--strip-cwd-prefix" },
                     sorting_strategy = "ascending",
                     hidden = true,
                     prompt_prefix = "   ",
