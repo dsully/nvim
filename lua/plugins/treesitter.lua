@@ -35,28 +35,6 @@ return {
                 used_by = { "gohtmltmpl", "gotexttmpl", "gotmpl" },
             }
 
-            -- Python requirements.txt
-            parser.requirements = {
-                install_info = {
-                    url = "https://github.com/otherJL0/tree-sitter-requirements",
-                    files = { "src/parser.c" },
-                    branch = "main",
-                    revision = "515679d20b30173320c9672efc9347d1b5519fd5",
-                },
-                filetype = "requirements",
-            }
-
-            parser.xml = {
-                install_info = {
-                    url = "https://github.com/Trivernis/tree-sitter-xml",
-                    -- https://github.com/lucascool12/tree-sitter-xml
-                    files = { "src/parser.c" },
-                    generate_requires_npm = true,
-                    branch = "main",
-                    revision = "3ef1d1a92ba91445c5b4bf50a300bb61e9c9ae8a",
-                },
-            }
-
             -- Treat Brewfiles as Ruby for syntax highlighting.
             vim.treesitter.language.register("ruby", "Brewfile")
             vim.treesitter.language.register("bash", "sh")
