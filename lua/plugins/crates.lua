@@ -2,7 +2,6 @@ return {
     "Saecki/crates.nvim",
     config = function()
         require("crates").setup({
-            null_ls = { enabled = true },
             popup = {
                 autofocus = true,
                 border = vim.g.border,
@@ -16,7 +15,7 @@ return {
         require("cmp").setup.buffer({
             sources = {
                 { name = "crates" },
-                { name = "path" },
+                { name = "async_path" },
                 { name = "buffer" },
             },
         })
