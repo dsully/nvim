@@ -123,17 +123,11 @@ return {
                 highlight = { enable = true },
 
                 -- Let nvim-yati do indentation.
-                indent = { enable = true, disable = { "python" } },
+                indent = { enable = true, disable = { "lua", "python" } },
 
-                -- Use treesitter to autoclose and autorename HTML tags.
+                -- Use treesitter to auto-close and auto-rename HTML tags.
                 -- https://github.com/windwp/nvim-ts-autotag
                 autotag = { enable = true },
-
-                -- https://github.com/JoosepAlviste/nvim-ts-context-commentstring
-                context_commentstring = {
-                    enable = true,
-                    enable_autocmd = false, -- for Comment.nvim integration
-                },
 
                 -- https://github.com/RRethy/nvim-treesitter-endwise
                 endwise = { enable = true },
