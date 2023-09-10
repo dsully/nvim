@@ -26,9 +26,12 @@ M.groups = {
 }
 
 M.on_attach = function(client, buffer)
+    local methods = vim.lsp.protocol.Methods
+
     --
     -- https://github.com/neovim/nvim-lspconfig/wiki/UI-Customization#highlight-symbol-under-cursor
-    if client.server_capabilities.documentHighlightProvider then
+
+    if client.supports_method(methods.textDocument_documentHighlight) then
         vim.api.nvim_create_autocmd({ "CursorHold", "CursorHoldI" }, {
             group = M.groups.lsp_highlight,
             buffer = buffer,
@@ -47,16 +50,16 @@ M.on_attach = function(client, buffer)
     vim.keymap.set("n", "<leader>xr", vim.diagnostic.reset, { desc = " Reset" })
     vim.keymap.set("n", "<leader>xs", vim.diagnostic.open_float, { desc = "󰙨 Show" })
 
-    if client.server_capabilities.signatureHelpProvider then
+    if client.supports_method(methods.textDocument_signatureHelp) then
         vim.keymap.set("n", "<leader>ch", vim.lsp.buf.signature_help, { desc = "󰞂 Signature Help" })
         vim.keymap.set("i", "<C-k>", vim.lsp.buf.signature_help, { desc = "󰞂 Signature Help" })
     end
 
-    if client.server_capabilities.declarationProvider then
+    if client.supports_method(methods.textDocument_declaration) then
         vim.keymap.set("n", "gD", vim.lsp.buf.declaration, { desc = "󰁴 Go To Declaration" })
     end
 
-    if client.server_capabilities.inlayHintProvider then
+    if client.supports_method(methods.textDocument_inlayHint) then
         vim.keymap.set("n", "<space>i", function()
             vim.lsp.inlay_hint(buffer)
         end, { desc = " Toggle Inlay Hints" })
@@ -64,19 +67,19 @@ M.on_attach = function(client, buffer)
         vim.lsp.inlay_hint(buffer, false)
     end
 
-    if client.server_capabilities.codeActionProvider then
+    if client.supports_method(methods.textDocument_codeAction) then
         vim.keymap.set({ "n", "x" }, "<leader>ca", require("actions-preview").code_actions, { desc = "󰅯 Actions" })
     end
 
     -- https://github.com/smjonas/inc-rename.nvim
-    if client.server_capabilities.renameProvider then
+    if client.supports_method(methods.textDocument_rename) then
         vim.keymap.set("n", "<leader>cr", function()
             --
             return ":" .. require("inc_rename").config.cmd_name .. " " .. vim.fn.expand("<cword>")
         end, { desc = "  Rename", expr = true })
     end
 
-    if client.server_capabilities.codeLensProvider then
+    if client.supports_method(methods.textDocument_codeLens) then
         --
         vim.api.nvim_create_autocmd({ "BufEnter", "InsertLeave", "BufWritePost" }, {
             desc = "LSP Code Lens Refresh",
@@ -88,29 +91,29 @@ M.on_attach = function(client, buffer)
     end
 
     -- Telescope based finders.
-    if client.server_capabilities.definitionProvider then
+    if client.supports_method(methods.textDocument_definition) then
         vim.keymap.set("n", "gd", vim.lsp.buf.definition, { desc = "󰁴 Go To Definition(s)" })
     end
 
-    if client.server_capabilities.implementationProvider then
+    if client.supports_method(methods.textDocument_implementation) then
         vim.keymap.set("n", "gi", function()
             vim.cmd.Telescope("lsp_implementations")
         end, { desc = "󰘲 Go To Implementations(s)" })
     end
 
-    if client.server_capabilities.referencesProvider then
+    if client.supports_method(methods.textDocument_references) then
         vim.keymap.set("n", "<leader>fR", function()
             vim.cmd.Telescope("lsp_references")
         end, { desc = "󰆋 References" })
     end
 
-    if client.server_capabilities.documentSymbolProvider then
+    if client.supports_method(methods.textDocument_documentSymbol) then
         vim.keymap.set("n", "<leader>fS", function()
             vim.cmd.Telescope("lsp_document_symbols")
         end, { desc = "󰆋 Symbols" })
     end
 
-    if client.server_capabilities.workspaceSymbolProvider then
+    if client.supports_method(methods.workspace_symbol) then
         vim.keymap.set("n", "<leader>fW", function()
             vim.cmd.Telescope("lsp_dynamic_workspace_symbols")
         end, { desc = "󰆋 Workspace Symbols" })
