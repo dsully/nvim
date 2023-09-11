@@ -23,8 +23,6 @@ return {
                 html = { prettier },
                 javascript = { prettier },
                 javascriptreact = { prettier },
-                json = { prettier },
-                jsonc = { prettier },
                 just = { "just" },
                 lua = { "stylua" },
                 markdown = { prettier },
@@ -32,7 +30,6 @@ return {
                 sh = shell,
                 typescript = { prettier },
                 typescriptreact = { prettier },
-                yaml = { prettier },
                 zsh = shell,
             },
             formatters = {
