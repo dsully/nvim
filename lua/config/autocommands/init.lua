@@ -37,6 +37,17 @@ vim.api.nvim_create_autocmd({ "FileType" }, {
     end,
 })
 
+vim.api.nvim_create_autocmd({ "BufHidden" }, {
+    desc = "Delete [No Name] buffers",
+    callback = function(event)
+        if event.file == "" and vim.bo[event.buf].buftype == "" and not vim.bo[event.buf].modified then
+            vim.schedule(function()
+                pcall(vim.api.nvim_buf_delete, event.buf, {})
+            end)
+        end
+    end,
+})
+
 vim.api.nvim_create_autocmd({ "BufReadCmd" }, {
     callback = function(args)
         vim.cmd.bdelete({ args.buf, bang = true })
