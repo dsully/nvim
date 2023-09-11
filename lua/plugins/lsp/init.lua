@@ -1,18 +1,7 @@
-local common = require("plugins.lsp.common")
+-- Enable fswatch for larger workspaces.
+require("plugins.lsp.workspace")
 
-local mason_tools = {
-    "actionlint",
-    "codelldb",
-    "curlylint",
-    "delve",
-    "gitlint",
-    "gitui",
-    "glow",
-    "markdownlint",
-    "rstcheck",
-    "shellcheck",
-    "yamllint",
-}
+local common = require("plugins.lsp.common")
 
 local servers = {
     bashls = {
@@ -587,6 +576,11 @@ return {
             -- Disable Python module installation of mypy & ruff for now.
             -- require("mason-registry"):on("package:install:success", require("plugins.lsp.python").mason_post_install)
         end,
+        dependencies = {
+            -- Needed so tools are installed properly.
+            "WhoIsSethDaniel/mason-tool-installer.nvim",
+            "williamboman/mason-lspconfig.nvim",
+        },
     },
     {
         "williamboman/mason-lspconfig.nvim",
@@ -622,15 +616,32 @@ return {
         },
         event = "VeryLazy",
         config = function()
-            require("mason-tool-installer").setup({
-                auto_update = true,
-                debounce_hours = 24,
-                ensure_installed = mason_tools,
-            })
+            local mason_tools = {
+                "codelldb",
+                "gitui",
+                "glow",
+            }
 
-            vim.defer_fn(function()
-                require("mason-tool-installer").run_on_start()
-            end, 2000)
+            -- Pull in linters and formatters.
+            for _, f in pairs(require("conform").list_all_formatters()) do
+                table.insert(mason_tools, f.command)
+            end
+
+            for _, f in pairs(require("lint").linters_by_ft) do
+                mason_tools = vim.tbl_extend("force", mason_tools, f)
+            end
+
+            -- These tools aren't in Mason
+            mason_tools = vim.tbl_filter(function(t)
+                return not vim.tbl_contains({ "fish", "fish_indent", "just", "typos" }, t)
+            end, mason_tools)
+
+            require("mason-tool-installer").setup({
+                auto_update = false,
+                debounce_hours = 0,
+                ensure_installed = mason_tools,
+                run_on_start = true,
+            })
         end,
     },
     {
