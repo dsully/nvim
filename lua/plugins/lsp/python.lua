@@ -148,26 +148,22 @@ M.mason_post_install = function(pkg)
     end
 
     local venv = require("mason-registry").get_package("python-lsp-server"):get_install_path() .. "/venv"
-    local job = require("plenary.job")
 
-    job:new({
-        command = venv .. "/bin/pip",
-        args = {
-            "install",
-            "-U",
-            "--disable-pip-version-check",
-            "pylsp-mypy",
-            "python-lsp-ruff",
-        },
+    vim.notify("Installing pylsp modules...")
+
+    vim.system({
+        venv .. "/bin/pip",
+        "install",
+        "-U",
+        "--disable-pip-version-check",
+        "pylsp-mypy",
+        "python-lsp-ruff",
+    }, {
         cwd = venv,
         env = { VIRTUAL_ENV = venv },
-        on_exit = function()
-            vim.notify("Finished installing pylsp modules.")
-        end,
-        on_start = function()
-            vim.notify("Installing pylsp modules...")
-        end,
-    }):start()
+    }, function()
+        vim.notify("Finished installing pylsp modules.")
+    end)
 end
 
 -- Config for pylsp-ruff as a Lua table.
@@ -203,7 +199,7 @@ M.ruff_config = function()
                         ---@type number
                         config[key] = tonumber(match)
                     else
-                        ---@type string
+                        ---@type table<string>
                         config["ignore"] = vim.tbl_deep_extend("force", config["ignore"], exclude_ignores(vim.split(match, "%s*,%s*")))
                     end
                 end

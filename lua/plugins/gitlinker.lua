@@ -13,7 +13,7 @@ return {
             function()
                 return require("gitlinker").get_buf_range_url("n", {
                     action_callback = function(url)
-                        require("plenary.job"):new({ command = vim.g.opener, args = { "--background", url } }):start()
+                        vim.system({ vim.g.opener, "--background", url })
                     end,
                 })
             end,

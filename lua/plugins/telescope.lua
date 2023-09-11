@@ -3,7 +3,6 @@ return {
     cmd = "Telescope",
     config = function()
         local actions = require("telescope.actions")
-        local job = require("plenary.job")
         local previewers = require("telescope.previewers")
         local telescope = require("telescope")
 
@@ -12,6 +11,7 @@ return {
         end
 
         local new_maker = function(filepath, bufnr, opts)
+            ---@type string
             filepath = vim.fn.expand(filepath)
 
             vim.uv.fs_stat(filepath, function(_, stat)
@@ -21,21 +21,17 @@ return {
                 end
             end)
 
-            job:new({
-                command = "file",
-                args = { "--mime-type", "-b", filepath },
-                on_exit = function(j)
-                    local mime_type = vim.split(j:result()[1], "/")[1]
+            vim.system({ "file", "--mime-type", "-b", filepath }, { text = true }, function(j)
+                local mime_type = vim.split(j.stdout, "/")[1]
 
-                    if mime_type == "text" then
-                        previewers.buffer_previewer_maker(filepath, bufnr, opts or {})
-                    else
-                        vim.schedule(function()
-                            vim.api.nvim_buf_set_lines(bufnr, 0, -1, false, { string.format("--- %s ---", mime_type) })
-                        end)
-                    end
-                end,
-            }):sync()
+                if mime_type == "text" then
+                    previewers.buffer_previewer_maker(filepath, bufnr, opts or {})
+                else
+                    vim.schedule(function()
+                        vim.api.nvim_buf_set_lines(bufnr, 0, -1, false, { string.format("--- %s ---", mime_type) })
+                    end)
+                end
+            end)
         end
 
         telescope.setup({
