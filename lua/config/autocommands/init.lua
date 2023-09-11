@@ -106,9 +106,9 @@ vim.api.nvim_create_autocmd({ "BufReadCmd" }, {
             --
             -- A partial path almost always comes from git.
             -- Find the root, then strip off the parent path.
-            local root = vim.fn.systemlist("git rev-parse --show-toplevel")[1] or cwd
+            local root = vim.system({ "git", "rev-parse", "--show-toplevel" }, { cwd = cwd, text = true }):wait().stdout
 
-            fqfn = root .. "/" .. path
+            fqfn = vim.trim(root or cwd) .. "/" .. path
 
             if vim.uv.fs_stat(fqfn) then
                 path = fqfn
