@@ -36,6 +36,15 @@ vim.keymap.set("n", "dd", function()
     return "dd"
 end, { noremap = true, expr = true })
 
+-- Create/edit file within the current directory
+vim.keymap.set("n", "<localleader><localleader>e", function()
+    return vim.ui.input({ prompt = "Save as: " }, function(name)
+        if name then
+            vim.cmd.edit(("%s/%s"):format(vim.fs.dirname(vim.api.nvim_buf_get_name(0)), name))
+        end
+    end)
+end, { silent = true, expr = false, desc = "Create/edit file relative to current document" })
+
 vim.api.nvim_create_autocmd({ "FileType" }, {
     desc = "Keymap for removing backslashes when joining lines.",
     pattern = { "bash", "fish", "make", "sh", "zsh" },
