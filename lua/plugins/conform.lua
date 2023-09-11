@@ -26,7 +26,7 @@ return {
                 just = { "just" },
                 lua = { "stylua" },
                 markdown = { prettier },
-                python = { black, "isort" },
+                python = { black },
                 sh = shell,
                 typescript = { prettier },
                 typescriptreact = { prettier },
