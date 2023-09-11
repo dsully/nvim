@@ -49,7 +49,7 @@ function M.open(lines, opts)
 
     vim.api.nvim_set_option_value("conceallevel", 3, { scope = "local", win = win })
     vim.api.nvim_set_option_value("spell", opts.spell, { scope = "local", win = win })
-    vim.api.nvim_set_option_value("filetype", opts.filetype, { scope = "local", win = win })
+    vim.api.nvim_set_option_value("filetype", opts.filetype, { scope = "local" })
 
     vim.api.nvim_set_option_value("winhl", ("Normal:%s"):format(opts.winhl), { scope = "local", win = win })
     vim.api.nvim_set_option_value("winhl", ("FloatBorder:%s"):format(opts.borderhl), { scope = "local", win = win })
