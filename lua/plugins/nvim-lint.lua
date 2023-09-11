@@ -103,25 +103,32 @@ return {
         }
 
         lint.linters_by_ft = {
-            bash = { "shellcheck", "typos" },
-            c = { "typos" },
-            cpp = { "typos" },
-            fish = { "fish", "typos" },
-            ghaction = { "actionlint", "typos" },
-            gitcommit = { "gitlint", "typos" },
+            bash = { "shellcheck" },
+            c = {},
+            cpp = {},
+            fish = { "fish" },
+            ghaction = { "actionlint" },
+            gitcommit = { "gitlint" },
+            go = { "revive" },
             htmldjango = { "curlylint" },
-            java = { "typos" },
-            jinja = { "curlylint", "typos" },
-            json = { "typos" },
-            lua = { "typos" },
-            markdown = { "markdownlint", "typos" },
-            python = { "typos" }, -- "mypy", "ruff"
-            rst = { "rstcheck", "typos" },
-            rust = { "typos" },
-            sh = { "shellcheck", "typos" },
-            text = { "typos" },
-            yaml = { "typos", "yamllint" },
+            java = {},
+            jinja = { "curlylint" },
+            json = {},
+            lua = {},
+            markdown = { "markdownlint" },
+            protobuf = { "buf", "protolint" },
+            python = {}, -- "mypy", "ruff"
+            rst = { "rstcheck" },
+            rust = {},
+            sh = { "shellcheck" },
+            text = {},
+            yaml = { "yamllint" },
         }
+
+        -- Add typos to all the languages.
+        for name, _ in pairs(lint.linters_by_ft) do
+            table.insert(lint.linters_by_ft[name], "typos")
+        end
 
         vim.api.nvim_create_autocmd({ "BufEnter", "BufReadPost", "BufWritePost", "TextChanged", "InsertLeave" }, {
             callback = function(args)

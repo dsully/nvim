@@ -476,6 +476,13 @@ local servers = {
 return {
     {
         "neovim/nvim-lspconfig",
+        cmd = {
+            "Mason",
+            "MasonInstall",
+            "MasonUninstall",
+            "MasonToolsInstall",
+            "MasonToolsUpdate",
+        },
         config = function()
             --
             -- Jump directly to the first available definition every time.
@@ -550,41 +557,7 @@ return {
                     on_attach = common.on_attach,
                 })
             end
-        end,
-        dependencies = {
-            "folke/neodev.nvim",
-            opts = {
-                library = {
-                    plugins = false,
-                },
-                setup_jsonls = false,
-            },
-        },
-    },
-    -- Mason related packages follow.
-    {
-        "williamboman/mason.nvim",
-        build = ":MasonUpdate",
-        cmd = { "Mason", "MasonInstall", "MasonUninstall" },
-        config = function()
-            require("mason").setup({
-                ui = {
-                    border = vim.g.border,
-                },
-            })
 
-            -- Disable Python module installation of mypy & ruff for now.
-            -- require("mason-registry"):on("package:install:success", require("plugins.lsp.python").mason_post_install)
-        end,
-        dependencies = {
-            -- Needed so tools are installed properly.
-            "WhoIsSethDaniel/mason-tool-installer.nvim",
-            "williamboman/mason-lspconfig.nvim",
-        },
-    },
-    {
-        "williamboman/mason-lspconfig.nvim",
-        config = function()
             local handlers = {}
 
             for name, handler in pairs(servers) do
@@ -600,26 +573,11 @@ return {
                 end
             end
 
-            require("mason-lspconfig").setup({
-                automatic_installation = true,
-                ensure_installed = vim.tbl_keys(handlers),
-                handlers = handlers,
-            })
-        end,
-        event = { "BufReadPre", "BufNewFile" },
-    },
-    {
-        "WhoIsSethDaniel/mason-tool-installer.nvim",
-        cmd = {
-            "MasonToolsInstall",
-            "MasonToolsUpdate",
-        },
-        event = "VeryLazy",
-        config = function()
             local mason_tools = {
                 "codelldb",
                 "gitui",
                 "glow",
+                "pylance",
             }
 
             -- Pull in linters and formatters.
@@ -636,6 +594,28 @@ return {
                 return not vim.tbl_contains({ "fish", "fish_indent", "just", "typos" }, t)
             end, mason_tools)
 
+            require("mason").setup({
+                registries = {
+                    "lua:custom-registry",
+                    "github:mason-org/mason-registry",
+                },
+                ui = {
+                    border = vim.g.border,
+                },
+            })
+
+            require("custom-registry")
+            require("custom-registry.pylance")
+
+            -- Disable Python module installation of mypy & ruff for now.
+            -- require("mason-registry"):on("package:install:success", require("plugins.lsp.python").mason_post_install)
+
+            require("mason-lspconfig").setup({
+                automatic_installation = true,
+                ensure_installed = vim.tbl_keys(handlers),
+                handlers = handlers,
+            })
+
             require("mason-tool-installer").setup({
                 auto_update = false,
                 debounce_hours = 0,
@@ -643,6 +623,21 @@ return {
                 run_on_start = true,
             })
         end,
+        dependencies = {
+            {
+                "folke/neodev.nvim",
+                opts = {
+                    library = {
+                        plugins = false,
+                    },
+                    setup_jsonls = false,
+                },
+            },
+            "williamboman/mason-lspconfig.nvim",
+            "williamboman/mason.nvim",
+            "WhoIsSethDaniel/mason-tool-installer.nvim",
+        },
+        event = { "BufRead", "BufNewFile" },
     },
     {
         "aznhe21/actions-preview.nvim",
