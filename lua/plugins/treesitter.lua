@@ -107,6 +107,11 @@ return {
                 -- https://github.com/windwp/nvim-ts-autotag
                 autotag = { enable = true },
 
+                context_commentstring = {
+                    enable = true,
+                    enable_autocmd = false,
+                },
+
                 -- https://github.com/RRethy/nvim-treesitter-endwise
                 endwise = { enable = true },
 
