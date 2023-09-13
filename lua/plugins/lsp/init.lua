@@ -15,6 +15,7 @@ local servers = {
     cmake = {},
     cssls = {},
     dockerls = {},
+    dmypyls = {},
     esbonio = {}, -- RestructuredText
     graphql = {},
     html = {},
@@ -577,7 +578,6 @@ return {
                 "codelldb",
                 "gitui",
                 "glow",
-                "pylance",
             }
 
             -- Pull in linters and formatters.
@@ -594,18 +594,17 @@ return {
                 return not vim.tbl_contains({ "fish", "fish_indent", "just", "typos" }, t)
             end, mason_tools)
 
+            require("plugins.lsp.server_configurations.dmypyls")
+
             require("mason").setup({
                 registries = {
-                    "lua:custom-registry",
+                    "lua:plugins.lsp.mason",
                     "github:mason-org/mason-registry",
                 },
                 ui = {
                     border = vim.g.border,
                 },
             })
-
-            require("custom-registry")
-            require("custom-registry.pylance")
 
             -- Disable Python module installation of mypy & ruff for now.
             -- require("mason-registry"):on("package:install:success", require("plugins.lsp.python").mason_post_install)

@@ -143,27 +143,12 @@ end
 
 -- Automate the installation of pylsp modules in it's virtualenv.
 M.mason_post_install = function(pkg)
-    if pkg.name ~= "python-lsp-server" then
-        return
+    if pkg.name == "python-lsp-server" then
+        vim.notify("Installing pylsp modules...")
+
+        vim.cmd.PylspInstall("pylsp-mypy")
+        vim.cmd.PylspInstall("python-lsp-ruff")
     end
-
-    local venv = require("mason-registry").get_package("python-lsp-server"):get_install_path() .. "/venv"
-
-    vim.notify("Installing pylsp modules...")
-
-    vim.system({
-        venv .. "/bin/pip",
-        "install",
-        "-U",
-        "--disable-pip-version-check",
-        "pylsp-mypy",
-        "python-lsp-ruff",
-    }, {
-        cwd = venv,
-        env = { VIRTUAL_ENV = venv },
-    }, function()
-        vim.notify("Finished installing pylsp modules.")
-    end)
 end
 
 -- Config for pylsp-ruff as a Lua table.
