@@ -2,7 +2,7 @@ local Pkg = require("mason-core.package")
 local pip3 = require("mason-core.managers.pip3")
 
 return Pkg.new({
-    name = "dmypy-ls",
+    name = "dmypyls",
     desc = "super fast mypy language server",
     homepage = "https://pypi.org/project/dmypy-ls/",
     languages = { Pkg.Lang.Python },
