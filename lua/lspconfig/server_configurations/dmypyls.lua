@@ -1,4 +1,4 @@
-require("lspconfig.configs").dmypyls = {
+return {
     default_config = {
         cmd = { "dmypy-ls" },
         filetypes = { "python" },
@@ -17,6 +17,3 @@ require("lspconfig.configs").dmypyls = {
         single_file_support = true,
     },
 }
-
-require("mason-lspconfig.mappings.server").lspconfig_to_package["dmypyls"] = "dmypy-ls"
-require("mason-lspconfig.mappings.server").package_to_lspconfig["dmypy-ls"] = "dmypyls"

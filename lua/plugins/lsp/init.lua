@@ -170,9 +170,6 @@ local servers = {
         },
     },
     pylsp = {
-        before_init = function(_, config)
-            config.settings.pylsp.plugins.ruff = require("plugins.lsp.python").ruff_config()
-        end,
         cmd = { "pylsp", "--check-parent-process" },
         settings = {
             pylsp = {
@@ -190,77 +187,71 @@ local servers = {
                     preload = { enabled = false },
                     pycodestyle = { enabled = false },
                     pyflakes = { enabled = false },
-                    pylsp_mypy = {
-                        enabled = true,
-                        live_mode = true,
-                        report_progress = true,
-                        dmypy = true,
-                    },
                     yapf = { enabled = false },
                 },
             },
         },
     },
 
-    -- pylance = function()
-    --     require("lspconfig").pylance.setup({
-    --         before_init = function(_, config)
-    --             local path = require("lspconfig/util").path
-    --             config.settings.python.analysis.stubPath = path.join(vim.fn.stdpath("data"), "lazy", "python-type-stubs")
-    --         end,
-    --         capabilities = common.capabilities(),
-    --         on_attach = function(client, ...)
-    --             -- Disable capabilities that are better handled by pylsp
-    --             client.server_capabilities.renameProvider = false -- Use Rope.
-    --             client.server_capabilities.hoverProvider = false -- pylsp includes docstrings
-    --             client.server_capabilities.signatureHelpProvider = false -- pyright typing of signature is weird
-    --             client.server_capabilities.definitionProvider = false -- pyright does not follow imports correctly
-    --             client.server_capabilities.referencesProvider = false
-    --             client.server_capabilities.completionProvider = {
-    --                 resolveProvider = true,
-    --                 triggerCharacters = { "." },
-    --             }
-    --             common.on_attach(client, ...)
-    --         end,
-    --         on_new_config = function(config, root)
-    --             config.settings.python.pythonPath = vim.fn.exepath("python3") or vim.fn.exepath("python") or "python"
-    --
-    --             -- PEP 582 support
-    --             local pypackages = require("lspconfig.util").path.join(root, "__pypackages__", "lib")
-    --
-    --             if vim.uv.fs_stat(pypackages) then
-    --                 config.settings.python.analysis.extraPaths = { pypackages }
-    --             end
-    --         end,
-    --         settings = {
-    --             python = {
-    --                 -- https://github.com/microsoft/pyright/blob/main/docs/configuration.md
-    --                 -- https://github.com/microsoft/pyright/blob/main/docs/settings.md
-    --                 analysis = {
-    --                     autoImportCompletions = true,
-    --                     autoSearchPaths = true,
-    --                     diagnosticMode = "openFilesOnly",
-    --                     diagnosticSeverityOverrides = {
-    --                         reportImportCycles = "none",
-    --                         reportMissingImports = "none",
-    --                         reportMissingTypeStubs = "none",
-    --                         reportPrivateUsage = "none",
-    --                         reportUnknownMemberType = "none",
-    --                         reportUnknownVariableType = "none",
-    --                         reportUnusedImport = "none",
-    --                     },
-    --                     inlayHints = {
-    --                         variableTypes = true,
-    --                         functionReturnTypes = true,
-    --                     },
-    --                     typeCheckingMode = "off", -- off, basic or strict
-    --                     useLibraryCodeForTypes = false,
-    --                 },
-    --                 disableOrganizeImports = true, -- Use isort or ruff instead.
-    --             },
-    --         },
-    --     })
-    -- end,
+    pylance = function()
+        require("lspconfig").pylance.setup({
+            before_init = function(_, config)
+                local path = require("lspconfig/util").path
+                config.settings.python.analysis.stubPath = path.join(vim.fn.stdpath("data"), "lazy", "python-type-stubs")
+            end,
+            capabilities = common.capabilities(),
+            on_attach = function(client, ...)
+                -- Disable capabilities that are better handled by pylsp
+                client.server_capabilities.renameProvider = false -- Use Rope.
+                client.server_capabilities.hoverProvider = false -- pylsp includes docstrings
+                client.server_capabilities.signatureHelpProvider = false -- pyright typing of signature is weird
+                client.server_capabilities.definitionProvider = false -- pyright does not follow imports correctly
+                client.server_capabilities.referencesProvider = false
+                client.server_capabilities.completionProvider = {
+                    resolveProvider = true,
+                    triggerCharacters = { "." },
+                }
+                common.on_attach(client, ...)
+            end,
+            on_new_config = function(config, root)
+                config.settings.python.pythonPath = vim.fn.exepath("python3") or vim.fn.exepath("python") or "python"
+
+                -- PEP 582 support
+                local pypackages = require("lspconfig.util").path.join(root, "__pypackages__", "lib")
+
+                if vim.uv.fs_stat(pypackages) then
+                    config.settings.python.analysis.extraPaths = { pypackages }
+                end
+            end,
+            settings = {
+                python = {
+                    -- https://github.com/microsoft/pyright/blob/main/docs/configuration.md
+                    -- https://github.com/microsoft/pyright/blob/main/docs/settings.md
+                    analysis = {
+                        autoImportCompletions = true,
+                        autoSearchPaths = true,
+                        diagnosticMode = "openFilesOnly",
+                        diagnosticSeverityOverrides = {
+                            reportImportCycles = "none",
+                            reportMissingImports = "none",
+                            reportMissingTypeStubs = "none",
+                            reportPrivateUsage = "none",
+                            reportUnknownMemberType = "none",
+                            reportUnknownVariableType = "none",
+                            reportUnusedImport = "none",
+                        },
+                        inlayHints = {
+                            variableTypes = true,
+                            functionReturnTypes = true,
+                        },
+                        typeCheckingMode = "off", -- off, basic or strict
+                        useLibraryCodeForTypes = false,
+                    },
+                    disableOrganizeImports = true, -- Use isort or ruff instead.
+                },
+            },
+        })
+    end,
 
     ruff_lsp = function()
         require("lspconfig").ruff_lsp.setup({
@@ -593,8 +584,6 @@ return {
             mason_tools = vim.tbl_filter(function(t)
                 return not vim.tbl_contains({ "fish", "fish_indent", "just", "typos" }, t)
             end, mason_tools)
-
-            require("plugins.lsp.server_configurations.dmypyls")
 
             require("mason").setup({
                 registries = {
