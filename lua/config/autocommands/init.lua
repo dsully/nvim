@@ -283,3 +283,21 @@ vim.api.nvim_create_autocmd({ "BufWriteCmd" }, {
         vim.opt_local.modified = false
     end,
 })
+
+vim.api.nvim_create_autocmd("BufWritePost", {
+    callback = function(args)
+        --- @type string
+        local file = args.file
+
+        file = file:gsub(".-/chezmoi%-edit%d+", vim.env.HOME)
+        file = file:gsub("dot_", ".")
+        file = file:gsub("private_", "")
+        file = file:gsub(".tmpl", "")
+
+        vim.notify("chezmoi: Applying changes to: " .. file, vim.log.DEBUG)
+
+        vim.system({ "chezmoi", "apply", "--no-tty", "--exclude", "scripts", file }):wait()
+    end,
+    desc = "Apply chezmoi changes via 'chezmoi edit'",
+    pattern = "*/chezmoi-edit*",
+})
