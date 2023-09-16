@@ -3,13 +3,21 @@ return {
     config = function()
         require("conform.formatters.black").args = require("plugins.lsp.python").black_args
 
+        require("conform.formatters.markdownlint").args = function()
+            return {
+                string.format("--config=%s/markdownlint/config.yaml", vim.env.XDG_CONFIG_HOME),
+                "--fix",
+                "$FILENAME",
+            }
+        end
+
         require("conform.formatters.shfmt").args = function()
-            return { "-i", "4", "-ci", "-s" }
+            return { "-i", "4", "-ci", "-s", "-filename", "$FILENAME" }
         end
 
         local black = { "blackd", "black" }
         local prettier = { "prettierd", "prettier" }
-        local shell = { "beautysh", "shellharden", "shfmt" }
+        local shell = { "beautysh", "shellcheck", "shellharden", "shfmt" }
 
         require("conform").setup({
             formatters_by_ft = {
@@ -21,15 +29,11 @@ return {
                 go = { "gofumpt", "goimports", "golines" },
                 graphql = { prettier },
                 html = { prettier },
-                javascript = { prettier },
-                javascriptreact = { prettier },
                 just = { "just" },
                 lua = { "stylua" },
-                markdown = { prettier },
+                markdown = { "markdownlint" },
                 python = { black },
                 sh = shell,
-                typescript = { prettier },
-                typescriptreact = { prettier },
                 zsh = shell,
             },
             formatters = {
