@@ -8,6 +8,12 @@ local s = luasnip.snippet
 local t = luasnip.text_node
 local sn = luasnip.snippet_node
 
+local date = function()
+    return {
+        os.date("%Y-%m-%d"),
+    }
+end
+
 -- documentation for snippet format inside examples:
 -- https://github.com/L3MON4D3/LuaSnip/blob/master/Examples/snippets.lua
 return {
@@ -17,6 +23,14 @@ return {
             return os.date("%D - %H:%M")
         end)
     ),
+
+    s({
+        trig = "today",
+        name = "Today",
+        dscr = "Today's date in YYYY-MM-DD",
+    }, {
+        t(date()),
+    }),
 
     s("todo", {
         c(1, {
