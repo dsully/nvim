@@ -164,12 +164,12 @@ return {
                     local luasnip = require("luasnip")
                     local neogen = require("neogen")
 
-                    if luasnip.expand_or_locally_jumpable() then
+                    if cmp.visible() and has_words_before() then
+                        cmp.select_next_item({ behavior = cmp.SelectBehavior.Select })
+                    elseif luasnip.expand_or_locally_jumpable() then
                         luasnip.expand_or_jump()
                     elseif neogen.jumpable() then
                         neogen.jump_next()
-                    elseif cmp.visible() and has_words_before() then
-                        cmp.select_next_item({ behavior = cmp.SelectBehavior.Select })
                     else
                         fallback()
                     end
@@ -204,6 +204,7 @@ return {
             },
             sorting = {
                 comparators = {
+                    cmp.config.compare.priority,
                     function(entry1, entry2)
                         if entry1.source.name ~= "nvim_lsp" then
                             if entry2.source.name == "nvim_lsp" then
@@ -242,6 +243,14 @@ return {
             },
             sources = cmp.config.sources({
                 {
+                    name = "luasnip",
+                    entry_filter = function()
+                        return not is_string_like()
+                    end,
+                    group_index = 0,
+                    priority = 150,
+                },
+                {
                     name = "nvim_lsp",
                     -- https://github.com/hrsh7th/nvim-cmp/pull/1067
                     --
@@ -274,14 +283,6 @@ return {
                     end,
                     group_index = 1,
                     priority = 120,
-                },
-                {
-                    name = "luasnip",
-                    entry_filter = function()
-                        return not is_string_like()
-                    end,
-                    group_index = 1,
-                    priority = 100,
                 },
                 {
                     name = "async_path",
@@ -340,7 +341,7 @@ return {
                 {
                     name = "copilot",
                     entry_filter = function()
-                        return not is_string_like()
+                        return not is_string_like() and not require("luasnip").in_snippet()
                     end,
                     group_index = 30,
                     priority = 70,
