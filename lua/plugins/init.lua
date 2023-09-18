@@ -23,6 +23,9 @@ return {
     -- Markdown helper.
     { "oncomouse/markdown.nvim", ft = "markdown", opts = {} },
 
+    -- PDL
+    { "hjdivad/vim-pdl", ft = "pdl" },
+
     -- Pattern replacement UI.
     { "AckslD/muren.nvim", event = "VeryLazy", opts = {} },
 
