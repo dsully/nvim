@@ -23,6 +23,7 @@ local servers = {
     lemminx = {}, -- XML
     marksman = {}, -- Markdown
     -- pylyzer",
+    starlark_rust = {},
     terraformls = {},
     clangd = function()
         -- https://github.com/p00f/clangd_extensions.nvim
