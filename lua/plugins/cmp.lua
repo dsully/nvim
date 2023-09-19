@@ -126,6 +126,12 @@ return {
 
                     kind.kind = string.format(" %s ", symbol_map.menu_icons[entry.source.name] or strings[1] or "")
 
+                    -- Remove duplicate entries, no matter the source.
+                    kind.dup = 0
+
+                    -- Trim leading space
+                    kind.abbr = string.gsub(kind.abbr, "^%s+", "")
+
                     if entry.source.name ~= "copilot" then
                         kind.menu = string.format("  %s: %s", symbol_map.cmp[entry.source.name] or "", strings[2] or "")
                     end
@@ -204,7 +210,6 @@ return {
             },
             sorting = {
                 comparators = {
-                    cmp.config.compare.priority,
                     function(entry1, entry2)
                         if entry1.source.name ~= "nvim_lsp" then
                             if entry2.source.name == "nvim_lsp" then
