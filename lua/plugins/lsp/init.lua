@@ -170,6 +170,7 @@ local servers = {
             },
         },
     },
+
     pylsp = {
         cmd = { "pylsp", "--check-parent-process" },
         settings = {
