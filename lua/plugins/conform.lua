@@ -1,7 +1,7 @@
 return {
     "stevearc/conform.nvim",
     config = function()
-        require("conform.formatters.black").args = require("plugins.lsp.python").black_args
+        require("conform.formatters.black").args = require("plugins.lsp.python").black_args()
 
         require("conform.formatters.markdownlint").args = function()
             return {
