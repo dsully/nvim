@@ -258,6 +258,30 @@ local servers = {
     ruff_lsp = function()
         require("lspconfig").ruff_lsp.setup({
             capabilities = common.capabilities(),
+            commands = {
+                RuffAutofix = {
+                    function()
+                        vim.lsp.buf.execute_command({
+                            command = "ruff.applyAutofix",
+                            arguments = {
+                                { uri = vim.uri_from_bufnr(0) },
+                            },
+                        })
+                    end,
+                    description = "Ruff: Fix all auto-fixable problems",
+                },
+                RuffOrganizeImports = {
+                    function()
+                        vim.lsp.buf.execute_command({
+                            command = "ruff.applyOrganizeImports",
+                            arguments = {
+                                { uri = vim.uri_from_bufnr(0) },
+                            },
+                        })
+                    end,
+                    description = "Ruff: Format imports",
+                },
+            },
             init_options = {
                 settings = {
                     args = require("plugins.lsp.python").ruff_args(),
