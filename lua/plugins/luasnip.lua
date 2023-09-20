@@ -2,13 +2,13 @@ return {
     "L3MON4D3/LuaSnip",
     cmd = { "LuaSnipEdit" },
     config = function()
-        local luasnip = require("luasnip")
+        local ls = require("luasnip")
         local types = require("luasnip.util.types")
 
         -- documentation for snippet format inside examples:
         -- https://github.com/L3MON4D3/LuaSnip/blob/master/Examples/snippets.lua
 
-        luasnip.config.set_config({
+        ls.config.set_config({
             history = true,
             -- Do not jump to snippet if I'm outside of it
             -- https://github.com/L3MON4D3/LuaSnip/issues/78
@@ -37,6 +37,9 @@ return {
         -- Snippets are stored in separate files.
         require("luasnip.loaders.from_lua").load({ paths = vim.api.nvim_get_runtime_file("lua/snippets", false)[1] })
 
+        -- Friendly snippets.
+        require("luasnip.loaders.from_vscode").lazy_load()
+
         -- Create a command to edit the snippet file associated with the current
         vim.api.nvim_create_user_command("LuaSnipEdit", require("luasnip.loaders.from_lua").edit_snippet_files, {})
 
@@ -51,5 +54,5 @@ return {
             end,
         })
     end,
-    -- dependencies = { "rafamadriz/friendly-snippets" },
+    dependencies = { "rafamadriz/friendly-snippets" },
 }
