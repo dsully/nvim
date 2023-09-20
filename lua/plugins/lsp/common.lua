@@ -52,7 +52,7 @@ M.on_attach = function(client, buffer)
 
     if client.supports_method(methods.textDocument_signatureHelp) then
         vim.keymap.set("n", "<leader>ch", vim.lsp.buf.signature_help, { desc = "󰞂 Signature Help" })
-        vim.keymap.set("i", "<C-k>", vim.lsp.buf.signature_help, { desc = "󰞂 Signature Help" })
+        vim.keymap.set("i", "<C-h>", vim.lsp.buf.signature_help, { desc = "󰞂 Signature Help" })
     end
 
     if client.supports_method(methods.textDocument_declaration) then
