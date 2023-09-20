@@ -126,8 +126,14 @@ return {
 
                     kind.kind = string.format(" %s ", symbol_map.menu_icons[entry.source.name] or strings[1] or "")
 
-                    -- Remove duplicate entries, no matter the source.
-                    kind.dup = 0
+                    -- Remove duplicate entries.
+                    kind.dup = ({
+                        buffer = 0,
+                        dictionary = 1,
+                        luasnip = 1,
+                        nvim_lsp = 1,
+                        path = 1,
+                    })[entry.source.name] or 0
 
                     -- Trim leading space
                     kind.abbr = string.gsub(kind.abbr, "^%s+", "")
@@ -146,12 +152,14 @@ return {
                 ghost_text = true,
             },
             formatting = format.normal,
-            mapping = cmp.mapping.preset.insert({
-                ["<C-c>"] = cmp.mapping.abort(),
+            mapping = cmp.mapping({
+                ["<C-a>"] = cmp.mapping.abort(),
                 ["<C-Space>"] = cmp.mapping.complete(),
-                ["<C-j>"] = cmp.mapping.select_next_item({ behavior = cmp.SelectBehavior.Select }),
-                ["<C-k>"] = cmp.mapping.select_prev_item({ behavior = cmp.SelectBehavior.Select }),
-                --
+                ["<C-n>"] = cmp.mapping.select_next_item({ behavior = cmp.SelectBehavior.Select }),
+                ["<C-p>"] = cmp.mapping.select_prev_item({ behavior = cmp.SelectBehavior.Select }),
+                ["<Up>"] = cmp.mapping.select_prev_item({ behavior = cmp.SelectBehavior.Select }),
+                ["<Down>"] = cmp.mapping.select_next_item({ behavior = cmp.SelectBehavior.Select }),
+
                 -- https://github.com/hrsh7th/nvim-cmp/wiki/Example-mappings#safely-select-entries-with-cr
                 ["<CR>"] = cmp.mapping({
                     i = function(fallback)

@@ -8,9 +8,6 @@ vim.keymap.set("n", "<leader>xs", vim.diagnostic.open_float, { desc = "󰙨 Show
 vim.keymap.set("n", "]b", vim.cmd.bnext, { desc = " Next Buffer" })
 vim.keymap.set("n", "[b", vim.cmd.bprev, { desc = " Previous Buffer" })
 
--- Save in insert mode
-vim.keymap.set("i", "<C-s>", "<cmd>:w<cr><esc>", { desc = "Save in Insert Mode" })
-vim.keymap.set("n", "<C-s>", "<cmd>:w<cr><esc>", { desc = "Save in Normal Mode" })
 vim.keymap.set("n", "<C-c>", "<cmd>normal! ciw<cr>a", { desc = "Change in Word" })
 
 -- Quitting / Sessions
