@@ -43,16 +43,29 @@ return {
         -- Create a command to edit the snippet file associated with the current
         vim.api.nvim_create_user_command("LuaSnipEdit", require("luasnip.loaders.from_lua").edit_snippet_files, {})
 
-        vim.api.nvim_create_autocmd("ModeChanged", {
-            desc = "Clear luasnip on mode change.",
-            callback = function()
-                local ls = require("luasnip")
+        vim.keymap.set({ "i" }, "<C-k>", function()
+            if ls.expand_or_jumpable() then
+                ls.expand_or_jump()
+            end
+        end, { silent = true, desc = "Expand or jump to next snippet node" })
 
-                if ls.in_snippet() then
-                    ls.unlink_current()
-                end
-            end,
-        })
+        vim.keymap.set({ "i", "s" }, "<C-l>", function()
+            ls.jump(1)
+        end, { silent = true, desc = "Jump to next snippet node" })
+
+        vim.keymap.set({ "i", "s" }, "<C-j>", function()
+            ls.jump(-1)
+        end, { silent = true, desc = "Jump to previous snippet node" })
+
+        vim.keymap.set({ "i", "s" }, "<C-e>", function()
+            if ls.choice_active() then
+                ls.change_choice(1)
+            end
+        end, { silent = true, desc = "Select previous choice in snippet choice nodes" })
+
+        vim.keymap.set({ "i", "n" }, "<C-s>", function()
+            ls.unlink_current()
+        end, { silent = true, desc = "Clear snippet jumps" })
     end,
     dependencies = { "rafamadriz/friendly-snippets" },
 }
