@@ -259,13 +259,20 @@ vim.api.nvim_create_autocmd({ "BufWritePre" }, {
             end
         end
 
-        for _, category in ipairs({ "tap", "brew", "cask", "mas" }) do
+        for _, category in ipairs({ "tap", "brew", "cask", "mas", "vscode" }) do
             if entries[category] then
+                local hash = {}
+
                 -- The actual sort.
                 table.sort(entries[category])
 
                 for _, item in ipairs(entries[category]) do
-                    table.insert(lines, category .. " " .. item)
+                    -- Ensure we don't have duplicates.
+                    if not hash[item] then
+                        hash[item] = true
+
+                        table.insert(lines, category .. " " .. item)
+                    end
                 end
             end
         end
