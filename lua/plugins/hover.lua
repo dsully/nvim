@@ -3,28 +3,20 @@ return {
     "lewis6991/hover.nvim",
     keys = {
         {
-            "K",
+            "gk",
             function()
-                --
-                if vim.bo.filetype == "vim" or vim.bo.filetype == "help" then
-                    vim.cmd.help({ vim.fn.expand("<cword>"), mods = { emsg_silent = true } })
-                elseif vim.fs.basename(vim.api.nvim_buf_get_name(0)) == "Cargo.toml" then
-                    require("crates").show_popup()
-                else
-                    require("hover").hover()
-                end
+                require("hover").hover()
             end,
-            desc = "Documentation",
+            desc = "Hover Providers",
         },
     },
     opts = {
         init = function()
             -- Require providers
-            require("hover.providers.lsp")
+            require("hover.providers.dictionary")
             require("hover.providers.gh")
             require("hover.providers.gh_user")
             require("hover.providers.man")
-            require("hover.providers.dictionary")
         end,
         preview_opts = {
             border = vim.g.border,
