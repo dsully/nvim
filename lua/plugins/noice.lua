@@ -23,15 +23,6 @@ return {
             end,
         })
 
-        vim.api.nvim_create_autocmd("FileType", {
-            pattern = "markdown",
-            callback = function(event)
-                vim.schedule(function()
-                    require("noice.text.markdown").keys(event.buf)
-                end)
-            end,
-        })
-
         vim.keymap.set("c", "<S-Enter>", function()
             require("noice").redirect(vim.fn.getcmdline())
         end, { desc = "Redirect Cmdline" })
@@ -50,33 +41,16 @@ return {
             },
             lsp = {
                 documentation = {
-                    enabled = true,
-                    view = "hover",
+                    enabled = false,
                 },
                 hover = {
-                    enabled = true,
-                    opts = {
-                        border = {
-                            style = vim.g.border,
-                        },
-                    },
-                },
-                override = {
-                    ["vim.lsp.util.convert_input_to_markdown_lines"] = true,
-                    ["vim.lsp.util.stylize_markdown"] = true,
-                    ["cmp.entry.get_documentation"] = true,
+                    enabled = false,
                 },
                 progress = {
                     enabled = true,
                 },
                 signature = {
-                    enabled = true,
-                    auto_open = {
-                        enabled = true,
-                        trigger = true, -- Automatically show signature help when typing a trigger character from the LSP
-                        luasnip = true, -- Will open signature help when jumping to LuaSnip insert nodes
-                        throttle = 50, -- Debounce lsp signature help request by 50ms
-                    },
+                    enabled = false,
                 },
             },
             messages = {
@@ -94,7 +68,6 @@ return {
                 command_palette = false, -- position the cmdline and popupmenu together
                 long_message_to_split = true, -- long messages will be sent to a split
                 inc_rename = true, -- enables an input dialog for inc-rename.nvim
-                lsp_doc_border = true, -- add a border to hover docs and signature help
             },
             routes = {
                 {
