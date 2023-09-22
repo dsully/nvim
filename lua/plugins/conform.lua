@@ -23,6 +23,7 @@ return {
             formatters_by_ft = {
                 bash = shell,
                 c = { "clang-format" },
+                caddy = { "caddy" },
                 cpp = { "clang-format" },
                 css = { prettier },
                 fish = { "fish_indent" },
@@ -40,6 +41,11 @@ return {
                 blackd = {
                     command = "blackd-client",
                     args = require("conform.formatters.black").args,
+                    stdin = true,
+                },
+                caddy = {
+                    command = "caddy",
+                    args = { "fmt", "-" },
                     stdin = true,
                 },
                 just = {

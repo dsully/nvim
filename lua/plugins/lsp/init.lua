@@ -608,7 +608,7 @@ return {
 
             -- These tools aren't in Mason
             mason_tools = vim.tbl_filter(function(t)
-                return not vim.tbl_contains({ "fish", "fish_indent", "just", "typos" }, t)
+                return not vim.tbl_contains({ "caddy", "fish", "fish_indent", "just", "typos" }, t)
             end, mason_tools)
 
             require("mason").setup({
