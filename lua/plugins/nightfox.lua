@@ -109,12 +109,6 @@ return {
 
         local groups = {
             -- Override some default Nordfox colors.
-            DiagnosticVirtualTextError = { link = "DiagnosticError" },
-            DiagnosticVirtualTextWarn = { link = "DiagnosticWarn" },
-            DiagnosticVirtualTextInfo = { link = "DiagnosticInfo" },
-            DiagnosticVirtualTextHint = { link = "DiagnosticHint" },
-
-            -- Editor changes.
             MatchParen = { fg = colors.cyan.bright, bg = colors.gray, style = "NONE" },
             ModeMsg = { fg = colors.white.dim },
             MoreMsg = { fg = colors.cyan.bright },
@@ -182,6 +176,16 @@ return {
             CodewindowAddition = { fg = colors.green },
             CodewindowBorder = { fg = colors.gray },
             CodewindowDeletion = { fg = colors.red },
+
+            DiagnosticVirtualTextError = { link = "DiagnosticError" },
+            DiagnosticVirtualTextWarn = { link = "DiagnosticWarn" },
+            DiagnosticVirtualTextInfo = { link = "DiagnosticInfo" },
+            DiagnosticVirtualTextHint = { link = "DiagnosticHint" },
+
+            DiagnosticUnderlineError = { style = "underline", fg = colors.red },
+            DiagnosticUnderlineWarn = { style = "underline", fg = colors.yellow },
+            DiagnosticUnderlineInfo = { style = "underline", fg = colors.green },
+            DiagnosticUnderlineHint = { style = "underline", fg = colors.blue },
 
             -- dressing.nvim
             FloatTitle = { fg = colors.white.bright },
