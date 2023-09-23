@@ -3,6 +3,51 @@ require("plugins.lsp.workspace")
 
 local common = require("plugins.lsp.common")
 
+-- Customize diagnostic symbols in the gutter.
+local icons = {
+    error = "󰅚 ",
+    warn = "󰀪 ",
+    info = " ",
+    hint = "󰌶 ",
+}
+
+local function sign(opts)
+    vim.fn.sign_define(opts.highlight, {
+        text = opts.icon,
+        texthl = opts.highlight,
+        numhl = opts.linehl ~= false and opts.highlight .. "Nr" or nil,
+        culhl = opts.linehl ~= false and opts.highlight .. "CursorNr" or nil,
+        linehl = opts.linehl ~= false and opts.highlight .. "Line" or nil,
+    })
+end
+
+sign({ highlight = "DiagnosticSignError", icon = icons.error })
+sign({ highlight = "DiagnosticSignWarn", icon = icons.warn })
+sign({ highlight = "DiagnosticSignInfo", linehl = false, icon = icons.info })
+sign({ highlight = "DiagnosticSignHint", linehl = false, icon = icons.hint })
+
+-- https://github.com/neovim/nvim-lspconfig/wiki/UI-Customization#show-source-in-diagnostics
+-- https://github.com/neovim/nvim-lspconfig/wiki/UI-Customization#change-prefixcharacter-preceding-the-diagnostics-virtual-text
+vim.diagnostic.config({
+    float = {
+        border = vim.g.border,
+        focusable = true,
+        header = { " Issues:" },
+        max_height = math.min(math.floor(vim.o.lines * 0.3), 30),
+        max_width = math.min(math.floor(vim.o.columns * 0.7), 100),
+        prefix = function(diag)
+            local level = vim.diagnostic.severity[diag.severity]
+            local prefix = string.format("%s ", icons[level:lower()])
+            return prefix, "Diagnostic" .. level:gsub("^%l", string.upper)
+        end,
+        source = "if_many",
+    },
+    underline = true,
+    signs = true,
+    severity_sort = true,
+    update_in_insert = false, -- https://www.reddit.com/r/neovim/comments/pfk209/nvimlsp_too_fast/
+})
+
 local servers = {
     bashls = {
         filetypes = { "bash", "sh", "zsh" },
@@ -693,4 +738,74 @@ return {
 
     -- Load Lua plugin files without needing to have them in the LSP workspace.
     { "mrjones2014/lua-gf.nvim", ft = "lua" },
+
+    -- Display diagnostic inline
+    {
+        "https://git.sr.ht/~whynothugo/lsp_lines.nvim",
+        config = function()
+            local default_virtual_text = {
+
+                format = function(diagnostic)
+                    -- https://www.reddit.com/r/neovim/comments/q9dxnp/set_lsp_messages_max_width/
+                    return string.sub(diagnostic.message, 1, 80)
+                end,
+                prefix = function(diagnostic)
+                    for d, icon in pairs(icons) do
+                        if diagnostic.severity == vim.diagnostic.severity[d:upper()] then
+                            return icon
+                        end
+                    end
+                end,
+                source = "if_many",
+                spacing = 1,
+            }
+
+            vim.diagnostic.config({
+                virtual_lines = false,
+                virtual_text = default_virtual_text,
+            })
+
+            vim.keymap.set("n", "<localleader>l", function()
+                local new_value = not vim.diagnostic.config().virtual_lines
+
+                --- @type boolean|table
+                local virtual_text = default_virtual_text
+
+                if new_value then
+                    virtual_text = false
+                end
+
+                vim.diagnostic.config({
+                    virtual_lines = new_value,
+                    virtual_text = virtual_text,
+                })
+            end, { buffer = true, desc = "Toggle LSP Diagnostic Lines" })
+
+            require("lsp_lines").setup({})
+        end,
+        event = "LspAttach",
+    },
+
+    {
+        "shellRaining/hlchunk.nvim",
+        event = "UIEnter",
+        opts = {
+            blank = {
+                enable = false,
+            },
+            chunk = {
+                chars = {
+                    horizontal_line = "─",
+                    vertical_line = "│",
+                    left_top = "┌",
+                    left_bottom = "└",
+                    right_arrow = "─",
+                },
+                style = "#81a1c1",
+            },
+            indent = {
+                enable = false,
+            },
+        },
+    },
 }
