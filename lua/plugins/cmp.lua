@@ -279,8 +279,8 @@ return {
                             return false
                         end
 
-                        -- Don't return snippets from LSP completion.
-                        if kind == types.Snippet then
+                        -- Don't return snippets or "Text" from LSP completion.
+                        if kind == types.Snippet or kind == types.Text then
                             return false
                         end
 
@@ -408,7 +408,6 @@ return {
         { "lukas-reineke/cmp-under-comparator" },
         { "mtoohey31/cmp-fish", ft = "fish", cond = string.find(vim.env.SHELL, "fish") },
         { "onsails/lspkind-nvim" },
-        { "petertriho/cmp-git", requires = "nvim-lua/plenary.nvim" },
         { "saadparwaiz1/cmp_luasnip" },
         {
             "uga-rosa/cmp-dictionary",
