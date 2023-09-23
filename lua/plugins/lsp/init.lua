@@ -690,4 +690,7 @@ return {
     { "yioneko/nvim-type-fmt", lazy = false }, -- LSP handler of textDocument/onTypeFormatting for nvim. Sets itself up via an LspAttach autocmd.
     { "VidocqH/lsp-lens.nvim", event = "LspAttach", opts = {} },
     { "zbirenbaum/neodim", branch = "v2", event = "LspAttach", opts = {} },
+
+    -- Load Lua plugin files without needing to have them in the LSP workspace.
+    { "mrjones2014/lua-gf.nvim", ft = "lua" },
 }
