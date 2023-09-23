@@ -90,7 +90,7 @@ vim.g.large_file_size = 1024 * 512
 
 -- Load clipboard.vim faster.
 -- This assumes I have my Linux versions of pbcopy/pbpaste.
-if vim.g.os == "Darwin" then
+if vim.g.os == "Darwin" and not vim.env.SSH_CONNECTION then
     vim.g.clipboard = {
         name = "pbcopy",
         copy = {
@@ -103,6 +103,9 @@ if vim.g.os == "Darwin" then
         },
         cache_enabled = false,
     }
+end
+
+if vim.g.os == "Darwin" then
     vim.g.opener = "open"
 else
     vim.g.opener = "xdg-open"
