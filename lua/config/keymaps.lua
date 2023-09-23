@@ -25,13 +25,12 @@ vim.keymap.set("n", "q:", "<Nop>", { desc = "hidden" })
 
 vim.keymap.set("n", "<leader>a", "<cmd>%y<cr>", { desc = "Yank All Lines" })
 
--- https://www.reddit.com/r/neovim/comments/w0jzzv/smart_dd/
-vim.keymap.set("n", "dd", function()
-    if vim.api.nvim_get_current_line():match("^%s*$") then
-        return '"_dd'
-    end
-    return "dd"
-end, { noremap = true, expr = true })
+-- Don't delete into the system clipboard.
+vim.keymap.set({ "x" }, "d", '"_d', { noremap = true })
+vim.keymap.set({ "n", "x" }, "dw", '"_dw', { noremap = true })
+vim.keymap.set({ "n", "x" }, "D", '"_D', { noremap = true })
+vim.keymap.set({ "n", "x" }, "c", '"_c', { noremap = true })
+vim.keymap.set({ "n", "x" }, "C", '"_C', { noremap = true })
 
 -- Create/edit file within the current directory
 vim.keymap.set("n", "<localleader><localleader>e", function()
