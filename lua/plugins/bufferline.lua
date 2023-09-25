@@ -5,18 +5,18 @@ return {
         for i = 1, 9 do
             vim.keymap.set("n", "<leader>" .. i, function()
                 require("bufferline").go_to(i, true)
-            end, { desc = "hidden" })
+            end, { desc = "which_key_ignore" })
 
             -- Allow Option-N in Wezterm.
             vim.keymap.set("n", string.format("<M-%d>", i), function()
                 require("bufferline").go_to(i, true)
-            end, { desc = "hidden" })
+            end, { desc = "which_key_ignore" })
         end
 
         -- Go to the last buffer.
         vim.keymap.set("n", "<leader>$", function()
             require("bufferline").go_to(-1, true)
-        end, { desc = "hidden" })
+        end, { desc = "which_key_ignore" })
 
         -- Always show tabs, but only load it if there is more than one.
         vim.api.nvim_create_autocmd({ "BufAdd", "TabEnter", "VimEnter", "WinEnter" }, {
