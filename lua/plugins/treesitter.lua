@@ -103,39 +103,10 @@ return {
 
                 highlight = { enable = true },
 
-                -- Let nvim-yati do indentation.
-                indent = { enable = true, disable = { "lua", "python" } },
-
-                -- Use treesitter to auto-close and auto-rename HTML tags.
-                -- https://github.com/windwp/nvim-ts-autotag
-                autotag = { enable = true },
-
-                context_commentstring = {
-                    enable = true,
-                    enable_autocmd = false,
-                },
-
-                -- https://github.com/RRethy/nvim-treesitter-endwise
-                endwise = { enable = true },
-
-                lsp_interop = {
-                    enable = false,
-                },
-
-                matchup = {
-                    enable = true,
-                },
-
                 query_linter = {
                     enable = true,
                     use_virtual_text = true,
                     lint_events = { "BufWrite", "CursorHold" },
-                },
-
-                -- https://github.com/yioneko/nvim-yati
-                yati = {
-                    enable = true,
-                    suppress_conflict_warning = true,
                 },
             })
 
@@ -144,11 +115,48 @@ return {
         event = { "BufReadPost", "BufNewFile" },
     },
 
-    { "RRethy/nvim-treesitter-endwise", event = "InsertEnter" },
-    { "yioneko/nvim-yati", event = "InsertEnter" },
+    {
+        "RRethy/nvim-treesitter-endwise",
+        config = function()
+            require("nvim-treesitter.configs").setup({
+                endwise = {
+                    enable = true,
+                },
+            })
+        end,
+        event = "InsertEnter",
+    },
+
+    {
+        "yioneko/nvim-yati",
+        config = function()
+            require("nvim-treesitter.configs").setup({
+                indent = {
+                    enable = true,
+                    disable = { "lua", "python" },
+                },
+                yati = {
+                    enable = true,
+                    suppress_conflict_warning = true,
+                },
+            })
+        end,
+        event = "InsertEnter",
+    },
 
     -- Use treesitter to auto-close and auto-rename HTML tags.
-    { "windwp/nvim-ts-autotag", ft = { "html", "javascript", "markdown", "xml" }, opts = {} },
+    {
+        "windwp/nvim-ts-autotag",
+        config = function()
+            require("nvim-treesitter.configs").setup({
+                autotag = {
+                    enable = true,
+                    filetypes = { "html", "javascript", "markdown", "xml" },
+                },
+            })
+        end,
+        event = "InsertEnter",
+    },
 
     -- Build treesitter queries.
     {
