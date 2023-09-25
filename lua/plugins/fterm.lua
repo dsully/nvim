@@ -3,13 +3,13 @@ return {
     "numToStr/FTerm.nvim",
     keys = {
         {
-            "<C-\\>",
+            [[<C-\>]],
             function()
                 require("FTerm").toggle()
             end,
 
             mode = { "n", "t" },
-            desc = " Terminal",
+            desc = "Terminal  ",
         },
     },
     opts = {
