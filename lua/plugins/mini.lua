@@ -69,14 +69,57 @@ return {
             ai.setup({
                 n_lines = 500,
                 custom_textobjects = {
-                    o = ai.gen_spec.treesitter({
+                    c = ai.gen_spec.treesitter({ a = "@class.outer", i = "@class.inner" }, {}),
+                    f = ai.gen_spec.treesitter({ a = "@function.outer", i = "@function.inner" }, {}),
+                    l = ai.gen_spec.treesitter({
                         a = { "@block.outer", "@conditional.outer", "@loop.outer" },
                         i = { "@block.inner", "@conditional.inner", "@loop.inner" },
                     }, {}),
-                    c = ai.gen_spec.treesitter({ a = "@class.outer", i = "@class.inner" }, {}),
-                    f = ai.gen_spec.treesitter({ a = "@function.outer", i = "@function.inner" }, {}),
+                    ["/"] = ai.gen_spec.treesitter({ a = "@comment.outer", i = "@comment.inner" }, {}),
                 },
             })
+
+            local i = {
+                [" "] = "mini.ai: whitespace",
+                ['"'] = 'mini.ai: balanced "',
+                ["'"] = "mini.ai: balanced '",
+                ["`"] = "mini.ai: balanced `",
+                ["("] = "mini.ai: balanced (",
+                [")"] = "mini.ai: balanced ) including white-space",
+                [">"] = "mini.ai: balanced > including white-space",
+                ["<lt>"] = "mini.ai: balanced <",
+                ["]"] = "mini.ai: balanced ] including white-space",
+                ["["] = "mini.ai: balanced [",
+                ["}"] = "mini.ai: balanced } including white-space",
+                ["{"] = "mini.ai: balanced {",
+                ["?"] = "mini.ai: user prompt",
+                _ = "mini.ai: underscore",
+                a = "mini.ai: argument",
+                b = "mini.ai: balanced ), ], }",
+                c = "mini.ai: class",
+                f = "mini.ai: function",
+                o = "mini.ai: block, conditional, loop",
+                q = "mini.ai: quote `, \", '",
+                t = "mini.ai: tag",
+            }
+
+            local a = vim.deepcopy(i)
+
+            for k, v in pairs(a) do
+                a[k] = v:gsub(" including.*", "")
+            end
+
+            local ic = vim.deepcopy(i)
+            local ac = vim.deepcopy(a)
+
+            for key, name in pairs({ n = "next", l = "last" }) do
+                ---@diagnostic disable-next-line: assign-type-mismatch
+                i[key] = vim.tbl_extend("force", { name = "mini.ai: inside " .. name .. " textobject" }, ic)
+                ---@diagnostic disable-next-line: assign-type-mismatch
+                a[key] = vim.tbl_extend("force", { name = "mini.ai: around " .. name .. " textobject" }, ac)
+            end
+
+            require("which-key").register({ mode = { "o", "x" }, i = i, a = a })
         end,
         dependencies = {
             {
