@@ -34,7 +34,7 @@ vim.opt.spellfile = vim.fn.stdpath("config") .. "/spell/en.utf-8.add"
 vim.opt.spelloptions:append({ "camel" })
 vim.opt.spellsuggest = "best,9"
 vim.opt.splitkeep = "screen"
-vim.opt.shortmess:append({ C = true, W = true, I = true, c = true })
+vim.opt.shortmess:append({ W = true, I = true, c = true })
 vim.opt.softtabstop = 4
 vim.opt.termguicolors = true
 vim.opt.textwidth = 160
