@@ -158,6 +158,9 @@ return {
         event = "InsertEnter",
     },
 
+    -- f-string manipulation.
+    { "chrisgrieser/nvim-puppeteer", lazy = false }, -- plugin lazy-loads itself
+
     -- Build treesitter queries.
     {
         "ziontee113/query-secretary",
