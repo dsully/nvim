@@ -8,7 +8,7 @@ return {
             function()
                 require("neogen").generate({})
             end,
-            desc = "Generate Docs",
+            desc = " Generate Docs",
         },
     },
     opts = {

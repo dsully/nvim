@@ -21,6 +21,7 @@ end
 
 M.groups = {
     code_lens = vim.api.nvim_create_augroup("LSP Code Lens", { clear = false }),
+    float = vim.api.nvim_create_namespace("LSP Float"),
     inlay_hints = vim.api.nvim_create_augroup("LSP Inlay Hints Refresh", { clear = false }),
     lsp_highlight = vim.api.nvim_create_augroup("LSP Highlight References", { clear = false }),
 }
@@ -49,6 +50,10 @@ M.on_attach = function(client, buffer)
     vim.keymap.set("n", "[d", vim.diagnostic.goto_prev, { desc = "󰙨󰙨 Previous Diagnostic" })
     vim.keymap.set("n", "<leader>xr", vim.diagnostic.reset, { desc = " Reset" })
     vim.keymap.set("n", "<leader>xs", vim.diagnostic.open_float, { desc = "󰙨 Show" })
+
+    if client.supports_method(methods.textDocument_hover) then
+        vim.keymap.set("n", "K", vim.lsp.buf.hover, { desc = "Documentation  " })
+    end
 
     if client.supports_method(methods.textDocument_signatureHelp) then
         vim.keymap.set("n", "<leader>ch", vim.lsp.buf.signature_help, { desc = "󰞂 Signature Help" })
@@ -129,8 +134,6 @@ M.on_attach = function(client, buffer)
     end, { desc = "󰁨 Quickfix" })
 end
 
-local float_namespace = vim.api.nvim_create_namespace("my/lsp_float")
-
 --- From: https://github.com/MariaSolOs/dotfiles/blob/main/.config/nvim/lua/lsp.lua#L212
 ---
 --- LSP handler that adds extra inline highlights, keymaps, and window options.
@@ -139,7 +142,6 @@ local float_namespace = vim.api.nvim_create_namespace("my/lsp_float")
 ---@param handler fun(err: any, result: any, ctx: any, config: any): integer, integer
 ---@return function
 M.enhanced_float_handler = function(handler)
-
     ---@param ctx lsp.HandlerContext
     return function(err, result, ctx, config)
         local buf, win = handler(
@@ -182,7 +184,7 @@ M.enhanced_float_handler = function(handler)
                         conceal = ""
                     end
                     if from then
-                        vim.api.nvim_buf_set_extmark(buf, float_namespace, l - 1, from - 1, {
+                        vim.api.nvim_buf_set_extmark(buf, M.groups.float, l - 1, from - 1, {
                             end_col = to,
                             hl_group = hl_group,
                             conceal = conceal,

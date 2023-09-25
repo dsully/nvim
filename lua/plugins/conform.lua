@@ -17,7 +17,7 @@ return {
 
         local black = { "blackd", "black" }
         local prettier = { "prettierd", "prettier" }
-        local shell = { "beautysh", "shellcheck", "shellharden", "shfmt" }
+        local shell = { "shellcheck", "shellharden", "shfmt" }
 
         require("conform").setup({
             formatters_by_ft = {
