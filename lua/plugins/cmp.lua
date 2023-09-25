@@ -349,7 +349,7 @@ return {
                     entry_filter = is_text,
                     group_index = 20,
                     priority = 40,
-                    keyword_length = 5,
+                    keyword_length = 2,
                 },
                 {
                     name = "copilot",
