@@ -142,20 +142,10 @@ end
 
 -- Config for pylsp-ruff as a Lua table.
 M.ruff_config = function()
-    -- If a pyproject exists and has a ruff config, use that.
-    local pyproject = find_file("pyproject.toml")
-
-    if pyproject ~= nil and vim.uv.fs_stat(pyproject) ~= nil then
-        for line in io.lines(pyproject) do
-            if line:match("^%[tool.ruff%]") then
-                return nil
-            end
-        end
-    end
-
-    -- Otherwise, extract some config out of setup.cfg if it exists and use some defaults.
-    local config_file = find_file("setup.cfg")
+    -- Extract config out of setup.cfg if it exists and use some defaults.
     local config = vim.tbl_deep_extend("force", {}, ruff_default_config)
+
+    local config_file = find_file("setup.cfg")
 
     if config_file ~= nil and vim.uv.fs_stat(config_file) ~= nil then
         local matches = {
@@ -173,6 +163,7 @@ M.ruff_config = function()
                         ---@type number
                         config[key] = tonumber(match)
                     else
+                        -- --extend-ignore has been deprecated in favor of --extend.
                         ---@type table<string>
                         config["ignore"] = vim.tbl_deep_extend("force", config["ignore"], exclude_ignores(vim.split(match, "%s*,%s*")))
                     end
@@ -181,27 +172,21 @@ M.ruff_config = function()
         end
     end
 
-    config["fixable"] = vim.tbl_deep_extend("force", {}, config["select"])
-
     return config
 end
 
 -- Massage the ruff config into something the CLI can handle.
 M.ruff_args = function()
-    local args = {}
     local config = M.ruff_config()
 
-    if not config then
-        return nil
-    end
+    local args = {
+        "--extend-select=" .. vim.fn.join(config["select"], ","),
+        "--ignore=" .. vim.fn.join(exclude_ignores(config["ignore"]), ","),
+    }
 
     if config["lineLength"] then
         table.insert(args, "--line-length=" .. config["lineLength"])
     end
-
-    table.insert(args, "--select=" .. vim.fn.join(config["select"], ","))
-    table.insert(args, "--fixable=" .. vim.fn.join(config["fixable"], ","))
-    table.insert(args, "--ignore=" .. vim.fn.join(exclude_ignores(config["ignore"]), ","))
 
     return args
 end

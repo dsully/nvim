@@ -327,6 +327,7 @@ local servers = {
                     description = "Ruff: Format imports",
                 },
             },
+            filetypes = { "python", "toml.pyproject" },
             init_options = {
                 settings = {
                     args = require("plugins.lsp.python").ruff_args(),
@@ -431,6 +432,7 @@ local servers = {
     },
 
     taplo = {
+        filetypes = { "toml", "toml.pyproject" },
         settings = {
             evenBetterToml = {
                 schema = {
