@@ -1,19 +1,29 @@
 return {
     "stevearc/conform.nvim",
     config = function()
-        require("conform.formatters.black").args = require("plugins.lsp.python").black_args()
+        local add_formatter_args = require("conform.util").add_formatter_args
+        local root_file = require("conform.util").root_file
 
-        require("conform.formatters.markdownlint").args = function()
-            return {
-                string.format("--config=%s/markdownlint/config.yaml", vim.env.XDG_CONFIG_HOME),
-                "--fix",
-                "$FILENAME",
-            }
+        add_formatter_args(require("conform.formatters.markdownlint"), {
+            string.format("--config=%s/markdownlint/config.yaml", vim.env.XDG_CONFIG_HOME),
+        })
+
+        add_formatter_args(require("conform.formatters.shfmt"), { "-i", "4", "-ci", "-s" })
+
+        -- This needs to be dynamic and not just at Neovim startup time.
+        require("conform.formatters.black").args = function()
+            return vim.tbl_flatten({
+                require("plugins.lsp.python").black_args(),
+                {
+                    "--stdin-filename",
+                    "$FILENAME",
+                    "--quiet",
+                    "-",
+                },
+            })
         end
 
-        require("conform.formatters.shfmt").args = function()
-            return { "-i", "4", "-ci", "-s", "-filename", "$FILENAME" }
-        end
+        require("conform.formatters.black").cwd = root_file({ "pyproject.toml", "setup.cfg" })
 
         local black = { "blackd", "black" }
         local prettier = { "prettierd", "prettier" }
@@ -40,23 +50,31 @@ return {
             formatters = {
                 blackd = {
                     command = "blackd-client",
-                    args = require("conform.formatters.black").args,
+                    args = function()
+                        return require("plugins.lsp.python").black_args()
+                    end,
+                    cwd = require("conform.util").root_file({
+                        "setup.cfg",
+                        "pyproject.toml",
+                    }),
                     stdin = true,
                 },
                 caddy = {
                     command = "caddy",
                     args = { "fmt", "-" },
+                    cwd = root_file({ "Caddyfile" }),
                     stdin = true,
                 },
                 just = {
                     command = "just",
                     args = { "--fmt", "--unstable", "-f", "$FILENAME" },
+                    cwd = root_file({ "Justfile", "justfile" }),
                     stdin = false,
                 },
             },
         })
     end,
-    event = { "VeryLazy" },
+    event = "VeryLazy",
     keys = {
         {
             "<space>f",
