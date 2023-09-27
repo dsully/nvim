@@ -16,7 +16,7 @@ vim.filetype.add({
         j2 = "htmldjango",
         jinja = "htmldjango",
         jinja2 = "htmldjango",
-        plist = "xml", -- macOS PropertyList files
+        plist = "xml.plist", -- macOS PropertyList files
         -- We always want LaTeX, avoid slow detection logic
         tex = "latex",
         -- Heuristic that only sets the filetype to C++ if the header file includes
@@ -28,14 +28,33 @@ vim.filetype.add({
             return "c"
         end,
         tmpl = function(filename, _)
-            if vim.fn.search("{{.\\+}}", "nw") then
-                if filename:find("fish.tmpl") then
-                    return "fish"
-                elseif filename:find("toml.tmpl") then
-                    return "toml"
-                elseif filename:find("yaml.tmpl") then
-                    return "yaml"
+            -- Handle chezmoi dot_
+            filename = filename:gsub(".tmpl", ""):gsub("dot_", ".")
+
+            -- Attempt with buffer content and filename
+            --- @type string?
+            local filetype = vim.filetype.match({ filename = filename }) or ""
+
+            if not filetype then
+                local lines = vim.api.nvim_buf_get_lines(0, 0, -1, false)
+
+                for index, line in ipairs(lines) do
+                    if string.match(line, "{{") then
+                        table.remove(lines, index) -- remove tmpl lines
+                    end
                 end
+
+                if not filetype then
+                    filetype = vim.filetype.match({ filename = filename, contents = lines }) -- attempt without tmpl lines
+
+                    if not filetype then
+                        filetype = vim.filetype.match({ contents = lines }) -- attempt without filename
+                    end
+                end
+            end
+
+            if filetype then
+                return filetype .. ".gotexttmpl"
             end
         end,
     },
