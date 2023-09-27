@@ -789,27 +789,38 @@ return {
         end,
         event = "LspAttach",
     },
-
+    -- Don't enable for non-LSP types
     {
         "shellRaining/hlchunk.nvim",
-        event = "UIEnter",
-        opts = {
-            blank = {
-                enable = false,
-            },
-            chunk = {
-                chars = {
-                    horizontal_line = "─",
-                    vertical_line = "│",
-                    left_top = "┌",
-                    left_bottom = "└",
-                    right_arrow = "─",
+        config = function()
+            local exclude_filetypes = {
+                ["text"] = true
+            }
+
+            for _, ft in ipairs(require("config.ignored").file_types) do
+                exclude_filetypes[ft] = true
+            end
+
+            require("hlchunk").setup({
+                blank = {
+                    enable = false,
                 },
-                style = "#81a1c1",
-            },
-            indent = {
-                enable = false,
-            },
-        },
+                chunk = {
+                    chars = {
+                        horizontal_line = "─",
+                        vertical_line = "│",
+                        left_top = "┌",
+                        left_bottom = "└",
+                        right_arrow = "─",
+                    },
+                    exclude_filetypes = exclude_filetypes,
+                    style = "#81a1c1",
+                },
+                indent = {
+                    enable = false,
+                },
+            })
+        end,
+        event = "UIEnter",
     },
 }
