@@ -18,6 +18,7 @@ return {
         "Trouble",
         "alpha",
         "checkhealth",
+        "cmp_menu",
         "git",
         "gitrebase",
         "glowpreview",
