@@ -1,6 +1,4 @@
 --
-require("config.autocommands.plist")
-
 vim.api.nvim_create_autocmd({ "FocusGained", "TermClose", "TermLeave" }, {
     command = "checktime",
     desc = "Check if we need to reload the file when it changed.",
@@ -8,7 +6,7 @@ vim.api.nvim_create_autocmd({ "FocusGained", "TermClose", "TermLeave" }, {
 
 vim.api.nvim_create_autocmd({ "FileType" }, {
     desc = "Map q to close the buffer.",
-    pattern = { "checkhealth", "help", "man", "qf", "tsplayground" },
+    pattern = { "checkhealth", "help", "man", "qf", "query", "tsplayground" },
     callback = function(event)
         vim.opt_local.spell = false
 
@@ -241,46 +239,6 @@ vim.api.nvim_create_autocmd({ "BufWritePre" }, {
             vim.uv.fs_mkdir(path, 511)
         end
     end,
-})
-
-vim.api.nvim_create_autocmd({ "BufWritePre" }, {
-    callback = function()
-        local entries = {}
-        local lines = {}
-
-        -- Collect existing entries from the buffer.
-        for _, line in ipairs(vim.api.nvim_buf_get_lines(0, 0, -1, true)) do
-            for category, entry in line:gmatch("(%l+) (.+)") do
-                if not entries[category] then
-                    entries[category] = { entry }
-                else
-                    table.insert(entries[category], entry)
-                end
-            end
-        end
-
-        for _, category in ipairs({ "tap", "brew", "cask", "mas", "vscode" }) do
-            if entries[category] then
-                local hash = {}
-
-                -- The actual sort.
-                table.sort(entries[category])
-
-                for _, item in ipairs(entries[category]) do
-                    -- Ensure we don't have duplicates.
-                    if not hash[item] then
-                        hash[item] = true
-
-                        table.insert(lines, category .. " " .. item)
-                    end
-                end
-            end
-        end
-
-        vim.api.nvim_buf_set_lines(0, 0, #lines, false, lines)
-    end,
-    desc = "Sort Brewfiles properly by category on write.",
-    pattern = "Brewfile",
 })
 
 vim.api.nvim_create_autocmd({ "BufWriteCmd" }, {

@@ -76,7 +76,7 @@ M.read_command = function(args)
         vim.api.nvim_buf_set_lines(bufnr, -1, -1, false, vim.split(xml, "\n"))
 
         vim.bo[bufnr].buftype = ""
-        vim.bo[bufnr].filetype = "xml"
+        vim.bo[bufnr].filetype = "xml.plist"
         vim.bo[bufnr].modifiable = true
         vim.bo[bufnr].modified = false
         vim.bo[bufnr].readonly = false
@@ -112,10 +112,10 @@ M.detect_format = function(filename)
             end
 
             if string.find(tostring(content), "^<!DOCTYPE plist") then
-                return "xml"
+                return "xml.plist"
             end
         end
     end
 
-    return "json"
+    return "json.plist"
 end
