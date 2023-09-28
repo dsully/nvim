@@ -108,8 +108,8 @@ return {
             v = { "j", "k" },
         },
         disable = {
-            buftypes = require("config.ignored").buffer_types,
-            filetypes = require("config.ignored").file_types,
+            buftypes = vim.g.defaults.ignored.buffer_types,
+            filetypes = vim.g.defaults.ignored.file_types,
         },
     },
 }

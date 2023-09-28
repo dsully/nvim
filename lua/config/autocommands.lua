@@ -28,6 +28,17 @@ vim.api.nvim_create_autocmd({ "FileType" }, {
 })
 
 vim.api.nvim_create_autocmd({ "FileType" }, {
+    desc = "Keymap for removing backslashes when joining lines.",
+    pattern = { "bash", "fish", "make", "sh", "zsh" },
+    callback = function()
+        vim.keymap.set("n", "J", function()
+            --
+            return vim.endswith(vim.api.nvim_get_current_line(), [[\]]) and "$xJ" or "J"
+        end, { expr = true, desc = "Remove trailing backslash when joining lines." })
+    end,
+})
+
+vim.api.nvim_create_autocmd({ "FileType" }, {
     desc = "Update format options and folding.",
     callback = function()
         vim.opt_local.formatoptions:remove({ "a", "o", "t" })
@@ -132,7 +143,7 @@ vim.api.nvim_create_autocmd({ "BufReadCmd" }, {
 
 vim.api.nvim_create_autocmd({ "BufReadPost" }, {
     callback = function()
-        if vim.tbl_contains(require("config.ignored").buffer_types, vim.bo.buftype) then
+        if vim.tbl_contains(vim.g.defaults.ignored.buffer_types, vim.bo.buftype) then
             return
         end
 

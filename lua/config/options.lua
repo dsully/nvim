@@ -110,3 +110,57 @@ if vim.g.os == "Darwin" then
 else
     vim.g.opener = "xdg-open"
 end
+
+vim.g.defaults = {
+    -- Diagnostic symbols in the gutter.
+    icons = {
+        error = "󰅚 ",
+        warn = "󰀪 ",
+        info = " ",
+        hint = "󰌶 ",
+    },
+
+    -- Various buffer and file types that should be ignored.
+    ignored = {
+        buffer_types = {
+            "Trouble",
+            "gitcommit",
+            "help",
+            "nofile",
+            "quickfix",
+            "terminal",
+        },
+        file_types = {
+            "",
+            "Codewindow",
+            "DressingInput",
+            "TelescopePrompt",
+            "TelescopeResults",
+            "Trouble",
+            "alpha",
+            "checkhealth",
+            "cmp_menu",
+            "git",
+            "gitrebase",
+            "glowpreview",
+            "keymenu",
+            "lazy",
+            "log",
+            "lspinfo",
+            "mason",
+            "noice",
+            "notify",
+            "qf",
+            "tsplayground",
+            "vim",
+        },
+        progress = {
+            "copilot",
+            "lua_ls",
+            "ltex",
+            "pylance",
+            "pyright",
+            "ruff_lsp",
+        },
+    },
+}

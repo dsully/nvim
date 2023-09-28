@@ -114,7 +114,7 @@ return {
                                 event = "lsp",
                                 kind = "progress",
                                 cond = function(message)
-                                    return vim.tbl_contains(require("config.ignored").progress, vim.tbl_get(message.opts, "progress", "client"))
+                                    return vim.tbl_contains(vim.g.defaults.ignored.progress, vim.tbl_get(message.opts, "progress", "client"))
                                 end,
                             },
                             { event = "lsp", kind = "progress", find = "cargo clippy" },
