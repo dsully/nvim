@@ -11,7 +11,7 @@ return {
     },
     opts = {
         auto_enable = true,
-        exclude_filetypes = require("config.ignored").file_types,
+        exclude_filetypes = vim.g.defaults.ignored.file_types,
         max_lines = 65536,
         minimap_width = 10,
     },
