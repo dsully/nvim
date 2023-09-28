@@ -688,33 +688,17 @@ return {
     { "pmizio/typescript-tools.nvim" },
     { "smjonas/inc-rename.nvim", opts = {} },
     { "someone-stole-my-name/yaml-companion.nvim" },
-    { "yioneko/nvim-type-fmt", lazy = false }, -- LSP handler of textDocument/onTypeFormatting for nvim. Sets itself up via an LspAttach autocmd.
     { "VidocqH/lsp-lens.nvim", event = "LspAttach", opts = {} },
-    { "zbirenbaum/neodim", branch = "v2", event = "LspAttach", opts = {} },
+    { "zbirenbaum/neodim", event = "LspAttach", opts = {} },
 
     -- Load Lua plugin files without needing to have them in the LSP workspace.
-    { "mrjones2014/lua-gf.nvim", ft = "lua" },
+    { "mrjones2014/lua-gf.nvim", event = "VeryLazy", ft = "lua" },
 
     -- Display diagnostic inline
     {
         "https://git.sr.ht/~whynothugo/lsp_lines.nvim",
         config = function()
-            local default_virtual_text = {
-
-                format = function(diagnostic)
-                    -- https://www.reddit.com/r/neovim/comments/q9dxnp/set_lsp_messages_max_width/
-                    return string.sub(diagnostic.message, 1, 80)
-                end,
-                prefix = function(diagnostic)
-                    for d, icon in pairs(icons) do
-                        if diagnostic.severity == vim.diagnostic.severity[d:upper()] then
-                            return icon
-                        end
-                    end
-                end,
-                source = "if_many",
-                spacing = 1,
-            }
+            local default_virtual_text = vim.diagnostic.config().virtual_text
 
             vim.diagnostic.config({
                 virtual_lines = false,
@@ -740,39 +724,5 @@ return {
             require("lsp_lines").setup({})
         end,
         event = "LspAttach",
-    },
-    -- Don't enable for non-LSP types
-    {
-        "shellRaining/hlchunk.nvim",
-        config = function()
-            local exclude_filetypes = {
-                ["text"] = true
-            }
-
-            for _, ft in ipairs(require("config.ignored").file_types) do
-                exclude_filetypes[ft] = true
-            end
-
-            require("hlchunk").setup({
-                blank = {
-                    enable = false,
-                },
-                chunk = {
-                    chars = {
-                        horizontal_line = "─",
-                        vertical_line = "│",
-                        left_top = "┌",
-                        left_bottom = "└",
-                        right_arrow = "─",
-                    },
-                    exclude_filetypes = exclude_filetypes,
-                    style = "#81a1c1",
-                },
-                indent = {
-                    enable = false,
-                },
-            })
-        end,
-        event = "UIEnter",
     },
 }

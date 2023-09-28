@@ -35,9 +35,9 @@ return {
                 used_by = { "gohtmltmpl", "gotexttmpl", "gotmpl" },
             }
 
-            -- Treat Brewfiles as Ruby for syntax highlighting.
-            vim.treesitter.language.register("ruby", "Brewfile")
+            -- Map languages to my created file types.
             vim.treesitter.language.register("bash", "sh")
+            vim.treesitter.language.register("ruby", "Brewfile")
 
             require("nvim-treesitter.configs").setup({
 
@@ -103,6 +103,8 @@ return {
 
                 highlight = { enable = true },
 
+                indent = { enable = true },
+
                 query_linter = {
                     enable = true,
                     use_virtual_text = true,
@@ -124,24 +126,7 @@ return {
                 },
             })
         end,
-        event = "InsertEnter",
-    },
-
-    {
-        "yioneko/nvim-yati",
-        config = function()
-            require("nvim-treesitter.configs").setup({
-                indent = {
-                    enable = true,
-                    disable = { "lua", "python" },
-                },
-                yati = {
-                    enable = true,
-                    suppress_conflict_warning = true,
-                },
-            })
-        end,
-        event = "InsertEnter",
+        event = { "BufReadPost", "BufNewFile" },
     },
 
     -- Use treesitter to auto-close and auto-rename HTML tags.
@@ -155,7 +140,8 @@ return {
                 },
             })
         end,
-        event = "InsertEnter",
+        event = { "BufReadPost", "BufNewFile" },
+        ft = { "html", "javascript", "markdown", "xml" },
     },
 
     -- f-string manipulation.
@@ -173,5 +159,41 @@ return {
                 desc = "Find TS Query",
             },
         },
+    },
+
+    {
+        "shellRaining/hlchunk.nvim",
+        config = function()
+            -- Don't enable for non-treesitter types
+            local exclude_filetypes = {
+                ["gitcommit"] = true,
+                ["text"] = true,
+            }
+
+            for _, ft in ipairs(vim.g.defaults.ignored.file_types) do
+                exclude_filetypes[ft] = true
+            end
+
+            require("hlchunk").setup({
+                blank = {
+                    enable = false,
+                },
+                chunk = {
+                    chars = {
+                        horizontal_line = "─",
+                        vertical_line = "│",
+                        left_top = "┌",
+                        left_bottom = "└",
+                        right_arrow = "─",
+                    },
+                    exclude_filetypes = exclude_filetypes,
+                    style = "#81a1c1",
+                },
+                indent = {
+                    enable = false,
+                },
+            })
+        end,
+        event = { "BufReadPost", "BufNewFile" },
     },
 }
