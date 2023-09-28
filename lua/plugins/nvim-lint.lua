@@ -46,7 +46,7 @@ return {
             json = {},
             lua = {},
             markdown = { "markdownlint" },
-            protobuf = { "buf", "protolint" },
+            protobuf = { "protolint" },
             python = {}, -- "mypy", "ruff"
             rst = { "rstcheck" },
             rust = {},
@@ -70,5 +70,5 @@ return {
             group = vim.api.nvim_create_augroup("nvim-lint", { clear = true }),
         })
     end,
-    event = { "BufReadPre", "BufNewFile" },
+    event = "VeryLazy",
 }
