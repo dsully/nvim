@@ -3,25 +3,12 @@ return {
     dependencies = { "MunifTanjim/nui.nvim" },
     event = "VeryLazy",
     config = function()
-        local messages = false
+        local messages = true
         local mini_row = -2
 
         if messages then
             mini_row = -1
         end
-
-        ---
-        local focused = true
-        vim.api.nvim_create_autocmd("FocusGained", {
-            callback = function()
-                focused = true
-            end,
-        })
-        vim.api.nvim_create_autocmd("FocusLost", {
-            callback = function()
-                focused = false
-            end,
-        })
 
         vim.keymap.set("c", "<S-Enter>", function()
             require("noice").redirect(vim.fn.getcmdline())
@@ -121,15 +108,6 @@ return {
                         },
                     },
                     opts = { skip = true },
-                },
-                {
-                    filter = {
-                        cond = function()
-                            return not focused
-                        end,
-                    },
-                    opts = { stop = false },
-                    view = "notify_send",
                 },
                 {
                     filter = { error = true },
