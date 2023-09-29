@@ -41,13 +41,10 @@ vim.keymap.set("n", "<localleader><localleader>e", function()
     end)
 end, { silent = true, expr = false, desc = "Create/edit file relative to current document" })
 
-vim.api.nvim_create_autocmd({ "FileType" }, {
-    desc = "Keymap for removing backslashes when joining lines.",
-    pattern = { "bash", "fish", "make", "sh", "zsh" },
-    callback = function()
-        vim.keymap.set("n", "J", function()
-            --
-            return vim.endswith(vim.api.nvim_get_current_line(), [[\]]) and "$xJ" or "J"
-        end, { expr = true, desc = "Remove trailing backslash when joining lines." })
-    end,
-})
+vim.keymap.set("n", "dt", function()
+    if vim.diagnostic.is_disabled() then
+        vim.diagnostic.enable()
+    else
+        vim.diagnostic.disable()
+    end
+end, { noremap = true, desc = "Diagnostics Toggle" })
