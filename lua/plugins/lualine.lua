@@ -142,7 +142,11 @@ return {
                                 ["InProgress"] = highlight("DiagnosticWarn"),
                             }
 
-                            return colors[require("copilot.api").status.data.status] or colors[""]
+                            if package.loaded["copilot"] then
+                                return colors[require("copilot.api").status.data.status] or colors[""]
+                            end
+
+                            return colors[""]
                         end,
                     },
                     {
