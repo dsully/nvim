@@ -452,6 +452,7 @@ local servers = {
                         },
                     },
                 }),
+                filetypes = { "yaml", "yaml.ghaction" },
                 on_attach = common.on_attach,
                 settings = {
                     yaml = {
