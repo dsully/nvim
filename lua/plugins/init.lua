@@ -28,26 +28,4 @@ return {
 
     -- Pattern replacement UI.
     { "AckslD/muren.nvim", event = "VeryLazy", opts = {} },
-
-    -- Better % matching.
-    {
-        "andymass/vim-matchup",
-        event = "BufReadPost",
-        init = function()
-            vim.o.matchpairs = "(:),{:},[:],<:>"
-        end,
-        config = function()
-            -- Don't recognize anything in comments
-            vim.g.matchup_delim_noskips = 2
-
-            vim.g.matchup_matchparen_deferred = 1
-            vim.g.matchup_matchparen_offscreen = { method = "status_manual" }
-
-            require("nvim-treesitter.configs").setup({
-                matchup = {
-                    enable = true,
-                },
-            })
-        end,
-    },
 }
