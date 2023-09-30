@@ -37,7 +37,7 @@ return {
                 cpp = { "clang-format" },
                 css = { prettier },
                 fish = { "fish_indent" },
-                go = { "gofumpt", "goimports", "golines" },
+                go = { "delve" },
                 graphql = { prettier },
                 html = { prettier },
                 just = { "just" },
