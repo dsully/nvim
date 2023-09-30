@@ -75,6 +75,7 @@ return {
                             { event = "msg_show", find = "search hit" },
                             { event = "msg_show", find = "^Hunk %d+ of %d" },
                             { event = "msg_show", find = "%d+ fewer lines" },
+                            { event = "msg_show", find = "%d+ line less" },
                             -- { event = "msg_show", find = "%d+ line" }, -- This hides Ctrl-g file information.
                             -- { find = "No active Snippet" },
                             -- { find = "No signature help available" },
