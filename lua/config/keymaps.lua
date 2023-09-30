@@ -4,11 +4,17 @@ vim.keymap.set("n", "[d", vim.diagnostic.goto_prev, { desc = "󰙨󰙨 Previous 
 vim.keymap.set("n", "<leader>xr", vim.diagnostic.reset, { desc = " Reset" })
 vim.keymap.set("n", "<leader>xs", vim.diagnostic.open_float, { desc = "󰙨 Show" })
 
+vim.keymap.set("n", "dt", function()
+    if vim.diagnostic.is_disabled() then
+        vim.diagnostic.enable()
+    else
+        vim.diagnostic.disable()
+    end
+end, { noremap = true, desc = "Diagnostics Toggle" })
+
 -- Buffers
 vim.keymap.set("n", "]b", vim.cmd.bnext, { desc = " Next Buffer" })
 vim.keymap.set("n", "[b", vim.cmd.bprev, { desc = " Previous Buffer" })
-
-vim.keymap.set("n", "<C-c>", "<cmd>normal! ciw<cr>a", { desc = "Change in Word" })
 
 -- Quitting / Sessions
 vim.keymap.set("n", "qq", vim.cmd.quitall, { desc = "Quit" })
@@ -26,7 +32,7 @@ vim.keymap.set("n", "q:", "<Nop>", { desc = "hidden" })
 vim.keymap.set("n", "<leader>a", "<cmd>%y<cr>", { desc = "Yank All Lines" })
 
 -- Don't delete into the system clipboard.
-vim.keymap.set({ "x" }, "d", '"_d', { noremap = true })
+-- vim.keymap.set({ "x" }, "d", '"_d', { noremap = true })
 vim.keymap.set({ "n", "x" }, "dw", '"_dw', { noremap = true })
 vim.keymap.set({ "n", "x" }, "D", '"_D', { noremap = true })
 vim.keymap.set({ "n", "x" }, "c", '"_c', { noremap = true })
@@ -40,11 +46,3 @@ vim.keymap.set("n", "<localleader><localleader>e", function()
         end
     end)
 end, { silent = true, expr = false, desc = "Create/edit file relative to current document" })
-
-vim.keymap.set("n", "dt", function()
-    if vim.diagnostic.is_disabled() then
-        vim.diagnostic.enable()
-    else
-        vim.diagnostic.disable()
-    end
-end, { noremap = true, desc = "Diagnostics Toggle" })
