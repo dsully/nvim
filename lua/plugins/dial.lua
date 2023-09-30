@@ -117,7 +117,7 @@ return {
     end,
     keys = {
         {
-            "<C-a>",
+            "<C-k>",
             function()
                 return require("dial.map").inc_normal()
             end,
@@ -125,7 +125,7 @@ return {
             expr = true,
         },
         {
-            "<C-x>",
+            "<C-j>",
             function()
                 return require("dial.map").dec_normal()
             end,
