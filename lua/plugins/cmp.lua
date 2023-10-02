@@ -57,6 +57,8 @@ return {
         local context = require("cmp.config.context")
         local types = require("cmp.types").lsp.CompletionItemKind
 
+        local has_copilot, copilot_cmp = pcall(require, "copilot_cmp.comparators")
+
         -- From: https://github.com/zbirenbaum/copilot-cmp#tab-completion-configuration-highly-recommended
         -- Unlike other completion sources, copilot can use other lines above or below an empty line to provide a completion.
         -- This can cause problematic for individuals that select menu entries with <TAB>. This behavior is configurable via
@@ -247,8 +249,8 @@ return {
                     cmp.config.compare.locality,
                     cmp.config.compare.length,
                     cmp.config.compare.order,
-                    require("copilot_cmp.comparators").prioritize,
-                    require("copilot_cmp.comparators").score,
+                    has_copilot and copilot_cmp.prioritize or nil,
+                    has_copilot and copilot_cmp.score or nil,
                 },
                 -- Keep priority weight at 2 for much closer matches to appear above Copilot.
                 -- Set to 1 to make Copilot always appear on top.
