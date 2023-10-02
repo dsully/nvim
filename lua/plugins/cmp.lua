@@ -427,6 +427,7 @@ return {
                     },
                 })
             end,
+            ft = { "gitcommit", "markdown", "text" },
         },
         {
             "zbirenbaum/copilot-cmp",
