@@ -138,6 +138,7 @@ vim.g.defaults = {
             "TelescopeResults",
             "Trouble",
             "alpha",
+            "chatgpt",
             "checkhealth",
             "cmp_menu",
             "git",
