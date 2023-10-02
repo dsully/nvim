@@ -11,7 +11,7 @@ return {
             require("chatgpt").setup(opts)
 
             vim.keymap.set("n", "<leader>cc", vim.cmd.ChatGPT, { desc = "Ask a question..." })
-            vim.keymap.set({ "n", "x" }, "<leader>ce", vim.cmd.ChatGPTEditWithInstructions, { desc = "Edit with instructions" })
+            vim.keymap.set({ "n", "x" }, "<leader>ci", vim.cmd.ChatGPTEditWithInstructions, { desc = "Edit with instructions" })
 
             for _, map in pairs({
                 { key = "g", cmd = "grammar_correction", desc = "Grammar Correction" },
