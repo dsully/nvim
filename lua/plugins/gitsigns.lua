@@ -10,27 +10,34 @@ return {
             preview_config = {
                 border = vim.g.border,
             },
-            on_attach = function()
+            on_attach = function(buffer)
                 local gs = package.loaded.gitsigns
 
-                vim.keymap.set("n", "]c", gs.next_hunk, { desc = "Next Git Hunk" })
-                vim.keymap.set("n", "[c", gs.prev_hunk, { desc = "Previous Git Hunk" })
+                local function map(mode, l, r, desc)
+                    vim.keymap.set(mode, l, r, { buffer = buffer, desc = desc })
+                end
 
-                vim.keymap.set("n", "<leader>gb", gs.blame_line, { desc = "Git Blame" })
-                vim.keymap.set("n", "<leader>gR", gs.reset_buffer, { desc = "Reset Git Buffer" })
-                vim.keymap.set("n", "<leader>gp", gs.preview_hunk, { desc = "Preview Git Hunk" })
-                vim.keymap.set("n", "<leader>gU", gs.undo_stage_hunk, { desc = "Undo Git Stage Hunk" })
+                map("n", "]c", gs.next_hunk, "Next Git Hunk")
+                map("n", "[c", gs.prev_hunk, "Previous Git Hunk")
 
-                vim.keymap.set("n", "<leader>gd", gs.toggle_deleted, { desc = "Git Deleted Toggle" })
-                vim.keymap.set("n", "<leader>gB", gs.toggle_current_line_blame, { desc = "Git Blame Toggle" })
+                map("n", "<leader>gb", function()
+                    gs.blame_line({ full = true, ignore_whitespace = true })
+                end, "Git Blame")
 
-                vim.keymap.set({ "n", "x" }, "<leader>gs", function()
+                map("n", "<leader>gR", gs.reset_buffer, "Reset Git Buffer")
+                map("n", "<leader>gp", gs.preview_hunk, "Preview Git Hunk")
+                map("n", "<leader>gU", gs.undo_stage_hunk, "Undo Git Stage Hunk")
+
+                map("n", "<leader>gd", gs.toggle_deleted, "Git Deleted Toggle")
+                map("n", "<leader>gB", gs.toggle_current_line_blame, "Git Blame Toggle")
+
+                map({ "n", "x" }, "<leader>gs", function()
                     gs.stage_hunk({ vim.fn.line("."), vim.fn.line("v") })
-                end, { desc = "Stage Lines(s)" })
+                end, "Stage Lines(s)")
 
-                vim.keymap.set({ "n", "x" }, "<leader>gr", function()
+                map({ "n", "x" }, "<leader>gr", function()
                     gs.reset_hunk({ vim.fn.line("."), vim.fn.line("v") })
-                end, { desc = "Reset Stage Lines(s)" })
+                end, "Reset Stage Lines(s)")
             end,
             trouble = true,
             worktrees = {
