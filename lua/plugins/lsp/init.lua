@@ -407,13 +407,11 @@ local servers = {
     },
 
     tsserver = function()
-        local mason_registry = require("mason-registry")
-        local tsserver_path = mason_registry.get_package("typescript-language-server"):get_install_path()
-
         require("typescript-tools").setup({
             capabilities = common.capabilities(),
             on_attach = common.on_attach,
             settings = {
+                code_lens = "on",
                 expose_as_code_actions = { "all" },
                 publish_diagnostic_on = "insert_leave",
                 tsserver_file_preferences = {
@@ -432,7 +430,6 @@ local servers = {
                     trimTrailingWhitespace = false,
                     semicolons = "insert",
                 },
-                tsserver_path = tsserver_path .. "/node_modules/typescript/lib/tsserver.js",
             },
         })
     end,
