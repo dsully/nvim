@@ -12,7 +12,6 @@ local servers = {
     cmake = {},
     cssls = {},
     dockerls = {},
-    dmypyls = {},
     esbonio = {}, -- RestructuredText
     graphql = {},
     html = {},
