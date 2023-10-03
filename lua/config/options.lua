@@ -28,6 +28,7 @@ vim.opt.showbreak = ">"
 vim.opt.showmatch = true -- Match brackets
 vim.opt.smartcase = false
 vim.opt.smartindent = false
+vim.opt.smoothscroll = true
 vim.opt.spell = true
 vim.opt.spellcapcheck = "" -- don't check for capital letters at start of sentence.
 vim.opt.spellfile = vim.fn.stdpath("config") .. "/spell/en.utf-8.add"
