@@ -1,17 +1,12 @@
 return {
     "axieax/urlview.nvim",
     cmd = "UrlView",
-    dependencies = { "nvim-telescope/telescope.nvim" },
     keys = {
-        {
-            "<leader>fu",
-            function()
-                vim.cmd.UrlView()
-            end,
-            desc = "URLs",
-        },
+        { "<leader>fu", vim.cmd.UrlView, desc = "URLs" },
     },
     opts = {
-        log_level_min = vim.log.levels.WARN,
+        default_action = "system",
+        default_picker = "telescope",
+        log_level_min = vim.log.levels.ERROR,
     },
 }
