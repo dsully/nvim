@@ -7,9 +7,7 @@ return {
             "ChatGPTEditWithInstructions",
             "ChatGPTRun",
         },
-        config = function(_, opts)
-            require("chatgpt").setup(opts)
-
+        init = function()
             vim.keymap.set("n", "<leader>cc", vim.cmd.ChatGPT, { desc = "Ask a question..." })
             vim.keymap.set({ "n", "x" }, "<leader>ci", vim.cmd.ChatGPTEditWithInstructions, { desc = "Edit with instructions" })
 
@@ -35,7 +33,6 @@ return {
             "nvim-lua/plenary.nvim",
             "nvim-telescope/telescope.nvim",
         },
-        event = "VeryLazy",
         opts = {
             answer_sign = "",
             chat = {
@@ -70,14 +67,17 @@ return {
         config = function(_, opts)
             require("copilot").setup(opts)
 
-            local cmp = require("cmp")
-            cmp.event:on("menu_opened", function()
-                vim.b.copilot_suggestion_hidden = true
-            end)
+            local ok, cmp = pcall(require, "cmp")
 
-            cmp.event:on("menu_closed", function()
-                vim.b.copilot_suggestion_hidden = false
-            end)
+            if ok then
+                cmp.event:on("menu_opened", function()
+                    vim.b.copilot_suggestion_hidden = true
+                end)
+
+                cmp.event:on("menu_closed", function()
+                    vim.b.copilot_suggestion_hidden = false
+                end)
+            end
 
             -- local keys = {
             --     {
@@ -153,20 +153,25 @@ return {
     },
     {
         "huggingface/llm.nvim",
+        cmd = {
+            "LLMSuggestion",
+            "LLMToggleAutoSuggest",
+        },
         config = function(_, opts)
             require("llm").setup(opts)
 
-            local cmp = require("cmp")
+            local ok, cmp = pcall(require, "cmp")
 
-            cmp.event:on("menu_opened", function()
-                require("llm.completion").suggestions_enabled = false
-            end)
+            if ok then
+                cmp.event:on("menu_opened", function()
+                    require("llm.completion").suggestions_enabled = false
+                end)
 
-            cmp.event:on("menu_closed", function()
-                require("llm.completion").suggestions_enabled = true
-            end)
+                cmp.event:on("menu_closed", function()
+                    require("llm.completion").suggestions_enabled = true
+                end)
+            end
         end,
-        -- event = "VeryLazy",
         init = function()
             vim.api.nvim_create_user_command("StarCoder", function()
                 require("llm.completion").complete()
