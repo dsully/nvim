@@ -9,7 +9,9 @@ return {
         -- https://github.com/L3MON4D3/LuaSnip/blob/master/Examples/snippets.lua
 
         ls.config.set_config({
-            history = true,
+            keep_roots = true,
+            link_roots = true,
+            link_children = true,
             -- Do not jump to snippet if I'm outside of it
             -- https://github.com/L3MON4D3/LuaSnip/issues/78
             region_check_events = "CursorMoved",
