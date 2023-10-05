@@ -7,6 +7,48 @@ end
 
 vim.opt.runtimepath:prepend(lazypath)
 
+-- Load file based plugins without blocking the UI.
+-- Snarfed from lazyvim. Maybe this will make it to lazy.nvim
+do
+    local events = {} ---@type {event: string, pattern?: string, buf: number, data?: any}[]
+
+    local load = vim.schedule_wrap(function()
+        if #events == 0 then
+            return
+        end
+
+        vim.api.nvim_del_augroup_by_name("lazy_file")
+        vim.api.nvim_exec_autocmds("User", { pattern = "LazyFile", modeline = false })
+
+        for _, event in ipairs(events) do
+            vim.api.nvim_exec_autocmds(event.event, {
+                pattern = event.pattern,
+                modeline = false,
+                buffer = event.buf,
+                data = { lazy_file = true },
+            })
+        end
+        events = {}
+    end)
+
+    vim.api.nvim_create_autocmd({ "BufReadPost", "BufWritePost", "BufNewFile" }, {
+        group = vim.api.nvim_create_augroup("lazy_file", { clear = true }),
+        callback = function(event)
+            table.insert(events, event)
+            load()
+        end,
+        once = true,
+    })
+end
+
+-- Add support for the LazyFile event
+local Event = require("lazy.core.handler.event")
+local _event = Event._event
+---@diagnostic disable-next-line: duplicate-set-field
+Event._event = function(self, value)
+    return value == "LazyFile" and "User LazyFile" or _event(self, value)
+end
+
 require("lazy").setup("plugins", {
     change_detection = {
         enabled = false,

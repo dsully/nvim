@@ -74,7 +74,6 @@ return {
             },
         })
     end,
-    event = "VeryLazy",
     keys = {
         {
             "<space>f",

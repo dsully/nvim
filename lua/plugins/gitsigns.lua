@@ -48,5 +48,5 @@ return {
             },
         })
     end,
-    event = "VeryLazy",
+    event = "LazyFile",
 }

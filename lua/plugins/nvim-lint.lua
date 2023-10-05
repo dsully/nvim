@@ -70,5 +70,5 @@ return {
             group = vim.api.nvim_create_augroup("nvim-lint", { clear = true }),
         })
     end,
-    event = "VeryLazy",
+    event = "LazyFile",
 }
