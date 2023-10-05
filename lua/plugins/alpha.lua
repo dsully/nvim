@@ -16,15 +16,15 @@ return {
 
         dashboard.section.buttons.opts.spacing = 0
         dashboard.section.buttons.val = {
-            -- dashboard.button("l", "󰁯  Load Last Session   ", ":lua require('persistence').load({last=true})<CR>"),
-            dashboard.button("l", "󰁯  Load Session        ", ":lua require('persistence').load({})<CR>"),
-            dashboard.button("n", "  New File            ", ":ene <BAR> startinsert<CR>"),
-            dashboard.button("r", "󰈢  Recently Opened     ", ":Telescope oldfiles<CR>"),
-            dashboard.button("f", "󰈞  Find Files          ", ":Telescope find_files hidden=true path_display=smart<CR>"),
-            dashboard.button("g", "  Find Text           ", ":Telescope live_grep <CR>"),
-            dashboard.button("p", "󰓅  Profile Plugins     ", ":Lazy profile<CR>"),
-            dashboard.button("u", "  Update Plugins      ", ":Lazy sync<CR>"),
-            dashboard.button("q", "󰗼  Quit Neovim         ", ":qa!<CR>"),
+            -- dashboard.button("l", "󰁯  Load Last Session   ", "<cmd> lua require('persistence').load({last=true})<CR>"),
+            dashboard.button("l", "󰁯  Load Session        ", "<cmd> lua require('persistence').load({})<CR>"),
+            dashboard.button("n", "  New File            ", "<cmd> ene <BAR> startinsert<CR>"),
+            dashboard.button("r", "󰈢  Recently Opened     ", "<cmd> Telescope oldfiles<CR>"),
+            dashboard.button("f", "󰈞  Find Files          ", "<cmd> Telescope find_files hidden=true path_display=smart<CR>"),
+            dashboard.button("g", "  Find Text           ", "<cmd> Telescope live_grep <CR>"),
+            dashboard.button("p", "󰓅  Profile Plugins     ", "<cmd> Lazy profile<CR>"),
+            dashboard.button("u", "  Update Plugins      ", "<cmd> Lazy sync<CR>"),
+            dashboard.button("q", "󰗼  Quit Neovim         ", "<cmd> qa!<CR>"),
         }
 
         dashboard.config.layout = {
