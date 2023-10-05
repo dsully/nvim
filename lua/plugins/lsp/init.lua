@@ -655,17 +655,11 @@ return {
         "aznhe21/actions-preview.nvim",
         config = function()
             require("actions-preview").setup({
-                backend = { "nui", "telescope" },
+                backend = { "nui" },
                 diff = {
                     algorithm = "patience",
                     ignore_whitespace = true,
                 },
-                telescope = require("telescope.themes").get_dropdown({
-                    layout_config = {
-                        width = 0.75,
-                        prompt_position = "bottom",
-                    },
-                }),
             })
         end,
     },
