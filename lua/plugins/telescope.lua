@@ -207,6 +207,5 @@ return {
         { "nvim-telescope/telescope-file-browser.nvim" },
         { "nvim-telescope/telescope-smart-history.nvim", dependencies = { "kkharji/sqlite.lua" } },
         { "tsakirist/telescope-lazy.nvim" },
-        { "folke/noice.nvim" },
     },
 }

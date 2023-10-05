@@ -120,49 +120,44 @@ return {
     -- Better % matching.
     {
         "andymass/vim-matchup",
-        event = "BufReadPost",
         init = function()
             vim.o.matchpairs = "(:),{:},[:],<:>"
-        end,
-        config = function()
+
             -- Don't recognize anything in comments
             vim.g.matchup_delim_noskips = 2
 
             vim.g.matchup_matchparen_deferred = 1
             vim.g.matchup_matchparen_offscreen = { method = "status_manual" }
-
-            require("nvim-treesitter.configs").setup({
-                matchup = {
-                    enable = true,
-                },
-            })
         end,
+        dependencies = {
+            "nvim-treesitter/nvim-treesitter",
+            opts = function(_, opts)
+                opts.matchup = { enable = true }
+            end,
+        },
+        event = { "LazyFile" },
     },
 
     {
         "RRethy/nvim-treesitter-endwise",
-        config = function()
-            require("nvim-treesitter.configs").setup({
-                endwise = {
-                    enable = true,
-                },
-            })
-        end,
-        event = { "BufReadPost", "BufNewFile" },
+        dependencies = {
+            "nvim-treesitter/nvim-treesitter",
+            opts = function(_, opts)
+                opts.endwise = { enable = true }
+            end,
+        },
+        event = { "LazyFile" },
     },
 
     -- Use treesitter to auto-close and auto-rename HTML tags.
     {
         "windwp/nvim-ts-autotag",
-        config = function()
-            require("nvim-treesitter.configs").setup({
-                autotag = {
-                    enable = true,
-                    filetypes = { "html", "javascript", "markdown", "xml" },
-                },
-            })
-        end,
-        event = { "BufReadPost", "BufNewFile" },
+        dependencies = {
+            "nvim-treesitter/nvim-treesitter",
+            opts = function(_, opts)
+                opts.autotag = { enable = true }
+            end,
+        },
         ft = { "html", "javascript", "markdown", "xml" },
     },
 
@@ -189,6 +184,7 @@ return {
             -- Don't enable for non-treesitter types
             local exclude_filetypes = {
                 ["gitcommit"] = true,
+                ["just"] = true,
                 ["text"] = true,
             }
 
@@ -216,6 +212,6 @@ return {
                 },
             })
         end,
-        event = { "BufReadPost", "BufNewFile" },
+        event = { "LazyFile" },
     },
 }
