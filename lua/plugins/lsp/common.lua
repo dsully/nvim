@@ -261,7 +261,7 @@ M.find_root = function()
 
     if path then
         for _, client in pairs(vim.lsp.get_clients({ bufnr = 0 })) do
-            if not vim.tbl_contains({ "copilot" }, client.name) then
+            if not vim.tbl_contains({ vim.g.defaults.ignored.lsp }, client.name) then
                 local workspace = client.config.workspace_folders
 
                 local paths = workspace and vim.tbl_map(function(ws)
