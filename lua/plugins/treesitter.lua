@@ -128,6 +128,9 @@ return {
 
             vim.g.matchup_matchparen_deferred = 1
             vim.g.matchup_matchparen_offscreen = { method = "status_manual" }
+
+            -- Wrong matching for HTML: https://github.com/andymass/vim-matchup/issues/19
+            vim.g.matchup_matchpref = { html = { nolists = 1 } }
         end,
         dependencies = {
             "nvim-treesitter/nvim-treesitter",
