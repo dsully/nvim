@@ -113,6 +113,24 @@ else
 end
 
 vim.g.defaults = {
+    ai_file_types = {
+        "bash",
+        "c",
+        "cpp",
+        "fish",
+        "go",
+        "html",
+        "java",
+        "javascript",
+        "just",
+        "lua",
+        "python",
+        "rust",
+        "sh",
+        "typescript",
+        "zsh",
+    },
+
     -- Diagnostic symbols in the gutter.
     icons = {
         error = "󰅚 ",
@@ -140,6 +158,7 @@ vim.g.defaults = {
             "Trouble",
             "alpha",
             "chatgpt",
+            "chatgpt-input",
             "checkhealth",
             "cmp_menu",
             "git",
@@ -155,6 +174,10 @@ vim.g.defaults = {
             "qf",
             "tsplayground",
             "vim",
+        },
+        lsp = {
+            "copilot",
+            "llm-ls",
         },
         progress = {
             "copilot",

@@ -65,6 +65,10 @@ return {
     {
         "zbirenbaum/copilot.lua",
         config = function(_, opts)
+            for _, ft in ipairs(vim.g.defaults.ai_file_types) do
+                opts.filetypes[ft] = true
+            end
+
             require("copilot").setup(opts)
 
             local ok, cmp = pcall(require, "cmp")
@@ -112,27 +116,11 @@ return {
         event = "InsertEnter",
         opts = {
             filetypes = {
-                bash = true,
-                c = true,
-                cpp = true,
-                fish = true,
-                go = true,
-                html = true,
-                java = true,
-                javascript = true,
-                just = true,
-                lua = true,
-                python = true,
-                rust = true,
-                sh = true,
-                typescript = true,
-                zsh = true,
-                ["*"] = false, -- disable for all other filetypes and ignore default `filetypes`
+                ["*"] = false, -- Disable for all other filetypes and ignore default `filetypes`
             },
             -- Per: https://github.com/zbirenbaum/copilot-cmp#install
             -- panel = { enabled = false },
             -- suggestion = { enabled = false },
-
             panel = {
                 enabled = true,
                 auto_refresh = true,
@@ -183,6 +171,7 @@ return {
             -- dismiss_keymap = "<Right>",
             accept_keymap = "<Tab>",
             dismiss_keymap = "<S-Tab>",
+            enable_suggestions_on_files = vim.g.defaults.ai_file_types,
             model = "bigcode/starcoder",
             query_params = {
                 max_new_tokens = 200,

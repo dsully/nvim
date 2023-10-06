@@ -540,7 +540,7 @@ return {
                 local lines = {}
 
                 for i, client in pairs(clients) do
-                    if not vim.tbl_contains({ "copilot", "llm-ls" }, client.name) then
+                    if not vim.tbl_contains({ vim.g.defaults.ignored.lsp }, client.name) then
                         table.insert(lines, "# " .. client.name:upper())
                         table.insert(lines, "```lua")
 

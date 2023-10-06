@@ -6,9 +6,7 @@ return {
             enabled = true,
         },
         ignore = {
-            clients = {
-                "copilot",
-            },
+            clients = vim.g.defaults.ignored.lsp,
         },
         sign = {
             enabled = true,
