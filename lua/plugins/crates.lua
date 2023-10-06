@@ -12,22 +12,23 @@ return {
                         vim.lsp.buf.hover()
                     end
                 end, {
-
                     buffer = bufnr,
                     desc = "Show Crate Documentation",
                 })
 
-                vim.keymap.set("n", "<leader>cu", require("crates").upgrade_crate, { buffer = bufnr, desc = "Upgrade crate." })
-                vim.keymap.set("n", "<leader>cU", require("crates").upgrade_all_crates, { buffer = bufnr, desc = "Upgrade all crates." })
+                vim.keymap.set("n", "<leader>cu", crates.upgrade_crate, { buffer = bufnr, desc = "Upgrade crate." })
+                vim.keymap.set("n", "<leader>cU", crates.upgrade_all_crates, { buffer = bufnr, desc = "Upgrade all crates." })
             end,
             popup = {
                 autofocus = true,
                 border = vim.g.border,
             },
+            src = {
+                cmp = {
+                    enabled = true,
+                },
+            },
         })
-
-        vim.keymap.set("n", "<leader>cu", crates.upgrade_crate, { desc = "Upgrade crate." })
-        vim.keymap.set("n", "<leader>cU", crates.upgrade_all_crates, { desc = "Upgrade all crates." })
 
         -- Add the nvim-cmp source if we're editing Cargo.toml
         require("cmp").setup.buffer({
