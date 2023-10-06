@@ -65,12 +65,6 @@ return {
                     cwd = root_file({ "Caddyfile" }),
                     stdin = true,
                 },
-                just = {
-                    command = "just",
-                    args = { "--fmt", "--unstable", "-f", "$FILENAME" },
-                    cwd = root_file({ "Justfile", "justfile" }),
-                    stdin = false,
-                },
             },
         })
     end,
