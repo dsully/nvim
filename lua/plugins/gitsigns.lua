@@ -3,9 +3,6 @@ return {
     config = function()
         require("gitsigns").setup({
             keymaps = nil,
-            -- Boost efficiency for the internal sign related operations
-            -- Ref: https://github.com/lewis6991/gitsigns.nvim/pull/438
-            _extmark_signs = true,
             _inline2 = true,
             preview_config = {
                 border = vim.g.border,
