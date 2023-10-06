@@ -16,6 +16,11 @@ return {
             end,
             desc = "Previous todo comment",
         },
+        {
+            "<leader>ft",
+            vim.cmd.TodoTelescope,
+            { desc = "TODOs" },
+        },
     },
     opts = true,
 }

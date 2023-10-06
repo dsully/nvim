@@ -19,6 +19,13 @@ return {
     end,
     keys = {
         {
+            "<leader>fn",
+            function()
+                vim.cmd.Telescope("notify")
+            end,
+            { desc = "Notifications" },
+        },
+        {
             "<leader>nd",
             function()
                 require("notify").dismiss({ silent = true, pending = true })

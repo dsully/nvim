@@ -140,4 +140,13 @@ return {
             },
         })
     end,
+    keys = {
+        {
+            "<leader>fN",
+            function()
+                vim.cmd.Noice("telescope")
+            end,
+            { desc = "Noice" },
+        },
+    },
 }
