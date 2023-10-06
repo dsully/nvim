@@ -18,12 +18,12 @@ return {
                 { key = "d", cmd = "docstring", desc = "Add Doc-Strings" },
                 { key = "a", cmd = "add_tests", desc = "Add Tests" },
                 { key = "o", cmd = "optimize_code", desc = "Optimize Code" },
-                { key = "s", cmd = "summarize", desc = "Sumamrize" },
+                { key = "s", cmd = "summarize", desc = "Summarize" },
                 { key = "f", cmd = "fix_bugs", desc = "Fix Bugs" },
                 { key = "x", cmd = "explain_code", desc = "Explain Code" },
                 { key = "l", cmd = "code_readability_analysis", desc = "Code Readability Analysis" },
             }) do
-                vim.keymap.set("n", "<leader>c" .. map.key, function()
+                vim.keymap.set({ "n", "x" }, "<leader>c" .. map.key, function()
                     vim.cmd.ChatGPTRun(map.cmd)
                 end, { desc = map.desc })
             end
@@ -34,32 +34,39 @@ return {
             "nvim-telescope/telescope.nvim",
         },
         opts = {
-            answer_sign = "",
             chat = {
-                sessions_window = {
-                    border = {
-                        style = vim.g.border,
-                    },
+                answer_sign = "",
+                keymaps = {
+                    close = { "<C-c>" },
+                    yank_last = "<C-y>",
+                    scroll_up = "<C-k>",
+                    scroll_down = "<C-j>",
+                    toggle_settings = "<C-o>",
+                    new_session = "<C-n>",
+                    cycle_windows = "<Tab>",
+                },
+                openai_params = {
+                    model = "gpt-4",
+                },
+                popup_window = { border = { style = vim.g.border } },
+                question_sign = "",
+                sessions_window = { border = { style = vim.g.border } },
+                settings_window = { border = { style = vim.g.border } },
+                system_input = { border = { style = vim.g.border } },
+                system_window = { border = { style = vim.g.border } },
+                welcome_message = "",
+            },
+            edit_with_instructions = {
+                diff = false,
+                keymaps = {
+                    close = "<C-c>",
+                    accept = "<C-y>",
+                    toggle_diff = "<C-d>",
+                    toggle_settings = "<C-o>",
+                    cycle_windows = "<Tab>",
+                    use_output_as_input = "<C-i>",
                 },
             },
-            keymaps = {
-                close = { "<C-c>" },
-                yank_last = "<C-y>",
-                scroll_up = "<C-k>",
-                scroll_down = "<C-j>",
-                toggle_settings = "<C-o>",
-                new_session = "<C-n>",
-                cycle_windows = "<Tab>",
-            },
-            openai_params = {
-                model = "gpt-4",
-            },
-            popup_window = { border = { style = vim.g.border } },
-            settings_window = { border = { style = vim.g.border } },
-            system_input = { border = { style = vim.g.border } },
-            system_window = { border = { style = vim.g.border } },
-            question_sign = "",
-            welcome_message = "",
         },
     },
     {
