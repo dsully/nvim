@@ -142,7 +142,11 @@ vim.api.nvim_create_autocmd({ "BufReadCmd" }, {
 })
 
 vim.api.nvim_create_autocmd({ "BufReadPost" }, {
-    callback = function()
+    callback = function(args)
+        if args.data and args.data.lazy_file then
+            return
+        end
+
         if vim.tbl_contains(vim.g.defaults.ignored.buffer_types, vim.bo.buftype) then
             return
         end
