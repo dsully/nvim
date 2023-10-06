@@ -448,44 +448,20 @@ local servers = {
                         },
                     },
                 }),
-                filetypes = { "yaml", "yaml.ghaction" },
+                filetypes = { "yaml", "yaml.ghaction", "!yaml.ansible" },
                 on_attach = common.on_attach,
+                on_new_config = function(config)
+                    vim.list_extend(config.settings.yaml.schemas or {}, require("schemastore").yaml.schemas())
+                end,
                 settings = {
                     yaml = {
                         format = {
-                            enable = true,
                             singleQuote = false,
                         },
-                        schemas = require("schemastore").json.schemas({
-                            exclude = {
-                                -- Disable these as they conflict with *defaults*.yaml files.
-                                "Ansible Inventory",
-                                "Ansible Playbook",
-                                "Ansible Requirements",
-                                "Ansible Tasks File",
-                                "Ansible Vars File",
-                                "PyProject", -- This has poetry config in it.
-                            },
-                        }),
-                        schemaStore = {
-                            enable = false,
-                        },
-                        validate = true,
                     },
                 },
             },
         }))
-
-        vim.api.nvim_create_user_command("YAMLSchema", function()
-            local schema = require("yaml-companion").get_buf_schema(0)
-
-            if schema.result[1].name ~= "none" then
-                vim.notify(schema.result[1].name)
-            end
-        end, { desc = "Show YAML schema" })
-
-        -- vs = View Schema
-        vim.keymap.set("n", "<leader>vs", vim.cmd.YAMLSchema, { desc = "Show the YAML schema in use" })
     end,
 }
 
