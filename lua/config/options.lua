@@ -20,6 +20,7 @@ vim.opt.sessionoptions = {
     "curdir",
     "globals",
     "options",
+    "skiprtp",
 }
 vim.opt.shell = "sh" -- plugins expect bash - not fish, zsh, etc
 vim.opt.shiftwidth = 4

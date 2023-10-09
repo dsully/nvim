@@ -31,7 +31,7 @@ do
         events = {}
     end)
 
-    vim.api.nvim_create_autocmd({ "BufReadPost", "BufWritePost", "BufNewFile" }, {
+    vim.api.nvim_create_autocmd({ "BufReadPost", "BufWritePre", "BufNewFile" }, {
         group = vim.api.nvim_create_augroup("lazy_file", { clear = true }),
         callback = function(event)
             table.insert(events, event)

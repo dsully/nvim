@@ -1,3 +1,5 @@
+require("plugins.lsp.handlers")
+
 local common = require("plugins.lsp.common")
 
 local servers = {
@@ -476,37 +478,6 @@ return {
             "MasonToolsUpdate",
         },
         config = function()
-            --
-            -- Jump directly to the first available definition every time.
-            -- Use Telescope if there is more than one result.
-            vim.lsp.handlers["textDocument/definition"] = function(_, result, ctx)
-                if not result or vim.tbl_isempty(result) then
-                    vim.api.nvim_echo({ { "LSP: Could not find definition" } }, false, {})
-                    return
-                end
-
-                local client = vim.lsp.get_client_by_id(ctx.client_id)
-
-                if not client then
-                    return
-                end
-
-                if vim.tbl_islist(result) then
-                    local results = vim.lsp.util.locations_to_items(result, client.offset_encoding)
-                    local lnum, filename = results[1].lnum, results[1].filename
-
-                    for _, val in pairs(results) do
-                        if val.lnum ~= lnum or val.filename ~= filename then
-                            return require("telescope.builtin").lsp_definitions()
-                        end
-                    end
-
-                    vim.lsp.util.jump_to_location(result[1], client.offset_encoding, false)
-                else
-                    vim.lsp.util.jump_to_location(result, client.offset_encoding, true)
-                end
-            end
-
             require("lspconfig.ui.windows").default_options.border = vim.g.border
 
             vim.lsp.set_log_level(vim.log.levels.ERROR)
