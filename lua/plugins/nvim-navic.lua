@@ -6,6 +6,7 @@ return {
     end,
     opts = {
         highlight = true,
+        lazy_update_context = true,
         lsp = {
             auto_attach = true,
             preference = { "pyright" },
