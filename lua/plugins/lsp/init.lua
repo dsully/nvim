@@ -23,36 +23,56 @@ local servers = {
     -- pylyzer",
     starlark_rust = {},
     terraformls = {},
-    clangd = function()
-        -- https://github.com/p00f/clangd_extensions.nvim
-        require("clangd_extensions").setup({
-            server = {
-                capabilities = vim.tbl_extend("force", common.capabilities(), {
-                    textDocument = {
-                        completion = {
-                            editsNearCursor = true,
-                        },
-                    },
-                    offsetEncoding = { "utf-16" },
-                }),
-                -- https://github.com/hrsh7th/nvim-cmp/issues/999
-                cmd = {
-                    "clangd",
-                    "--all-scopes-completion",
-                    "--clang-tidy",
-                    "--completion-style=detailed",
-                    "--header-insertion-decorators",
+    clangd = {
+        capabilities = vim.tbl_extend("force", common.capabilities(), {
+            textDocument = {
+                completion = {
+                    editsNearCursor = true,
                 },
-                -- Don't want objective-c and objective-cpp.
-                filetypes = { "c", "cpp", "cuda" },
-                on_attach = common.on_attach,
             },
-            extensions = {
-                autoSetHints = true,
-                hover_with_actions = false,
-            },
-        })
-    end,
+            offsetEncoding = { "utf-16" },
+        }),
+        cmd = {
+            "clangd",
+            "--all-scopes-completion",
+            "--background-index",
+            "--clang-tidy",
+            "--completion-style=detailed",
+            "--fallback-style=llvm",
+            "--function-arg-placeholders",
+            "--header-insertion=iwyu",
+        },
+        -- Don't want objective-c and objective-cpp.
+        filetypes = { "c", "cpp", "cuda" },
+        init_options = {
+            usePlaceholders = true,
+            completeUnimported = true,
+            clangdFileStatus = true,
+        },
+        on_attach = function(client, ...)
+            -- https://github.com/p00f/clangd_extensions.nvim
+            require("clangd_extensions").setup()
+
+            local inlay_hints = require("clangd_extensions.inlay_hints")
+
+            inlay_hints.setup_autocmd()
+            inlay_hints.set_inlay_hints()
+            inlay_hints.toggle_inlay_hints()
+
+            common.on_attach(client, ...)
+        end,
+        root_dir = function(fname)
+            return require("lspconfig.util").root_pattern(
+                "Makefile",
+                "configure.ac",
+                "configure.in",
+                "config.h.in",
+                "meson.build",
+                "meson_options.txt",
+                "build.ninja"
+            )(fname) or require("lspconfig.util").find_git_ancestor(fname)
+        end,
+    },
     gopls = {
         filetypes = { "go", "gomod", "gowork" },
         init_options = {
