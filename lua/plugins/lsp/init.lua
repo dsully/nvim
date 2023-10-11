@@ -207,10 +207,7 @@ local servers = {
                 client.server_capabilities.signatureHelpProvider = false -- pyright typing of signature is weird
                 client.server_capabilities.definitionProvider = false -- pyright does not follow imports correctly
                 client.server_capabilities.referencesProvider = false
-                client.server_capabilities.completionProvider = {
-                    resolveProvider = true,
-                    triggerCharacters = { "." },
-                }
+                client.server_capabilities.completionProvider = false
                 common.on_attach(client, ...)
             end,
             on_new_config = function(config, root)
