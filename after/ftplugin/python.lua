@@ -9,9 +9,8 @@ end
 --
 -- If/once upstream addresses my PR, then pulling from pypi is an option.
 do
-    if vim.env.VIRTUAL_ENV then
+    if vim.env.VIRTUAL_ENV and not vim.g.dmypy then
         local dmypy = vim.env.VIRTUAL_ENV .. "/bin/dmypy-ls"
-        local pip = vim.env.VIRTUAL_ENV .. "/bin/pip"
 
         if not vim.uv.fs_access(dmypy, "RX") then
             vim.notify("Installing dmypy-ls in virtual env...")
@@ -24,6 +23,8 @@ do
                 end
             end)
         end
+
+        vim.g.dmypy = true
 
         local check = vim.loop.new_check()
 
