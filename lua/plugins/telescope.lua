@@ -137,6 +137,9 @@ return {
                     oldfiles = {
                         only_cwd = true,
                         prompt_prefix = " 󰋚  ",
+                        file_ignore_patterns = {
+                            ".git/COMMIT_EDITMSG",
+                        },
                     },
                 },
             })
