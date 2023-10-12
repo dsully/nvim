@@ -48,6 +48,9 @@ return {
                 openai_params = {
                     model = "gpt-4",
                 },
+                popup_input = {
+                    submit = "<C-Enter>",
+                },
                 popup_window = { border = { style = vim.g.border } },
                 question_sign = "",
                 sessions_window = { border = { style = vim.g.border } },
@@ -59,11 +62,12 @@ return {
             edit_with_instructions = {
                 diff = false,
                 keymaps = {
-                    close = "<C-c>",
                     accept = "<C-y>",
+                    close = "<C-c>",
+                    cycle_windows = "<Tab>",
+                    new_session = "<C-n>",
                     toggle_diff = "<C-d>",
                     toggle_settings = "<C-o>",
-                    cycle_windows = "<Tab>",
                     use_output_as_input = "<C-i>",
                 },
             },
