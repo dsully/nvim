@@ -142,6 +142,7 @@ return {
             })
 
             telescope.load_extension("smart_history")
+            telescope.load_extension("ui-select")
             telescope.load_extension("zf-native")
         end,
         init = function()
@@ -149,6 +150,7 @@ return {
                 { key = "B", cmd = "buffers", desc = "Buffers" },
                 { key = "c", cmd = "git_commits", desc = "Git Commits" },
                 { key = "g", cmd = "live_grep", desc = "Live Grep" },
+                { key = "i", cmd = "symbols", desc = "Icons / Symbols" },
                 { key = "o", cmd = "oldfiles", desc = "Recently Opened" },
                 { key = "r", cmd = "resume", desc = "Resume Last Telescope Finder" },
                 { key = "w", cmd = "grep_string", desc = "Words" },
@@ -161,6 +163,8 @@ return {
         dependencies = {
             { "natecraddock/telescope-zf-native.nvim" },
             { "nvim-telescope/telescope-smart-history.nvim", dependencies = { "kkharji/sqlite.lua" } },
+            { "nvim-telescope/telescope-symbols.nvim" },
+            { "nvim-telescope/telescope-ui-select.nvim" },
         },
         keys = {
             {
