@@ -318,7 +318,7 @@ local servers = {
             -- Override clippy to run in its own directory to avoid clobbering caches.
             local target = "--target-dir=" .. config.root_dir .. "/target/ide-clippy"
 
-            table.insert(config.settings["rust-analyzer"].checkOnSave.extraArgs, target)
+            table.insert(config.settings["rust-analyzer"].check.extraArgs, target)
         end,
         on_attach = function(client, ...)
             client.server_capabilities.experimental.hoverActions = true
