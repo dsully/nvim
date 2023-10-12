@@ -87,7 +87,7 @@ return {
                     v = string.format("v%s.%s.%s ", version.major, version.minor, version.patch)
                 end
 
-                dashboard.section.footer.val = "⚡ Neovim " .. v .. "loaded " .. stats.count .. " plugins in " .. ms .. "ms"
+                dashboard.section.footer.val = "⚡ Neovim loaded " .. stats.loaded .. "/" .. stats.count .. " plugins in " .. ms .. "ms"
 
                 vim.cmd.AlphaRedraw()
             end,
