@@ -25,27 +25,8 @@ return {
 
         require("conform.formatters.black").cwd = root_file({ "pyproject.toml", "setup.cfg" })
 
-        local black = { "blackd", "black" }
-        local shell = { "shellcheck", "shellharden", "shfmt" }
-
         require("conform").setup({
-            formatters_by_ft = {
-                bash = shell,
-                c = { "clang-format" },
-                caddy = { "caddy" },
-                cpp = { "clang-format" },
-                css = { "prettier" },
-                fish = { "fish_indent" },
-                go = { "goimports", "gofumpt", "delve" },
-                graphql = { "prettier" },
-                html = { "prettier" },
-                just = { "just" },
-                lua = { "stylua" },
-                markdown = { "markdownlint" },
-                python = { black },
-                sh = shell,
-                zsh = shell,
-            },
+            formatters_by_ft = vim.g.defaults.formatters,
             formatters = {
                 blackd = {
                     command = "blackd-client",

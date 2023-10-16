@@ -560,7 +560,7 @@ return {
             }
 
             -- Pull in linters and formatters.
-            for _, f in pairs(require("conform").list_all_formatters()) do
+            for _, f in pairs(vim.g.defaults.formatters) do
                 table.insert(mason_tools, f.command)
             end
 
@@ -568,9 +568,9 @@ return {
                 mason_tools = vim.tbl_extend("force", mason_tools, f)
             end
 
-            -- These tools aren't in Mason
+            -- Remove built-ins / formatters that are not in Mason.
             mason_tools = vim.tbl_filter(function(t)
-                return not vim.tbl_contains({ "caddy", "fish", "fish_indent", "just", "typos" }, t)
+                return not vim.tbl_contains({ "caddy", "fish", "fish_indent", "just" }, t)
             end, mason_tools)
 
             require("mason").setup({
