@@ -320,11 +320,31 @@ local servers = {
     end,
 
     rust_analyzer = {
+        -- before_init = function(_, config)
+        --     -- Override clippy to run in its own directory to avoid clobbering caches.
+        --     local target = "--target-dir=" .. config.root_dir .. "/target/ide-clippy"
+        --
+        --     table.insert(config.settings["rust-analyzer"].check.extraArgs, target)
+        -- end,
         before_init = function(_, config)
-            -- Override clippy to run in its own directory to avoid clobbering caches.
-            local target = "--target-dir=" .. config.root_dir .. "/target/ide-clippy"
+            -- From mrjones: Override clippy to run in its own directory to avoid clobbering caches
+            -- but only if target-dir isn't already set in either the command or the extraArgs
+            local checkOnSave = config.settings["rust-analyzer"].checkOnSave
+            local needle = "%-%-target%-dir"
 
-            table.insert(config.settings["rust-analyzer"].check.extraArgs, target)
+            if string.find(checkOnSave.command, needle) then
+                return
+            end
+
+            checkOnSave.extraArgs = checkOnSave.extraArgs or {}
+
+            for _, v in pairs(checkOnSave.extraArgs) do
+                if string.find(v, needle) then
+                    return
+                end
+            end
+
+            table.insert(checkOnSave.extraArgs, "--target-dir=" .. config.root_dir .. "/target/ide-clippy")
         end,
         on_attach = function(client, ...)
             client.server_capabilities.experimental.hoverActions = true
