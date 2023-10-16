@@ -165,7 +165,7 @@ return {
     },
 
     -- f-string manipulation.
-    { "chrisgrieser/nvim-puppeteer", lazy = false }, -- plugin lazy-loads itself
+    { "chrisgrieser/nvim-puppeteer", ft = "python" },
 
     -- Build treesitter queries.
     {
@@ -215,6 +215,6 @@ return {
                 },
             })
         end,
-        event = { "LazyFile" },
+        event = { "LspAttach" },
     },
 }
