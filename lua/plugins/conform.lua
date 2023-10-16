@@ -26,7 +26,6 @@ return {
         require("conform.formatters.black").cwd = root_file({ "pyproject.toml", "setup.cfg" })
 
         local black = { "blackd", "black" }
-        local prettier = { "prettierd", "prettier" }
         local shell = { "shellcheck", "shellharden", "shfmt" }
 
         require("conform").setup({
@@ -35,11 +34,11 @@ return {
                 c = { "clang-format" },
                 caddy = { "caddy" },
                 cpp = { "clang-format" },
-                css = { prettier },
+                css = { "prettier" },
                 fish = { "fish_indent" },
-                go = { "goimports", "delve" },
-                graphql = { prettier },
-                html = { prettier },
+                go = { "goimports", "gofumpt", "delve" },
+                graphql = { "prettier" },
+                html = { "prettier" },
                 just = { "just" },
                 lua = { "stylua" },
                 markdown = { "markdownlint" },
