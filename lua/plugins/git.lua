@@ -46,7 +46,7 @@ return {
                 },
             })
         end,
-        event = "LazyFile",
+        event = vim.g.defaults.lazyfile,
     },
     {
         "linrongbin16/gitlinker.nvim",

@@ -639,7 +639,7 @@ return {
             { "williamboman/mason.nvim", build = ":MasonUpdate" },
             { "WhoIsSethDaniel/mason-tool-installer.nvim" },
         },
-        event = { "LazyFile" },
+        event = vim.g.defaults.lazyfile,
     },
     {
         "aznhe21/actions-preview.nvim",
