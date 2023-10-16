@@ -165,7 +165,7 @@ return {
                 -- https://github.com/hrsh7th/nvim-cmp/wiki/Example-mappings#safely-select-entries-with-cr
                 ["<CR>"] = cmp.mapping({
                     i = function(fallback)
-                        if cmp.visible() and cmp.get_active_entry() then
+                        if cmp.visible() then
                             cmp.confirm({ behavior = cmp.ConfirmBehavior.Insert, select = true })
                         else
                             fallback()
