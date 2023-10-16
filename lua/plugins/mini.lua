@@ -175,7 +175,7 @@ return {
                 },
             })
         end,
-        event = "BufReadPre",
+        event = vim.g.defaults.lazyfile,
     },
     {
         "echasnovski/mini.pairs",

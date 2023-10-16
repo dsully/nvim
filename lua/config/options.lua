@@ -207,4 +207,6 @@ vim.g.defaults = {
             "ruff_lsp",
         },
     },
+
+    lazyfile = { { "BufReadPost", "BufNewFile", "BufWritePre" } },
 }

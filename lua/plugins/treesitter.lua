@@ -114,7 +114,7 @@ return {
 
             vim.keymap.set("n", "<leader>i", vim.show_pos, { desc = "Inspect Position" })
         end,
-        event = { "BufReadPost", "BufNewFile" },
+        event = vim.g.defaults.lazyfile,
     },
 
     -- Better % matching.
@@ -138,7 +138,7 @@ return {
                 opts.matchup = { enable = true }
             end,
         },
-        event = { "LazyFile" },
+        event = vim.g.defaults.lazyfile,
     },
 
     {
@@ -149,7 +149,7 @@ return {
                 opts.endwise = { enable = true }
             end,
         },
-        event = { "LazyFile" },
+        event = vim.g.defaults.lazyfile,
     },
 
     -- Use treesitter to auto-close and auto-rename HTML tags.
