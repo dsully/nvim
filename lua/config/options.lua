@@ -132,6 +132,24 @@ vim.g.defaults = {
         "zsh",
     },
 
+    formatters = {
+        bash = { "shellcheck", "shellharden", "shfmt" },
+        c = { "clang-format" },
+        caddy = { "caddy" },
+        cpp = { "clang-format" },
+        css = { "prettier" },
+        fish = { "fish_indent" },
+        go = { "goimports", "gofumpt", "delve" },
+        graphql = { "prettier" },
+        html = { "prettier" },
+        just = { "just" },
+        lua = { "stylua" },
+        markdown = { "markdownlint" },
+        python = { "blackd" },
+        sh = { "shellcheck", "shellharden", "shfmt" },
+        zsh = { "shellcheck", "shellharden", "shfmt" },
+    },
+
     -- Diagnostic symbols in the gutter.
     icons = {
         error = "󰅚 ",
