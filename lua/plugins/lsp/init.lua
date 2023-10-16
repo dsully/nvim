@@ -143,9 +143,15 @@ local servers = {
     },
     jsonls = {
         before_init = function(_, config)
-            config.settings.json.schemas = require("schemastore").json.schemas()
+            vim.list_extend(config.settings.json.schemas, require("schemastore").json.schemas())
         end,
         filetypes = { "json", "json5", "jsonc" },
+        settings = {
+            json = {
+                schemas = {},
+                validate = { enable = true },
+            },
+        },
     },
     lua_ls = {
         settings = {
