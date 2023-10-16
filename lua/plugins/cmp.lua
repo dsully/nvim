@@ -413,12 +413,15 @@ return {
         { "saadparwaiz1/cmp_luasnip" },
         {
             "uga-rosa/cmp-dictionary",
+            cond = function()
+                return vim.fn.executable("wn") == 1 -- Needs wordnet + tcl-tk
+            end,
             config = function()
                 local dict = require("cmp_dictionary")
 
                 dict.setup({
                     first_case_insensitive = true,
-                    document = vim.fn.executable("wn") == 1, -- Needs wordnet + tcl-tk
+                    document = true,
                 })
 
                 dict.switcher({
