@@ -70,6 +70,10 @@ return {
             return sections
         end
 
+        -- Performance: We don't need this lualine require madness.
+        local lualine_require = require("lualine_require")
+        lualine_require.require = require
+
         require("lualine").setup({
             options = {
                 disabled_filetypes = vim.g.defaults.ignored.file_types,
