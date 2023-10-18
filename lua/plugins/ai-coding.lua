@@ -37,7 +37,7 @@ return {
             chat = {
                 answer_sign = "",
                 keymaps = {
-                    close = { "<C-c>" },
+                    close = { "<C-c>", "<Esc>" },
                     yank_last = "<C-y>",
                     scroll_up = "<C-k>",
                     scroll_down = "<C-j>",
