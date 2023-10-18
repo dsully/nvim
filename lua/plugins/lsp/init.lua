@@ -382,6 +382,9 @@ local servers = {
                         "unused_lifetimes",
                     },
                 },
+                checkOnSave = {
+                    command = "clippy",
+                },
                 -- https://github.com/rust-analyzer/rust-analyzer/issues/6835
                 diagnostics = {
                     disabled = { "inactive-code", "macro-error", "unresolved-macro-call" },
