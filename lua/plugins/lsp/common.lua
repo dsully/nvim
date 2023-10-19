@@ -143,6 +143,7 @@ end
 M.find_root = function()
     local root_patterns = {
         ".chezmoiroot",
+        ".neoconf.conf",
         ".stylua.toml",
         "configure",
         "package.json",
