@@ -160,29 +160,6 @@ vim.g.defaults = {
             Unit = 1,
             Value = 1,
         },
-
-        symbol_map = {
-            cmp = {
-                async_path = " [Path]",
-                buffer = " [Buffer]",
-                calc = "󰃬 [Calc]",
-                cmdline = "󰘳 [Command]",
-                copilot = " [Copilot]",
-                crates = " [󱘗 Crates]",
-                dictionary = "󰂽 [Dict]",
-                fish = "󰈺 [Fish]",
-                git = "󰊢 [Git]",
-                luasnip = "󰢱 [LuaSnip]",
-                nerdfonts = "󰊄 [Font]",
-                nvim_lsp = " [LSP]",
-                nvim_lsp_document_symbol = "󰎕 [Symbol]",
-                path = " [Path]",
-            },
-            menu_icons = {
-                calc = "󰃬",
-                fish = "󰌋",
-            },
-        },
     },
 
     formatters = {

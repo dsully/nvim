@@ -1,10 +1,49 @@
+local M = {
+    symbols = {
+        buffer = " [Buffer]",
+        crates = " [󱘗 Crates]",
+        luasnip = "󰢱 [LuaSnip]",
+        nvim_lsp = " [LSP]",
+    },
+    menu = {},
+}
+
+-- Only show matches in strings and comments.
+local is_string_like = function()
+    local context = require("cmp.config.context")
+
+    return context.in_treesitter_capture("comment")
+        or context.in_treesitter_capture("string")
+        or context.in_syntax_group("Comment")
+        or context.in_syntax_group("String")
+end
+
+-- Only show matches in strings and comments or text-like file types.
+local is_text = function()
+    local ft = vim.api.nvim_get_option_value("filetype", { buf = 0 })
+
+    if vim.tbl_contains({ "gitcommit", "markdown", "text" }, ft) then
+        return true
+    end
+
+    return is_string_like()
+end
+
 return {
     {
         "hrsh7th/nvim-cmp",
         cmd = "CmpStatus",
-        config = function()
+        config = function(_, opts)
+            if opts and opts.sources then
+                for _, source in ipairs(opts.sources) do
+                    source.group_index = source.group_index or 1
+                end
+            end
+
+            require("cmp").setup(opts)
+        end,
+        opts = function()
             local cmp = require("cmp")
-            local context = require("cmp.config.context")
             local types = require("cmp.types").lsp.CompletionItemKind
 
             -- From: https://github.com/zbirenbaum/copilot-cmp#tab-completion-configuration-highly-recommended
@@ -20,40 +59,25 @@ return {
                 return col ~= 0 and vim.api.nvim_buf_get_text(0, line - 1, 0, line - 1, col, {})[1]:match("^%s*$") == nil
             end
 
-            -- Only show matches in strings and comments.
-            local is_string_like = function()
-                return context.in_treesitter_capture("comment")
-                    or context.in_treesitter_capture("string")
-                    or context.in_syntax_group("Comment")
-                    or context.in_syntax_group("String")
-            end
+            -- Hide copilot suggestions if the completion window is open.
+            cmp.event:on("menu_opened", function()
+                vim.api.nvim_buf_set_var(0, "copilot_suggestion_hidden", true)
+            end)
 
-            -- Only show matches in strings and comments or text-like file types.
-            local is_text = function()
-                local ft = vim.api.nvim_get_option_value("filetype", { buf = 0 })
+            cmp.event:on("menu_closed", function()
+                vim.api.nvim_buf_set_var(0, "copilot_suggestion_hidden", false)
+            end)
 
-                if vim.tbl_contains({ "gitcommit", "markdown", "text" }, ft) then
-                    return true
-                end
-
-                return is_string_like()
-            end
-
-            local format = {
-                cmdline = {
-                    format = function(_, item)
-                        item.kind = ""
-                        item.menu = ""
-                        item.dup = 0
-                        return item
-                    end,
+            return {
+                experimental = {
+                    ghost_text = true,
                 },
-                normal = {
+                formatting = {
                     fields = { "kind", "abbr", "menu" },
                     format = function(entry, vim_item)
                         --
                         -- Give path completions a different set of icons.
-                        if vim.tbl_contains({ "async_path", "path" }, entry.source.name) then
+                        if string.match(entry.source.name, "path") then
                             local icon, hl_group = require("nvim-web-devicons").get_icon(entry:get_completion_item().label)
 
                             if icon then
@@ -74,7 +98,7 @@ return {
 
                         local strings = vim.split(kind.kind, "%s", { trimempty = true })
 
-                        kind.kind = string.format(" %s ", vim.g.defaults.cmp.symbol_map.menu_icons[entry.source.name] or strings[1] or "")
+                        kind.kind = string.format(" %s ", M.menu[entry.source.name] or strings[1] or "")
 
                         -- Remove duplicate entries.
                         kind.dup = ({
@@ -89,19 +113,12 @@ return {
                         kind.abbr = string.gsub(kind.abbr, "^%s+", "")
 
                         if entry.source.name ~= "copilot" then
-                            kind.menu = string.format("  %s: %s", vim.g.defaults.cmp.symbol_map.cmp[entry.source.name] or "", strings[2] or "")
+                            kind.menu = string.format("  %s: %s", M.symbols[entry.source.name] or "", strings[2] or "")
                         end
 
                         return kind
                     end,
                 },
-            }
-
-            cmp.setup({
-                experimental = {
-                    ghost_text = true,
-                },
-                formatting = format.normal,
                 mapping = cmp.mapping({
                     ["<C-a>"] = cmp.mapping.abort(),
                     ["<C-Space>"] = cmp.mapping.complete(),
@@ -209,8 +226,6 @@ return {
                         entry_filter = function()
                             return not is_string_like()
                         end,
-                        group_index = 1,
-                        priority = 150,
                     },
                     {
                         name = "nvim_lsp",
@@ -243,43 +258,10 @@ return {
 
                             return true
                         end,
-                        group_index = 1,
-                        priority = 120,
                     },
-                    {
-                        name = "async_path",
-                        group_index = 1,
-                        priority = 90,
-                    },
-                    {
-                        name = "calc",
-                        group_index = 2,
-                        priority = 80,
-                    },
-                    {
-                        name = "dictionary",
-                        entry_filter = is_text,
-                        group_index = 2,
-                        keyword_length = 2,
-                        max_item_count = 5,
-                        priority = 90,
-                    },
-                    {
-                        name = "env",
-                        group_index = 3,
-                        priority = 80,
-                    },
-                    {
-                        name = "fish",
-                        entry_filter = function()
-                            return not is_string_like()
-                        end,
-                        group_index = 3,
-                        priority = 80,
-                    },
+                }, {
                     {
                         name = "buffer",
-                        group_index = 10,
                         keyword_length = 5,
                         option = {
                             -- Complete from visible buffers, as opposed to just the current buffer.
@@ -291,22 +273,6 @@ return {
                                 return vim.tbl_keys(buffers)
                             end,
                         },
-                        priority = 50,
-                    },
-                    {
-                        name = "nerdfonts",
-                        entry_filter = is_text,
-                        group_index = 20,
-                        priority = 40,
-                        keyword_length = 2,
-                    },
-                    {
-                        name = "copilot",
-                        entry_filter = function()
-                            return not is_string_like() and not require("luasnip").in_snippet()
-                        end,
-                        group_index = 30,
-                        priority = 70,
                     },
                 }),
                 view = {
@@ -321,11 +287,90 @@ return {
                         border = vim.g.border,
                     }),
                 },
+            }
+        end,
+        dependencies = {
+            { "hrsh7th/cmp-buffer" },
+            { "hrsh7th/cmp-nvim-lsp" },
+            { "lukas-reineke/cmp-under-comparator" },
+            { "onsails/lspkind-nvim" },
+            { "saadparwaiz1/cmp_luasnip" },
+        },
+        event = "InsertEnter",
+        version = false,
+    },
+    {
+        "nvim-cmp",
+        dependencies = "FelipeLema/cmp-async-path",
+        event = "InsertEnter",
+        opts = function(_, opts)
+            table.insert(opts.sources, { name = "async_path" })
+            table.insert(M.symbols, { async_path = " [Path]" })
+        end,
+    },
+    {
+        "nvim-cmp",
+        dependencies = "bydlw98/cmp-env",
+        event = "InsertEnter",
+        opts = function(_, opts)
+            table.insert(opts.sources, { name = "env" })
+            table.insert(M.symbols, { env = " [ENV]" })
+        end,
+    },
+    {
+        "nvim-cmp",
+        dependencies = "fazibear/cmp-nerdfonts",
+        event = "InsertEnter",
+        opts = function(_, opts)
+            table.insert(opts.sources, {
+                name = "nerdfonts",
+                entry_filter = is_text,
+                keyword_length = 3,
+                keyword_pattern = [[nf\-.*]],
             })
+            table.insert(M.symbols, { nerdfonts = "󰊄 [Font]" })
+        end,
+    },
+
+    {
+        "nvim-cmp",
+        dependencies = "hrsh7th/cmp-calc",
+        event = "InsertEnter",
+        opts = function(_, opts)
+            table.insert(opts.sources, { name = "calc" })
+            table.insert(M.symbols, { calc = "󰃬 [Calc]" })
+            table.insert(M.menu, { calc = "󰃬" })
+        end,
+    },
+
+    {
+        "nvim-cmp",
+        dependencies = {
+            "FelipeLema/cmp-async-path",
+            "hrsh7th/cmp-buffer",
+            "hrsh7th/cmp-cmdline",
+            "hrsh7th/cmp-nvim-lsp-document-symbol",
+        },
+        event = { "CmdlineEnter", "InsertEnter" },
+        opts = function(_, opts)
+            local cmp = require("cmp")
+
+            table.insert(M.symbols, { cmdline = "󰘳 [Command]" })
+            table.insert(M.symbols, { nvim_lsp_document_symbol = "󰎕 [Symbol]" })
+            table.insert(M.symbols, { path = " [Path]" })
+
+            local formatting = {
+                format = function(_, item)
+                    item.kind = ""
+                    item.menu = ""
+                    item.dup = 0
+                    return item
+                end,
+            }
 
             -- Completions for search mode.
             cmp.setup.cmdline({ "/", "?" }, {
-                formatting = format.cmdline,
+                formatting = formatting,
                 mapping = cmp.mapping.preset.cmdline(),
                 sources = cmp.config.sources({
                     { name = "nvim_lsp_document_symbol", group_index = 1 },
@@ -335,7 +380,7 @@ return {
 
             -- Completions for : command mode
             cmp.setup.cmdline(":", {
-                formatting = format.cmdline,
+                formatting = formatting,
                 mapping = cmp.mapping.preset.cmdline(),
                 sources = cmp.config.sources({
                     { name = "async_path" },
@@ -344,61 +389,80 @@ return {
                 }),
             })
         end,
-        dependencies = {
-            {
-                "FelipeLema/cmp-async-path",
-                config = function()
-                    require("cmp").register_source("async_path", require("cmp_async_path").new())
+    },
+    {
+        "nvim-cmp",
+        dependencies = "mtoohey31/cmp-fish",
+        ft = "fish",
+        event = "InsertEnter",
+        opts = function(_, opts)
+            table.insert(opts.sources, {
+                name = "fish",
+                entry_filter = function()
+                    return not is_string_like()
                 end,
-                event = "InsertEnter",
-            },
-            { "amarakon/nvim-cmp-buffer-lines" },
-            { "bydlw98/cmp-env" },
-            { "fazibear/cmp-nerdfonts" },
-            { "hrsh7th/cmp-buffer" },
-            { "hrsh7th/cmp-calc" },
-            { "hrsh7th/cmp-cmdline" },
-            { "hrsh7th/cmp-nvim-lsp" },
-            { "hrsh7th/cmp-nvim-lsp-document-symbol" },
-            { "hrsh7th/cmp-nvim-lsp-signature-help" },
-            { "lukas-reineke/cmp-under-comparator" },
-            { "mtoohey31/cmp-fish", ft = "fish", cond = string.find(vim.env.SHELL, "fish") },
-            { "onsails/lspkind-nvim" },
-            { "saadparwaiz1/cmp_luasnip" },
-            {
-                "uga-rosa/cmp-dictionary",
-                cond = function()
-                    return vim.fn.executable("wn") == 1 -- Needs wordnet + tcl-tk
-                end,
-                config = function()
-                    local dict = require("cmp_dictionary")
+            })
 
-                    dict.setup({
-                        first_case_insensitive = true,
-                        document = true,
-                    })
+            table.insert(M.symbols, { fish = "󰈺 [Fish]" })
+            table.insert(M.menu, { fish = "󰌋" })
+        end,
+    },
+    {
+        "nvim-cmp",
+        dependencies = "uga-rosa/cmp-dictionary",
+        cond = function()
+            return vim.fn.executable("wn") == 1 -- Needs wordnet + tcl-tk
+        end,
+        ft = { "gitcommit", "markdown", "text" },
+        event = "InsertEnter",
+        opts = function(_, opts)
+            local dict = require("cmp_dictionary")
 
-                    dict.switcher({
-                        spelllang = {
-                            en = "/usr/share/dict/words",
-                        },
-                    })
-                end,
-            },
-            {
-                -- Currently disabled.
-                "zbirenbaum/copilot-cmp",
-                dependencies = "copilot.lua",
-                disable = true,
-                opts = function()
-                    return {
-                        formatters = {
-                            insert_text = require("copilot_cmp.format").remove_existing,
-                        },
-                    }
-                end,
-            },
-        },
-        event = "VeryLazy",
+            dict.setup({
+                first_case_insensitive = true,
+                document = true,
+            })
+
+            dict.switcher({
+                spelllang = {
+                    en = "/usr/share/dict/words",
+                },
+            })
+
+            table.insert(M.symbols, { dictionary = "󰂽 [Dict]" })
+
+            require("cmp").setup.filetype({ "gitcommit", "markdown", "text" }, {
+                sources = {
+                    name = "dictionary",
+                    group_index = 2,
+                    keyword_length = 2,
+                    max_item_count = 5,
+                },
+            })
+        end,
+    },
+    {
+        "nvim-cmp",
+        dependencies = { { "zbirenbaum/copilot-cmp", disable = true } },
+        opts = function(_, opts)
+            if package.loaded["copilot_cmp"] then
+                table.insert(opts.sources, {
+                    name = "copilot",
+                    entry_filter = function()
+                        return not is_string_like() and not require("luasnip").in_snippet()
+                    end,
+                })
+
+                table.insert(M.symbols, { copilot = " [Copilot]" })
+
+                if opts.formatters == nil then
+                    opts.formatters = {}
+                end
+
+                table.insert(opts.formatters, {
+                    insert_text = require("copilot_cmp.format").remove_existing,
+                })
+            end
+        end,
     },
 }
