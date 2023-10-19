@@ -316,6 +316,16 @@ local servers = {
             root_dir = function(fname)
                 return require("lspconfig.util").root_pattern("pyproject.toml", "setup.cfg", "ruff.toml")(fname)
             end,
+            settings = {
+                codeAction = {
+                    fixViolation = {
+                        enable = true,
+                    },
+                    disableRuleComment = {
+                        enable = false,
+                    },
+                },
+            },
         })
     end,
 
