@@ -535,6 +535,7 @@ return {
         },
         config = function()
             require("lspconfig.ui.windows").default_options.border = vim.g.border
+            require("neoconf").setup()
 
             vim.lsp.set_log_level(vim.log.levels.ERROR)
 
@@ -648,6 +649,7 @@ return {
                     setup_jsonls = false,
                 },
             },
+            { "folke/neoconf.nvim", cmd = "Neoconf", config = false, dependencies = { "nvim-lspconfig" } },
             { "williamboman/mason-lspconfig.nvim" },
             { "williamboman/mason.nvim", build = ":MasonUpdate" },
             { "WhoIsSethDaniel/mason-tool-installer.nvim" },
