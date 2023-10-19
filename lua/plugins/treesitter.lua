@@ -188,6 +188,7 @@ return {
             local exclude_filetypes = {
                 ["gitcommit"] = true,
                 ["just"] = true,
+                ["jsonc"] = true,
                 ["text"] = true,
             }
 
