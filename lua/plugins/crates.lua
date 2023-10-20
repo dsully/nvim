@@ -31,11 +31,18 @@ return {
         })
 
         -- Add the nvim-cmp source if we're editing Cargo.toml
+        table.insert(vim.g.defaults.cmp.symbols, { async_path = " [Path]" })
+        table.insert(vim.g.defaults.cmp.symbols, { crates = " [󱘗 Crates]" })
+
         require("cmp").setup.buffer({
             sources = {
-                { name = "crates" },
-                { name = "async_path" },
-                { name = "buffer" },
+                {
+                    { name = "crates" },
+                    { name = "async_path" },
+                },
+                {
+                    { name = "buffer", keyword_length = 5 },
+                },
             },
         })
     end,
