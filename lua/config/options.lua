@@ -160,6 +160,12 @@ vim.g.defaults = {
             Unit = 1,
             Value = 1,
         },
+        menu = {},
+        symbols = {
+            buffer = " [Buffer]",
+            luasnip = "󰢱 [LuaSnip]",
+            nvim_lsp = " [LSP]",
+        },
     },
 
     formatters = {
