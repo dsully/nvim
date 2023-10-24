@@ -597,6 +597,7 @@ return {
                 "codelldb",
                 "gitui",
                 "glow",
+                "write-good",
             }
 
             -- Pull in linters and formatters.
@@ -610,7 +611,7 @@ return {
 
             -- Remove built-ins / formatters that are not in Mason.
             mason_tools = vim.tbl_filter(function(t)
-                return not vim.tbl_contains({ "caddy", "fish", "fish_indent", "just", "typos" }, t)
+                return not vim.tbl_contains({ "caddy", "fish", "fish_indent", "just", "typos", "write_good" }, t)
             end, mason_tools)
 
             require("mason").setup({
