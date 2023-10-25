@@ -188,6 +188,7 @@ return {
         config = function()
             -- Don't enable for non-treesitter types
             local exclude_filetypes = {
+                ["bzl"] = true,
                 ["gitcommit"] = true,
                 ["just"] = true,
                 ["jsonc"] = true,
