@@ -64,8 +64,7 @@ M.read_command = function(args)
 
     if vim.b.plist_original_format ~= "binary" then
         vim.cmd.bdelete("#")
-        vim.cmd.file(args.file)
-        vim.cmd.edit({ bang = true })
+        vim.cmd.edit({ args.file, mods = { keepalt = true } })
 
         return
     end
