@@ -46,3 +46,6 @@ vim.keymap.set("n", "<localleader><localleader>e", function()
         end
     end)
 end, { silent = true, expr = false, desc = "Create/edit file relative to current document" })
+
+-- Close floating windows [Neovim 0.10 and above]
+vim.keymap.set("n", "<leader>fq", vim.cmd.fclose, { silent = true, desc = "Close all floating windows" })
