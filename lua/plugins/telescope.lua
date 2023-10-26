@@ -243,10 +243,24 @@ return {
             {
                 "<leader>fl",
                 function()
-                    -- vim.cmd.Telescope("lazy")
                     require("telescope").extensions.lazy.lazy()
                 end,
                 { desc = "Lazy Packages" },
+            },
+        },
+    },
+    {
+        "2kabhishek/nerdy.nvim",
+        cmd = "Nerdy",
+        keys = {
+            {
+                "<leader>fl",
+                function()
+                    -- Ensure that telescope-ui-select is loaded.
+                    require("telescope")
+                    require("nerdy").list()
+                end,
+                { desc = "Nerd Icons" },
             },
         },
     },
