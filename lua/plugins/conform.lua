@@ -1,14 +1,8 @@
 return {
     "stevearc/conform.nvim",
+    cmd = { "ConformInfo" },
     config = function()
-        local add_formatter_args = require("conform.util").add_formatter_args
         local root_file = require("conform.util").root_file
-
-        add_formatter_args(require("conform.formatters.markdownlint"), {
-            string.format("--config=%s/markdownlint/config.yaml", vim.env.XDG_CONFIG_HOME),
-        })
-
-        add_formatter_args(require("conform.formatters.shfmt"), { "-i", "4", "-ci", "-s" })
 
         -- This needs to be dynamic and not just at Neovim startup time.
         require("conform.formatters.black").args = function()
@@ -44,6 +38,12 @@ return {
                     args = { "fmt", "-" },
                     cwd = root_file({ "Caddyfile" }),
                     stdin = true,
+                },
+                markdownlint = {
+                    prepend_args = { string.format("--config=%s/markdownlint/config.yaml", vim.env.XDG_CONFIG_HOME) },
+                },
+                shfmt = {
+                    prepend_args = { "-i", "2", "-ci", "-sr", "-s", "-bn" },
                 },
             },
         })
