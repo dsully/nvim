@@ -174,7 +174,7 @@ return {
         "ziontee113/query-secretary",
         keys = {
             {
-                "<leader>fq",
+                "<leader>fQ",
                 function()
                     require("query-secretary").query_window_initiate()
                 end,
