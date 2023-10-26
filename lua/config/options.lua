@@ -203,6 +203,7 @@ vim.g.defaults = {
             "nofile",
             "quickfix",
             "terminal",
+            "trouble",
         },
         file_types = {
             "",
@@ -227,6 +228,7 @@ vim.g.defaults = {
             "noice",
             "notify",
             "qf",
+            "trouble",
             "tsplayground",
             "vim",
         },
