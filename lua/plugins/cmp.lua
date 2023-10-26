@@ -309,21 +309,6 @@ return {
     },
     {
         "nvim-cmp",
-        dependencies = "fazibear/cmp-nerdfonts",
-        event = "InsertEnter",
-        opts = function(_, opts)
-            table.insert(opts.sources, {
-                name = "nerdfonts",
-                entry_filter = is_text,
-                keyword_length = 3,
-                keyword_pattern = [[nf\-.*]],
-            })
-            table.insert(vim.g.defaults.cmp.symbols, { nerdfonts = "󰊄 [Font]" })
-        end,
-    },
-
-    {
-        "nvim-cmp",
         dependencies = "hrsh7th/cmp-calc",
         event = "InsertEnter",
         opts = function(_, opts)
@@ -332,7 +317,6 @@ return {
             table.insert(vim.g.defaults.cmp.menu, { calc = "󰃬" })
         end,
     },
-
     {
         "nvim-cmp",
         dependencies = {
