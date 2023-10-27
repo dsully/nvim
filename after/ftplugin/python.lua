@@ -26,7 +26,7 @@ do
 
         vim.g.dmypy = true
 
-        local check = vim.loop.new_check()
+        local check = vim.uv.new_check()
 
         if check then
             check:start(function()
