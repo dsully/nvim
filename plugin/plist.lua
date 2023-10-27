@@ -99,11 +99,11 @@ M.write_command = function(args)
 end
 
 M.detect_format = function(filename)
-    local fd = vim.loop.fs_open(filename, "r", 438)
+    local fd = vim.uv.fs_open(filename, "r", 438)
 
     if fd then
-        local content = vim.loop.fs_read(fd, 16, 0)
-        vim.loop.fs_close(fd)
+        local content = vim.uv.fs_read(fd, 16, 0)
+        vim.uv.fs_close(fd)
 
         if content then
             if string.find(tostring(content), "^bplist") then
