@@ -1,8 +1,6 @@
 return {
     "ojroques/nvim-osc52",
-    config = function(_, opts)
-        require("osc52").setup(opts)
-
+    init = function()
         local function copy(lines, _)
             require("osc52").copy(table.concat(lines, "\n"))
         end
@@ -26,5 +24,6 @@ return {
     event = "VeryLazy",
     opts = {
         silent = true,
+        trim = true,
     },
 }
