@@ -157,8 +157,8 @@ local servers = {
         settings = {
             Lua = {
                 completion = {
-                    callSnippet = "Both",
-                    keywordSnippet = "Replace",
+                    callSnippet = "Replace",
+                    keywordSnippet = "Both",
                     workspaceWord = true,
                 },
                 diagnostics = {
@@ -394,6 +394,46 @@ local servers = {
                 },
                 checkOnSave = {
                     command = "clippy",
+                },
+                completion = {
+                    postfix = {
+                        enable = true,
+                    },
+                    callable = {
+                        -- Whether to add parenthesis and argument snippets when completing function.
+                        -- Possible value: fill_arguments (default), add_parentheses, none
+                        snippets = "fill_arguments",
+                    },
+                    snippets = {
+                        custom = {
+                            ["println!"] = {
+                                ["postfix"] = "println",
+                                ["body"] = {
+                                    'println!("$0", ${receiver});',
+                                },
+                                ["description"] = "println!()",
+                                ["scope"] = "expr",
+                            },
+                            Ok = {
+                                postfix = "ok",
+                                body = "Ok(${receiver})",
+                                description = "Wrap the expression in a `Result::Ok`",
+                                scope = "expr",
+                            },
+                            Err = {
+                                postfix = "err",
+                                body = "Err(${receiver})",
+                                description = "Wrap the expression in a `Result::Err`",
+                                scope = "expr",
+                            },
+                            Some = {
+                                ["postfix"] = "some",
+                                ["body"] = "Some(${receiver})",
+                                ["description"] = "Wrap the expression in an `Option::Some`",
+                                ["scope"] = "expr",
+                            },
+                        },
+                    },
                 },
                 -- https://github.com/rust-analyzer/rust-analyzer/issues/6835
                 diagnostics = {
