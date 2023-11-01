@@ -143,7 +143,7 @@ vim.api.nvim_create_autocmd({ "BufReadCmd" }, {
 
 vim.api.nvim_create_autocmd({ "BufReadPost" }, {
     callback = function(args)
-        if vim.tbl_contains(vim.g.defaults.ignored.buffer_types, vim.bo.buftype) then
+        if vim.tbl_contains(require("config.defaults").ignored.buffer_types, vim.bo.buftype) then
             return
         end
 

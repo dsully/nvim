@@ -6,7 +6,7 @@ return {
             enabled = true,
         },
         ignore = {
-            clients = vim.g.defaults.ignored.lsp,
+            clients = require("config..defaults").ignored.lsp,
         },
         sign = {
             enabled = true,
