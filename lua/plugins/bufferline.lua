@@ -33,6 +33,7 @@ return {
             numbers = "ordinal",
             diagnostics = "nvim_lsp",
             show_buffer_close_icons = false,
+            sort_by = "insert_at_end",
         },
     },
 }

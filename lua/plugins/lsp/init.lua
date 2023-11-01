@@ -544,7 +544,7 @@ return {
                 local lines = {}
 
                 for i, client in pairs(clients) do
-                    if not vim.tbl_contains({ vim.g.defaults.ignored.lsp }, client.name) then
+                    if not vim.tbl_contains({ require("config.defaults").ignored.lsp }, client.name) then
                         table.insert(lines, "# " .. client.name:upper())
                         table.insert(lines, "```lua")
 
@@ -601,7 +601,7 @@ return {
             }
 
             -- Pull in linters and formatters.
-            for _, f in pairs(vim.g.defaults.formatters) do
+            for _, f in pairs(require("config.defaults").formatters) do
                 table.insert(mason_tools, f.command)
             end
 
