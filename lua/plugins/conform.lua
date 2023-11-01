@@ -20,7 +20,7 @@ return {
         require("conform.formatters.black").cwd = root_file({ "pyproject.toml", "setup.cfg" })
 
         require("conform").setup({
-            formatters_by_ft = vim.g.defaults.formatters,
+            formatters_by_ft = require("config.defaults").formatters,
             formatters = {
                 blackd = {
                     command = "blackd-client",

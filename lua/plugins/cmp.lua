@@ -1,3 +1,5 @@
+local defaults = require("config.defaults")
+
 -- Only show matches in strings and comments.
 local is_string_like = function()
     local context = require("cmp.config.context")
@@ -88,7 +90,7 @@ return {
 
                         local strings = vim.split(kind.kind, "%s", { trimempty = true })
 
-                        kind.kind = string.format(" %s ", vim.g.defaults.cmp.menu[entry.source.name] or strings[1] or "")
+                        kind.kind = string.format(" %s ", defaults.cmp.menu[entry.source.name] or strings[1] or "")
 
                         -- Remove duplicate entries.
                         kind.dup = ({
@@ -103,7 +105,7 @@ return {
                         kind.abbr = string.gsub(kind.abbr, "^%s+", "")
 
                         if entry.source.name ~= "copilot" then
-                            kind.menu = string.format("  %s: %s", vim.g.defaults.cmp.symbols[entry.source.name] or "", strings[2] or "")
+                            kind.menu = string.format("  %s: %s", defaults.cmp.symbols[entry.source.name] or "", strings[2] or "")
                         end
 
                         return kind
@@ -187,7 +189,7 @@ return {
                             local kind1 = types[entry1:get_kind()]
                             local kind2 = types[entry2:get_kind()]
 
-                            local priorities = vim.g.defaults.cmp.priorities
+                            local priorities = defaults.cmp.priorities
                             local priority1 = priorities[kind1] or 0
                             local priority2 = priorities[kind2] or 0
 
@@ -295,7 +297,7 @@ return {
         event = "InsertEnter",
         opts = function(_, opts)
             table.insert(opts.sources, { name = "async_path" })
-            table.insert(vim.g.defaults.cmp.symbols, { async_path = " [Path]" })
+            table.insert(defaults.cmp.symbols, { async_path = " [Path]" })
         end,
     },
     {
@@ -304,7 +306,7 @@ return {
         event = "InsertEnter",
         opts = function(_, opts)
             table.insert(opts.sources, { name = "env" })
-            table.insert(vim.g.defaults.cmp.symbols, { env = " [ENV]" })
+            table.insert(defaults.cmp.symbols, { env = " [ENV]" })
         end,
     },
     {
@@ -313,8 +315,8 @@ return {
         event = "InsertEnter",
         opts = function(_, opts)
             table.insert(opts.sources, { name = "calc" })
-            table.insert(vim.g.defaults.cmp.symbols, { calc = "󰃬 [Calc]" })
-            table.insert(vim.g.defaults.cmp.menu, { calc = "󰃬" })
+            table.insert(defaults.cmp.symbols, { calc = "󰃬 [Calc]" })
+            table.insert(defaults.cmp.menu, { calc = "󰃬" })
         end,
     },
     {
@@ -329,9 +331,9 @@ return {
         opts = function(_, opts)
             local cmp = require("cmp")
 
-            table.insert(vim.g.defaults.cmp.symbols, { cmdline = "󰘳 [Command]" })
-            table.insert(vim.g.defaults.cmp.symbols, { nvim_lsp_document_symbol = "󰎕 [Symbol]" })
-            table.insert(vim.g.defaults.cmp.symbols, { path = " [Path]" })
+            table.insert(defaults.cmp.symbols, { cmdline = "󰘳 [Command]" })
+            table.insert(defaults.cmp.symbols, { nvim_lsp_document_symbol = "󰎕 [Symbol]" })
+            table.insert(defaults.cmp.symbols, { path = " [Path]" })
 
             local formatting = {
                 format = function(_, item)
@@ -377,8 +379,8 @@ return {
                 end,
             })
 
-            table.insert(vim.g.defaults.cmp.symbols, { fish = "󰈺 [Fish]" })
-            table.insert(vim.g.defaults.cmp.menu, { fish = "󰌋" })
+            table.insert(defaults.cmp.symbols, { fish = "󰈺 [Fish]" })
+            table.insert(defaults.cmp.menu, { fish = "󰌋" })
         end,
     },
     {
@@ -403,7 +405,7 @@ return {
                 },
             })
 
-            table.insert(vim.g.defaults.cmp.symbols, { dictionary = "󰂽 [Dict]" })
+            table.insert(defaults.cmp.symbols, { dictionary = "󰂽 [Dict]" })
 
             require("cmp").setup.filetype({ "gitcommit", "markdown", "text" }, {
                 sources = {
@@ -427,7 +429,7 @@ return {
                     end,
                 })
 
-                table.insert(vim.g.defaults.cmp.symbols, { copilot = " [Copilot]" })
+                table.insert(defaults.cmp.symbols, { copilot = " [Copilot]" })
 
                 if opts.formatters == nil then
                     opts.formatters = {}

@@ -203,7 +203,7 @@ return {
                 ["text"] = true,
             }
 
-            for _, ft in ipairs(vim.g.defaults.ignored.file_types) do
+            for _, ft in ipairs(require("config.defaults").ignored.file_types) do
                 exclude_filetypes[ft] = true
             end
 

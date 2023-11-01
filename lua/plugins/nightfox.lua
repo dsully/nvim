@@ -2,46 +2,7 @@
 return {
     "EdenEast/nightfox.nvim",
     config = function()
-        local colors = {
-            -- Slightly tweaked to be more like nordic.nvim.
-            red = { base = "#bf616a", bright = "#d06f79", dim = "#a54e56" },
-            orange = { base = "#d08770", bright = "#d89079", dim = "#b46950" },
-            green = { base = "#a3be8c", bright = "#b1d196", dim = "#8aa872" },
-            yellow = { base = "#ebcb8b", bright = "#f0d399", dim = "#d9b263" },
-            magenta = { base = "#b48ead", bright = "#c895bf", dim = "#9d7495" },
-            pink = { base = "#bf88bc", bright = "#d092ce", dim = "#a96ca5" },
-
-            -- Nordic: blue, intense_blue, none
-            blue = { base = "#81a1c1", bright = "#5e81ac", dim = "#668aab" },
-
-            -- Nordic: black, bright_black, dark_black
-            black = { base = "#3b4252", bright = "#434c5e", dim = "#2e3440" },
-
-            -- Nordic: cyan, bright_cyan, none
-            cyan = { base = "#8fbcbb", bright = "#88c0d0", dim = "#69a7ba" },
-
-            -- Nordic: white, bright_white, dark_white
-            white = { base = "#e5e9f0", bright = "#eceff4", dim = "#d8dee9" },
-
-            -- Noridc: gray, grayish, dark_black_alt
-            gray = { base = "#4c566a", bright = "#667084", dim = "#2b303b" },
-        }
-
-        colors.comment = colors.gray.bright
-        colors.bg0 = colors.black.base -- Dark bg (status line and float)
-        colors.bg1 = colors.black.dim -- Default bg
-
-        colors.bg2 = "#39404f" -- Lighter bg (color column folds)
-        colors.bg3 = "#444c5e" -- Lighter bg (cursor line)
-        colors.bg4 = colors.black.bright -- Conceal, border fg
-
-        colors.fg0 = "#c7cdd9" -- Lighter fg
-        colors.fg1 = colors.white.dim -- Default fg: white.base
-        colors.fg2 = colors.white.base -- Darker fg (status line): cyan.bright
-        colors.fg3 = colors.gray.base -- Darker fg (line numbers, fold columns)
-
-        colors.sel0 = "#3e4a5b" -- Pop-up bg, visual selection bg
-        colors.sel1 = "#4f6074" -- Pop-up selection bg, search bg
+        local colors = require("config.defaults").colors
 
         local spec = {
             diag = {

@@ -76,7 +76,7 @@ return {
 
         require("lualine").setup({
             options = {
-                disabled_filetypes = vim.g.defaults.ignored.file_types,
+                disabled_filetypes = require("config.defaults").ignored.file_types,
                 theme = "nord",
                 component_separators = "",
                 section_separators = { left = "", right = "" },

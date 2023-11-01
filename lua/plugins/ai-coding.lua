@@ -76,7 +76,7 @@ return {
     {
         "zbirenbaum/copilot.lua",
         config = function(_, opts)
-            for _, ft in ipairs(vim.g.defaults.ai_file_types) do
+            for _, ft in ipairs(require("config.defaults").ai_file_types) do
                 opts.filetypes[ft] = true
             end
 
@@ -182,7 +182,7 @@ return {
             -- dismiss_keymap = "<Right>",
             accept_keymap = "<Tab>",
             dismiss_keymap = "<S-Tab>",
-            enable_suggestions_on_files = vim.g.defaults.ai_file_types,
+            enable_suggestions_on_files = require("config.defaults").ai_file_types,
             model = "bigcode/starcoder",
             query_params = {
                 max_new_tokens = 200,

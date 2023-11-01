@@ -1,3 +1,5 @@
+local defaults = require("config.defaults")
+
 local function sign(opts)
     vim.fn.sign_define(opts.highlight, {
         text = opts.icon,
@@ -8,10 +10,10 @@ local function sign(opts)
     })
 end
 
-sign({ highlight = "DiagnosticSignError", icon = vim.g.defaults.icons.error })
-sign({ highlight = "DiagnosticSignWarn", icon = vim.g.defaults.icons.warn })
-sign({ highlight = "DiagnosticSignInfo", linehl = false, icon = vim.g.defaults.icons.info })
-sign({ highlight = "DiagnosticSignHint", linehl = false, icon = vim.g.defaults.icons.hint })
+sign({ highlight = "DiagnosticSignError", icon = defaults.icons.error })
+sign({ highlight = "DiagnosticSignWarn", icon = defaults.icons.warn })
+sign({ highlight = "DiagnosticSignInfo", linehl = false, icon = defaults.icons.info })
+sign({ highlight = "DiagnosticSignHint", linehl = false, icon = defaults.icons.hint })
 
 -- https://github.com/neovim/nvim-lspconfig/wiki/UI-Customization#show-source-in-diagnostics
 -- https://github.com/neovim/nvim-lspconfig/wiki/UI-Customization#change-prefixcharacter-preceding-the-diagnostics-virtual-text
@@ -24,7 +26,7 @@ vim.diagnostic.config({
         max_width = math.min(math.floor(vim.o.columns * 0.7), 100),
         prefix = function(diag)
             local level = vim.diagnostic.severity[diag.severity]
-            local prefix = string.format("%s ", vim.g.defaults.icons[level:lower()])
+            local prefix = string.format("%s ", defaults.icons[level:lower()])
             return prefix, "Diagnostic" .. level:gsub("^%l", string.upper)
         end,
         source = "if_many",
