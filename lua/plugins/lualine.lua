@@ -190,5 +190,5 @@ return {
             extensions = { "quickfix" },
         })
     end,
-    event = "VeryLazy",
+    enable = false,
 }
