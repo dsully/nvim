@@ -23,6 +23,9 @@ return {
     -- Markdown helper.
     { "oncomouse/markdown.nvim", ft = "markdown", opts = {} },
 
+    -- JSON Sorting
+    { "2nthony/sortjson.nvim", ft = "json", opts = true },
+
     -- PDL
     { "hjdivad/vim-pdl", ft = "pdl" },
 
