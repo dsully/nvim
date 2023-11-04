@@ -306,7 +306,7 @@ local servers = {
             filetypes = { "python", "toml.pyproject" },
             init_options = {
                 settings = {
-                    args = require("plugins.lsp.python").ruff_args(),
+                    args = require("plugins.lsp.python").ruff_check_args(),
                 },
             },
             on_attach = function(client, ...)

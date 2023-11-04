@@ -83,9 +83,7 @@ local find_file = function(filename)
     return vim.fs.find(filename, opts_d)[1] or vim.fs.find(filename, opts_u)[1]
 end
 
-local black_args_from_treesitter = function(filename, language, query_string)
-    require("nvim-treesitter")
-
+local format_args_from_treesitter = function(filename, language, query_string)
     local args = {}
     local config_file = find_file(filename)
 
@@ -123,10 +121,10 @@ end
 -- Extract arguments to pass to blackd/blackd-client
 --
 -- Check build.gradle (work) and pyproject.toml.
-M.black_args = function()
+M.ruff_format_args = function()
     -- stylua: ignore
-    return black_args_from_treesitter("pyproject.toml", "toml", toml_query) or
-           black_args_from_treesitter("build.gradle", "groovy", gradle_query) or
+    return format_args_from_treesitter("pyproject.toml", "toml", toml_query) or
+           format_args_from_treesitter("build.gradle", "groovy", gradle_query) or
            {}
 end
 
@@ -140,8 +138,8 @@ M.mason_post_install = function(pkg)
     end
 end
 
--- Config for pylsp-ruff as a Lua table.
-M.ruff_config = function()
+-- Config for ruff-lsp as a Lua table.
+M.ruff_check_config = function()
     -- Extract config out of setup.cfg if it exists and use some defaults.
     local config = vim.tbl_deep_extend("force", {}, ruff_default_config)
 
@@ -176,8 +174,8 @@ M.ruff_config = function()
 end
 
 -- Massage the ruff config into something the CLI can handle.
-M.ruff_args = function()
-    local config = M.ruff_config()
+M.ruff_check_args = function()
+    local config = M.ruff_check_config()
 
     local args = {
         "--extend-select=" .. vim.fn.join(config["select"], ","),
