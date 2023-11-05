@@ -72,7 +72,9 @@ M.on_attach = function(client, buffer)
     end
 
     if client.supports_method(methods.textDocument_codeAction) then
-        vim.keymap.set({ "n", "x" }, "<leader>ca", require("actions-preview").code_actions, { desc = "󰅯 Actions" })
+        vim.keymap.set({ "n", "x" }, "<leader>ca", function()
+            require("actions-preview").code_actions({ context = { only = { "quickfix" } } })
+        end, { desc = "󰅯 Actions" })
     end
 
     -- https://github.com/smjonas/inc-rename.nvim

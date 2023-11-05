@@ -67,7 +67,6 @@ local M = {
         just = { "just" },
         lua = { "stylua" },
         markdown = { "markdownlint" },
-        python = { "ruff_format" },
         sh = { "shellcheck", "shellharden", "shfmt" },
         zsh = { "shellcheck", "shellharden", "shfmt" },
     },

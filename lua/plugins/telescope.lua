@@ -180,7 +180,6 @@ return {
                 end,
                 { desc = "Find Files" },
             },
-
             {
                 "<leader>ftr",
                 function()

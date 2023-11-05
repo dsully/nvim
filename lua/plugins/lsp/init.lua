@@ -279,37 +279,40 @@ local servers = {
     ruff_lsp = function()
         require("lspconfig").ruff_lsp.setup({
             capabilities = common.capabilities(),
-            commands = {
-                RuffAutofix = {
-                    function()
-                        vim.lsp.buf.execute_command({
-                            command = "ruff.applyAutofix",
-                            arguments = {
-                                { uri = vim.uri_from_bufnr(0) },
-                            },
-                        })
-                    end,
-                    description = "Ruff: Fix all auto-fixable problems",
-                },
-                RuffOrganizeImports = {
-                    function()
-                        vim.lsp.buf.execute_command({
-                            command = "ruff.applyOrganizeImports",
-                            arguments = {
-                                { uri = vim.uri_from_bufnr(0) },
-                            },
-                        })
-                    end,
-                    description = "Ruff: Format imports",
-                },
-            },
             filetypes = { "python", "toml.pyproject" },
             init_options = {
                 settings = {
-                    args = require("plugins.lsp.python").ruff_check_args(),
+                    format = {
+                        args = require("plugins.lsp.python").ruff_format_args(),
+                    },
+                    lint = {
+                        args = require("plugins.lsp.python").ruff_check_args(),
+                    },
                 },
             },
-            on_attach = function(client, ...)
+            on_attach = function(client, bufnr, ...)
+                local request = function(method, params)
+                    client.request(method, params, nil, bufnr)
+                end
+
+                vim.api.nvim_create_user_command("RuffAutoFix", function()
+                    request("workspace/executeCommand", {
+                        command = "ruff.applyAutofix",
+                        arguments = {
+                            { uri = vim.uri_from_bufnr(bufnr) },
+                        },
+                    })
+                end, { desc = "Ruff: Fix all auto-fixable problems" })
+
+                vim.api.nvim_create_user_command("RuffOrganizeImports", function()
+                    request("workspace/executeCommand", {
+                        command = "ruff.applyOrganizeImports",
+                        arguments = {
+                            { uri = vim.uri_from_bufnr(bufnr) },
+                        },
+                    })
+                end, { desc = "Ruff: Organize Imports" })
+
                 client.server_capabilities.hoverProvider = false
                 common.on_attach(client, ...)
             end,
