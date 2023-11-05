@@ -221,5 +221,5 @@ return {
             return ctx.is_focused and statusline or stl_inactive
         end)
     end,
-    event = "VeryLazy"
+    event = "VeryLazy",
 }
