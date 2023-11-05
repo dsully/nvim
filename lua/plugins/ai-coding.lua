@@ -16,7 +16,7 @@ return {
                 { key = "t", cmd = "translate", desc = "Translate" },
                 { key = "k", cmd = "keywords", desc = "Keywords" },
                 { key = "d", cmd = "docstring", desc = "Add Doc-Strings" },
-                { key = "a", cmd = "add_tests", desc = "Add Tests" },
+                { key = "T", cmd = "add_tests", desc = "Add Tests" },
                 { key = "o", cmd = "optimize_code", desc = "Optimize Code" },
                 { key = "s", cmd = "summarize", desc = "Summarize" },
                 { key = "f", cmd = "fix_bugs", desc = "Fix Bugs" },
