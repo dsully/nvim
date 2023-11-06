@@ -32,13 +32,13 @@ M.on_attach = function(client, buffer)
     -- https://github.com/neovim/nvim-lspconfig/wiki/UI-Customization#highlight-symbol-under-cursor
 
     if client.supports_method(methods.textDocument_documentHighlight) then
-        vim.api.nvim_create_autocmd({ "CursorHold", "CursorHoldI" }, {
+        vim.api.nvim_create_autocmd({ "CursorHold" }, {
             group = M.groups.lsp_highlight,
             buffer = buffer,
             callback = vim.lsp.buf.document_highlight,
         })
 
-        vim.api.nvim_create_autocmd({ "CursorMoved" }, {
+        vim.api.nvim_create_autocmd({ "CursorMoved", "InsertEnter" }, {
             group = M.groups.lsp_highlight,
             callback = vim.lsp.buf.clear_references,
         })
@@ -89,8 +89,7 @@ M.on_attach = function(client, buffer)
         --
         vim.api.nvim_create_autocmd({ "BufEnter", "InsertLeave", "BufWritePost" }, {
             desc = "LSP Code Lens Refresh",
-            -- call via Vimscript so that errors are silenced
-            command = "silent! lua vim.lsp.codelens.refresh()",
+            callback = vim.lsp.codelens.refresh,
             buffer = buffer,
             group = M.groups.code_lens,
         })
