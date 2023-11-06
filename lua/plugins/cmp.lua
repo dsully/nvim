@@ -36,7 +36,7 @@ return {
         end,
         opts = function()
             local cmp = require("cmp")
-            local types = require("cmp.types").lsp.CompletionItemKind
+            local types = require("cmp.types")
 
             -- From: https://github.com/zbirenbaum/copilot-cmp#tab-completion-configuration-highly-recommended
             -- Unlike other completion sources, copilot can use other lines above or below an empty line to provide a completion.
@@ -51,16 +51,23 @@ return {
                 return col ~= 0 and vim.api.nvim_buf_get_text(0, line - 1, 0, line - 1, col, {})[1]:match("^%s*$") == nil
             end
 
-            -- Hide copilot suggestions if the completion window is open.
-            cmp.event:on("menu_opened", function()
-                vim.api.nvim_buf_set_var(0, "copilot_suggestion_hidden", true)
-            end)
+            ---@type table<integer, integer>
+            local modified_priority = {
+                [types.lsp.CompletionItemKind.Variable] = types.lsp.CompletionItemKind.Method,
+                [types.lsp.CompletionItemKind.Snippet] = 0, -- top
+                [types.lsp.CompletionItemKind.Keyword] = 0, -- top
+                [types.lsp.CompletionItemKind.Text] = 100, -- bottom
+            }
 
-            cmp.event:on("menu_closed", function()
-                vim.api.nvim_buf_set_var(0, "copilot_suggestion_hidden", false)
-            end)
+            ---@param kind integer: Kind of completion entry
+            local function modified_kind(kind)
+                return modified_priority[kind] or kind
+            end
 
             return {
+                completion = {
+                    keyword_length = 4,
+                },
                 experimental = {
                     ghost_text = true,
                 },
@@ -177,35 +184,56 @@ return {
                 },
                 sorting = {
                     comparators = {
-                        function(entry1, entry2)
-                            if entry1.source.name ~= "nvim_lsp" then
-                                if entry2.source.name == "nvim_lsp" then
-                                    return false
-                                else
-                                    return nil
-                                end
-                            end
-
-                            local kind1 = types[entry1:get_kind()]
-                            local kind2 = types[entry2:get_kind()]
-
-                            local priorities = defaults.cmp.priorities
-                            local priority1 = priorities[kind1] or 0
-                            local priority2 = priorities[kind2] or 0
-
-                            if priority1 == priority2 then
-                                return nil
-                            end
-
-                            return priority1 > priority2
-                        end,
+                        -- function(entry1, entry2)
+                        --     if entry1.source.name ~= "nvim_lsp" then
+                        --         if entry2.source.name == "nvim_lsp" then
+                        --             return false
+                        --         else
+                        --             return nil
+                        --         end
+                        --     end
+                        --
+                        --     local kind1 = types[entry1:get_kind()]
+                        --     local kind2 = types[entry2:get_kind()]
+                        --
+                        --     local priorities = defaults.cmp.priorities
+                        --     local priority1 = priorities[kind1] or 0
+                        --     local priority2 = priorities[kind2] or 0
+                        --
+                        --     if priority1 == priority2 then
+                        --         return nil
+                        --     end
+                        --
+                        --     return priority1 > priority2
+                        -- end,
                         cmp.config.compare.offset,
                         cmp.config.compare.exact,
-                        cmp.config.compare.score,
+                        function(entry1, entry2) -- sort by length ignoring "=~"
+                            local len1 = string.len(string.gsub(entry1.completion_item.label, "[=~()_]", ""))
+                            local len2 = string.len(string.gsub(entry2.completion_item.label, "[=~()_]", ""))
+                            if len1 ~= len2 then
+                                return len1 - len2 < 0
+                            end
+                        end,
                         cmp.config.compare.recently_used,
-                        cmp.config.compare.sort_text,
-                        cmp.config.compare.locality,
-                        cmp.config.compare.length,
+                        function(entry1, entry2) -- sort by compare kind (Variable, Function etc)
+                            local kind1 = modified_kind(entry1:get_kind())
+                            local kind2 = modified_kind(entry2:get_kind())
+                            if kind1 ~= kind2 then
+                                return kind1 - kind2 < 0
+                            end
+                        end,
+                        function(entry1, entry2) -- score by lsp, if available
+                            local t1 = entry1.completion_item.sortText
+                            local t2 = entry2.completion_item.sortText
+                            if t1 ~= nil and t2 ~= nil and t1 ~= t2 then
+                                return t1 < t2
+                            end
+                        end,
+                        cmp.config.compare.score,
+                        -- cmp.config.compare.sort_text,
+                        -- cmp.config.compare.locality,
+                        -- cmp.config.compare.length,
                         cmp.config.compare.order,
                     },
                     -- Keep priority weight at 2 for much closer matches to appear above Copilot.
@@ -236,16 +264,20 @@ return {
                             end
 
                             -- Don't return snippets or "Text" from LSP completion.
-                            if kind == types.Snippet or kind == types.Text then
-                                return false
-                            end
+                            -- if kind == types.lsp.Snippet or kind == types.lsp.Text then
+                            --     return false
+                            -- end
 
                             if char_before_cursor == "." and char_after_dot:match("[a-zA-Z]") then
-                                return vim.tbl_contains({ types.Method, types.Field, types.Property }, kind)
+                                return vim.tbl_contains({
+                                    types.lsp.CompletionItemKind.Method,
+                                    types.lsp.CompletionItemKind.Field,
+                                    types.lsp.CompletionItemKind.Property,
+                                }, kind)
                             end
-
+                            --
                             if string.match(line, "^%s+%w+$") then
-                                return kind == types.Function or kind == types.lsp.CompletionItemKind.Variable
+                                return kind == types.lsp.CompletionItemKind.Function or kind == types.lsp.CompletionItemKind.Variable
                             end
 
                             return true
@@ -254,7 +286,6 @@ return {
                 }, {
                     {
                         name = "buffer",
-                        keyword_length = 5,
                         option = {
                             -- Complete from visible buffers, as opposed to just the current buffer.
                             get_bufnrs = function()
@@ -284,7 +315,6 @@ return {
         dependencies = {
             { "hrsh7th/cmp-buffer" },
             { "hrsh7th/cmp-nvim-lsp" },
-            { "lukas-reineke/cmp-under-comparator" },
             { "onsails/lspkind-nvim" },
             { "saadparwaiz1/cmp_luasnip" },
         },
@@ -361,7 +391,7 @@ return {
                 sources = cmp.config.sources({
                     { name = "async_path" },
                     -- https://github.com/hrsh7th/nvim-cmp/issues/1511
-                    { name = "cmdline", keyword_length = 4, keyword_pattern = [=[[^[:blank:]\!]*]=], option = { ignore_cmds = {} } },
+                    { name = "cmdline", keyword_pattern = [=[[^[:blank:]\!]*]=], option = { ignore_cmds = {} } },
                 }),
             })
         end,
@@ -385,13 +415,17 @@ return {
     },
     {
         "nvim-cmp",
-        dependencies = "uga-rosa/cmp-dictionary",
+        dependencies = { "uga-rosa/cmp-dictionary", enabled = false },
         cond = function()
             return vim.fn.executable("wn") == 1 -- Needs wordnet + tcl-tk
         end,
-        ft = { "gitcommit", "markdown", "text" },
         event = "InsertEnter",
+        ft = { "gitcommit", "markdown", "text" },
         opts = function(_, opts)
+            if not package.loaded["cmp_dictionary"] then
+                return
+            end
+
             local dict = require("cmp_dictionary")
 
             dict.setup({
@@ -419,9 +453,20 @@ return {
     },
     {
         "nvim-cmp",
-        dependencies = { { "zbirenbaum/copilot-cmp", disable = true } },
+        dependencies = { { "zbirenbaum/copilot-cmp", enabled = false } },
         opts = function(_, opts)
             if package.loaded["copilot_cmp"] then
+                local cmp = require("cmp")
+
+                -- Hide copilot suggestions if the completion window is open.
+                cmp.event:on("menu_opened", function()
+                    vim.api.nvim_buf_set_var(0, "copilot_suggestion_hidden", true)
+                end)
+
+                cmp.event:on("menu_closed", function()
+                    vim.api.nvim_buf_set_var(0, "copilot_suggestion_hidden", false)
+                end)
+
                 table.insert(opts.sources, {
                     name = "copilot",
                     entry_filter = function()
