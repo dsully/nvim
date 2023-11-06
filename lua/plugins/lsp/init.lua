@@ -153,6 +153,16 @@ local servers = {
             },
         },
     },
+    jedi_language_server = {
+        on_attach = function(client, ...)
+            -- Let ruff handle code actions.
+            client.server_capabilities.codeActionProvider = false
+            common.on_attach(client, ...)
+        end,
+        root_dir = function(fname)
+            return require("lspconfig.util").root_pattern("pyproject.toml", "setup.cfg", "setup.py")(fname)
+        end,
+    },
     lua_ls = {
         settings = {
             Lua = {
@@ -194,88 +204,6 @@ local servers = {
             },
         },
     },
-
-    pylsp = {
-        cmd = { "pylsp", "--check-parent-process" },
-        settings = {
-            pylsp = {
-                configurationSources = {},
-                plugins = {
-                    autopep8 = { enabled = false },
-                    isort = { enabled = false },
-                    jedi_completion = {
-                        enabled = true,
-                        include_class_objects = true,
-                        include_function_objects = true,
-                        include_params = true,
-                    },
-                    mccabe = { enabled = false },
-                    preload = { enabled = false },
-                    pycodestyle = { enabled = false },
-                    pyflakes = { enabled = false },
-                    yapf = { enabled = false },
-                },
-            },
-        },
-    },
-
-    pylance = function()
-        require("lspconfig").pylance.setup({
-            before_init = function(_, config)
-                local path = require("lspconfig/util").path
-                config.settings.python.analysis.stubPath = path.join(vim.fn.stdpath("data"), "lazy", "python-type-stubs")
-            end,
-            capabilities = common.capabilities(),
-            on_attach = function(client, ...)
-                -- Disable capabilities that are better handled by pylsp
-                client.server_capabilities.renameProvider = false -- Use Rope.
-                client.server_capabilities.hoverProvider = false -- pylsp includes docstrings
-                client.server_capabilities.signatureHelpProvider = false -- pyright typing of signature is weird
-                client.server_capabilities.definitionProvider = false -- pyright does not follow imports correctly
-                client.server_capabilities.referencesProvider = false
-                client.server_capabilities.completionProvider = false
-                common.on_attach(client, ...)
-            end,
-            on_new_config = function(config, root)
-                config.settings.python.pythonPath = vim.fn.exepath("python3") or vim.fn.exepath("python") or "python"
-
-                -- PEP 582 support
-                local pypackages = require("lspconfig.util").path.join(root, "__pypackages__", "lib")
-
-                if vim.uv.fs_stat(pypackages) then
-                    config.settings.python.analysis.extraPaths = { pypackages }
-                end
-            end,
-            settings = {
-                python = {
-                    -- https://github.com/microsoft/pyright/blob/main/docs/configuration.md
-                    -- https://github.com/microsoft/pyright/blob/main/docs/settings.md
-                    analysis = {
-                        autoImportCompletions = true,
-                        autoSearchPaths = true,
-                        diagnosticMode = "openFilesOnly",
-                        diagnosticSeverityOverrides = {
-                            reportImportCycles = "none",
-                            reportMissingImports = "none",
-                            reportMissingTypeStubs = "none",
-                            reportPrivateUsage = "none",
-                            reportUnknownMemberType = "none",
-                            reportUnknownVariableType = "none",
-                            reportUnusedImport = "none",
-                        },
-                        inlayHints = {
-                            variableTypes = true,
-                            functionReturnTypes = true,
-                        },
-                        typeCheckingMode = "off", -- off, basic or strict
-                        useLibraryCodeForTypes = false,
-                    },
-                    disableOrganizeImports = true, -- Use isort or ruff instead.
-                },
-            },
-        })
-    end,
-
     ruff_lsp = function()
         require("lspconfig").ruff_lsp.setup({
             capabilities = common.capabilities(),
