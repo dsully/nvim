@@ -555,6 +555,8 @@ return {
             end
 
             -- Remove built-ins / formatters that are not in Mason.
+            --
+            -- 'typos-cli' doesn't have a pre-compiled release for Apple Silicon.
             mason_tools = vim.tbl_filter(function(t)
                 return not vim.tbl_contains({ "caddy", "fish", "fish_indent", "just", "typos", "write_good" }, t)
             end, mason_tools)
@@ -569,9 +571,6 @@ return {
                 },
             })
 
-            -- Disable Python module installation of mypy & ruff for now.
-            -- require("mason-registry"):on("package:install:success", require("plugins.lsp.python").mason_post_install)
-
             require("mason-lspconfig").setup({
                 automatic_installation = true,
                 ensure_installed = vim.tbl_keys(handlers),
@@ -582,7 +581,8 @@ return {
                 auto_update = false,
                 debounce_hours = 0,
                 ensure_installed = mason_tools,
-                run_on_start = true,
+                run_on_start = false,
+                start_delay = 2000,
             })
         end,
         dependencies = {
@@ -623,6 +623,7 @@ return {
             "GoInstall",
             "GoLint",
         },
+        enabled = false,
         event = "VeryLazy",
     },
     { "microsoft/python-type-stubs" },
