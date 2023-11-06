@@ -59,7 +59,7 @@ return {
 
                     item({
                         content = function()
-                            local dev, _ = require("nvim-web-devicons").get_icon(vim.bo.filetype)
+                            local dev, _ = require("nvim-web-devicons").get_icon(vim.api.nvim_buf_get_name(0))
 
                             return dev and " " .. dev .. " " or " "
                         end,
