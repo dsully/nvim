@@ -128,16 +128,6 @@ M.ruff_format_args = function()
            {}
 end
 
--- Automate the installation of pylsp modules in it's virtualenv.
-M.mason_post_install = function(pkg)
-    if pkg.name == "python-lsp-server" then
-        vim.notify("Installing pylsp modules...")
-
-        vim.cmd.PylspInstall("pylsp-mypy")
-        vim.cmd.PylspInstall("python-lsp-ruff")
-    end
-end
-
 -- Config for ruff-lsp as a Lua table.
 M.ruff_check_config = function()
     -- Extract config out of setup.cfg if it exists and use some defaults.
