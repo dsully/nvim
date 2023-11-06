@@ -118,7 +118,7 @@ local format_args_from_treesitter = function(filename, language, query_string)
     end
 end
 
--- Extract arguments to pass to blackd/blackd-client
+-- Extract arguments to pass to the ruff formatter.
 --
 -- Check build.gradle (work) and pyproject.toml.
 M.ruff_format_args = function()
