@@ -98,7 +98,7 @@ return {
                     }),
                 }
             end,
-            hidden = #vim.diagnostic.get(0) == 0,
+            hidden = not #vim.diagnostic.get(0)
         })
 
         statusline:add_item({
