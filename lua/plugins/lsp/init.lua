@@ -668,4 +668,25 @@ return {
         end,
         event = "LspAttach",
     },
+    {
+        "chrisgrieser/nvim-rulebook",
+        keys = {
+            {
+                "<leader>di",
+                function()
+                    require("telescope")
+                    require("rulebook").ignoreRule()
+                end,
+                desc = "  Ignore Rule",
+            },
+            {
+                "<leader>dl",
+                function()
+                    require("telescope")
+                    require("rulebook").lookupRule()
+                end,
+                desc = "  Look up Rule",
+            },
+        },
+    },
 }

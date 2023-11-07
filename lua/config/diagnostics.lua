@@ -30,6 +30,11 @@ vim.diagnostic.config({
             return prefix, "Diagnostic" .. level:gsub("^%l", string.upper)
         end,
         source = "if_many",
+        suffix = function(diag)
+            if package.loaded["rulebook"] then
+                return require("rulebook").hasDocs(diag) and "  " or ""
+            end
+        end,
     },
     underline = true,
     signs = true,
