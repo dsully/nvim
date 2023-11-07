@@ -21,7 +21,7 @@ return {
 
         dashboard.section.buttons.opts.spacing = 0
         dashboard.section.buttons.val = {
-            dashboard.button("l", "󰁯  Load Session        ", "<cmd> lua require('persisted').load()<CR>"),
+            dashboard.button("l", "󰁯  Load Session        ", "<cmd> SessionLoad<CR>"),
             dashboard.button("n", "  New File            ", "<cmd> ene <BAR> startinsert<CR>"),
             dashboard.button("r", "󰈢  Recently Opened     ", "<cmd> Telescope oldfiles<CR>"),
             dashboard.button("f", "󰈞  Find Files          ", "<cmd> Telescope find_files hidden=true path_display=smart<CR>"),

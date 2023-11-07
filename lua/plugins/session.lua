@@ -1,51 +1,62 @@
 return {
-    "olimorris/persisted.nvim",
-    event = "BufReadPre",
-    config = function(_, opts)
-        require("persisted").setup(opts)
-
-        -- Persisted has a conditional that prevents auto-starting if vim.fn.argc() is not 0.
-        require("persisted").start()
-    end,
+    "stevearc/resession.nvim",
     init = function()
-        local group = vim.api.nvim_create_augroup("PersistedHooks", {})
+        local function session_name()
+            local cwd = tostring(vim.uv.cwd())
+            local obj = vim.system({ "git", "branch", "--show-current" }, { text = true }):wait()
 
-        vim.api.nvim_create_autocmd({ "User" }, {
-            pattern = "PersistedSavePre",
-            group = group,
+            return obj.code == 0 and string.format("%s-%s", cwd, vim.trim(obj.stdout)) or cwd
+        end
+
+        vim.api.nvim_create_user_command("SessionLoad", function()
+            require("resession").load(session_name(), { silence_errors = false })
+
+            vim.cmd.doautocmd("VimEnter")
+        end, { desc = "Session Load" })
+
+        vim.api.nvim_create_autocmd({ "VimLeavePre" }, {
             callback = function()
-                vim.opt.guicursor = ""
-
-                -- Arguments are always persisted in a session and can't be removed using 'sessionoptions'
-                -- so remove them when saving a session
-                vim.cmd("%argdelete")
+                require("resession").save(session_name(), { notify = false })
             end,
+            desc = "Save session on exit.",
         })
     end,
-    keys = {
-        {
-            "<leader>fp",
-            function()
-                require("telescope").extensions.persisted.persisted()
-            end,
-            { desc = "Persisted Sessions" },
-        },
-    },
+    lazy = false,
     opts = {
-        ignored_dirs = {
-            "~/.cache",
-            "~/.cargo",
-            "~/.local/state",
-            "~/.rustup",
-            vim.env.HOME,
-            vim.fn.stdpath("data"),
-            vim.fn.stdpath("state"),
-        },
-        save_dir = vim.fn.expand(vim.fn.stdpath("state") .. "/sessions/"),
-        silent = true,
-        use_git_branch = true,
-        should_autosave = function()
-            return not vim.tbl_contains(require("config.defaults").ignored.file_types, vim.bo.filetype)
+        buf_filter = function(bufnr)
+            local buftype = vim.bo[bufnr].buftype
+            local ignored = require("config.defaults").ignored
+
+            if buftype ~= "" and buftype ~= "acwrite" then
+                return false
+            end
+
+            if vim.tbl_contains(ignored.buffer_types, buftype) or vim.tbl_contains(ignored.file_types, vim.bo[bufnr].filetype) then
+                return false
+            end
+
+            --- Escape special pattern matching characters in a string
+            ---@param input string
+            ---@return string
+            local function escape_pattern(input)
+                local magic_chars = { "%", "(", ")", ".", "+", "-", "*", "?", "[", "^", "$" }
+
+                for _, char in ipairs(magic_chars) do
+                    input = input:gsub("%" .. char, "%%" .. char)
+                end
+
+                return input
+            end
+
+            local cwd = tostring(vim.uv.cwd())
+
+            for _, pattern in ipairs(ignored.paths) do
+                if cwd:find(escape_pattern(tostring(vim.fn.expand(pattern)))) then
+                    return false
+                end
+            end
+
+            return vim.bo[bufnr].buflisted
         end,
     },
     priority = 100, -- Load before alpha.nvim

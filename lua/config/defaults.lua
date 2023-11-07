@@ -121,6 +121,14 @@ local M = {
             "copilot",
             "llm-ls",
         },
+        paths = {
+            "~/.cache",
+            "~/.cargo",
+            "~/.local/state",
+            "~/.rustup",
+            tostring(vim.fn.stdpath("data")),
+            tostring(vim.fn.stdpath("state")),
+        },
         progress = {
             "copilot",
             "lua_ls",
