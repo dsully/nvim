@@ -30,20 +30,33 @@ return {
             },
         })
 
-        -- Add the nvim-cmp source if we're editing Cargo.toml
-        table.insert(vim.g.defaults.cmp.symbols, { async_path = " [Path]" })
-        table.insert(vim.g.defaults.cmp.symbols, { crates = " [󱘗 Crates]" })
+        local defaults = require("config.defaults")
 
-        require("cmp").setup.buffer({
-            sources = {
-                {
-                    { name = "crates" },
-                    { name = "async_path" },
+        -- Add the nvim-cmp source if we're editing Cargo.toml
+        table.insert(defaults.cmp.symbols, { async_path = " [Path]" })
+        table.insert(defaults.cmp.symbols, { crates = " [󱘗 Crates]" })
+
+        if defaults.cmp.backend == "nvim-cmp" then
+            require("crates.src.cmp").setup()
+
+            require("cmp").setup.buffer({
+                sources = {
+                    {
+                        { name = "crates" },
+                        { name = "async_path" },
+                    },
+                    {
+                        { name = "buffer", keyword_length = 5 },
+                    },
                 },
-                {
-                    { name = "buffer", keyword_length = 5 },
-                },
-            },
+            })
+        end
+
+        M.enable_crates()
+
+        vim.api.nvim_create_autocmd("BufEnter", {
+            pattern = "Cargo.toml",
+            callback = M.enable_crates,
         })
     end,
     event = { "BufRead Cargo.toml" },
