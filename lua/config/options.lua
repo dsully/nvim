@@ -90,9 +90,20 @@ vim.g.border = "single"
 vim.g.large_file = false
 vim.g.large_file_size = 1024 * 512
 
--- Load clipboard.vim faster.
--- This assumes I have my Linux versions of pbcopy/pbpaste.
-if vim.g.os == "Darwin" and not vim.env.SSH_CONNECTION then
+-- Load clipboard.vim faster. Neovim 0.10+ includes OSC52 support.
+if vim.env.SSH_CONNECTION then
+    vim.g.clipboard = {
+        name = "OSC 52",
+        copy = {
+            ["+"] = require("vim.clipboard.osc52").copy,
+            ["*"] = require("vim.clipboard.osc52").copy,
+        },
+        paste = {
+            ["+"] = require("vim.clipboard.osc52").paste,
+            ["*"] = require("vim.clipboard.osc52").paste,
+        },
+    }
+elseif vim.g.os == "Darwin" then
     vim.g.clipboard = {
         name = "pbcopy",
         copy = {
