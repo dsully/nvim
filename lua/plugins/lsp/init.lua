@@ -11,6 +11,7 @@ local servers = {
         cmd = { "biome", "lsp-proxy", "--config-path", vim.env.XDG_CONFIG_HOME },
     },
     bufls = {},
+    bzl = {},
     cmake = {},
     cssls = {},
     dockerls = {},
@@ -21,7 +22,6 @@ local servers = {
     lemminx = {}, -- XML
     marksman = {}, -- Markdown
     -- pylyzer",
-    starlark_rust = {},
     terraformls = {},
     clangd = {
         capabilities = vim.tbl_extend("force", common.capabilities(), {
@@ -560,6 +560,9 @@ return {
             mason_tools = vim.tbl_filter(function(t)
                 return not vim.tbl_contains({ "caddy", "fish", "fish_indent", "just", "typos", "write_good" }, t)
             end, mason_tools)
+
+            -- Require before mason itself is loaded.
+            require("plugins.lsp.mason")
 
             require("mason").setup({
                 registries = {
