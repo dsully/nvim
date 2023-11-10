@@ -134,6 +134,11 @@ return {
                         find_command = { "rg", "--color", "never", "--hidden", "--no-require-git", "--sort", "--trim" },
                         prompt_prefix = "   ",
                     },
+                    lsp_references = {
+                        fname_width = 40,
+                        include_declaration = false,
+                        trim_text = true,
+                    },
                     oldfiles = {
                         only_cwd = true,
                         prompt_prefix = " 󰋚  ",
