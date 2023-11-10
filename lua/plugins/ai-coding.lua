@@ -46,7 +46,7 @@ return {
                     cycle_windows = "<Tab>",
                 },
                 openai_params = {
-                    model = "gpt-4",
+                    model = "gpt-4-1106-preview",
                 },
                 popup_input = {
                     submit = "<C-Enter>",
