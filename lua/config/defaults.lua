@@ -224,4 +224,17 @@ M.colors.fg3 = M.colors.gray.base -- Darker fg (line numbers, fold columns)
 M.colors.sel0 = "#3e4a5b" -- Pop-up bg, visual selection bg
 M.colors.sel1 = "#4f6074" -- Pop-up selection bg, search bg
 
+-- Keymap helpers.
+M.cmd = function(cmd)
+    return "<cmd>" .. cmd .. "<CR>"
+end
+
+M.cmd_alt = function(cmd)
+    return ":" .. cmd .. "<CR>"
+end
+
+M.lua = function(cmd)
+    return "<cmd>lua " .. cmd .. "<CR>"
+end
+
 return M

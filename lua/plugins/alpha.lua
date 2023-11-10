@@ -1,6 +1,7 @@
 return {
     "goolord/alpha-nvim",
     opts = function()
+        local cmd = require("config.defaults").cmd
         local dashboard = require("alpha.themes.dashboard")
 
         dashboard.section.header.val = {
@@ -21,14 +22,14 @@ return {
 
         dashboard.section.buttons.opts.spacing = 0
         dashboard.section.buttons.val = {
-            dashboard.button("l", "󰁯  Load Session        ", "<cmd> SessionLoad<CR>"),
-            dashboard.button("n", "  New File            ", "<cmd> ene <BAR> startinsert<CR>"),
-            dashboard.button("r", "󰈢  Recently Opened     ", "<cmd> Telescope oldfiles<CR>"),
-            dashboard.button("f", "󰈞  Find Files          ", "<cmd> Telescope find_files hidden=true path_display=smart<CR>"),
-            dashboard.button("g", "  Find Text           ", "<cmd> Telescope live_grep <CR>"),
-            dashboard.button("p", "󰓅  Profile Plugins     ", "<cmd> Lazy profile<CR>"),
-            dashboard.button("u", "  Update Plugins      ", "<cmd> Lazy sync<CR>"),
-            dashboard.button("q", "󰗼  Quit Neovim         ", "<cmd> qa!<CR>"),
+            dashboard.button("l", "󰁯  Load Session        ", cmd("SessionLoad"),
+            dashboard.button("n", "  New File            ", cmd("ene <BAR> startinsert"),
+            dashboard.button("r", "󰈢  Recently Opened     ", cmd("Telescope oldfiles"),
+            dashboard.button("f", "󰈞  Find Files          ", cmd("Telescope find_files hidden=true path_display=smart"),
+            dashboard.button("g", "  Find Text           ", cmd("Telescope live_grep"),
+            dashboard.button("p", "󰓅  Profile Plugins     ", cmd("Lazy profile"),
+            dashboard.button("u", "  Update Plugins      ", cmd("Lazy sync"),
+            dashboard.button("q", "󰗼  Quit Neovim         ", cmd("qa!"),
         }
 
         dashboard.config.layout = {
