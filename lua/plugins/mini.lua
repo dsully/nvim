@@ -119,7 +119,9 @@ return {
                 a[key] = vim.tbl_extend("force", { name = "mini.ai: around " .. name .. " textobject" }, ac)
             end
 
-            require("which-key").register({ mode = { "o", "x" }, i = i, a = a })
+            if package.loaded["which-key"] then
+                require("which-key").register({ mode = { "o", "x" }, i = i, a = a })
+            end
         end,
         dependencies = {
             {
