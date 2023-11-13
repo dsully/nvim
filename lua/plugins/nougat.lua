@@ -98,7 +98,7 @@ return {
                     }),
                 }
             end,
-            hidden = not #vim.diagnostic.get(0)
+            hidden = require("nougat.nut.buf.diagnostic_count").hidden.if_zero,
         })
 
         statusline:add_item({
