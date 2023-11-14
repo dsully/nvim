@@ -64,11 +64,9 @@ M.on_attach = function(client, buffer)
     end
 
     if client.supports_method(methods.textDocument_inlayHint) then
-        vim.keymap.set("n", "<space>i", function()
-            vim.lsp.inlay_hint(buffer)
-        end, { desc = " Toggle Inlay Hints" })
+        vim.keymap.set("n", "<space>i", vim.lsp.inlay_hint.enable, { desc = " Toggle Inlay Hints" })
 
-        vim.lsp.inlay_hint(buffer, false)
+        vim.lsp.inlay_hint.enable(buffer, false)
     end
 
     if client.supports_method(methods.textDocument_codeAction) then
