@@ -8,8 +8,9 @@ return {
         local statusline = bar("statusline")
 
         local colors = require("config.defaults").colors
+        local icons = require("config.defaults").icons
 
-        local wordcount = {
+        local word_filetypes = {
             markdown = true,
             text = true,
             vimwiki = true,
@@ -49,95 +50,110 @@ return {
             suffix = " ",
         })
 
+        local diagnostics = require("nougat.nut.buf.diagnostic_count").create({
+            prefix = " ",
+            suffix = " ",
+            hl = { bg = colors.bg0 },
+            config = {
+                error = { prefix = icons.error, fg = colors.red.base },
+                warn = { prefix = icons.warn, fg = colors.yellow.base },
+                info = { prefix = icons.info, fg = colors.blue.bright },
+                hint = { prefix = icons.hint, fg = colors.blue.bright },
+            },
+            sep_right = sep.right_lower_triangle_solid(true),
+        })
+
+        local filetype_icon = item({
+            content = function()
+                local dev, _ = require("nvim-web-devicons").get_icon(vim.api.nvim_buf_get_name(0))
+
+                return dev and " " .. dev .. " " or " "
+            end,
+            hl = { bg = colors.bg0 },
+        })
+
+        local filetype_name = item({
+            content = vim.bo.filetype,
+            hl = { bg = colors.bg0, fg = colors.white.base },
+            suffix = " ",
+            sep_right = sep.right_lower_triangle_solid(true),
+        })
+
+        local git_status = require("nougat.nut.git.branch").create({
+            config = { provider = "gitsigns" },
+            hl = { bg = colors.bg0, fg = colors.white.base },
+            prefix = "  ",
+            sep_left = sep.left_lower_triangle_solid(true),
+            suffix = " ",
+        })
+
+        local hl_search = item({
+            content = function()
+                local text = require("noice").api.status.search.get()
+                local query = vim.F.if_nil(text:match("%/(.-)%s"), text:match("%?(.-)%s"))
+
+                return string.format("󰍉  %s [%s]", query, text:match("%d+%/%d+"))
+            end,
+            hl = { fg = colors.white.base },
+            prefix = " ",
+            sep_right = sep.right_lower_triangle_solid(true),
+            suffix = " ",
+        })
+
+        local navic = item({
+            content = function()
+                return require("nvim-navic").get_location()
+            end,
+            prefix = " ",
+        })
+
+        local wordcount = require("nougat.nut.buf.wordcount").create({
+            config = {
+                format = function(count)
+                    return string.format("%d Word%s", count, count > 1 and "s" or "")
+                end,
+            },
+            hl = { bg = colors.bg0, fg = colors.white.base },
+            sep_left = sep.left_lower_triangle_solid(true),
+            prefix = " ",
+            suffix = " ",
+        })
+
         -- MODE
         statusline:add_item(mode)
 
         statusline:add_item({
-            content = function()
-                return {
-                    white_right_lower_triangle,
-
-                    item({
-                        content = function()
-                            local dev, _ = require("nvim-web-devicons").get_icon(vim.api.nvim_buf_get_name(0))
-
-                            return dev and " " .. dev .. " " or " "
-                        end,
-                        hl = { bg = colors.bg0 },
-                    }),
-
-                    item({
-                        content = vim.bo.filetype,
-                        hl = { bg = colors.bg0, fg = colors.white.base },
-                        suffix = " ",
-                        sep_right = sep.right_lower_triangle_solid(true),
-                    }),
-                }
-            end,
+            content = {
+                white_right_lower_triangle,
+                filetype_icon,
+                filetype_name,
+            },
             hidden = vim.bo.filetype == nil,
         })
 
         statusline:add_item({
-            content = function()
-                local icons = require("config.defaults").icons
-
-                return {
-                    white_right_lower_triangle,
-
-                    require("nougat.nut.buf.diagnostic_count").create({
-                        prefix = " ",
-                        suffix = " ",
-                        hl = { bg = colors.bg0 },
-                        config = {
-                            error = { prefix = icons.error, fg = colors.red.base },
-                            warn = { prefix = icons.warn, fg = colors.yellow.base },
-                            info = { prefix = icons.info, fg = colors.blue.bright },
-                            hint = { prefix = icons.hint, fg = colors.blue.bright },
-                        },
-                        sep_right = sep.right_lower_triangle_solid(true),
-                    }),
-                }
-            end,
+            content = {
+                white_right_lower_triangle,
+                diagnostics,
+            },
             hidden = require("nougat.nut.buf.diagnostic_count").hidden.if_zero,
         })
 
         statusline:add_item({
-            content = function()
-                return {
-                    white_right_lower_triangle,
-
-                    item({
-                        content = function()
-                            local text = require("noice").api.status.search.get()
-                            local query = vim.F.if_nil(text:match("%/(.-)%s"), text:match("%?(.-)%s"))
-
-                            return string.format("󰍉  %s [%s]", query, text:match("%d+%/%d+"))
-                        end,
-                        hl = { fg = colors.white.base },
-                        prefix = " ",
-                        sep_right = sep.right_lower_triangle_solid(true),
-                        suffix = " ",
-                    }),
-                }
-            end,
+            content = {
+                white_right_lower_triangle,
+                hl_search,
+            },
             hidden = function()
                 return not package.loaded["noice"] or not require("noice").api.status.search.has()
             end,
         })
 
         statusline:add_item({
-            content = function()
-                return {
-                    white_right_lower_triangle,
-
-                    item({
-                        content = function()
-                            return require("nvim-navic").get_location()
-                        end,
-                        prefix = " ",
-                    }),
-                }
-            end,
+            content = {
+                white_right_lower_triangle,
+                navic,
+            },
             hidden = function()
                 return not package.loaded["nvim-navic"] or not require("nvim-navic").is_available()
             end,
@@ -149,44 +165,22 @@ return {
         -----------------------------------------------
 
         statusline:add_item({
-            content = function()
-                return {
-                    white_left_lower_triangle,
-
-                    item(require("nougat.nut.git.branch").create({
-                        config = { provider = "gitsigns" },
-                        hl = { bg = colors.bg0, fg = colors.white.base },
-                        prefix = "  ",
-                        sep_left = sep.left_lower_triangle_solid(true),
-                        suffix = " ",
-                    })),
-                }
-            end,
+            content = {
+                white_left_lower_triangle,
+                git_status,
+            },
             hidden = function()
                 return not vim.g.gitsigns_head
             end,
         })
 
         statusline:add_item({
-            content = function()
-                return {
-                    white_left_lower_triangle,
-
-                    require("nougat.nut.buf.wordcount").create({
-                        config = {
-                            format = function(count)
-                                return string.format("%d Word%s", count, count > 1 and "s" or "")
-                            end,
-                        },
-                        hl = { bg = colors.bg0, fg = colors.white.base },
-                        sep_left = sep.left_lower_triangle_solid(true),
-                        prefix = " ",
-                        suffix = " ",
-                    }),
-                }
-            end,
+            content = {
+                white_left_lower_triangle,
+                wordcount,
+            },
             hidden = function(_, ctx)
-                return not wordcount[vim.api.nvim_get_option_value("filetype", { buf = ctx.bufnr })]
+                return not word_filetypes[vim.api.nvim_get_option_value("filetype", { buf = ctx.bufnr })]
             end,
         })
 
