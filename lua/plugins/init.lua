@@ -29,6 +29,9 @@ return {
     -- PDL
     { "hjdivad/vim-pdl", ft = "pdl" },
 
+    -- Wezterm
+    { "justinsgithub/wezterm-types" },
+
     -- Pattern replacement UI.
     {
         "AckslD/muren.nvim",

@@ -106,6 +106,7 @@
   "vim-log-highlighting": { "branch": "master", "commit": "1037e26f3120e6a6a2c0c33b14a84336dee2a78f" },
   "vim-matchup": { "branch": "master", "commit": "d30b72d20f01478a8486f15a57c89fe3177373db" },
   "vim-pdl": { "branch": "master", "commit": "9b98492f955bed63b85ffbcec7df4d0fdeff01ed" },
+  "wezterm-types": { "branch": "main", "commit": "49f66ce40002f0ef881440c10f8854b02bb67c3f" },
   "which-key.nvim": { "branch": "main", "commit": "4433e5ec9a507e5097571ed55c02ea9658fb268a" },
   "yaml-companion.nvim": { "branch": "main", "commit": "4de1e1546abc461f62dee02fcac6a02debd6eb9e" }
 }
