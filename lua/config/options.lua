@@ -41,6 +41,7 @@ vim.opt.softtabstop = 4
 vim.opt.termguicolors = true
 vim.opt.textwidth = 160
 vim.opt.updatetime = 100 -- milliseconds to write the swap file.
+vim.opt.wildignore:append { '.DS_Store' }
 
 -- Don't create root-owned files.
 if vim.env.USER == "root" then
