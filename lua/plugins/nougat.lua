@@ -9,6 +9,7 @@ return {
 
         local colors = require("config.defaults").colors
         local icons = require("config.defaults").icons
+        local devicons = require("nvim-web-devicons")
 
         local word_filetypes = {
             markdown = true,
@@ -65,9 +66,20 @@ return {
 
         local filetype_icon = item({
             content = function()
-                local dev, _ = require("nvim-web-devicons").get_icon(vim.api.nvim_buf_get_name(0))
+                local icon, icon_hl = devicons.get_icon(vim.api.nvim_buf_get_name(0))
 
-                return dev and " " .. dev .. " " or " "
+                if not icon then
+                    icon, icon_hl = devicons.get_icon_by_filetype(vim.bo.filetype, { default = true })
+                end
+
+                local hl_name = "Statusline" .. icon_hl
+
+                vim.api.nvim_set_hl(0, hl_name, {
+                    bg = colors.bg0,
+                    fg = ("#%06x"):format(vim.api.nvim_get_hl(0, { name = icon_hl }).fg),
+                })
+
+                return string.format(" %%#%s#%s %%##", hl_name, icon or " ")
             end,
             hl = { bg = colors.bg0 },
         })
