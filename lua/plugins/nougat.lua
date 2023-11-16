@@ -85,7 +85,9 @@ return {
         })
 
         local filetype_name = item({
-            content = vim.bo.filetype,
+            content = function()
+                return vim.bo.filetype
+            end,
             hl = { bg = colors.bg0, fg = colors.white.base },
             suffix = " ",
             sep_right = sep.right_lower_triangle_solid(true),
@@ -148,7 +150,9 @@ return {
                 white_right_lower_triangle,
                 diagnostics,
             },
-            hidden = require("nougat.nut.buf.diagnostic_count").hidden.if_zero,
+            hidden = function()
+                return not require("nougat.nut.buf.diagnostic_count").hidden.if_zero()
+            end
         })
 
         statusline:add_item({
