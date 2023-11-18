@@ -556,6 +556,7 @@ return {
                 "codelldb",
                 "gitui",
                 "glow",
+                "jdtls",
                 "write-good",
             }
 
