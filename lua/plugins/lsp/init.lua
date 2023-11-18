@@ -204,6 +204,20 @@ local servers = {
             },
         },
     },
+    pyright = {
+        on_attach = function(client, ...)
+            -- Let jedi or ruff handle these.
+            client.server_capabilities.codeActionProvider = false
+            client.server_capabilities.completionProvider = false
+            client.server_capabilities.declarationProvider = false
+            client.server_capabilities.definitionProvider = false
+            client.server_capabilities.documentSymbolProvider = false
+            client.server_capabilities.hoverProvider = false
+            client.server_capabilities.referencesProvider = false
+            client.server_capabilities.signatureHelpProvider = false
+            common.on_attach(client, ...)
+        end
+    },
     ruff_lsp = function()
         require("lspconfig").ruff_lsp.setup({
             capabilities = common.capabilities(),
