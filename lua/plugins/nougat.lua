@@ -39,16 +39,24 @@ return {
             },
         })
 
-        local white_right_lower_triangle = item({
+        -- Renders a space only when item is rendered.
+        local function paired_sep(def)
+            return function(paired_item)
+                def.hidden = paired_item
+                return item(def)
+            end
+        end
+
+        local white_right_lower_triangle = paired_sep({
             content = "",
             hl = { bg = colors.white.base },
             sep_right = sep.right_lower_triangle_solid(true),
         })
 
-        local white_left_lower_triangle = item({
+        local white_left_lower_triangle = paired_sep({
+            content = "",
             hl = { bg = colors.white.base },
             sep_left = sep.left_lower_triangle_solid(true),
-            suffix = " ",
         })
 
         local diagnostics = require("nougat.nut.buf.diagnostic_count").create({
@@ -94,8 +102,20 @@ return {
             sep_right = sep.right_lower_triangle_solid(true),
         })
 
+        local filetype = item({
+            content = {
+                -- white_right_lower_triangle,
+                filetype_icon,
+                filetype_name,
+            },
+            hidden = vim.bo.filetype == nil,
+        })
+
         local git_status = require("nougat.nut.git.branch").create({
             config = { provider = "gitsigns" },
+            hidden = function()
+                return not vim.g.gitsigns_head
+            end,
             hl = { bg = colors.bg0, fg = colors.white.base },
             prefix = "  ",
             sep_left = sep.left_lower_triangle_solid(true),
@@ -109,6 +129,9 @@ return {
 
                 return string.format("󰍉  %s [%s]", query, text:match("%d+%/%d+"))
             end,
+            hidden = function()
+                return not package.loaded["noice"] or not require("noice").api.status.search.has()
+            end,
             hl = { fg = colors.white.base },
             prefix = " ",
             sep_right = sep.right_lower_triangle_solid(true),
@@ -119,6 +142,9 @@ return {
             content = function()
                 return require("nvim-navic").get_location()
             end,
+            hidden = function()
+                return not package.loaded["nvim-navic"] or not require("nvim-navic").is_available()
+            end,
             prefix = " ",
         })
 
@@ -128,79 +154,16 @@ return {
                     return string.format("%d Word%s", count, count > 1 and "s" or "")
                 end,
             },
+            hidden = function(_, ctx)
+                return not word_filetypes[vim.api.nvim_get_option_value("filetype", { buf = ctx.bufnr })]
+            end,
             hl = { bg = colors.bg0, fg = colors.white.base },
             sep_left = sep.left_lower_triangle_solid(true),
             prefix = " ",
             suffix = " ",
         })
 
-        -- MODE
-        statusline:add_item(mode)
-
-        statusline:add_item({
-            content = {
-                white_right_lower_triangle,
-                filetype_icon,
-                filetype_name,
-            },
-            hidden = vim.bo.filetype == nil,
-        })
-
-        statusline:add_item({
-            content = {
-                white_right_lower_triangle,
-                diagnostics,
-            },
-        })
-
-        statusline:add_item({
-            content = {
-                white_right_lower_triangle,
-                hl_search,
-            },
-            hidden = function()
-                return not package.loaded["noice"] or not require("noice").api.status.search.has()
-            end,
-        })
-
-        statusline:add_item({
-            content = {
-                white_right_lower_triangle,
-                navic,
-            },
-            hidden = function()
-                return not package.loaded["nvim-navic"] or not require("nvim-navic").is_available()
-            end,
-        })
-
-        -----------------------------------------------
-        statusline:add_item(require("nougat.nut.spacer").create())
-        statusline:add_item(require("nougat.nut.truncation_point").create())
-        -----------------------------------------------
-
-        statusline:add_item({
-            content = {
-                white_left_lower_triangle,
-                git_status,
-            },
-            hidden = function()
-                return not vim.g.gitsigns_head
-            end,
-        })
-
-        statusline:add_item({
-            content = {
-                white_left_lower_triangle,
-                wordcount,
-            },
-            hidden = function(_, ctx)
-                return not word_filetypes[vim.api.nvim_get_option_value("filetype", { buf = ctx.bufnr })]
-            end,
-        })
-
-        statusline:add_item(white_left_lower_triangle)
-
-        statusline:add_item({
+        local counts = item({
             hl = { bg = colors.bg0, fg = colors.white.base },
             sep_left = sep.left_lower_triangle_solid(true),
             content = table.concat({
@@ -219,6 +182,35 @@ return {
                 }, { align = "right", min_width = 5 }),
             }),
         })
+
+        -- MODE
+        statusline:add_item(mode)
+
+        statusline:add_item(white_right_lower_triangle(filetype))
+        statusline:add_item(filetype)
+
+        statusline:add_item(white_right_lower_triangle(diagnostics))
+        statusline:add_item(diagnostics)
+
+        statusline:add_item(white_right_lower_triangle(hl_search))
+        statusline:add_item(hl_search)
+
+        statusline:add_item(white_right_lower_triangle(navic))
+        statusline:add_item(navic)
+
+        -----------------------------------------------
+        statusline:add_item(require("nougat.nut.spacer").create())
+        statusline:add_item(require("nougat.nut.truncation_point").create())
+        -----------------------------------------------
+
+        statusline:add_item(white_left_lower_triangle(git_status))
+        statusline:add_item(git_status)
+
+        statusline:add_item(white_left_lower_triangle(wordcount))
+        statusline:add_item(wordcount)
+
+        statusline:add_item(white_left_lower_triangle(counts))
+        statusline:add_item(counts)
 
         local stl_inactive = bar("statusline")
 
