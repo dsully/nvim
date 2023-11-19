@@ -62,6 +62,7 @@ return {
                 hint = { prefix = icons.hint, fg = colors.blue.bright },
             },
             sep_right = sep.right_lower_triangle_solid(true),
+            hidden = require("nougat.nut.buf.diagnostic_count").hidden.if_zero(),
         })
 
         local filetype_icon = item({
@@ -150,9 +151,6 @@ return {
                 white_right_lower_triangle,
                 diagnostics,
             },
-            hidden = function()
-                return not require("nougat.nut.buf.diagnostic_count").hidden.if_zero()
-            end
         })
 
         statusline:add_item({
