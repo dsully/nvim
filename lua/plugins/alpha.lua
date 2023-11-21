@@ -68,14 +68,19 @@ return {
         vim.api.nvim_create_autocmd("FileType", {
             desc = "Hide tab line and status lines on startup screen.",
             callback = function()
-                vim.opt_local.buflisted = true
-                vim.opt_local.colorcolumn = ""
                 vim.opt_local.laststatus = 0
-                vim.opt_local.ruler = false
-                vim.opt_local.showtabline = 0
             end,
             once = true,
             pattern = "alpha",
+        })
+
+        vim.api.nvim_create_autocmd("BufUnload", {
+            buffer = 0,
+            desc = "Re-enable status line.",
+            callback = function()
+                vim.opt_local.laststatus = 3
+            end,
+            once = true,
         })
 
         require("alpha").setup(dashboard.opts)
