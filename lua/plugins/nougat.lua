@@ -54,9 +54,9 @@ return {
         })
 
         local white_left_lower_triangle = paired_sep({
-            content = "",
             hl = { bg = colors.white.base },
             sep_left = sep.left_lower_triangle_solid(true),
+            stuffix = " ",
         })
 
         local diagnostics = require("nougat.nut.buf.diagnostic_count").create({
@@ -104,7 +104,6 @@ return {
 
         local filetype = item({
             content = {
-                -- white_right_lower_triangle,
                 filetype_icon,
                 filetype_name,
             },
