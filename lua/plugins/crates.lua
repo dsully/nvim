@@ -51,13 +51,6 @@ return {
                 },
             })
         end
-
-        M.enable_crates()
-
-        vim.api.nvim_create_autocmd("BufEnter", {
-            pattern = "Cargo.toml",
-            callback = M.enable_crates,
-        })
     end,
     event = { "BufRead Cargo.toml" },
 }
