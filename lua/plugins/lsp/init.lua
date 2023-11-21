@@ -216,7 +216,7 @@ local servers = {
             client.server_capabilities.referencesProvider = false
             client.server_capabilities.signatureHelpProvider = false
             common.on_attach(client, ...)
-        end
+        end,
     },
     ruff_lsp = function()
         require("lspconfig").ruff_lsp.setup({

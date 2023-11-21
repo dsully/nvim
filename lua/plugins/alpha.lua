@@ -29,7 +29,7 @@ return {
             dashboard.button("g", "  Find Text           ", cmd("Telescope live_grep")),
             dashboard.button("p", "󰓅  Profile Plugins     ", cmd("Lazy profile")),
             dashboard.button("u", "  Update Plugins      ", cmd("Lazy sync")),
-            dashboard.button("q", "󰗼  Quit Neovim         ", cmd("qa!"))
+            dashboard.button("q", "󰗼  Quit Neovim         ", cmd("qa!")),
         }
 
         dashboard.config.layout = {
@@ -104,5 +104,5 @@ return {
         return vim.fn.argc() == 0
     end,
     event = "VimEnter",
-    priority = 5, -- Load after persistence.nvim
+    priority = 5, -- Load after session manager.
 }
