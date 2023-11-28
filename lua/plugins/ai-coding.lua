@@ -13,8 +13,6 @@ return {
 
             for _, map in pairs({
                 { key = "g", cmd = "grammar_correction", desc = "Grammar Correction" },
-                { key = "t", cmd = "translate", desc = "Translate" },
-                { key = "k", cmd = "keywords", desc = "Keywords" },
                 { key = "d", cmd = "docstring", desc = "Add Doc-Strings" },
                 { key = "T", cmd = "add_tests", desc = "Add Tests" },
                 { key = "o", cmd = "optimize_code", desc = "Optimize Code" },
@@ -35,6 +33,7 @@ return {
         },
         opts = {
             chat = {
+                actions_paths = { vim.fn.stdpath("config") .. "chatgpt/actions.json" },
                 answer_sign = "",
                 keymaps = {
                     close = { "<C-c>", "<Esc>" },
@@ -47,6 +46,11 @@ return {
                 },
                 openai_params = {
                     model = "gpt-4-1106-preview",
+                    max_tokens = 600,
+                },
+                openai_edit_params = {
+                    model = "gpt-4-1106-preview",
+                    max_tokens = 600,
                 },
                 popup_input = {
                     submit = "<C-Enter>",
@@ -60,7 +64,7 @@ return {
                 welcome_message = "",
             },
             edit_with_instructions = {
-                diff = false,
+                diff = true,
                 keymaps = {
                     accept = "<C-y>",
                     close = "<C-c>",
