@@ -56,6 +56,7 @@ local M = {
 
     formatters = {
         bash = { "shellcheck", "shellharden", "shfmt" },
+        bzl = { "buildifier" },
         c = { "clang-format" },
         caddy = { "caddy" },
         cpp = { "clang-format" },
