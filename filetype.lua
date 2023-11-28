@@ -13,6 +13,7 @@ vim.filetype.add({
     },
     extension = {
         conf = "conf",
+        ivy = "xml",
         j2 = "htmldjango",
         jinja = "htmldjango",
         jinja2 = "htmldjango",
