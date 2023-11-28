@@ -1,34 +1,17 @@
 return {
     "mfussenegger/nvim-lint",
     config = function()
-        local config = vim.env.XDG_CONFIG_HOME
-
         local lint = require("lint")
-        local linters = lint.linters
 
-        linters.gitlint = {
-            cmd = "gitlint",
-            stdin = true,
-            args = {
-                string.format("--config=%s/gitlint.ini", config),
-                "--msg-filename",
-                "-",
-            },
-            stream = "stderr",
-            ignore_exitcode = true,
-            env = nil,
-            parser = require("lint.parser").from_pattern([[(%d+): (%w+) (.+)]], { "lnum", "code", "message" }),
-        }
-
-        linters.markdownlint.args = {
+        lint.linters.markdownlint.args = {
             function()
-                return string.format("--config=%s/markdownlint/config.yaml", config)
+                return string.format("--config=%s/markdownlint/config.yaml", vim.env.XDG_CONFIG_HOME)
             end,
         }
 
-        linters.yamllint.args = {
+        lint.linters.yamllint.args = {
             function()
-                return string.format("--config=%s/yamllint.yaml", config)
+                return string.format("--config=%s/yamllint.yaml", vim.env.XDG_CONFIG_HOME)
             end,
         }
 
