@@ -11,6 +11,11 @@ end
 do
     if vim.env.VIRTUAL_ENV and not vim.g.dmypy then
         local dmypy = vim.env.VIRTUAL_ENV .. "/bin/dmypy-ls"
+        local python = vim.env.VIRTUAL_ENV .. "/bin/python"
+
+        if not vim.uv.fs_access(python, "RX") then
+            return
+        end
 
         if not vim.uv.fs_access(dmypy, "RX") then
             vim.notify("Installing dmypy-ls in virtual env...")
