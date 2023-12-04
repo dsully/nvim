@@ -33,7 +33,7 @@ return {
         },
         opts = {
             chat = {
-                actions_paths = { vim.fn.stdpath("config") .. "chatgpt/actions.json" },
+                actions_paths = { vim.fn.stdpath("config") .. "/chatgpt/actions.json" },
                 answer_sign = "",
                 keymaps = {
                     close = { "<C-c>", "<Esc>" },
