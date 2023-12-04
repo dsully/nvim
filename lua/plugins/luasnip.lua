@@ -43,7 +43,10 @@ return {
         require("luasnip.loaders.from_vscode").lazy_load()
 
         -- Create a command to edit the snippet file associated with the current
-        vim.api.nvim_create_user_command("LuaSnipEdit", require("luasnip.loaders.from_lua").edit_snippet_files, {})
+        vim.api.nvim_create_user_command("LuaSnipEdit", function()
+            require("telescope")
+            require("luasnip.loaders").edit_snippet_files()
+        end, {})
 
         vim.keymap.set({ "i" }, "<C-k>", function()
             if ls.expand_or_jumpable() then
