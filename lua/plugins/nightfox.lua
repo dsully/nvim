@@ -138,6 +138,11 @@ return {
             CodewindowBorder = { fg = colors.gray },
             CodewindowDeletion = { fg = colors.red },
 
+            DiagnosticFloatingError = { link = "DiagnosticError" },
+            DiagnosticFloatingWarn = { link = "DiagnosticWarn" },
+            DiagnosticFloatingInfo = { link = "DiagnosticInfo" },
+            DiagnosticFloatingHint = { link = "DiagnosticHint" },
+
             DiagnosticVirtualTextError = { link = "DiagnosticError" },
             DiagnosticVirtualTextWarn = { link = "DiagnosticWarn" },
             DiagnosticVirtualTextInfo = { link = "DiagnosticInfo" },
