@@ -361,11 +361,15 @@ local servers = {
                 },
                 files = {
                     excludeDirs = {
-                        "./assets/",
-                        "./data/",
-                        "./docs/",
-                        "./.vscode/",
-                        "./.git/",
+                        ".direnv",
+                        ".git",
+                        ".vscode",
+                        "assets",
+                        "ci",
+                        "data",
+                        "docs",
+                        "js",
+                        "target",
                     },
                 },
                 inlayHints = {
