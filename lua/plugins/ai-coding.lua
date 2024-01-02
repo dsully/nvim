@@ -33,7 +33,6 @@ return {
         },
         opts = {
             chat = {
-                actions_paths = { vim.fn.stdpath("config") .. "/chatgpt/actions.json" },
                 answer_sign = "",
                 keymaps = {
                     close = { "<C-c>", "<Esc>" },
@@ -44,24 +43,8 @@ return {
                     new_session = "<C-n>",
                     cycle_windows = "<Tab>",
                 },
-                openai_params = {
-                    model = "gpt-4-1106-preview",
-                    max_tokens = 600,
-                },
-                openai_edit_params = {
-                    model = "gpt-4-1106-preview",
-                    max_tokens = 600,
-                },
-                popup_input = {
-                    submit = "<C-Enter>",
-                },
-                popup_window = { border = { style = vim.g.border } },
                 question_sign = "",
                 sessions_window = { border = { style = vim.g.border } },
-                settings_window = { border = { style = vim.g.border } },
-                system_input = { border = { style = vim.g.border } },
-                system_window = { border = { style = vim.g.border } },
-                welcome_message = "",
             },
             edit_with_instructions = {
                 diff = true,
@@ -75,6 +58,22 @@ return {
                     use_output_as_input = "<C-i>",
                 },
             },
+            openai_params = {
+                model = "gpt-4-1106-preview",
+                max_tokens = 600,
+            },
+            openai_edit_params = {
+                model = "gpt-4-1106-preview",
+                max_tokens = 600,
+            },
+            popup_input = {
+                submit = "<C-Enter>",
+            },
+            popup_window = { border = { style = vim.g.border } },
+            settings_window = { border = { style = vim.g.border } },
+            system_input = { border = { style = vim.g.border } },
+            system_window = { border = { style = vim.g.border } },
+            welcome_message = "",
         },
     },
     {
