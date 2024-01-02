@@ -216,7 +216,7 @@ return {
         stl_inactive:add_item(mode)
         stl_inactive:add_item(require("nougat.nut.spacer").create())
 
-        require("nougat.bar.util").set_statusline(function(ctx)
+        require("nougat").set_statusline(function(ctx)
             return ctx.is_focused and statusline or stl_inactive
         end)
     end,
