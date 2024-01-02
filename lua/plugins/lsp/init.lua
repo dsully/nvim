@@ -145,7 +145,7 @@ local servers = {
         before_init = function(_, config)
             vim.list_extend(config.settings.json.schemas, require("schemastore").json.schemas())
         end,
-        filetypes = { "json", "json5", "jsonc" },
+        filetypes = { "json", "jsonc" },
         settings = {
             json = {
                 schemas = {},
