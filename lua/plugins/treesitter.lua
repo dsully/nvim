@@ -198,8 +198,9 @@ return {
             local exclude_filetypes = {
                 ["bzl"] = true,
                 ["gitcommit"] = true,
-                ["just"] = true,
+                ["json5"] = true,
                 ["jsonc"] = true,
+                ["just"] = true,
                 ["text"] = true,
             }
 
