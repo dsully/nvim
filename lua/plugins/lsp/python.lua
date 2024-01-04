@@ -72,6 +72,12 @@ local function exclude_ignores(table)
                 return false
             end
         end
+
+        -- ruff doesn't implement flake8's W503.
+        if str == "W503" then
+            return false
+        end
+
         return true
     end, table)
 end
