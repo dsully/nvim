@@ -50,30 +50,25 @@ return {
     },
     {
         "linrongbin16/gitlinker.nvim",
+        cmd = "GitLink",
         keys = {
             {
                 "<leader>gc",
-                function()
-                    return require("gitlinker").get_buf_range_url("n")
-                end,
+                vim.cmd.GitLink,
                 desc = "Copy Git URL",
+                mode = { "v", "n" },
             },
             {
                 "<leader>go",
                 function()
-                    return require("gitlinker").get_buf_range_url("n", {
-                        action_callback = function(url)
-                            vim.system({ vim.g.opener, "--background", url })
-                        end,
-                    })
+                    vim.cmd.GitLink({ bang = true })
                 end,
                 desc = "Open Git URL",
+                mode = { "v", "n" },
             },
         },
         opts = {
-            opts = {
-                print_url = false,
-            },
+            message = false,
         },
     },
     {
@@ -85,5 +80,27 @@ return {
             { "<leader>gh", vim.cmd.GhActions, desc = "Open Github Actions" },
         },
         opts = true,
+    },
+    {
+        "aspeddro/gitui.nvim",
+        keys = {
+            {
+                "<space>g",
+                function()
+                    require("gitui").open()
+                end,
+                desc = " Git UI",
+            },
+        },
+        opts = {
+            command = {
+                enable = false,
+            },
+            window = {
+                options = {
+                    border = vim.g.border,
+                },
+            },
+        },
     },
 }
