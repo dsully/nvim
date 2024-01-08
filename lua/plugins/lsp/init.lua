@@ -23,6 +23,11 @@ local servers = {
     marksman = {}, -- Markdown
     -- pylyzer",
     terraformls = {},
+    typos_lsp = {
+        init_options = {
+            config = vim.env.HOME .. "/.typos.toml",
+        },
+    },
     clangd = {
         capabilities = vim.tbl_extend("force", common.capabilities(), {
             textDocument = {
@@ -574,10 +579,8 @@ return {
             end
 
             -- Remove built-ins / formatters that are not in Mason.
-            --
-            -- 'typos-cli' doesn't have a pre-compiled release for Apple Silicon.
-            mason_tools = vim.tbl_filter(function(t)
-                return not vim.tbl_contains({ "caddy", "fish", "fish_indent", "just", "typos", "write_good" }, t)
+            mason_tools = vim.iter.filter(function(t)
+                return not vim.tbl_contains({ "caddy", "fish", "fish_indent", "just", "write_good" }, t)
             end, mason_tools)
 
             -- Require before mason itself is loaded.

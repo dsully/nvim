@@ -36,7 +36,6 @@ return {
             sh = { "shellcheck" },
             text = { "write_good" },
             yaml = { "yamllint" },
-            ["*"] = { "typos" },
         }
 
         vim.api.nvim_create_autocmd({ "BufEnter", "BufReadPost", "BufWritePost", "TextChanged", "InsertLeave" }, {
