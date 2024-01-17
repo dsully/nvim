@@ -212,6 +212,9 @@ return {
             Terminal = { fg = colors.white.dim, bg = colors.gray.dim },
 
             UnderlinedTitle = { style = "bold,underline" },
+
+            WinBar = { link = "StatusLine" },
+            WinBarNC = { link = "StatusLineNC" },
         }
 
         local options = {

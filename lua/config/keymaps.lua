@@ -29,6 +29,9 @@ vim.keymap.set("n", "q", "<Nop>", { desc = "hidden" })
 vim.keymap.set("n", "Q", "<Nop>", { desc = "hidden" })
 vim.keymap.set("n", "q:", "<Nop>", { desc = "hidden" })
 
+-- Copy selection to gui-clipboard
+vim.keymap.set("x", "Y", '"+y', { desc = "Yank to Clipboard" })
+
 vim.keymap.set("n", "<leader>a", "<cmd>%y<cr>", { desc = "Yank All Lines" })
 
 -- Don't delete into the system clipboard.

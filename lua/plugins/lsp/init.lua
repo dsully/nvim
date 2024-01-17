@@ -664,7 +664,8 @@ return {
 
     -- Display diagnostic inline
     {
-        "https://git.sr.ht/~whynothugo/lsp_lines.nvim",
+        -- "https://git.sr.ht/~whynothugo/lsp_lines.nvim",
+        "dsully/lsp_lines.nvim",
         config = function()
             local default_virtual_text = vim.diagnostic.config().virtual_text
 
