@@ -9,10 +9,12 @@ return {
                     python = "python3",
                     runner = "pytest",
                     args = {
+                        "-s", -- don't capture console output
                         "--log-level",
                         "DEBUG",
                         "-vv",
                     },
+                    pytest_discover_instances = true, -- experimental, support parametrized test cases
                 }),
                 require("neotest-rust"),
             },

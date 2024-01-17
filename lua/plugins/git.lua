@@ -4,7 +4,6 @@ return {
         config = function()
             require("gitsigns").setup({
                 keymaps = nil,
-                _inline2 = true,
                 preview_config = {
                     border = vim.g.border,
                 },
