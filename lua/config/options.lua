@@ -1,5 +1,4 @@
 vim.opt.backup = false
-vim.opt.clipboard = "unnamedplus" -- https://stackoverflow.com/questions/30691466/what-is-difference-between-vims-clipboard-unnamed-and-unnamedplus-settings
 vim.opt.cmdheight = 1 -- (Disabled) A little more screen real estate.
 vim.opt.completeopt = { "menu", "menuone", "noselect" }
 vim.opt.expandtab = true
