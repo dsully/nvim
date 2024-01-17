@@ -656,7 +656,6 @@ return {
     { "pmizio/typescript-tools.nvim" },
     { "smjonas/inc-rename.nvim", opts = {} },
     { "someone-stole-my-name/yaml-companion.nvim" },
-    { "VidocqH/lsp-lens.nvim", event = "LspAttach", opts = {} },
     { "zbirenbaum/neodim", event = "LspAttach", opts = {} },
 
     -- Load Lua plugin files without needing to have them in the LSP workspace.
@@ -675,9 +674,9 @@ return {
             })
 
             vim.keymap.set("n", "<localleader>l", function()
+                ---@diagnostic disable-next-line: undefined-field
                 local new_value = not vim.diagnostic.config().virtual_lines
 
-                --- @type boolean|table
                 local virtual_text = default_virtual_text
 
                 if new_value then
