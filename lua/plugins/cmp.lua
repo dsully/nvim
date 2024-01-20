@@ -415,44 +415,6 @@ return {
     },
     {
         "nvim-cmp",
-        dependencies = { "uga-rosa/cmp-dictionary", enabled = false },
-        cond = function()
-            return vim.fn.executable("wn") == 1 -- Needs wordnet + tcl-tk
-        end,
-        event = "InsertEnter",
-        ft = { "gitcommit", "markdown", "text" },
-        opts = function(_, opts)
-            if not package.loaded["cmp_dictionary"] then
-                return
-            end
-
-            local dict = require("cmp_dictionary")
-
-            dict.setup({
-                first_case_insensitive = true,
-                document = true,
-            })
-
-            dict.switcher({
-                spelllang = {
-                    en = "/usr/share/dict/words",
-                },
-            })
-
-            table.insert(defaults.cmp.symbols, { dictionary = "󰂽 [Dict]" })
-
-            require("cmp").setup.filetype({ "gitcommit", "markdown", "text" }, {
-                sources = {
-                    name = "dictionary",
-                    group_index = 2,
-                    keyword_length = 2,
-                    max_item_count = 5,
-                },
-            })
-        end,
-    },
-    {
-        "nvim-cmp",
         dependencies = { { "zbirenbaum/copilot-cmp", enabled = false } },
         opts = function(_, opts)
             if package.loaded["copilot_cmp"] then
