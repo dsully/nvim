@@ -1,4 +1,4 @@
-;extends
+;; extends
 
 ((call_expression
   function: (field_expression

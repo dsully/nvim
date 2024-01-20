@@ -41,7 +41,7 @@ vim.api.nvim_create_autocmd({ "FileType" }, {
 
 vim.api.nvim_create_autocmd({ "FileType" }, {
     desc = "Map q to close the buffer.",
-    pattern = { "checkhealth", "help", "man", "qf", "query", "tsplayground" },
+    pattern = { "checkhealth", "help", "man", "qf", "tsplayground" },
     callback = function(event)
         vim.opt_local.spell = false
 
