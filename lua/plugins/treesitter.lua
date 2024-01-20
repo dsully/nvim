@@ -194,6 +194,7 @@ return {
                 ["json5"] = true,
                 ["jsonc"] = true,
                 ["just"] = true,
+                ["sshdconfig"] = true,
                 ["text"] = true,
             }
 
