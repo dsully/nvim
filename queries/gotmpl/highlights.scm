@@ -14,7 +14,7 @@
 
 (method_call
   method: (selector_expression
-    field: (field_identifier) @method))
+    field: (field_identifier) @function.method))
 
 ; Operators
 
@@ -45,7 +45,7 @@
     "else if"
     "if"
     "with"
-] @conditional
+] @keyword.conditional
 
 [
     "range"
@@ -81,4 +81,3 @@
 ] @constant.builtin
 
 (comment) @comment
-(ERROR) @error
