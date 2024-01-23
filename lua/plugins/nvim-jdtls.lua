@@ -17,10 +17,6 @@ return {
         vim.fn.mkdir(workspace, "p")
 
         require("jdtls").start_or_attach({
-            on_attach = function(client, ...)
-                require("jdtls.setup").add_commands()
-                common.on_attach(client, ...)
-            end,
             capabilities = common.capabilities(),
             cmd = {
                 "java",
@@ -50,6 +46,7 @@ return {
                     progressReportProvider = false,
                 },
             },
+            on_attach = common.on_attach,
             settings = {
                 codeGeneration = {
                     toString = {

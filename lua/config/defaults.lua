@@ -121,7 +121,7 @@ local M = {
         lsp = {
             "copilot",
             "llm-ls",
-            "typos_lsp"
+            "typos_lsp",
         },
         paths = {
             "~/.cache",
