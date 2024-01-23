@@ -18,6 +18,7 @@ require("lazy").setup("plugins", {
     },
     defaults = {
         lazy = true,
+        version = false, -- always use the latest git commit
     },
     install = {
         colorscheme = { "nordfox" },
@@ -57,7 +58,7 @@ require("lazy").setup("plugins", {
     profiling = {
         -- Enables extra stats on the debug tab related to the loader cache.
         -- Additionally gathers stats about all package.loaders
-        loader = false,
+        loader = true,
         -- Track each new require in the Lazy profiling tab
         require = false,
     },
@@ -66,6 +67,12 @@ require("lazy").setup("plugins", {
     },
 })
 
+vim.api.nvim_create_user_command("LazyHealth", function()
+    vim.cmd.Lazy({ "load all", bang = true })
+    vim.cmd.checkhealth()
+end, { desc = "Load all plugins and run :checkhealth" })
+
+vim.keymap.set("n", "<leader>ph", vim.cmd.LazyHealth, { desc = " Plugin Health" })
 vim.keymap.set("n", "<leader>pi", require("lazy").show, { desc = " Plugin Info" })
 vim.keymap.set("n", "<leader>pp", require("lazy").profile, { desc = " Profile Plugins" })
 vim.keymap.set("n", "<leader>ps", require("lazy").sync, { desc = " Sync Plugins" })

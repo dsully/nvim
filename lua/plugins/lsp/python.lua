@@ -74,7 +74,7 @@ local function exclude_ignores(table)
         end
 
         -- ruff doesn't implement flake8's W503.
-        if vim.tbl_contains({"E128", "W503", ""}, str) then
+        if vim.tbl_contains({ "E128", "W503", "" }, str) then
             return false
         end
 

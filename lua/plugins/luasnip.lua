@@ -39,9 +39,6 @@ return {
         -- Snippets are stored in separate files.
         require("luasnip.loaders.from_lua").load({ paths = vim.api.nvim_get_runtime_file("lua/snippets", false)[1] })
 
-        -- Friendly snippets.
-        require("luasnip.loaders.from_vscode").lazy_load()
-
         -- Create a command to edit the snippet file associated with the current
         vim.api.nvim_create_user_command("LuaSnipEdit", function()
             require("telescope")
@@ -72,5 +69,13 @@ return {
             ls.unlink_current()
         end, { silent = true, desc = "Clear snippet jumps" })
     end,
-    dependencies = { "rafamadriz/friendly-snippets" },
+    dependencies = {
+        {
+            "rafamadriz/friendly-snippets",
+            config = function()
+                require("luasnip.loaders.from_vscode").lazy_load()
+                -- require('luasnip/loaders/from_vscode').lazy_load({ paths = { vim.fn.stdpath('config') .. '/misc/snippets' } })
+            end,
+        },
+    },
 }
