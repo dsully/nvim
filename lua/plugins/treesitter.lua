@@ -182,46 +182,29 @@ return {
             },
         },
     },
-
     {
-        "shellRaining/hlchunk.nvim",
-        config = function()
-            -- Don't enable for non-treesitter types
-            local exclude_filetypes = {
-                ["bzl"] = true,
-                ["cfg"] = true,
-                ["gitcommit"] = true,
-                ["json5"] = true,
-                ["jsonc"] = true,
-                ["just"] = true,
-                ["sshdconfig"] = true,
-                ["text"] = true,
-            }
-
-            for _, ft in ipairs(require("config.defaults").ignored.file_types) do
-                exclude_filetypes[ft] = true
-            end
-
-            require("hlchunk").setup({
-                blank = {
-                    enable = false,
-                },
-                chunk = {
-                    chars = {
-                        horizontal_line = "─",
-                        vertical_line = "│",
-                        left_top = "┌",
-                        left_bottom = "└",
-                        right_arrow = "─",
-                    },
-                    exclude_filetypes = exclude_filetypes,
-                    style = "#81a1c1",
-                },
-                indent = {
-                    enable = false,
-                },
-            })
-        end,
+        -- "shellRaining/hlchunk.nvim",
+        "dsully/hlchunk.nvim",
         event = { "LspAttach" },
+        opts = {
+            blank = {
+                enable = false,
+            },
+            chunk = {
+                chars = {
+                    horizontal_line = "─",
+                    vertical_line = "│",
+                    left_top = "┌",
+                    left_bottom = "└",
+                    right_arrow = "─",
+                },
+                style = "#81a1c1",
+                use_treesitter = true,
+            },
+            indent = {
+                enable = false,
+            },
+        },
+    },
     },
 }
