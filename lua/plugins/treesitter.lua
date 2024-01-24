@@ -118,9 +118,8 @@ return {
         end,
         event = vim.g.defaults.lazyfile,
     },
-
-    -- Better % matching.
     {
+        -- Better % matching.
         "andymass/vim-matchup",
         init = function()
             vim.o.matchpairs = "(:),{:},[:],<:>"
@@ -142,7 +141,6 @@ return {
         },
         event = vim.g.defaults.lazyfile,
     },
-
     {
         "RRethy/nvim-treesitter-endwise",
         dependencies = {
@@ -153,9 +151,8 @@ return {
         },
         event = vim.g.defaults.lazyfile,
     },
-
-    -- Use treesitter to auto-close and auto-rename HTML tags.
     {
+        -- Use treesitter to auto-close and auto-rename HTML tags.
         "windwp/nvim-ts-autotag",
         dependencies = {
             "nvim-treesitter/nvim-treesitter",
