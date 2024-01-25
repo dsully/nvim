@@ -92,15 +92,17 @@ vim.g.large_file_size = 1024 * 512
 
 -- Load clipboard.vim faster. Neovim 0.10+ includes OSC52 support.
 if vim.env.SSH_CONNECTION then
+    local osc52 = require("vim.ui.clipboard.osc52")
+
     vim.g.clipboard = {
         name = "OSC 52",
         copy = {
-            ["+"] = require("vim.ui.clipboard.osc52").copy("+"),
-            ["*"] = require("vim.ui.clipboard.osc52").copy("*"),
+            ["+"] = osc52.copy("+"),
+            ["*"] = osc52.copy("*"),
         },
         paste = {
-            ["+"] = require("vim.ui.clipboard.osc52").paste("+"),
-            ["*"] = require("vim.ui.clipboard.osc52").paste("*"),
+            ["+"] = osc52.paste("+"),
+            ["*"] = osc52.paste("*"),
         },
     }
 elseif vim.g.os == "Darwin" then

@@ -310,3 +310,38 @@ vim.api.nvim_create_autocmd("BufWritePost", {
     desc = "Apply chezmoi changes via 'chezmoi edit'",
     pattern = "*/chezmoi-edit*",
 })
+
+vim.api.nvim_create_autocmd("TextYankPost", {
+    callback = function()
+        vim.highlight.on_yank({ higroup = "Visual", timeout = 500 })
+
+        -- Copy data to system clipboard only when we are pressing 'y'. 'd', 'x' will be filtered out.
+        if vim.v.operator ~= "y" then
+            return
+        end
+
+        local copy = function(str)
+            local ok, error = pcall(vim.fn.setreg, "+", str)
+
+            if not ok then
+                vim.notify("Failed to copy to clipboard: " .. error, vim.log.levels.ERROR)
+                return
+            end
+        end
+
+        local present, yank_data = pcall(vim.fn.getreg, '"')
+
+        if not present then
+            vim.notify('Failed to get content from register ": ' .. yank_data, vim.log.levels.ERROR)
+            return
+        end
+
+        if #yank_data < 1 then
+            return
+        end
+
+        copy(yank_data)
+    end,
+    desc = "Copy and highlight yanked text to system clipboard",
+    group = vim.api.nvim_create_augroup("SmartYank", { clear = true }),
+})
