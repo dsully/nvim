@@ -29,8 +29,10 @@ vim.keymap.set("n", "q", "<Nop>", { desc = "hidden" })
 vim.keymap.set("n", "Q", "<Nop>", { desc = "hidden" })
 vim.keymap.set("n", "q:", "<Nop>", { desc = "hidden" })
 
--- Copy selection to gui-clipboard
-vim.keymap.set("x", "Y", '"+y', { desc = "Yank to Clipboard" })
+vim.keymap.set({ "n", "x" }, "Y", "y$", { desc = "Yank to clipboard" })
+-- vim.keymap.set({ "n", "x" }, "gY", '"*y$', { desc = "Yank until end of line to system clipboard" })
+-- vim.keymap.set({ "n", "x" }, "gy", '"*y', { desc = "Yank to system clipboard" })
+vim.keymap.set({ "n", "x" }, "gp", '"*p', { desc = "Paste from system clipboard" })
 
 vim.keymap.set("n", "<leader>a", "<cmd>%y<cr>", { desc = "Yank All Lines" })
 
