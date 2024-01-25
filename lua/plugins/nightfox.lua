@@ -90,17 +90,18 @@ return {
             ["@keyword.exception"] = { fg = spec.syntax.builtin0 },
             ["@keyword.repeat"] = { fg = colors.blue, style = "italic" },
             ["@markup.emphasis"] = { fg = colors.white.dim, style = "italic" },
-            ["@markup.link.uri"] = { fg = spec.syntax.const, style = "NONE" },
+            ["@markup.link.url"] = { link = "@string.special.url" },
             ["@markup.list"] = { fg = colors.blue },
             ["@markup.note"] = { fg = colors.orange, bg = "NONE" },
             ["@markup.strong"] = { fg = colors.white.dim, style = "bold" },
             ["@module"] = { fg = spec.syntax.namespace, style = "italic" },
             ["@string.regexp"] = { fg = spec.syntax.regex },
-            ["@variable.member.rust"] = { fg = spec.syntax.builtin0 },
+            ["@string.special.url"] = { fg = spec.syntax.const, style = "NONE" },
             ["@variable.parameter"] = { fg = colors.yellow, style = "italic" },
 
             -- Ignore semantic token highlighting for comments so the tree-sitter comment parser can work.
             ["@lsp.type.comment.lua"] = { fg = "NONE", style = "NONE" },
+            ["@lsp.type.interface"] = {link = "@lsp.mod.public" },
             ["@lsp.type.typeParameter"] = { link = "@parameter" },
 
             CmpDocumentation = { fg = colors.white },
