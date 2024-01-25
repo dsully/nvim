@@ -170,7 +170,7 @@ return {
         end,
         dependencies = {
             { "natecraddock/telescope-zf-native.nvim" },
-            { "nvim-telescope/telescope-smart-history.nvim", dependencies = { "kkharji/sqlite.lua" } },
+            { "nvim-telescope/telescope-smart-history.nvim", dependencies = { "sqlite.lua" } },
             { "nvim-telescope/telescope-symbols.nvim" },
             { "nvim-telescope/telescope-ui-select.nvim" },
         },

@@ -44,4 +44,11 @@ return {
         },
         cmd = "MurenToggle",
     },
+
+    {
+        "kkharji/sqlite.lua",
+        build = function()
+            vim.uv.fs_mkdir(vim.fn.stdpath("data") .. "/databases", 511)
+        end,
+    },
 }

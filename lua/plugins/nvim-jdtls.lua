@@ -14,7 +14,7 @@ return {
 
         local workspace = vim.env.XDG_CACHE_HOME .. "/jdtls/" .. vim.fn.fnamemodify(vim.uv.cwd(), ":p:h:t")
 
-        vim.fn.mkdir(workspace, "p")
+        vim.uv.fs_mkdir(workspace, 511)
 
         require("jdtls").start_or_attach({
             capabilities = common.capabilities(),
