@@ -74,6 +74,22 @@ local M = {
         zsh = { "shellcheck", "shellharden", "shfmt" },
     },
 
+    linters = {
+        bash = { "shellcheck" },
+        fish = { "fish" },
+        ghaction = { "actionlint" },
+        gitcommit = { "gitlint", "write_good" },
+        go = { "revive" },
+        htmldjango = { "curlylint" },
+        jinja = { "curlylint" },
+        markdown = { "markdownlint", "write_good" },
+        protobuf = { "protolint" },
+        rst = { "rstcheck", "write_good" },
+        sh = { "shellcheck" },
+        text = { "write_good" },
+        yaml = { "yamllint" },
+    },
+
     -- Diagnostic symbols in the gutter.
     icons = {
         error = "󰅚 ",
