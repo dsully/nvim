@@ -88,7 +88,9 @@ return {
             local ok, cmp = pcall(require, "cmp")
 
             if ok then
+                -- Remove Copilot ghost text when the cmp menu is opened.
                 cmp.event:on("menu_opened", function()
+                    require("copilot.suggestion").dismiss()
                     vim.api.nvim_buf_set_var(0, "copilot_suggestion_hidden", true)
                 end)
 
@@ -97,7 +99,7 @@ return {
                 end)
             end
         end,
-        event = "InsertEnter",
+        event = "LazyFile",
         opts = {
             filetypes = {
                 ["*"] = false, -- Disable for all other filetypes and ignore default `filetypes`

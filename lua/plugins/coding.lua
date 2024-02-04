@@ -17,12 +17,9 @@ return {
         cmd = "CmpStatus",
         dependencies = {
             "FelipeLema/cmp-async-path",
-            "bydlw98/cmp-env",
-            "hrsh7th/cmp-buffer",
             "hrsh7th/cmp-calc",
-            "hrsh7th/cmp-cmdline",
+            -- "hrsh7th/cmp-cmdline",
             "hrsh7th/cmp-nvim-lsp",
-            "mtoohey31/cmp-fish",
             "onsails/lspkind-nvim",
             {
                 "garymjr/nvim-snippets",
@@ -31,11 +28,11 @@ return {
                 },
                 dependencies = {
                     "rafamadriz/friendly-snippets",
-                    event = { "InsertEnter" },
+                    lazy = false,
                 },
             },
         },
-        event = "InsertEnter",
+        event = "LazyFile",
         config = function()
             local cmp = require("cmp")
             local types = require("cmp.types")
@@ -44,7 +41,7 @@ return {
                 maxwidth = 50,
                 mode = "symbol",
                 menu = nil,
-                symbol_map = defaults.cmp.symbols
+                symbol_map = defaults.cmp.symbols,
             })
 
             -- From: https://github.com/zbirenbaum/copilot-cmp#tab-completion-configuration-highly-recommended
@@ -292,15 +289,6 @@ return {
                 }),
             })
 
-            cmp.setup.filetype({ "fish" }, {
-                sources = cmp.config.sources({
-                    { name = "fish" },
-                    { name = "snippets" },
-                    { name = "async_path" },
-                    { name = "env" },
-                    { name = "buffer" },
-                }),
-            })
         end,
     },
     {
@@ -645,7 +633,7 @@ return {
     -- Load Lua plugin files without needing to have them in the LSP workspace.
     { "mrjones2014/lua-gf.nvim", ft = "lua" },
     {
-        "dsully/crates.nvim",
+        "Saecki/crates.nvim",
         event = { "BufRead Cargo.toml" },
         opts = {
             lsp = {
@@ -669,5 +657,47 @@ return {
                 border = vim.g.border,
             },
         },
+    },
+    {
+        "mtoohey31/cmp-fish",
+        config = function()
+            require("cmp").setup.buffer({
+                sources = {
+                    { name = "fish" },
+                    { name = "snippets" },
+                    { name = "async_path" },
+                    { name = "env" },
+                    { name = "calc" },
+                    { name = "buffer" },
+                },
+            })
+        end,
+        dependencies = {
+            "FelipeLema/cmp-async-path",
+            "bydlw98/cmp-env",
+            "hrsh7th/cmp-buffer",
+        },
+        ft = "fish",
+    },
+    {
+        "hrsh7th/cmp-buffer",
+        config = function()
+            require("cmp").setup.buffer({
+                sources = {
+                    { name = "nvim_lsp" },
+                    { name = "snippets" },
+                    { name = "async_path" },
+                    { name = "env" },
+                    { name = "calc" },
+                    { name = "buffer" },
+                },
+            })
+        end,
+        dependencies = {
+            "FelipeLema/cmp-async-path",
+            "bydlw98/cmp-env",
+            "hrsh7th/cmp-buffer",
+        },
+        ft = { "bash", "sh", "zsh" },
     },
 }
