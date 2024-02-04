@@ -15,28 +15,7 @@ return {
             end,
         }
 
-        lint.linters_by_ft = {
-            bash = { "shellcheck" },
-            c = {},
-            cpp = {},
-            fish = { "fish" },
-            ghaction = { "actionlint" },
-            gitcommit = { "gitlint", "write_good" },
-            go = { "revive" },
-            htmldjango = { "curlylint" },
-            java = {},
-            jinja = { "curlylint" },
-            json = {},
-            lua = {},
-            markdown = { "markdownlint", "write_good" },
-            protobuf = { "protolint" },
-            python = {}, -- "mypy", "ruff"
-            rst = { "rstcheck", "write_good" },
-            rust = {},
-            sh = { "shellcheck" },
-            text = { "write_good" },
-            yaml = { "yamllint" },
-        }
+        lint.linters_by_ft = require("config.defaults").linters
 
         vim.api.nvim_create_autocmd({ "BufEnter", "BufReadPost", "BufWritePost", "TextChanged", "InsertLeave" }, {
             callback = function(args)
@@ -52,5 +31,5 @@ return {
             group = vim.api.nvim_create_augroup("nvim-lint", { clear = true }),
         })
     end,
-    event = vim.g.defaults.lazyfile,
+    event = "LazyFile",
 }
