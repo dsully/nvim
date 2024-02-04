@@ -101,7 +101,7 @@ return {
 
             -- Ignore semantic token highlighting for comments so the tree-sitter comment parser can work.
             ["@lsp.type.comment.lua"] = { fg = "NONE", style = "NONE" },
-            ["@lsp.type.interface"] = {link = "@lsp.mod.public" },
+            ["@lsp.type.interface.rust"] = { link = "@lsp.mod.public" },
             ["@lsp.type.typeParameter"] = { link = "@parameter" },
 
             CmpDocumentation = { fg = colors.white },
