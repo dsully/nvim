@@ -10,17 +10,6 @@ local is_string_like = function()
         or context.in_syntax_group("String")
 end
 
--- Only show matches in strings and comments or text-like file types.
-local is_text = function()
-    local ft = vim.api.nvim_get_option_value("filetype", { buf = 0 })
-
-    if vim.tbl_contains({ "gitcommit", "markdown", "text" }, ft) then
-        return true
-    end
-
-    return is_string_like()
-end
-
 ---@type LazySpec[]
 return {
     {
@@ -38,6 +27,18 @@ return {
         opts = function()
             local cmp = require("cmp")
             local types = require("cmp.types")
+
+            local lspkind = require("lspkind").cmp_format({
+                maxwidth = 50,
+                mode = "symbol",
+                menu = nil,
+                symbol_map = {
+                    Copilot = "",
+                    Snippet = "",
+                    calc = "󰃬",
+                    fish = "󰌋",
+                },
+            })
 
             -- From: https://github.com/zbirenbaum/copilot-cmp#tab-completion-configuration-highly-recommended
             -- Unlike other completion sources, copilot can use other lines above or below an empty line to provide a completion.
@@ -87,36 +88,8 @@ return {
                             end
                         end
 
-                        local kind = require("lspkind").cmp_format({
-                            maxwidth = 50,
-                            mode = "symbol_text",
-                            symbol_map = {
-                                Copilot = "",
-                                Snippet = "",
-                            },
-                        })(entry, vim_item)
-
-                        local strings = vim.split(kind.kind, "%s", { trimempty = true })
-
-                        kind.kind = string.format(" %s ", defaults.cmp.menu[entry.source.name] or strings[1] or "")
-
-                        -- Remove duplicate entries.
-                        kind.dup = ({
-                            buffer = 0,
-                            dictionary = 1,
-                            luasnip = 1,
-                            nvim_lsp = 1,
-                            path = 1,
-                        })[entry.source.name] or 0
-
-                        -- Trim leading space
-                        kind.abbr = string.gsub(kind.abbr, "^%s+", "")
-
-                        if entry.source.name ~= "copilot" then
-                            kind.menu = string.format("  %s: %s", defaults.cmp.symbols[entry.source.name] or "", strings[2] or "")
-                        end
-
-                        return kind
+                        vim_item.menu = ""
+                        return lspkind(entry, vim_item)
                     end,
                 },
                 mapping = cmp.mapping({
