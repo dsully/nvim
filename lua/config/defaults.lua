@@ -157,9 +157,15 @@ local M = {
             "pyright",
             "ruff_lsp",
         },
+        tools = {
+            "caddy",
+            "fish",
+            "fish_indent",
+            "just",
+            "write_good",
+        },
     },
 
-    lazyfile = { { "BufReadPost", "BufNewFile", "BufWritePre" } },
     root_patterns = {
         ".chezmoiroot",
         ".neoconf.conf",

@@ -2,14 +2,279 @@
   "neodev": {
     "library": {
       "enabled": true,
-      "plugins": false
+      "plugins": ["crates.nvim", "lazy.nvim", "mason.nvim", "nvim-lspconfig"],
+      "runtime": true,
+      "types": true
     }
   },
   "neoconf": {
     "plugins": {
+      "lspconfig": {
+        "enabled": true
+      },
       "lua_ls": {
         "enabled": true
       }
+    }
+  },
+  "lspconfig": {
+    "bashls": {
+      "bashIde": {
+        "includeAllWorkspaceSymbols": true
+      }
+    },
+    "clangd": {
+      "single_file_support": false,
+      "semanticHighlighting": true
+    },
+    "gopls": {
+      "analyses": {
+        "fieldalignment": true,
+        "nilness": true,
+        "shadow": true,
+        "unusedparams": true,
+        "unusedwrite": true,
+        "useany": true
+      },
+      "codelenses": {
+        "gc_details": false,
+        "generate": true,
+        "regenerate_cgo": true,
+        "run_govulncheck": true,
+        "test": true,
+        "tidy": true,
+        "upgrade_dependency": true,
+        "vendor": true
+      },
+      "completeUnimported": true,
+      "directoryFilters": ["-.git", "-.vscode", "-.idea", "-.vscode-test", "-node_modules"],
+      "experimentalPostfixCompletions": true,
+      "gofumpt": true,
+      "hints": {
+        "assignVariableTypes": true,
+        "compositeLiteralFields": true,
+        "compositeLiteralTypes": true,
+        "constantValues": true,
+        "functionTypeParameters": true,
+        "parameterNames": true,
+        "rangeVariableTypes": true
+      },
+      "semanticTokens": true,
+      "staticcheck": true,
+      "usePlaceholders": true
+    },
+    "jsonls": {
+      "validate.enable": true
+    },
+    "lua_ls": {
+      "Lua": {
+        "completion": {
+          "callSnippet": "Replace",
+          "keywordSnippet": "Both",
+          "workspaceWord": true
+        },
+        "diagnostics": {
+          "disable": ["missing-fields"],
+          "globals": ["bit", "describe", "it", "vim"],
+          "unusedLocalExclude": ["_*"]
+        },
+        "doc": {
+          "privateName": ["^_"]
+        },
+        "format": {
+          "enable": false
+        },
+        "hint": {
+          "arrayIndex": "Disable",
+          "enable": true,
+          "paramName": "Disable",
+          "paramType": true,
+          "semicolon": "Disable",
+          "setType": true
+        },
+        "runtime": {
+          "version": "LuaJIT"
+        },
+        "telemetry": {
+          "enable": false
+        },
+        "type": {
+          "castNumberToInteger": true
+        },
+        "workspace": {
+          "checkThirdParty": false
+        }
+      }
+    },
+    "pyright": {
+      "python.analysis.diagnosticMode": "openFilesOnly",
+      "python.analysis.useLibraryCodeForTypes": true
+    },
+    "ruff_lsp": {
+      "codeAction": {
+        "fixViolation": {
+          "enable": true
+        },
+        "disableRuleComment": {
+          "enable": false
+        }
+      }
+    },
+    "rust-analyzer": {
+      "cargo": {
+        "allFeatures": true,
+        "allTargets": true,
+        "extraEnv": {
+          "CARGO_INCREMENTAL": "0"
+        }
+      },
+      "check": {
+        "allTargets": false,
+        "command": "clippy",
+        "extraArgs": [
+          "--no-deps",
+          "--",
+          "-W",
+          "correctness",
+          "-W",
+          "keyword_idents",
+          "-W",
+          "rust_2021_prelude_collisions",
+          "-W",
+          "trivial_casts",
+          "-W",
+          "trivial_numeric_casts",
+          "-W",
+          "unused_lifetimes"
+        ]
+      },
+      "checkOnSave": {
+        "command": "clippy"
+      },
+      "completion": {
+        "postfix": {
+          "enable": true
+        },
+        "callable": {
+          "snippets": "fill_arguments"
+        },
+        "fullFunctionSignatures": {
+          "enable": true
+        },
+        "snippets": {
+          "custom": {
+            "println!": {
+              "postfix": "println",
+              "body": ["println!(\"$0\", ${receiver});"],
+              "description": "println!()",
+              "scope": "expr"
+            },
+            "Ok": {
+              "postfix": "ok",
+              "body": "Ok(${receiver})",
+              "description": "Wrap the expression in a `Result::Ok`",
+              "scope": "expr"
+            },
+            "Err": {
+              "postfix": "err",
+              "body": "Err(${receiver})",
+              "description": "Wrap the expression in a `Result::Err`",
+              "scope": "expr"
+            },
+            "Some": {
+              "postfix": "some",
+              "body": "Some(${receiver})",
+              "description": "Wrap the expression in an `Option::Some`",
+              "scope": "expr"
+            }
+          }
+        }
+      },
+      "diagnostics": {
+        "disabled": ["inactive-code", "macro-error", "unresolved-macro-call"],
+        "experimental": {
+          "enable": true
+        }
+      },
+      "files": {
+        "excludeDirs": [".direnv", ".git", ".vscode", "assets", "ci", "data", "docs", "js", "target"]
+      },
+      "hover": {
+        "actions": {
+          "references": {
+            "enable": true
+          }
+        }
+      },
+      "inlayHints": {
+        "chainingHints": {
+          "enable": false
+        },
+        "closureReturnTypeHints": {
+          "enable": "with_block"
+        },
+        "parameterHints": {
+          "enable": false
+        }
+      },
+      "lens": {
+        "enable": true,
+        "references": {
+          "method": {
+            "enable": true
+          },
+          "enumVariant": {
+            "enable": true
+          },
+          "trait": {
+            "enable": true
+          }
+        }
+      },
+      "lru": {
+        "capacity": 2048
+      },
+      "procMacro": {
+        "enable": true
+      },
+      "references": {
+        "excludeImports": true
+      },
+      "rust": {
+        "analyzerTargetDir": true
+      },
+      "workspace": {
+        "symbol": {
+          "search": {
+            "kind": "all_symbols",
+            "scope": "workspace_and_dependencies"
+          }
+        }
+      }
+    },
+    "tsserver": {
+      "code_lens": "on",
+      "expose_as_code_actions": ["all"],
+      "publish_diagnostic_on": "insert_leave",
+      "tsserver_file_preferences": {
+        "includeInlayEnumMemberValueHints": true,
+        "includeInlayFunctionLikeReturnTypeHints": true,
+        "includeInlayFunctionParameterTypeHints": true,
+        "includeInlayParameterNameHints": "all",
+        "includeInlayParameterNameHintsWhenArgumentMatchesName": true,
+        "includeInlayPropertyDeclarationTypeHints": true,
+        "includeInlayVariableTypeHints": true,
+        "includeInlayVariableTypeHintsWhenTypeMatchesName": false
+      },
+      "tsserver_format_preferences": {
+        "convertTabsToSpaces": true,
+        "indentSize": 2,
+        "trimTrailingWhitespace": false,
+        "semicolons": "insert"
+      }
+    },
+    "yamlls": {
+      "format.singleQuote": false
     }
   }
 }

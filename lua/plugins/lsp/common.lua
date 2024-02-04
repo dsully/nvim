@@ -25,6 +25,38 @@ M.groups = {
     lsp_highlight = vim.api.nvim_create_augroup("LSP Highlight References", { clear = false }),
 }
 
+M.setup = function()
+    vim.api.nvim_create_autocmd("LspAttach", {
+        callback = function(args)
+            local buffer = args.buf ---@type number
+            local client = vim.lsp.get_client_by_id(args.data.client_id)
+
+            if client then
+                M.on_attach(client, buffer)
+            end
+        end,
+    })
+
+    -- https://github.com/neovim/neovim/issues/24229
+    local register_capability = vim.lsp.handlers["client/registerCapability"]
+
+    vim.lsp.handlers["client/registerCapability"] = function(err, res, ctx)
+        local client_id = ctx.client_id
+        local client = vim.lsp.get_client_by_id(client_id)
+        local buffer = vim.api.nvim_get_current_buf()
+
+        if client then
+            M.on_attach(client, buffer)
+        end
+
+        return register_capability(err, res, ctx)
+    end
+
+    return M.capabilities()
+end
+
+---@param client lsp.Client
+---@param buffer integer
 M.on_attach = function(client, buffer)
     local methods = vim.lsp.protocol.Methods
 
