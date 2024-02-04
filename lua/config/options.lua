@@ -2,6 +2,7 @@ vim.opt.backup = false
 vim.opt.cmdheight = 1 -- (Disabled) A little more screen real estate.
 vim.opt.completeopt = { "menu", "menuone", "noselect" }
 vim.opt.expandtab = true
+vim.opt.exrc = true
 vim.opt.fileformats = "unix" -- force \n
 vim.opt.foldenable = false
 vim.opt.foldexpr = "v:lua.vim.treesitter.foldexpr()"
@@ -125,7 +126,3 @@ if vim.g.os == "Darwin" then
 else
     vim.g.opener = "xdg-open"
 end
-
-vim.g.defaults = {
-    lazyfile = { { "BufReadPost", "BufNewFile", "BufWritePre" } },
-}
