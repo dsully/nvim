@@ -15,6 +15,21 @@ return {
     {
         "hrsh7th/nvim-cmp",
         cmd = "CmpStatus",
+        dependencies = {
+            { "hrsh7th/cmp-buffer" },
+            { "hrsh7th/cmp-nvim-lsp" },
+            { "onsails/lspkind-nvim" },
+            {
+                "garymjr/nvim-snippets",
+                opts = {
+                    friendly_snippets = true,
+                },
+                dependencies = {
+                    "rafamadriz/friendly-snippets",
+                    event = { "InsertEnter" },
+                },
+            },
+        },
         config = function(_, opts)
             if opts and opts.sources then
                 for _, source in ipairs(opts.sources) do
@@ -66,6 +81,9 @@ return {
                 return modified_priority[kind] or kind
             end
 
+            -- Inside a snippet, use backspace to remove the placeholder.
+            vim.keymap.set("s", "<BS>", "<C-O>s")
+
             return {
                 completion = {
                     keyword_length = 4,
@@ -115,23 +133,19 @@ return {
                     --
                     -- https://github.com/hrsh7th/nvim-cmp/wiki/Example-mappings#super-tab-like-mapping
                     ["<Tab>"] = cmp.mapping(function(fallback)
-                        local luasnip = require("luasnip")
-
                         if cmp.visible() and has_words_before() then
                             cmp.select_next_item({ behavior = cmp.SelectBehavior.Select })
-                        elseif luasnip.expand_or_locally_jumpable() then
-                            luasnip.expand_or_jump()
+                        elseif vim.snippet.jumpable(1) then
+                            vim.snippet.jump(1)
                         else
                             fallback()
                         end
                     end),
                     ["<S-Tab>"] = cmp.mapping(function(fallback)
-                        local luasnip = require("luasnip")
-
-                        if luasnip.jumpable(-1) then
-                            luasnip.jump(-1)
-                        elseif cmp.visible() and has_words_before() then
+                        if cmp.visible() and has_words_before() then
                             cmp.select_prev_item()
+                        elseif vim.snippet.jumpable(1) then
+                            vim.snippet.jump(1)
                         else
                             fallback()
                         end
@@ -150,7 +164,7 @@ return {
                 preselect = cmp.PreselectMode.Item,
                 snippet = {
                     expand = function(args)
-                        require("luasnip").lsp_expand(args.body)
+                        vim.snippet.expand(args.body)
                     end,
                 },
                 sorting = {
@@ -213,10 +227,8 @@ return {
                 },
                 sources = cmp.config.sources({
                     {
-                        name = "luasnip",
-                        entry_filter = function()
-                            return not is_string_like()
-                        end,
+                        name = "snippets",
+                        max_item_count = 3,
                     },
                     {
                         name = "nvim_lsp",
@@ -283,12 +295,6 @@ return {
                 },
             }
         end,
-        dependencies = {
-            { "hrsh7th/cmp-buffer" },
-            { "hrsh7th/cmp-nvim-lsp" },
-            { "onsails/lspkind-nvim" },
-            { "saadparwaiz1/cmp_luasnip" },
-        },
         event = "InsertEnter",
         version = false,
     },
@@ -383,122 +389,6 @@ return {
             table.insert(defaults.cmp.symbols, { fish = "󰈺 [Fish]" })
             table.insert(defaults.cmp.menu, { fish = "󰌋" })
         end,
-    },
-    {
-        "nvim-cmp",
-        dependencies = { { "zbirenbaum/copilot-cmp", enabled = false } },
-        opts = function(_, opts)
-            if package.loaded["copilot_cmp"] then
-                local cmp = require("cmp")
-
-                -- Hide copilot suggestions if the completion window is open.
-                cmp.event:on("menu_opened", function()
-                    vim.api.nvim_buf_set_var(0, "copilot_suggestion_hidden", true)
-                end)
-
-                cmp.event:on("menu_closed", function()
-                    vim.api.nvim_buf_set_var(0, "copilot_suggestion_hidden", false)
-                end)
-
-                table.insert(opts.sources, {
-                    name = "copilot",
-                    entry_filter = function()
-                        return not is_string_like() and not require("luasnip").in_snippet()
-                    end,
-                })
-
-                table.insert(defaults.cmp.symbols, { copilot = " [Copilot]" })
-
-                if opts.formatters == nil then
-                    opts.formatters = {}
-                end
-
-                table.insert(opts.formatters, {
-                    insert_text = require("copilot_cmp.format").remove_existing,
-                })
-            end
-        end,
-    },
-    {
-        "L3MON4D3/LuaSnip",
-        cmd = { "LuaSnipEdit" },
-        config = function()
-            local ls = require("luasnip")
-            local types = require("luasnip.util.types")
-
-            -- documentation for snippet format inside examples:
-            -- https://github.com/L3MON4D3/LuaSnip/blob/master/Examples/snippets.lua
-
-            ls.config.set_config({
-                keep_roots = true,
-                link_roots = true,
-                link_children = true,
-                -- Do not jump to snippet if I'm outside of it
-                -- https://github.com/L3MON4D3/LuaSnip/issues/78
-                region_check_events = "CursorMoved",
-                delete_check_events = "TextChanged",
-                enable_autosnippets = true,
-                ext_opts = {
-                    [types.choiceNode] = {
-                        active = {
-                            virt_text = { { "", "Operator" } },
-                            hl_mode = "combine",
-                        },
-                    },
-                    [types.insertNode] = {
-                        active = {
-                            virt_text = { { "", "Type" } },
-                            hl_mode = "combine",
-                        },
-                    },
-                },
-                -- Use treesitter for getting the current filetype. This allows correctly resolving
-                -- the current filetype in eg. a markdown-code block or `vim.cmd()`.
-                ft_func = require("luasnip.extras.filetype_functions").from_cursor,
-            })
-
-            -- Snippets are stored in separate files.
-            require("luasnip.loaders.from_lua").load({ paths = vim.api.nvim_get_runtime_file("lua/snippets", false)[1] })
-
-            -- Create a command to edit the snippet file associated with the current
-            vim.api.nvim_create_user_command("LuaSnipEdit", function()
-                require("telescope")
-                require("luasnip.loaders").edit_snippet_files()
-            end, {})
-
-            vim.keymap.set({ "i" }, "<C-k>", function()
-                if ls.expand_or_jumpable() then
-                    ls.expand_or_jump()
-                end
-            end, { silent = true, desc = "Expand or jump to next snippet node" })
-
-            vim.keymap.set({ "i", "s" }, "<C-l>", function()
-                ls.jump(1)
-            end, { silent = true, desc = "Jump to next snippet node" })
-
-            vim.keymap.set({ "i", "s" }, "<C-j>", function()
-                ls.jump(-1)
-            end, { silent = true, desc = "Jump to previous snippet node" })
-
-            vim.keymap.set({ "i", "s" }, "<C-e>", function()
-                if ls.choice_active() then
-                    ls.change_choice(1)
-                end
-            end, { silent = true, desc = "Select previous choice in snippet choice nodes" })
-
-            vim.keymap.set({ "i", "n" }, "<C-s>", function()
-                ls.unlink_current()
-            end, { silent = true, desc = "Clear snippet jumps" })
-        end,
-        dependencies = {
-            {
-                "rafamadriz/friendly-snippets",
-                config = function()
-                    require("luasnip.loaders.from_vscode").lazy_load()
-                    -- require('luasnip/loaders/from_vscode').lazy_load({ paths = { vim.fn.stdpath('config') .. '/misc/snippets' } })
-                end,
-            },
-        },
     },
     {
         "echasnovski/mini.ai",
