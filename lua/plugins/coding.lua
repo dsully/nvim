@@ -44,12 +44,7 @@ return {
                 maxwidth = 50,
                 mode = "symbol",
                 menu = nil,
-                symbol_map = {
-                    Copilot = "",
-                    Snippet = "",
-                    calc = "󰃬",
-                    fish = "󰌋",
-                },
+                symbol_map = defaults.cmp.symbols
             })
 
             -- From: https://github.com/zbirenbaum/copilot-cmp#tab-completion-configuration-highly-recommended
@@ -104,7 +99,14 @@ return {
                         end
 
                         vim_item.menu = ""
-                        return lspkind(entry, vim_item)
+
+                        if defaults.cmp.kind[entry.source.name] then
+                            vim_item.kind = defaults.cmp.kind[entry.source.name]
+                        else
+                            vim_item = lspkind(entry, vim_item)
+                        end
+
+                        return vim_item
                     end,
                 },
                 mapping = cmp.mapping({
@@ -653,27 +655,18 @@ return {
                 hover = true,
                 on_attach = require("plugins.lsp.common").on_attach,
             },
-            on_attach = function(bufnr)
-                local crates = require("crates")
-
-                vim.keymap.set("n", "<leader>cu", crates.upgrade_crate, { buffer = bufnr, desc = "Upgrade crate." })
-                vim.keymap.set("n", "<leader>cU", crates.upgrade_all_crates, { buffer = bufnr, desc = "Upgrade all crates." })
-
-                vim.api.nvim_create_autocmd("InsertEnter", {
-                    callback = function()
-                        table.insert(defaults.cmp.symbols, #defaults.cmp.symbols + 1, { async_path = " [Path]" })
-                        table.insert(defaults.cmp.symbols, #defaults.cmp.symbols + 1, { crates = " [󱘗 Crates]" })
-
-                        require("crates.src.cmp").setup()
-                    end,
+            on_attach = function()
+                require("cmp").setup.buffer({
+                    sources = {
+                        { name = "async_path" },
+                        { name = "buffer" },
+                        { name = "nvim_lsp" },
+                    },
                 })
             end,
             popup = {
                 autofocus = true,
                 border = vim.g.border,
-            },
-            src = {
-                cmp = { enabled = false },
             },
         },
     },
