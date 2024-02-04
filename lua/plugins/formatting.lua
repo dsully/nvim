@@ -1,9 +1,21 @@
 return {
     "stevearc/conform.nvim",
-    cmd = { "ConformInfo" },
-    config = function()
-        require("conform").setup({
+    cmd = "ConformInfo",
+    keys = {
+        {
+            "<space>f",
+            function()
+                require("conform").format({ async = true, lsp_fallback = true })
+            end,
+            desc = "󰛗 Format Buffer",
+        },
+    },
+    opts = function()
+        return {
+            ---@type table<string, conform.FormatterUnit[]>
             formatters_by_ft = require("config.defaults").formatters,
+
+            ---@type table<string, conform.FormatterConfigOverride|fun(bufnr: integer): nil|conform.FormatterConfigOverride>
             formatters = {
                 caddy = {
                     command = "caddy",
@@ -17,16 +29,6 @@ return {
                     prepend_args = { "-i", "2", "-ci", "-sr", "-s", "-bn" },
                 },
             },
-        })
+        }
     end,
-    keys = {
-        {
-            "<space>f",
-            function()
-                require("conform").format({ async = true, lsp_fallback = true })
-            end,
-            mode = "n",
-            desc = "󰛗 Format Buffer",
-        },
-    },
 }
