@@ -71,83 +71,119 @@ vim.api.nvim_create_autocmd({ "BufReadCmd" }, {
     nested = true,
 })
 
-vim.api.nvim_create_autocmd({ "BufReadCmd" }, {
+-- Replace with:
+-- { "lewis6991/fileline.nvim", enable = false, lazy = false }
+--
+-- If the multi-file bug is addressed.
+--
+vim.api.nvim_create_autocmd({ "BufNewFile" }, {
     callback = function(args)
-        -- This must be called for LSP and other events to work.
-        vim.cmd.doautocmd("BufReadPre")
-
         -- Trailing colon, i.e. ':lnum[:colnum[:]]'
-        local pattern = ":(%d*:?%d*):?$"
+        local pattern = "^([^:]+):(%d*:?%d*):?$"
 
-        local cwd = (vim.uv.cwd() or vim.fn.getcwd()) .. "/"
+        local path, capture = vim.api.nvim_buf_get_name(args.buf):match(pattern)
 
-        -- Strip off any duplicated parent path.
-        local bufname = vim.api.nvim_buf_get_name(args.buf):gsub(cwd, "")
-        local capture = bufname:match(pattern)
-        local pos = nil
-        local fqfn = nil
-        local numeric = false
+        path = vim.fn.fnameescape(path)
 
-        -- Skip filenames that are all numbers.
-        if bufname:match("^%d$") then
-            numeric = true
-        end
-
-        -- If the next argument is a +<line>
-        for i, v in ipairs(vim.v.argv) do
-            if v == bufname then
-                --
-                -- If the next argument is a +<line>
-                if vim.v.argv[i + 1] ~= nil and vim.v.argv[i + 1]:match("^+%d+") then
-                    pos = { tonumber(vim.v.argv[i + 1]:gsub("%+", "") or 0), 0 }
-                end
-            end
-        end
-
-        if capture and capture ~= "" and not numeric and not pos then
-            -- Allow for /path/to/file:<row>:
-            pos = vim.split(capture, ":", {})
-            pos = { tonumber(pos[1]) or 1, tonumber(pos[2] or 0) or 0 }
-        elseif pos == nil and not vim.endswith(bufname, ".plist") then
-            -- If the position wasn't set via the filename, check previous marks.
-            pos = vim.api.nvim_buf_get_mark(0, '"')
-        end
-
-        local path = numeric and bufname or bufname:gsub(pattern, "")
-
-        -- Look for non-qualified paths that aren't cwd local.
-        if not bufname:match("^[/~]") and bufname:find("/") then
+        if capture and path and vim.uv.fs_access(path, "R") then
             --
-            -- A partial path almost always comes from git.
-            -- Find the root, then strip off the parent path.
-            local root = vim.system({ "git", "rev-parse", "--show-toplevel" }, { cwd = cwd, text = true }):wait().stdout
+            vim.cmd.edit({ path, mods = { keepalt = true } })
 
-            fqfn = vim.trim(root or cwd) .. "/" .. path
+            vim.api.nvim_buf_delete(args.buf, {})
 
-            if vim.uv.fs_stat(fqfn) then
-                path = fqfn
-            end
+            local pos = vim.tbl_map(tonumber, vim.split(capture, ":", { trimempty = true }))
+
+            vim.api.nvim_win_set_cursor(0, {
+                math.min(pos[1] or 0, vim.api.nvim_buf_line_count(0)),
+                pos[2] and pos[2] - 1 or 0,
+            })
+
+            vim.cmd.normal({ "zz", bang = true })
+            vim.cmd.filetype("detect")
         end
 
-        if pos ~= nil or fqfn ~= nil and vim.uv.fs_stat(path) then
-            pcall(vim.cmd.file, path)
-            pcall(vim.cmd.edit, { bang = true })
-
-            -- Make sure we don't try and set marks on a file that already has marks,
-            -- but has changed out from underneath us.
-            local count = vim.api.nvim_buf_line_count(args.buf)
-
-            if pos and count >= pos[1] then
-                vim.api.nvim_buf_set_mark(args.buf, '"', pos[1], pos[2], {})
-            end
-        end
-
-        vim.cmd.doautocmd("BufReadPost")
+        return path
     end,
+    nested = true,
 })
 
+-- vim.api.nvim_create_autocmd({ "BufReadCmd" }, {
+--     callback = function(args)
+--         -- This must be called for LSP and other events to work.
+--         vim.cmd.doautocmd("BufReadPre")
+--
+--         -- Trailing colon, i.e. ':lnum[:colnum[:]]'
+--         local pattern = ":(%d*:?%d*):?$"
+--
+--         local cwd = (vim.uv.cwd() or vim.fn.getcwd()) .. "/"
+--
+--         -- Strip off any duplicated parent path.
+--         local bufname = vim.api.nvim_buf_get_name(args.buf):gsub(cwd, "")
+--         local capture = bufname:match(pattern)
+--         local pos = nil
+--         local fqfn = nil
+--         local numeric = false
+--
+--         -- Skip filenames that are all numbers.
+--         if bufname:match("^%d$") then
+--             numeric = true
+--         end
+--
+--         -- If the next argument is a +<line>
+--         for i, v in ipairs(vim.v.argv) do
+--             if v == bufname then
+--                 --
+--                 -- If the next argument is a +<line>
+--                 if vim.v.argv[i + 1] ~= nil and vim.v.argv[i + 1]:match("^+%d+") then
+--                     pos = { tonumber(vim.v.argv[i + 1]:gsub("%+", "") or 0), 0 }
+--                 end
+--             end
+--         end
+--
+--         if capture and capture ~= "" and not numeric and not pos then
+--             -- Allow for /path/to/file:<row>:
+--             pos = vim.split(capture, ":", {})
+--             pos = { tonumber(pos[1]) or 1, tonumber(pos[2] or 0) or 0 }
+--         elseif pos == nil and not vim.endswith(bufname, ".plist") then
+--             -- If the position wasn't set via the filename, check previous marks.
+--             pos = vim.api.nvim_buf_get_mark(0, '"')
+--         end
+--
+--         local path = numeric and bufname or bufname:gsub(pattern, "")
+--
+--         -- Look for non-qualified paths that aren't cwd local.
+--         if not bufname:match("^[/~]") and bufname:find("/") then
+--             --
+--             -- A partial path almost always comes from git.
+--             -- Find the root, then strip off the parent path.
+--             local root = vim.system({ "git", "rev-parse", "--show-toplevel" }, { cwd = cwd, text = true }):wait().stdout
+--
+--             fqfn = vim.trim(root or cwd) .. "/" .. path
+--
+--             if vim.uv.fs_stat(fqfn) then
+--                 path = fqfn
+--             end
+--         end
+--
+--         if pos ~= nil or fqfn ~= nil and vim.uv.fs_stat(path) then
+--             pcall(vim.cmd.file, path)
+--             pcall(vim.cmd.edit, { bang = true })
+--
+--             -- Make sure we don't try and set marks on a file that already has marks,
+--             -- but has changed out from underneath us.
+--             local count = vim.api.nvim_buf_line_count(args.buf)
+--
+--             if pos and count >= pos[1] then
+--                 vim.api.nvim_buf_set_mark(args.buf, '"', pos[1], pos[2], {})
+--             end
+--         end
+--
+--         vim.cmd.doautocmd("BufReadPost")
+--     end,
+-- })
+
 vim.api.nvim_create_autocmd({ "BufReadPost" }, {
-    callback = function(args)
+    callback = function()
         if vim.tbl_contains(require("config.defaults").ignored.buffer_types, vim.bo.buftype) then
             return
         end
