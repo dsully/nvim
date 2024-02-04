@@ -276,3 +276,7 @@ Restli
 Octocrab
 reqwest
 LDAP
+stylua
+bufnr
+bufferline
+jedi
