@@ -174,38 +174,7 @@ return {
     -- Build treesitter queries.
     {
         "ziontee113/query-secretary",
-        keys = {
-            {
-                "<leader>fQ",
-                function()
-                    require("query-secretary").query_window_initiate()
-                end,
-                desc = "Find TS Query",
-            },
-        },
-    },
-    {
-        -- "shellRaining/hlchunk.nvim",
-        "dsully/hlchunk.nvim",
-        event = { "LspAttach" },
-        opts = {
-            blank = {
-                enable = false,
-            },
-            chunk = {
-                chars = {
-                    horizontal_line = "─",
-                    vertical_line = "│",
-                    left_top = "┌",
-                    left_bottom = "└",
-                    right_arrow = "─",
-                },
-                style = "#81a1c1",
-                use_treesitter = true,
-            },
-            indent = {
-                enable = false,
-            },
-        },
+        -- stylua: ignore
+        keys = { { "<leader>fQ", function() require("query-secretary").query_window_initiate() end, desc = "Find TS Query" } },
     },
 }
