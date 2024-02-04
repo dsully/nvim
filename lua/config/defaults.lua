@@ -17,6 +17,8 @@ local M = {
         "zsh",
     },
 
+    borderchars = { "─", "│", "─", "│", "┌", "┐", "┘", "└" },
+
     cmp = {
         backend = "nvim-cmp",
         priorities = {
@@ -142,6 +144,21 @@ local M = {
     },
 
     lazyfile = { { "BufReadPost", "BufNewFile", "BufWritePre" } },
+    root_patterns = {
+        ".chezmoiroot",
+        ".neoconf.conf",
+        ".stylua.toml",
+        "configure",
+        "package.json",
+        "pyproject.toml",
+        "requirements.txt",
+        "ruff.toml",
+        "selene.toml",
+        "setup.cfg",
+        "setup.py",
+        "stylua.toml",
+        "Cargo.toml",
+    },
 
     statusline = {
         modes = {

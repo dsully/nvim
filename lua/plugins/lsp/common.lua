@@ -140,21 +140,7 @@ end
 -- * root pattern of filename of the current buffer
 -- * root pattern of cwd
 M.find_root = function()
-    local root_patterns = {
-        ".chezmoiroot",
-        ".neoconf.conf",
-        ".stylua.toml",
-        "configure",
-        "package.json",
-        "pyproject.toml",
-        "requirements.txt",
-        "ruff.toml",
-        "selene.toml",
-        "setup.cfg",
-        "setup.py",
-        "stylua.toml",
-        "Cargo.toml",
-    }
+    local defaults = require("config.defaults")
 
     ---@type string?
     local path = vim.api.nvim_buf_get_name(0)
@@ -166,7 +152,7 @@ M.find_root = function()
 
     if path then
         for _, client in pairs(vim.lsp.get_clients({ bufnr = 0 })) do
-            if not vim.tbl_contains(require("config.defaults").ignored.lsp, client.name) then
+            if not vim.tbl_contains(defaults.ignored.lsp, client.name) then
                 local workspace = client.config.workspace_folders
 
                 local paths = workspace and vim.tbl_map(function(ws)
@@ -197,7 +183,7 @@ M.find_root = function()
         path = path and vim.fs.dirname(path) or cwd
 
         ---@type string?
-        root = vim.fs.find(root_patterns, { path = path, upward = true })[1]
+        root = vim.fs.find(defaults.root_patterns, { path = path, upward = true })[1]
         root = root and vim.fs.dirname(root) or cwd
     end
 
