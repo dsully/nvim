@@ -16,9 +16,14 @@ return {
         "hrsh7th/nvim-cmp",
         cmd = "CmpStatus",
         dependencies = {
-            { "hrsh7th/cmp-buffer" },
-            { "hrsh7th/cmp-nvim-lsp" },
-            { "onsails/lspkind-nvim" },
+            "bydlw98/cmp-env",
+            "FelipeLema/cmp-async-path",
+            "hrsh7th/cmp-buffer",
+            "hrsh7th/cmp-calc",
+            "hrsh7th/cmp-cmdline",
+            "hrsh7th/cmp-nvim-lsp",
+            "mtoohey31/cmp-fish",
+            "onsails/lspkind-nvim",
             {
                 "garymjr/nvim-snippets",
                 opts = {
@@ -30,16 +35,8 @@ return {
                 },
             },
         },
-        config = function(_, opts)
-            if opts and opts.sources then
-                for _, source in ipairs(opts.sources) do
-                    source.group_index = source.group_index or 1
-                end
-            end
-
-            require("cmp").setup(opts)
-        end,
-        opts = function()
+        event = "InsertEnter",
+        config = function()
             local cmp = require("cmp")
             local types = require("cmp.types")
 
@@ -84,7 +81,7 @@ return {
             -- Inside a snippet, use backspace to remove the placeholder.
             vim.keymap.set("s", "<BS>", "<C-O>s")
 
-            return {
+            cmp.setup({
                 completion = {
                     keyword_length = 4,
                 },
@@ -266,20 +263,8 @@ return {
                             return true
                         end,
                     },
-                }, {
-                    {
-                        name = "buffer",
-                        option = {
-                            -- Complete from visible buffers, as opposed to just the current buffer.
-                            get_bufnrs = function()
-                                local buffers = {}
-                                for _, win in ipairs(vim.api.nvim_list_wins()) do
-                                    buffers[vim.api.nvim_win_get_buf(win)] = true
-                                end
-                                return vim.tbl_keys(buffers)
-                            end,
-                        },
-                    },
+                    { name = "calc" },
+                    { name = "async_path" },
                 }),
                 view = {
                     entries = "custom", -- "native | wildmenu"
@@ -293,101 +278,27 @@ return {
                         border = vim.g.border,
                     }),
                 },
-            }
-        end,
-        event = "InsertEnter",
-        version = false,
-    },
-    {
-        "nvim-cmp",
-        dependencies = "FelipeLema/cmp-async-path",
-        event = "InsertEnter",
-        opts = function(_, opts)
-            table.insert(opts.sources, { name = "async_path" })
-            table.insert(defaults.cmp.symbols, { async_path = " [Path]" })
-        end,
-    },
-    {
-        "nvim-cmp",
-        dependencies = "bydlw98/cmp-env",
-        event = "InsertEnter",
-        opts = function(_, opts)
-            table.insert(opts.sources, { name = "env" })
-            table.insert(defaults.cmp.symbols, { env = " [ENV]" })
-        end,
-    },
-    {
-        "nvim-cmp",
-        dependencies = "hrsh7th/cmp-calc",
-        event = "InsertEnter",
-        opts = function(_, opts)
-            table.insert(opts.sources, { name = "calc" })
-            table.insert(defaults.cmp.symbols, { calc = "󰃬 [Calc]" })
-            table.insert(defaults.cmp.menu, { calc = "󰃬" })
-        end,
-    },
-    {
-        "nvim-cmp",
-        dependencies = {
-            "FelipeLema/cmp-async-path",
-            "hrsh7th/cmp-buffer",
-            "hrsh7th/cmp-cmdline",
-            "hrsh7th/cmp-nvim-lsp-document-symbol",
-        },
-        event = { "CmdlineEnter", "InsertEnter" },
-        opts = function(_, opts)
-            local cmp = require("cmp")
-
-            table.insert(defaults.cmp.symbols, { cmdline = "󰘳 [Command]" })
-            table.insert(defaults.cmp.symbols, { nvim_lsp_document_symbol = "󰎕 [Symbol]" })
-            table.insert(defaults.cmp.symbols, { path = " [Path]" })
-
-            local formatting = {
-                format = function(_, item)
-                    item.kind = ""
-                    item.menu = ""
-                    item.dup = 0
-                    return item
-                end,
-            }
-
-            -- Completions for search mode.
-            cmp.setup.cmdline({ "/", "?" }, {
-                formatting = formatting,
-                mapping = cmp.mapping.preset.cmdline(),
-                sources = cmp.config.sources({
-                    { name = "nvim_lsp_document_symbol", group_index = 1 },
-                    { name = "buffer", group_index = 2 },
-                }),
             })
 
-            -- Completions for : command mode
-            cmp.setup.cmdline(":", {
-                formatting = formatting,
-                mapping = cmp.mapping.preset.cmdline(),
+            cmp.setup.filetype({ "bash", "sh", "zsh" }, {
                 sources = cmp.config.sources({
+                    { name = "nvim_lsp" },
+                    { name = "snippets" },
                     { name = "async_path" },
-                    -- https://github.com/hrsh7th/nvim-cmp/issues/1511
-                    { name = "cmdline", keyword_pattern = [=[[^[:blank:]\!]*]=], option = { ignore_cmds = {} } },
+                    { name = "env" },
+                    { name = "buffer" },
                 }),
             })
-        end,
-    },
-    {
-        "nvim-cmp",
-        dependencies = "mtoohey31/cmp-fish",
-        ft = "fish",
-        event = "InsertEnter",
-        opts = function(_, opts)
-            table.insert(opts.sources, {
-                name = "fish",
-                entry_filter = function()
-                    return not is_string_like()
-                end,
-            })
 
-            table.insert(defaults.cmp.symbols, { fish = "󰈺 [Fish]" })
-            table.insert(defaults.cmp.menu, { fish = "󰌋" })
+            cmp.setup.filetype({ "fish" }, {
+                sources = cmp.config.sources({
+                    { name = "fish" },
+                    { name = "snippets" },
+                    { name = "async_path" },
+                    { name = "env" },
+                    { name = "buffer" },
+                }),
+            })
         end,
     },
     {
