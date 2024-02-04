@@ -5,53 +5,28 @@ vim.api.nvim_create_autocmd({ "FocusGained", "TermClose", "TermLeave" }, {
 })
 
 vim.api.nvim_create_autocmd({ "FileType" }, {
-    callback = function()
-        -- Don't try and float the help window if it's the only buffer.
-        if #vim.api.nvim_list_bufs() == 1 then
-            return
-        end
+    desc = "Map q to close the buffer.",
+    pattern = { "checkhealth", "man", "qf", "tsplayground" },
+    callback = function(event)
+        vim.opt_local.spell = false
+        vim.api.nvim_buf_set_name(event.buf, event.match)
 
-        local win = vim.api.nvim_get_current_win()
-        local buf = vim.api.nvim_win_get_buf(win)
-
-        local ui = vim.api.nvim_list_uis()[1]
-        local width = 120
-        local height = 40
-
-        vim.api.nvim_win_set_config(win, {
-            col = (ui.height - height) * 0.4,
-            row = (ui.height - height) * 0.4,
-            width = width,
-            height = height,
-            border = vim.g.border,
-            relative = "editor",
-            zindex = 10,
-        })
-
-        vim.api.nvim_create_autocmd("WinClosed", {
-            pattern = tostring(win),
-            callback = function()
-                vim.api.nvim_buf_delete(buf, {})
-            end,
-        })
+        vim.keymap.set("n", "q", function()
+            vim.cmd.BWipeout()
+            vim.cmd.close({ mods = { emsg_silent = true, silent = true } })
+        end, { noremap = true, silent = true, buffer = event.buf })
     end,
-    desc = "Open Help in a floating window.",
-    pattern = { "help" },
 })
 
 vim.api.nvim_create_autocmd({ "FileType" }, {
-    desc = "Map q to close the buffer.",
-    pattern = { "checkhealth", "help", "man", "qf", "tsplayground" },
+    desc = "Map q to close the help buffer.",
+    pattern = { "help" },
     callback = function(event)
-        vim.opt_local.spell = false
-
-        vim.api.nvim_buf_set_name(event.buf, event.match)
-
+        --
         -- Don't try to close a help buffer if explicitly edited.
         if #vim.api.nvim_list_bufs() > 1 then
             vim.keymap.set("n", "q", function()
-                vim.cmd.BWipeout()
-                vim.cmd.close({ mods = { emsg_silent = true, silent = true } })
+                vim.cmd.FloatingHelpClose()
             end, { noremap = true, silent = true, buffer = event.buf })
         end
     end,
