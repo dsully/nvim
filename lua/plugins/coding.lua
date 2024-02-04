@@ -16,8 +16,8 @@ return {
         "hrsh7th/nvim-cmp",
         cmd = "CmpStatus",
         dependencies = {
-            "bydlw98/cmp-env",
             "FelipeLema/cmp-async-path",
+            "bydlw98/cmp-env",
             "hrsh7th/cmp-buffer",
             "hrsh7th/cmp-calc",
             "hrsh7th/cmp-cmdline",
@@ -643,28 +643,18 @@ return {
     -- Load Lua plugin files without needing to have them in the LSP workspace.
     { "mrjones2014/lua-gf.nvim", ft = "lua" },
     {
-        "Saecki/crates.nvim",
+        "dsully/crates.nvim",
         event = { "BufRead Cargo.toml" },
         opts = {
             lsp = {
                 actions = true,
                 completion = true,
                 enabled = true,
+                hover = true,
                 on_attach = require("plugins.lsp.common").on_attach,
             },
             on_attach = function(bufnr)
                 local crates = require("crates")
-
-                vim.keymap.set("n", "K", function()
-                    if crates.popup_available() then
-                        crates.show_popup()
-                    else
-                        vim.lsp.buf.hover()
-                    end
-                end, {
-                    buffer = bufnr,
-                    desc = "Show Crate Documentation",
-                })
 
                 vim.keymap.set("n", "<leader>cu", crates.upgrade_crate, { buffer = bufnr, desc = "Upgrade crate." })
                 vim.keymap.set("n", "<leader>cU", crates.upgrade_all_crates, { buffer = bufnr, desc = "Upgrade all crates." })

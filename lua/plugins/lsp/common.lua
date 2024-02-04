@@ -82,10 +82,6 @@ M.on_attach = function(client, buffer)
     vim.keymap.set("n", "<leader>xr", vim.diagnostic.reset, { desc = " Reset" })
     vim.keymap.set("n", "<leader>xs", vim.diagnostic.open_float, { desc = "󰙨 Show" })
 
-    if client.supports_method(methods.textDocument_hover) then
-        vim.keymap.set("n", "K", vim.lsp.buf.hover, { desc = "Documentation  " })
-    end
-
     if client.supports_method(methods.textDocument_signatureHelp) then
         vim.keymap.set("n", "<leader>ch", vim.lsp.buf.signature_help, { desc = "󰞂 Signature Help" })
         vim.keymap.set("i", "<C-h>", vim.lsp.buf.signature_help, { desc = "󰞂 Signature Help" })
