@@ -143,14 +143,11 @@ return {
                     -- https://github.com/hrsh7th/nvim-cmp/wiki/Example-mappings#super-tab-like-mapping
                     ["<Tab>"] = cmp.mapping(function(fallback)
                         local luasnip = require("luasnip")
-                        local neogen = require("neogen")
 
                         if cmp.visible() and has_words_before() then
                             cmp.select_next_item({ behavior = cmp.SelectBehavior.Select })
                         elseif luasnip.expand_or_locally_jumpable() then
                             luasnip.expand_or_jump()
-                        elseif neogen.jumpable() then
-                            neogen.jump_next()
                         else
                             fallback()
                         end
