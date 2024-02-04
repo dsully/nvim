@@ -37,6 +37,9 @@ return {
             local cmp = require("cmp")
             local types = require("cmp.types.lsp")
 
+            local copilot = require("copilot.suggestion")
+            local treesitter = require("nvim-treesitter.indent")
+
             local lspkind = require("lspkind").cmp_format({
                 maxwidth = 50,
                 mode = "symbol",
@@ -61,10 +64,10 @@ return {
 
             cmp.setup({
                 completion = {
-                    keyword_length = 4,
+                    keyword_length = 3,
                 },
                 experimental = {
-                    ghost_text = true,
+                    ghost_text = false,
                 },
                 formatting = {
                     fields = { "kind", "abbr", "menu" },
@@ -93,7 +96,17 @@ return {
                     end,
                 },
                 mapping = cmp.mapping({
-                    ["<C-a>"] = cmp.mapping.abort(),
+                    ["<C-a>"] = cmp.mapping(function()
+                        if vim.snippet.active() then
+                            vim.snippet.exit()
+                        elseif cmp.visible() then
+                            cmp.abort()
+                        elseif copilot.is_visible() then
+                            copilot.dismiss()
+                        end
+                    end, { "i", "c" }),
+                    --
+                    -- Bring up the completion menu manually.
                     ["<C-Space>"] = cmp.mapping.complete(),
                     ["<C-n>"] = cmp.mapping.select_next_item({ behavior = cmp.SelectBehavior.Select }),
                     ["<C-p>"] = cmp.mapping.select_prev_item({ behavior = cmp.SelectBehavior.Select }),
@@ -103,7 +116,9 @@ return {
                     -- https://github.com/hrsh7th/nvim-cmp/wiki/Example-mappings#safely-select-entries-with-cr
                     ["<CR>"] = cmp.mapping({
                         i = function(fallback)
-                            if cmp.visible() then
+                            if copilot.is_visible() then
+                                copilot.accept()
+                            elseif cmp.visible() and cmp.get_active_entry() then
                                 cmp.confirm({ behavior = cmp.ConfirmBehavior.Insert, select = true })
                             else
                                 fallback()
@@ -112,13 +127,44 @@ return {
                         s = cmp.mapping.confirm({ select = true }),
                         -- c = cmp.mapping.confirm({ behavior = cmp.ConfirmBehavior.Replace, select = true }),
                     }),
-                    --
-                    -- https://github.com/hrsh7th/nvim-cmp/wiki/Example-mappings#super-tab-like-mapping
                     ["<Tab>"] = cmp.mapping(function(fallback)
-                        if cmp.visible() and has_words_before() then
+                        --
+                        -- Terminal
+                        if vim.api.nvim_get_mode().mode == "t" then
+                            fallback()
+                            return
+                        end
+
+                        local row, col = unpack(vim.api.nvim_win_get_cursor(0))
+                        local line = vim.api.nvim_buf_get_lines(0, row - 1, row, true)[1]
+                        local ok, indent = pcall(treesitter.get_indent, row)
+
+                        if not ok then
+                            indent = 0
+                        end
+
+                        -- https://www.reddit.com/r/neovim/comments/1817q4a/how_to_replicate_vscode_copilot_ghost_text/
+                        -- https://github.com/willothy/nvim-config/blob/main/lua/configs/editor/cmp.lua
+                        --
+                        if cmp.visible() then
                             cmp.select_next_item({ behavior = cmp.SelectBehavior.Select })
                         elseif vim.snippet.jumpable(1) then
                             vim.snippet.jump(1)
+                        elseif col < indent and line:sub(1, col):gsub("^%s+", "") == "" then
+                            --
+                            -- Smart indent like VSCode - indent to the correct level when pressing tab at the beginning of a line.
+                            vim.api.nvim_buf_set_lines(0, row - 1, row, true, {
+                                string.rep(" ", indent or 0) .. line:sub(col),
+                            })
+
+                            vim.api.nvim_win_set_cursor(0, { row, math.max(0, indent) })
+
+                            vim.lsp.inlay_hint.on_refresh(nil, nil, {
+                                client_id = vim.lsp.get_clients({ bufnr = vim.api.nvim_get_current_buf() })[1].id,
+                                bufnr = vim.api.nvim_get_current_buf(),
+                            }, nil)
+                        elseif col >= indent then
+                            require("tabout").tabout()
                         else
                             fallback()
                         end
@@ -134,7 +180,7 @@ return {
                     end),
                 }),
                 matching = {
-                    disallow_fuzzy_matching = false,
+                    disallow_fuzzy_matching = true,
                     disallow_fullfuzzy_matching = true,
                     disallow_partial_fuzzy_matching = true,
                     disallow_partial_matching = true,
