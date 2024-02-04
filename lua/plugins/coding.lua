@@ -35,7 +35,7 @@ return {
         event = "LazyFile",
         config = function()
             local cmp = require("cmp")
-            local types = require("cmp.types")
+            local types = require("cmp.types.lsp")
 
             local lspkind = require("lspkind").cmp_format({
                 maxwidth = 50,
@@ -59,10 +59,9 @@ return {
 
             ---@type table<integer, integer>
             local modified_priority = {
-                [types.lsp.CompletionItemKind.Variable] = types.lsp.CompletionItemKind.Method,
-                [types.lsp.CompletionItemKind.Snippet] = 0, -- top
-                [types.lsp.CompletionItemKind.Keyword] = 0, -- top
-                [types.lsp.CompletionItemKind.Text] = 100, -- bottom
+                [types.CompletionItemKind.Snippet] = 0, -- top
+                [types.CompletionItemKind.Keyword] = 0, -- top
+                [types.CompletionItemKind.Text] = 100, -- bottom
             }
 
             ---@param kind integer: Kind of completion entry
@@ -232,31 +231,32 @@ return {
                         --
                         entry_filter = function(entry, ctx)
                             local kind = entry:get_kind()
-                            local line = ctx.cursor.line
+                            local line = ctx.cursor_line
                             local col = ctx.cursor.col
                             local char_before_cursor = string.sub(line, col - 1, col - 1)
-                            local char_after_dot = string.sub(line, col, col)
 
                             -- Don't complete LSP symbols in comments or strings.
                             if is_string_like() then
                                 return false
                             end
 
-                            -- Don't return snippets or "Text" from LSP completion.
-                            -- if kind == types.lsp.Snippet or kind == types.lsp.Text then
-                            --     return false
-                            -- end
+                            -- Don't return "Text" types from LSP completion.
+                            if vim.tbl_contains({
+                                types.CompletionItemKind.Text,
+                            }, kind) then
+                                return false
+                            end
 
-                            if char_before_cursor == "." and char_after_dot:match("[a-zA-Z]") then
+                            if char_before_cursor == "." then
                                 return vim.tbl_contains({
-                                    types.lsp.CompletionItemKind.Method,
-                                    types.lsp.CompletionItemKind.Field,
-                                    types.lsp.CompletionItemKind.Property,
+                                    types.CompletionItemKind.Method,
+                                    types.CompletionItemKind.Field,
+                                    types.CompletionItemKind.Property,
                                 }, kind)
                             end
-                            --
+
                             if string.match(line, "^%s+%w+$") then
-                                return kind == types.lsp.CompletionItemKind.Function or kind == types.lsp.CompletionItemKind.Variable
+                                return kind == types.CompletionItemKind.Function or kind == types.CompletionItemKind.Variable
                             end
 
                             return true
