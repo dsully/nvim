@@ -109,33 +109,6 @@ return {
         keys = { { "gx", vim.cmd.Browse, mode = { "n", "x" } } },
     },
 
-    -- Log file syntax highlighting.
-    {
-        "MTDL9/vim-log-highlighting",
-        ft = "log",
-        init = function()
-            require("lazy.core.loader").disable_rtp_plugin("vim-log-highlighting")
-        end,
-    },
-
-    -- Justfile, as the treesitter parser is rough.
-    { "NoahTheDuke/vim-just", ft = "just" },
-
-    -- Caddy
-    {
-        "isobit/vim-caddyfile",
-        ft = "caddyfile",
-        init = function()
-            require("lazy.core.loader").disable_rtp_plugin("vim-caddyfile")
-        end,
-    },
-
-    -- Markdown helper.
-    { "oncomouse/markdown.nvim", ft = "markdown", opts = {} },
-
-    -- JSON Sorting
-    { "2nthony/sortjson.nvim", ft = "json", opts = true },
-
     -- Wezterm
     { "justinsgithub/wezterm-types" },
 
