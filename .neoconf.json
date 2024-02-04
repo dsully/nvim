@@ -2,7 +2,7 @@
   "neodev": {
     "library": {
       "enabled": true,
-      "plugins": ["crates.nvim", "lazy.nvim", "mason.nvim", "nvim-lspconfig"],
+      "plugins": ["crates.nvim", "lazy.nvim", "mason.nvim", "nvim-lspconfig", "lua/"],
       "runtime": true,
       "types": true
     }
