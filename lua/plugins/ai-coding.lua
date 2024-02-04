@@ -59,11 +59,11 @@ return {
                 },
             },
             openai_params = {
-                model = "gpt-4-1106-preview",
+                model = "gpt-4-turbo-preview",
                 max_tokens = 600,
             },
             openai_edit_params = {
-                model = "gpt-4-1106-preview",
+                model = "gpt-4-turbo-preview",
                 max_tokens = 600,
             },
             popup_input = {
@@ -89,43 +89,13 @@ return {
 
             if ok then
                 cmp.event:on("menu_opened", function()
-                    vim.b.copilot_suggestion_hidden = true
+                    vim.api.nvim_buf_set_var(0, "copilot_suggestion_hidden", true)
                 end)
 
                 cmp.event:on("menu_closed", function()
-                    vim.b.copilot_suggestion_hidden = false
+                    vim.api.nvim_buf_set_var(0, "copilot_suggestion_hidden", false)
                 end)
             end
-
-            -- local keys = {
-            --     {
-            --         "<C-a>",
-            --         function()
-            --             require("copilot.suggestion").accept()
-            --         end,
-            --         description = "Accept suggestion",
-            --         mode = { "i" },
-            --         opts = { silent = true },
-            --     },
-            --     {
-            --         "<C-x>",
-            --         function()
-            --             require("copilot.suggestion").dismiss()
-            --         end,
-            --         description = "Dismiss suggestion",
-            --         mode = { "i" },
-            --         opts = { silent = true },
-            --     },
-            --     {
-            --         "<C-n>",
-            --         function()
-            --             require("copilot.suggestion").next()
-            --         end,
-            --         description = "Next suggestion",
-            --         mode = { "i" },
-            --         opts = { silent = true },
-            --     },
-            -- }
         end,
         event = "InsertEnter",
         opts = {
@@ -136,22 +106,36 @@ return {
             -- panel = { enabled = false },
             -- suggestion = { enabled = false },
             panel = {
-                enabled = true,
+                enabled = false,
                 auto_refresh = true,
             },
             suggestion = {
                 enabled = true,
                 auto_trigger = true,
                 keymap = {
-                    accept = "<M-l>",
+                    accept = "<C-y>",
                     accept_word = false,
                     accept_line = false,
-                    next = "<M-]>",
-                    prev = "<M-[>",
+                    next = "<C-n>",
+                    prev = "<C-p>",
                     dismiss = "<Esc>",
                 },
             },
         },
+    },
+    {
+        "robitx/gp.nvim",
+        build = function()
+            vim.uv.fs_mkdir(vim.fn.stdpath("data") .. "/gp", 511)
+        end,
+        cmd = {
+            "GpChatNew",
+            "GpChatToggle",
+            "GpContext",
+            "GpNextAgent",
+            "GpStop",
+        },
+        opts = {},
     },
     {
         "huggingface/llm.nvim",
@@ -189,6 +173,37 @@ return {
             model = "bigcode/starcoder",
             query_params = {
                 max_new_tokens = 200,
+            },
+        },
+    },
+    {
+        "Bryley/neoai.nvim",
+        dependencies = {
+            "MunifTanjim/nui.nvim",
+        },
+        cmd = {
+            "NeoAI",
+            "NeoAIOpen",
+            "NeoAIClose",
+            "NeoAIToggle",
+            "NeoAIContext",
+            "NeoAIContextOpen",
+            "NeoAIContextClose",
+            "NeoAIInject",
+            "NeoAIInjectCode",
+            "NeoAIInjectContext",
+            "NeoAIInjectContextCode",
+        },
+        keys = {
+            { "<leader>as", desc = "Summarize text" },
+            { "<leader>ag", desc = "Generate commit message." },
+        },
+        opts = {
+            models = {
+                {
+                    name = "openai",
+                    model = "gpt-4-turbo-preview",
+                },
             },
         },
     },
