@@ -197,30 +197,9 @@ return {
                 },
                 sorting = {
                     comparators = {
-                        -- function(entry1, entry2)
-                        --     if entry1.source.name ~= "nvim_lsp" then
-                        --         if entry2.source.name == "nvim_lsp" then
-                        --             return false
-                        --         else
-                        --             return nil
-                        --         end
-                        --     end
-                        --
-                        --     local kind1 = types[entry1:get_kind()]
-                        --     local kind2 = types[entry2:get_kind()]
-                        --
-                        --     local priorities = defaults.cmp.priorities
-                        --     local priority1 = priorities[kind1] or 0
-                        --     local priority2 = priorities[kind2] or 0
-                        --
-                        --     if priority1 == priority2 then
-                        --         return nil
-                        --     end
-                        --
-                        --     return priority1 > priority2
-                        -- end,
                         cmp.config.compare.offset,
                         cmp.config.compare.exact,
+                        cmp.config.compare.scopes,
                         function(entry1, entry2) -- sort by length ignoring "=~"
                             local len1 = string.len(string.gsub(entry1.completion_item.label, "[=~()_]", ""))
                             local len2 = string.len(string.gsub(entry2.completion_item.label, "[=~()_]", ""))
@@ -228,7 +207,6 @@ return {
                                 return len1 - len2 < 0
                             end
                         end,
-                        cmp.config.compare.recently_used,
                         function(entry1, entry2) -- sort by compare kind (Variable, Function etc)
                             local kind1 = modified_kind(entry1:get_kind())
                             local kind2 = modified_kind(entry2:get_kind())
@@ -236,22 +214,10 @@ return {
                                 return kind1 - kind2 < 0
                             end
                         end,
-                        function(entry1, entry2) -- score by lsp, if available
-                            local t1 = entry1.completion_item.sortText
-                            local t2 = entry2.completion_item.sortText
-                            if t1 ~= nil and t2 ~= nil and t1 ~= t2 then
-                                return t1 < t2
-                            end
-                        end,
+                        cmp.config.compare.sort_text,
                         cmp.config.compare.score,
-                        -- cmp.config.compare.sort_text,
-                        -- cmp.config.compare.locality,
-                        -- cmp.config.compare.length,
                         cmp.config.compare.order,
                     },
-                    -- Keep priority weight at 2 for much closer matches to appear above Copilot.
-                    -- Set to 1 to make Copilot always appear on top.
-                    priority_weight = 2,
                 },
                 sources = cmp.config.sources({
                     {
