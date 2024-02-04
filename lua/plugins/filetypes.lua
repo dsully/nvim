@@ -1,7 +1,4 @@
 return {
-    { "microsoft/python-type-stubs" },
-    { "p00f/clangd_extensions.nvim" },
-
     -- Log file syntax highlighting.
     { "MTDL9/vim-log-highlighting", ft = "log" },
 

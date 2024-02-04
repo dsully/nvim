@@ -392,6 +392,7 @@ return {
             end)
         end,
     },
+    { "microsoft/python-type-stubs" },
     {
         "pmizio/typescript-tools.nvim",
         event = {
@@ -426,4 +427,6 @@ return {
             }
         end,
     },
+    { "p00f/clangd_extensions.nvim" },
+    { "someone-stole-my-name/yaml-companion.nvim" },
 }
