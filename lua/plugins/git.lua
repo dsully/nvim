@@ -45,26 +45,15 @@ return {
                 },
             })
         end,
-        event = vim.g.defaults.lazyfile,
+        event = "VeryLazy",
     },
     {
         "linrongbin16/gitlinker.nvim",
         cmd = "GitLink",
+        -- stylua: ignore
         keys = {
-            {
-                "<leader>gc",
-                vim.cmd.GitLink,
-                desc = "Copy Git URL",
-                mode = { "v", "n" },
-            },
-            {
-                "<leader>go",
-                function()
-                    vim.cmd.GitLink({ bang = true })
-                end,
-                desc = "Open Git URL",
-                mode = { "v", "n" },
-            },
+            { "<leader>gc", vim.cmd.GitLink, desc = "Copy Git URL", mode = { "v", "n" } },
+            { "<leader>go", function() vim.cmd.GitLink({ bang = true }) end, desc = "Open Git URL", mode = { "v", "n" } },
         },
         opts = {
             message = false,
@@ -73,24 +62,16 @@ return {
     {
         "topaxi/gh-actions.nvim",
         build = "make",
-        cmd = "GhActions",
+        cmd = "GHActions",
         dependencies = { "nvim-lua/plenary.nvim", "MunifTanjim/nui.nvim" },
-        keys = {
-            { "<leader>gh", vim.cmd.GhActions, desc = "Open Github Actions" },
-        },
+        -- stylua: ignore
+        keys = { { "<leader>gh", vim.cmd.GhActions, desc = "Open Github Actions" } },
         opts = true,
     },
     {
         "aspeddro/gitui.nvim",
-        keys = {
-            {
-                "<space>g",
-                function()
-                    require("gitui").open()
-                end,
-                desc = " Git UI",
-            },
-        },
+        -- stylua: ignore
+        keys = { { "<space>g", function() require("gitui").open() end, desc = " Git UI" } },
         opts = {
             command = {
                 enable = false,
