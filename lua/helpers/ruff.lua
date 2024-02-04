@@ -127,7 +127,7 @@ end
 -- Extract arguments to pass to the ruff formatter.
 --
 -- Check build.gradle (work) and pyproject.toml.
-M.ruff_format_args = function()
+M.format_args = function()
     -- stylua: ignore
     return format_args_from_treesitter("pyproject.toml", "toml", toml_query) or
            format_args_from_treesitter("build.gradle", "groovy", gradle_query) or
@@ -135,7 +135,7 @@ M.ruff_format_args = function()
 end
 
 -- Config for ruff-lsp as a Lua table.
-M.ruff_check_config = function()
+local check_config = function()
     -- Extract config out of setup.cfg if it exists and use some defaults.
     local config = vim.tbl_deep_extend("force", {}, ruff_default_config)
 
@@ -170,8 +170,8 @@ M.ruff_check_config = function()
 end
 
 -- Massage the ruff config into something the CLI can handle.
-M.ruff_check_args = function()
-    local config = M.ruff_check_config()
+M.check_args = function()
+    local config = check_config()
 
     local args = {
         "--extend-select=" .. vim.fn.join(config["select"], ","),

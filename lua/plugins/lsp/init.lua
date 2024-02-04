@@ -1,518 +1,67 @@
-require("plugins.lsp.handlers")
-
-local common = require("plugins.lsp.common")
-
-local servers = {
-    bashls = {
-        filetypes = { "bash", "sh", "zsh" },
-    },
-    -- https://github.com/biomejs/biome
-    biome = {
-        cmd = { "biome", "lsp-proxy", "--config-path", vim.env.XDG_CONFIG_HOME },
-    },
-    bufls = {},
-    bzl = {},
-    cmake = {},
-    cssls = {},
-    dockerls = {},
-    esbonio = {}, -- RestructuredText
-    graphql = {},
-    html = {},
-    kotlin_language_server = {},
-    lemminx = {}, -- XML
-    marksman = {}, -- Markdown
-    -- pylyzer",
-    terraformls = {},
-    typos_lsp = {
-        init_options = {
-            config = vim.env.HOME .. "/.typos.toml",
-        },
-    },
-    clangd = {
-        capabilities = vim.tbl_extend("force", common.capabilities(), {
-            textDocument = {
-                completion = {
-                    editsNearCursor = true,
-                },
-            },
-            offsetEncoding = { "utf-16" },
-        }),
-        cmd = {
-            "clangd",
-            "--all-scopes-completion",
-            "--background-index",
-            "--clang-tidy",
-            "--completion-style=detailed",
-            "--fallback-style=llvm",
-            "--function-arg-placeholders",
-            "--header-insertion=iwyu",
-        },
-        -- Don't want objective-c and objective-cpp.
-        filetypes = { "c", "cpp", "cuda" },
-        init_options = {
-            usePlaceholders = true,
-            completeUnimported = true,
-            clangdFileStatus = true,
-        },
-        on_attach = function(client, ...)
-            -- https://github.com/p00f/clangd_extensions.nvim
-            require("clangd_extensions").setup()
-
-            local inlay_hints = require("clangd_extensions.inlay_hints")
-
-            inlay_hints.setup_autocmd()
-            inlay_hints.set_inlay_hints()
-            inlay_hints.toggle_inlay_hints()
-
-            common.on_attach(client, ...)
-        end,
-        root_dir = function(fname)
-            return require("lspconfig.util").root_pattern(
-                "Makefile",
-                "configure.ac",
-                "configure.in",
-                "config.h.in",
-                "meson.build",
-                "meson_options.txt",
-                "build.ninja"
-            )(fname) or require("lspconfig.util").find_git_ancestor(fname)
-        end,
-    },
-    gopls = {
-        filetypes = { "go", "gomod", "gowork" },
-        init_options = {
-            usePlaceholders = true,
-        },
-        on_attach = function(client, ...)
-            -- As of v0.11.0, gopls does not send a Semantic Token legend (in a
-            -- client/registerCapability message) unless the client supports dynamic
-            -- registration. Neovim's LSP client does not support dynamic registration
-            -- for semantic tokens, so we need to declare those server_capabilities
-            -- ourselves for the time being.
-            -- Ref. https://github.com/golang/go/issues/54531
-            client.server_capabilities.semanticTokensProvider = {
-                full = true,
-                legend = {
-                    tokenModifiers = client.config.capabilities.textDocument.semanticTokens.tokenModifiers,
-                    tokenTypes = client.config.capabilities.textDocument.semanticTokens.tokenTypes,
-                },
-                range = true,
-            }
-            common.on_attach(client, ...)
-        end,
-        settings = {
-            gopls = {
-                analyses = {
-                    fieldalignment = true,
-                    nilness = true,
-                    shadow = true,
-                    unusedparams = true,
-                    unusedwrite = true,
-                    useany = true,
-                },
-                codelenses = {
-                    gc_details = false,
-                    generate = true,
-                    regenerate_cgo = true,
-                    run_govulncheck = true,
-                    test = true,
-                    tidy = true,
-                    upgrade_dependency = true,
-                    vendor = true,
-                },
-
-                completeUnimported = true,
-                directoryFilters = { "-.git", "-.vscode", "-.idea", "-.vscode-test", "-node_modules" },
-                experimentalPostfixCompletions = true,
-                gofumpt = true,
-                hints = {
-                    assignVariableTypes = true,
-                    compositeLiteralFields = true,
-                    compositeLiteralTypes = true,
-                    constantValues = true,
-                    functionTypeParameters = true,
-                    parameterNames = true,
-                    rangeVariableTypes = true,
-                },
-                semanticTokens = true,
-                staticcheck = true,
-                usePlaceholders = true,
-            },
-        },
-    },
-    gradle_ls = {
-        on_attach = function(client, ...)
-            common.on_attach(client, ...)
-            vim.lsp.handlers["textDocument/references"] = nil
-        end,
-    },
-    jsonls = {
-        before_init = function(_, config)
-            vim.list_extend(config.settings.json.schemas, require("schemastore").json.schemas())
-        end,
-        filetypes = { "json", "jsonc" },
-        settings = {
-            json = {
-                schemas = {},
-                validate = { enable = true },
-            },
-        },
-    },
-    jedi_language_server = {
-        on_attach = function(client, ...)
-            -- Let ruff handle code actions.
-            client.server_capabilities.codeActionProvider = false
-            common.on_attach(client, ...)
-        end,
-        root_dir = function(fname)
-            return require("lspconfig.util").root_pattern("pyproject.toml", "setup.cfg", "setup.py")(fname)
-        end,
-    },
-    lua_ls = {
-        settings = {
-            Lua = {
-                completion = {
-                    callSnippet = "Replace",
-                    keywordSnippet = "Both",
-                    workspaceWord = true,
-                },
-                diagnostics = {
-                    -- Have the language server to recognize the `vim` global.
-                    globals = { "bit", "vim" },
-                },
-                doc = {
-                    privateName = { "^_" },
-                },
-                format = {
-                    enable = false,
-                },
-                hint = {
-                    arrayIndex = "Disable",
-                    enable = true,
-                    paramName = "Disable",
-                    paramType = true,
-                    semicolon = "Disable",
-                    setType = true,
-                },
-                runtime = {
-                    version = "Lua 5.1",
-                },
-                telemetry = {
-                    enable = false,
-                },
-                type = {
-                    castNumberToInteger = true,
-                },
-                workspace = {
-                    checkThirdParty = false,
-                },
-            },
-        },
-    },
-    pyright = {
-        on_attach = function(client, ...)
-            -- Let jedi or ruff handle these.
-            client.server_capabilities.codeActionProvider = false
-            client.server_capabilities.completionProvider = false
-            client.server_capabilities.declarationProvider = false
-            client.server_capabilities.definitionProvider = false
-            client.server_capabilities.documentSymbolProvider = false
-            client.server_capabilities.hoverProvider = false
-            client.server_capabilities.referencesProvider = false
-            client.server_capabilities.signatureHelpProvider = false
-            common.on_attach(client, ...)
-        end,
-    },
-    ruff_lsp = function()
-        require("lspconfig").ruff_lsp.setup({
-            capabilities = common.capabilities(),
-            filetypes = { "python", "toml.pyproject" },
-            init_options = {
-                settings = {
-                    format = {
-                        args = require("plugins.lsp.python").ruff_format_args(),
-                    },
-                    lint = {
-                        args = require("plugins.lsp.python").ruff_check_args(),
-                    },
-                },
-            },
-            on_attach = function(client, bufnr, ...)
-                local request = function(method, params)
-                    client.request(method, params, nil, bufnr)
-                end
-
-                vim.api.nvim_create_user_command("RuffAutoFix", function()
-                    request("workspace/executeCommand", {
-                        command = "ruff.applyAutofix",
-                        arguments = {
-                            { uri = vim.uri_from_bufnr(bufnr) },
-                        },
-                    })
-                end, { desc = "Ruff: Fix all auto-fixable problems" })
-
-                vim.api.nvim_create_user_command("RuffOrganizeImports", function()
-                    request("workspace/executeCommand", {
-                        command = "ruff.applyOrganizeImports",
-                        arguments = {
-                            { uri = vim.uri_from_bufnr(bufnr) },
-                        },
-                    })
-                end, { desc = "Ruff: Organize Imports" })
-
-                client.server_capabilities.hoverProvider = false
-                common.on_attach(client, ...)
-            end,
-            root_dir = function(fname)
-                return require("lspconfig.util").root_pattern("pyproject.toml", "setup.cfg", "ruff.toml")(fname)
-            end,
-            settings = {
-                codeAction = {
-                    fixViolation = {
-                        enable = true,
-                    },
-                    disableRuleComment = {
-                        enable = false,
-                    },
-                },
-            },
-        })
-    end,
-
-    rust_analyzer = {
-        on_attach = function(client, ...)
-            client.server_capabilities.experimental.hoverActions = true
-            client.server_capabilities.experimental.hoverRange = true
-            client.server_capabilities.experimental.serverStatusNotification = true
-            client.server_capabilities.experimental.snippetTextEdit = true
-            client.server_capabilities.experimental.codeActionGroup = true
-            client.server_capabilities.experimental.ssr = true
-            common.on_attach(client, ...)
-        end,
-        settings = {
-            -- https://rust-analyzer.github.io/manual.html
-            ["rust-analyzer"] = {
-                cargo = {
-                    allFeatures = true,
-                    allTargets = true,
-                    extraEnv = { CARGO_INCREMENTAL = "0" }, -- Use sccache
-                },
-                check = {
-                    command = "clippy",
-                    extraArgs = {
-                        "--no-deps",
-                        "--",
-                        "-W",
-                        "correctness",
-                        "-W",
-                        "keyword_idents",
-                        "-W",
-                        "rust_2021_prelude_collisions",
-                        "-W",
-                        "trivial_casts",
-                        "-W",
-                        "trivial_numeric_casts",
-                        "-W",
-                        "unused_lifetimes",
-                    },
-                },
-                checkOnSave = {
-                    command = "clippy",
-                },
-                completion = {
-                    postfix = {
-                        enable = true,
-                    },
-                    callable = {
-                        -- Whether to add parenthesis and argument snippets when completing function.
-                        -- Possible value: fill_arguments (default), add_parentheses, none
-                        snippets = "fill_arguments",
-                    },
-                    snippets = {
-                        custom = {
-                            ["println!"] = {
-                                ["postfix"] = "println",
-                                ["body"] = {
-                                    'println!("$0", ${receiver});',
-                                },
-                                ["description"] = "println!()",
-                                ["scope"] = "expr",
-                            },
-                            Ok = {
-                                postfix = "ok",
-                                body = "Ok(${receiver})",
-                                description = "Wrap the expression in a `Result::Ok`",
-                                scope = "expr",
-                            },
-                            Err = {
-                                postfix = "err",
-                                body = "Err(${receiver})",
-                                description = "Wrap the expression in a `Result::Err`",
-                                scope = "expr",
-                            },
-                            Some = {
-                                ["postfix"] = "some",
-                                ["body"] = "Some(${receiver})",
-                                ["description"] = "Wrap the expression in an `Option::Some`",
-                                ["scope"] = "expr",
-                            },
-                        },
-                    },
-                },
-                -- https://github.com/rust-analyzer/rust-analyzer/issues/6835
-                diagnostics = {
-                    disabled = { "inactive-code", "macro-error", "unresolved-macro-call" },
-                    experimental = { enable = true },
-                },
-                files = {
-                    excludeDirs = {
-                        ".direnv",
-                        ".git",
-                        ".vscode",
-                        "assets",
-                        "ci",
-                        "data",
-                        "docs",
-                        "js",
-                        "target",
-                    },
-                },
-                inlayHints = {
-                    chainingHints = { enable = false },
-
-                    -- Whether to show inlay hints for closure captures.
-                    -- https://rust-analyzer.github.io//thisweek/2023/05/15/changelog-181.html#new-features
-                    closureCaptureHints = { enable = false }, -- default : false
-
-                    -- Whether to show inlay type hints for return types of closures.
-                    closureReturnTypeHints = { enable = "with_block" }, --default: "never", options: "always", "never", "with_block"
-
-                    parameterHints = { enable = false },
-                },
-                lru = { capacity = 2048 },
-                procMacro = { enable = true },
-                references = {
-                    -- Exclude imports from find-all-references.
-                    excludeImports = true,
-                },
-                workspace = {
-                    symbol = {
-                        search = {
-                            kind = "all_symbols",
-                            scope = "workspace_and_dependencies",
-                        },
-                    },
-                },
-            },
-        },
-        standalone = false,
-    },
-
-    taplo = {
-        filetypes = { "toml", "toml.pyproject" },
-        settings = {
-            evenBetterToml = {
-                schema = {
-                    enabled = true,
-                    repositoryEnabled = true,
-                    repositoryUrl = "https://taplo.tamasfe.dev/schema_index.json",
-                },
-                formatter = {
-                    arrayTrailingComma = true,
-                    arrayAutoExpand = true,
-                    arrayAutoCollapse = false,
-                    compactArrays = false,
-                    compactInlineTables = false,
-                    indentTables = true,
-                    trailingNewline = false,
-                    reorderKeys = true,
-                },
-            },
-        },
-    },
-
-    tsserver = function()
-        require("typescript-tools").setup({
-            capabilities = common.capabilities(),
-            on_attach = common.on_attach,
-            settings = {
-                code_lens = "on",
-                expose_as_code_actions = { "all" },
-                publish_diagnostic_on = "insert_leave",
-                tsserver_file_preferences = {
-                    includeInlayEnumMemberValueHints = true,
-                    includeInlayFunctionLikeReturnTypeHints = true,
-                    includeInlayFunctionParameterTypeHints = true,
-                    includeInlayParameterNameHints = "all",
-                    includeInlayParameterNameHintsWhenArgumentMatchesName = true,
-                    includeInlayPropertyDeclarationTypeHints = true,
-                    includeInlayVariableTypeHints = true,
-                    includeInlayVariableTypeHintsWhenTypeMatchesName = false,
-                },
-                tsserver_format_preferences = {
-                    convertTabsToSpaces = true,
-                    indentSize = 2,
-                    trimTrailingWhitespace = false,
-                    semicolons = "insert",
-                },
-            },
-        })
-    end,
-
-    yamlls = function()
-        require("lspconfig").yamlls.setup(require("yaml-companion").setup({
-            builtin_matchers = {
-                cloud_init = { enabled = false },
-                kubernetes = { enabled = false },
-            },
-            lspconfig = {
-                capabilities = vim.tbl_extend("force", common.capabilities(), {
-                    textDocument = {
-                        foldingRange = {
-                            dynamicRegistration = false,
-                            lineFoldingOnly = true,
-                        },
-                    },
-                }),
-                filetypes = { "yaml", "yaml.ghaction", "!yaml.ansible" },
-                on_attach = common.on_attach,
-                on_new_config = function(config)
-                    vim.list_extend(config.settings.yaml.schemas or {}, require("schemastore").yaml.schemas())
-                end,
-                settings = {
-                    yaml = {
-                        format = {
-                            singleQuote = false,
-                        },
-                    },
-                },
-            },
-        }))
-    end,
-}
-
 return {
     {
         "neovim/nvim-lspconfig",
         cmd = {
-            "Mason",
-            "MasonInstall",
-            "MasonUninstall",
-            "MasonToolsInstall",
-            "MasonToolsUpdate",
+            "LspInfo",
+            "LspLog",
+            "LspRestart",
+            "LspStop",
         },
-        config = function()
+        ---@param opts PluginLspOpts
+        config = function(_, opts)
             require("lspconfig.ui.windows").default_options.border = vim.g.border
-            require("neoconf").setup()
+            require("plugins.lsp.handlers").setup()
 
+            vim.diagnostic.config(vim.deepcopy(opts.diagnostics))
+
+            local capabilities = require("plugins.lsp.common").setup()
+            local handlers = {}
+
+            if vim.g.os == "Darwin" then
+                require("lspconfig").sourcekit.setup({
+                    capabilities = capabilities,
+                    filetypes = { "objective-c", "objective-cpp", "swift" }, -- Handle Swift. Let clangd handle C/C++
+                    settings = {},
+                })
+            end
+
+            for name, handler in pairs(opts.servers) do
+                handlers[name] = function()
+                    require("lspconfig")[name].setup(vim.tbl_deep_extend("force", { capabilities = capabilities }, handler))
+                end
+            end
+
+            require("mason-lspconfig").setup({
+                automatic_installation = true,
+                ensure_installed = vim.tbl_keys(handlers),
+                handlers = handlers,
+            })
+        end,
+        dependencies = {
+            { "b0o/schemastore.nvim", version = false },
+            {
+                "folke/neodev.nvim",
+                dependencies = {
+                    { "folke/neoconf.nvim", cmd = "Neoconf", opts = true },
+                },
+                opts = true,
+            },
+            { "williamboman/mason.nvim" },
+            { "williamboman/mason-lspconfig.nvim" },
+        },
+        event = "LazyFile",
+        init = function()
             vim.lsp.set_log_level(vim.log.levels.ERROR)
 
             vim.api.nvim_create_user_command("LspCapabilities", function()
+                ---@type lsp.Client[]
                 local clients = vim.lsp.get_clients({ bufnr = vim.api.nvim_get_current_buf() })
                 local lines = {}
 
+                local defaults = require("config.defaults")
+
                 for i, client in pairs(clients) do
-                    if not vim.tbl_contains(require("config.defaults").ignored.lsp, client.name) then
+                    if not vim.tbl_contains(defaults.ignored.lsp, client.name) then
                         table.insert(lines, "# " .. client.name:upper())
                         table.insert(lines, "```lua")
 
@@ -530,188 +79,351 @@ return {
 
                 require("helpers.float").open(lines)
             end, { desc = "Show LSP Capabilities" })
+        end,
+        keys = {
+            { "<leader>lc", vim.cmd.LspCapabilities, desc = "  LSP Capabilities" },
+            { "<leader>li", vim.cmd.LspInfo, desc = "  LSP Info" },
+            { "<leader>ll", vim.cmd.LspLog, desc = " LSP Log" },
+            { "<leader>lr", vim.cmd.LspRestart, desc = "  LSP Restart" },
+            { "<leader>ls", vim.cmd.LspStop, desc = " LSP Stop" },
+        },
+        opts = function()
+            local defaults = require("config.defaults")
 
-            vim.keymap.set("n", "<leader>lc", vim.cmd.LspCapabilities, { desc = "  LSP Capabilities" })
-            vim.keymap.set("n", "<leader>li", vim.cmd.LspInfo, { desc = "  LSP Info" })
-            vim.keymap.set("n", "<leader>ll", vim.cmd.LspLog, { desc = " LSP Log" })
-            vim.keymap.set("n", "<leader>lr", vim.cmd.LspRestart, { desc = "  LSP Restart" })
-            vim.keymap.set("n", "<leader>ls", vim.cmd.LspStop, { desc = " LSP Stop" })
+            ---@class PluginLspOpts
+            local opts = {
+                ---@type vim.diagnostic.Opts
+                diagnostics = {
+                    float = {
+                        border = vim.g.border,
+                        focusable = true,
+                        header = { " Issues:" },
+                        max_height = math.min(math.floor(vim.o.lines * 0.3), 30),
+                        max_width = math.min(math.floor(vim.o.columns * 0.7), 100),
+                        severity_sort = true,
+                        spacing = 2,
+                        source = "if_many",
+                        suffix = function(diag)
+                            local text = ""
 
-            -- Handle Swift. Let clangd handle C/C++
-            if vim.g.os == "Darwin" then
-                require("lspconfig").sourcekit.setup({
-                    capabilities = common.capabilities(),
-                    filetypes = { "objective-c", "objective-cpp", "swift" },
-                    on_attach = common.on_attach,
-                })
-            end
+                            if package.loaded["rulebook"] then
+                                text = require("rulebook").hasDocs(diag) and "  " or ""
+                            end
 
-            local handlers = {}
+                            -- suffix, highlight group. Defaults to NormalText
+                            return text, ""
+                        end,
+                    },
+                    underline = true,
+                    signs = {
+                        text = {
+                            [vim.diagnostic.severity.ERROR] = defaults.icons.error,
+                            [vim.diagnostic.severity.WARN] = defaults.icons.warn,
+                            [vim.diagnostic.severity.INFO] = defaults.icons.info,
+                            [vim.diagnostic.severity.HINT] = defaults.icons.hint,
+                        },
+                    },
+                    severity_sort = true,
+                    update_in_insert = false, -- https://www.reddit.com/r/neovim/comments/pfk209/nvimlsp_too_fast/
+                },
+                servers = {
+                    bashls = {},
+                    biome = {
+                        single_file_support = true,
+                    },
+                    bufls = {},
+                    bzl = {},
+                    cmake = {},
+                    cssls = {},
+                    dockerls = {},
+                    esbonio = {}, -- RestructuredText
+                    gradle_ls = {},
+                    graphql = {},
+                    html = {},
+                    jedi_language_server = {},
+                    kotlin_language_server = {},
+                    lemminx = {}, -- XML
+                    lua_ls = {},
+                    marksman = {}, -- Markdown
+                    terraformls = {},
+                    typos_lsp = {},
+                    clangd = {
+                        filetypes = { "c", "cpp", "cuda" }, -- Let SourceKit handle objective-c and objective-cpp.
+                        init_options = {
+                            clangdFileStatus = true,
+                            completeUnimported = true,
+                            usePlaceholders = true,
+                            semanticHighlighting = true,
+                        },
+                        on_attach = function()
+                            -- https://github.com/p00f/clangd_extensions.nvim
+                            require("clangd_extensions").setup()
 
-            for name, handler in pairs(servers) do
-                if type(handler) == "function" then
-                    handlers[name] = handler
-                else
-                    handlers[name] = function()
-                        require("lspconfig")[name].setup(vim.tbl_deep_extend("force", {
-                            capabilities = common.capabilities(),
-                            on_attach = common.on_attach,
-                        }, handler))
-                    end
-                end
-            end
+                            local inlay_hints = require("clangd_extensions.inlay_hints")
 
-            local mason_tools = {
-                "codelldb",
-                "gitui",
-                "glow",
-                "jdtls",
-                "write-good",
+                            inlay_hints.setup_autocmd()
+                            inlay_hints.set_inlay_hints()
+                            inlay_hints.toggle_inlay_hints()
+                        end,
+                        root_dir = function(fname)
+                            return require("lspconfig.util").root_pattern("Makefile", "configure.in", "meson.build", "build.ninja")(fname)
+                                or require("lspconfig.util").find_git_ancestor(fname)
+                        end,
+                    },
+                    gopls = {
+                        filetypes = { "go", "gomod", "gowork" }, -- Don't attach for gotmpl.
+                        init_options = {
+                            usePlaceholders = true,
+                        },
+                        ---@param client lsp.Client
+                        on_attach = function(client)
+                            -- As of v0.11.0, gopls does not send a Semantic Token legend (in a
+                            -- client/registerCapability message) unless the client supports dynamic
+                            -- registration. Neovim's LSP client does not support dynamic registration
+                            -- for semantic tokens, so we need to declare those server_capabilities
+                            -- ourselves for the time being.
+                            -- Ref. https://github.com/golang/go/issues/54531
+                            --
+                            if not not client.server_capabilities.semanticTokensProvider then
+                                local semantic = client.config.capabilities.textDocument.semanticTokens
+
+                                if semantic then
+                                    client.server_capabilities.semanticTokensProvider = {
+                                        full = true,
+                                        legend = {
+                                            tokenModifiers = semantic.tokenModifiers,
+                                            tokenTypes = semantic.tokenTypes,
+                                        },
+                                        range = true,
+                                    }
+                                end
+                            end
+                        end,
+                    },
+                    jsonls = {
+                        on_new_config = function(c)
+                            c.settings.json.schemas = vim.tbl_deep_extend("force", c.settings.json.schemas or {}, require("schemastore").json.schemas())
+                        end,
+                    },
+                    ruff_lsp = {
+                        commands = {
+                            RuffAutoFix = {
+                                function()
+                                    vim.lsp.buf.code_action({ context = { only = { "source.fixAll.ruff" } }, apply = true })
+                                end,
+                                description = "Ruff: Auto Fix",
+                            },
+
+                            RuffOrganizeImports = {
+                                function()
+                                    vim.lsp.buf.code_action({ context = { only = { "source.organizeImports.ruff" } }, apply = true })
+                                end,
+                                description = "Ruff: Organize Imports",
+                            },
+                        },
+                        filetypes = { "python", "toml.pyproject" },
+                        ---@param client lsp.Client
+                        on_attach = function(client)
+                            client.server_capabilities.hoverProvider = false
+                        end,
+                        ---@param new_config lspconfig.Config
+                        on_new_config = function(new_config)
+                            local ruff = require("helpers.ruff")
+
+                            -- We need to check our probe directories because they may have changed.
+                            ---@diagnostic disable-next-line: inject-field
+                            new_config.settings = vim.tbl_deep_extend("keep", new_config.settings, {
+                                format = {
+                                    args = ruff.format_args(),
+                                },
+                                lint = {
+                                    args = ruff.check_args(),
+                                },
+                            })
+                        end,
+                        root_dir = function(fname)
+                            return require("lspconfig.util").root_pattern("pyproject.toml", "setup.cfg", "ruff.toml")(fname)
+                        end,
+                        settings = {
+                            codeAction = {
+                                fixViolation = {
+                                    enable = true,
+                                },
+                                disableRuleComment = {
+                                    enable = false,
+                                },
+                            },
+                        },
+                    },
+                    rust_analyzer = {
+                        ---@param client lsp.Client
+                        ---@param bufnr integer
+                        on_attach = function(client, bufnr)
+                            local cmd = require("config.defaults").cmd
+
+                            vim.cmd.compiler("cargo")
+
+                            vim.keymap.set("n", "<localleader>t", cmd("make test -q"), { desc = "Cargo test" })
+                            vim.keymap.set("n", "<localleader>b", cmd("make build"), { desc = "Cargo build" })
+                            vim.keymap.set("n", "<localleader>c", cmd("make clippy -q"), { desc = "Cargo clippy" })
+
+                            client.server_capabilities.experimental.commands = {
+                                commands = {
+                                    "rust-analyzer.runSingle",
+                                    "rust-analyzer.debugSingle",
+                                    "rust-analyzer.showReferences",
+                                    "rust-analyzer.gotoLocation",
+                                    "editor.action.triggerParameterHints",
+                                },
+                            }
+
+                            client.server_capabilities.experimental.hoverActions = true
+                            client.server_capabilities.experimental.serverStatusNotification = true
+                            client.server_capabilities.experimental.snippetTextEdit = true
+                            client.server_capabilities.experimental.codeActionGroup = true
+
+                            vim.keymap.set("n", "<leader>ce", function()
+                                ---
+                                client.request("experimental/openCargoToml", {
+                                    textDocument = vim.lsp.util.make_text_document_params(bufnr),
+                                }, function(_, result, ctx)
+                                    --
+                                    if result ~= nil then
+                                        vim.lsp.util.jump_to_location(result, vim.lsp.get_client_by_id(ctx.client_id).offset_encoding)
+                                    end
+                                end, bufnr)
+                            end, { desc = "Open Cargo.toml" })
+
+                            vim.api.nvim_create_autocmd("BufWritePost", {
+                                callback = function()
+                                    local handler = function(err)
+                                        if err then
+                                            local msg = string.format("Error reloading Rust workspace: %v", err)
+                                            vim.notify(msg, vim.lsp.log_levels.ERROR, {
+                                                title = "Reloading Rust workspace",
+                                                timeout = 3000,
+                                            })
+                                        else
+                                            vim.notify("Workspace has been reloaded")
+                                        end
+                                    end
+
+                                    client.request("rust-analyzer/reloadWorkspace", nil, handler, bufnr)
+                                end,
+                                desc = "Apply Cargo.toml changes after edit.",
+                                pattern = "*/Cargo.toml",
+                            })
+                        end,
+                        standalone = false,
+                    },
+                    yamlls = {
+                        filetypes = { "yaml", "yaml.ghaction", "!yaml.ansible" },
+                        on_new_config = function(c)
+                            c.settings.yaml.schemas = vim.tbl_deep_extend("force", c.settings.yaml.schemas or {}, require("schemastore").yaml.schemas())
+
+                            require("yaml-companion").setup({
+                                builtin_matchers = {
+                                    cloud_init = { enabled = false },
+                                    kubernetes = { enabled = false },
+                                },
+                            })
+                        end,
+                    },
+                },
             }
 
-            -- Pull in linters and formatters.
-            for _, f in pairs(require("config.defaults").formatters) do
-                table.insert(mason_tools, f.command)
-            end
-
-            for _, f in pairs(require("lint").linters_by_ft) do
-                mason_tools = vim.tbl_extend("force", mason_tools, f)
-            end
-
-            -- Remove built-ins / formatters that are not in Mason.
-            mason_tools = vim.iter.filter(function(t)
-                return not vim.tbl_contains({ "caddy", "fish", "fish_indent", "just", "write_good" }, t)
-            end, mason_tools)
-
-            -- Require before mason itself is loaded.
-            require("plugins.lsp.mason")
-
-            require("mason").setup({
-                registries = {
-                    "lua:plugins.lsp.mason",
-                    "github:mason-org/mason-registry",
-                },
-                ui = {
-                    border = vim.g.border,
-                },
-            })
-
-            require("mason-lspconfig").setup({
-                automatic_installation = true,
-                ensure_installed = vim.tbl_keys(handlers),
-                handlers = handlers,
-            })
-
-            require("mason-tool-installer").setup({
-                auto_update = false,
-                debounce_hours = 0,
-                ensure_installed = mason_tools,
-                run_on_start = false,
-                start_delay = 2000,
-            })
-        end,
-        dependencies = {
-            {
-                "folke/neodev.nvim",
-                opts = {
-                    library = {
-                        plugins = false,
-                    },
-                    setup_jsonls = false,
-                },
-            },
-            { "folke/neoconf.nvim", cmd = "Neoconf", config = false, dependencies = { "nvim-lspconfig" } },
-            { "williamboman/mason-lspconfig.nvim" },
-            { "williamboman/mason.nvim", build = ":MasonUpdate" },
-            { "WhoIsSethDaniel/mason-tool-installer.nvim" },
-        },
-        event = vim.g.defaults.lazyfile,
-    },
-    {
-        "aznhe21/actions-preview.nvim",
-        config = function()
-            require("actions-preview").setup({
-                backend = { "nui" },
-                diff = {
-                    algorithm = "patience",
-                    ignore_whitespace = true,
-                },
-            })
+            return opts
         end,
     },
-    { "b0o/schemastore.nvim", version = false },
     {
-        "crispgm/nvim-go",
+        "williamboman/mason.nvim",
+        build = ":MasonUpdate",
         cmd = {
-            "GoFormat",
-            "GoGet",
-            "GoInstall",
-            "GoLint",
+            "Mason",
+            "MasonInstall",
+            "MasonUninstall",
+            "MasonUpdate",
+            "MasonToolsInstall",
+            "MasonToolsUpdate",
         },
-        enabled = false,
-        event = "VeryLazy",
-    },
-    { "microsoft/python-type-stubs" },
-    { "p00f/clangd_extensions.nvim" },
-    { "pmizio/typescript-tools.nvim" },
-    { "smjonas/inc-rename.nvim", opts = {} },
-    { "someone-stole-my-name/yaml-companion.nvim" },
-    { "zbirenbaum/neodim", event = "LspAttach", opts = {} },
+        opts = {
+            ensure_installed = {
+                "codelldb",
+                "gitui",
+                "jdtls",
+                "write-good",
+            },
+            ui = {
+                border = vim.g.border,
+            },
+        },
+        ---@param opts MasonSettings | {ensure_installed: string[]}
+        config = function(_, opts)
+            require("mason").setup(opts)
 
-    -- Load Lua plugin files without needing to have them in the LSP workspace.
-    { "mrjones2014/lua-gf.nvim", event = "VeryLazy", ft = "lua" },
+            vim.schedule_wrap(function()
+                local defaults = require("config.defaults")
+                local mr = require("mason-registry")
 
-    -- Display diagnostic inline
-    {
-        -- "https://git.sr.ht/~whynothugo/lsp_lines.nvim",
-        "dsully/lsp_lines.nvim",
-        config = function()
-            local default_virtual_text = vim.diagnostic.config().virtual_text
+                vim.list_extend(opts.ensure_installed, vim.tbl_flatten(vim.tbl_values(defaults.formatters)))
+                vim.list_extend(opts.ensure_installed, vim.tbl_flatten(vim.tbl_values(defaults.linters)))
 
-            vim.diagnostic.config({
-                virtual_lines = false,
-                virtual_text = default_virtual_text,
-            })
+                -- Remove built-ins / formatters that are not in Mason.
+                opts.ensure_installed = vim.iter.filter(function(t)
+                    return not vim.tbl_contains(defaults.ignored.tools, t)
+                end, opts.ensure_installed)
 
-            vim.keymap.set("n", "<localleader>l", function()
-                ---@diagnostic disable-next-line: undefined-field
-                local new_value = not vim.diagnostic.config().virtual_lines
+                vim.iter(opts.ensure_installed):each(function(tool)
+                    local p = mr.get_package(tool)
 
-                local virtual_text = default_virtual_text
+                    if p:is_installed() then
+                        return
+                    end
 
-                if new_value then
-                    virtual_text = false
-                end
+                    vim.notify(("Installing %s"):format(p.name), vim.log.levels.INFO, { title = "Mason", render = "compact" })
 
-                vim.diagnostic.config({
-                    virtual_lines = new_value,
-                    virtual_text = virtual_text,
-                })
-            end, { buffer = true, desc = "Toggle LSP Diagnostic Lines" })
+                    local handle_closed = vim.schedule_wrap(function()
+                        return p:is_installed()
+                            and vim.notify(("Successfully installed %s"):format(p.name), vim.log.levels.INFO, { title = "Mason", render = "compact" })
+                    end)
 
-            require("lsp_lines").setup({})
+                    p:install():once("closed", handle_closed)
+                end)
+            end)
         end,
-        event = "LspAttach",
     },
     {
-        "chrisgrieser/nvim-rulebook",
-        keys = {
-            {
-                "<leader>di",
-                function()
-                    require("telescope")
-                    require("rulebook").ignoreRule()
-                end,
-                desc = "  Ignore Rule",
-            },
-            {
-                "<leader>dl",
-                function()
-                    require("telescope")
-                    require("rulebook").lookupRule()
-                end,
-                desc = "  Look up Rule",
-            },
+        "pmizio/typescript-tools.nvim",
+        event = {
+            "BufReadPre *.ts,*.tsx,*.js,*.jsx",
+            "BufNewFile *.ts,*.tsx,*.js,*.jsx",
         },
+        dependencies = { "nvim-lua/plenary.nvim", "nvim-lspconfig" },
+        opts = function()
+            return {
+                capabilities = require("plugins.lsp.common").capabilities(),
+                settings = {
+                    code_lens = "on",
+                    expose_as_code_actions = { "all" },
+                    publish_diagnostic_on = "insert_leave",
+                    tsserver_file_preferences = {
+                        includeInlayEnumMemberValueHints = true,
+                        includeInlayFunctionLikeReturnTypeHints = true,
+                        includeInlayFunctionParameterTypeHints = true,
+                        includeInlayParameterNameHints = "all",
+                        includeInlayParameterNameHintsWhenArgumentMatchesName = true,
+                        includeInlayPropertyDeclarationTypeHints = true,
+                        includeInlayVariableTypeHints = true,
+                        includeInlayVariableTypeHintsWhenTypeMatchesName = false,
+                    },
+                    tsserver_format_preferences = {
+                        convertTabsToSpaces = true,
+                        indentSize = 2,
+                        trimTrailingWhitespace = false,
+                        semicolons = "insert",
+                    },
+                },
+            }
+        end,
     },
 }

@@ -12,7 +12,6 @@ vim.api.nvim_create_autocmd("User", {
         if lazy_autocmds then
             require("config.autocommands")
         end
-        require("config.diagnostics")
         require("config.keymaps")
     end,
     pattern = "VeryLazy",
