@@ -46,7 +46,7 @@ return {
 
             telescope.setup({
                 defaults = dropdown({
-                    borderchars = { "─", "│", "─", "│", "┌", "┐", "┘", "└" },
+                    borderchars = require("config.defaults").borderchars,
                     color_devicons = true,
                     file_ignore_patterns = {
                         "%.DS_Store",
@@ -183,7 +183,7 @@ return {
 
                     require("telescope.builtin")[builtin](M.args())
                 end,
-                { desc = "Find Files" },
+                desc = "Find Files",
             },
             {
                 "<leader>ftr",
@@ -192,66 +192,21 @@ return {
 
                     vim.notify(string.format("Telescope root is now: %s", M.cwd()))
                 end,
-                {
-                    desc = "Telescope: Toggle root between Git and LSP/current directory.",
-                },
+                desc = "Telescope: Toggle root between Git and LSP/current directory.",
             },
-            {
-                "z=",
-                function()
-                    vim.cmd.Telescope("spell_suggest")
-                end,
-                { desc = "Suggest Spelling" },
-            },
+            -- stylua: ignore
+            { "z=", function() vim.cmd.Telescope("spell_suggest") end, desc = "Suggest Spelling" },
         },
     },
     {
         "nvim-telescope/telescope-file-browser.nvim",
-        keys = {
-            {
-                "<leader>fb",
-                function()
-                    require("telescope").extensions.file_browser.file_browser(M.args())
-                end,
-                { desc = "File Browser" },
-            },
-        },
-    },
-    {
-        "benfowler/telescope-luasnip.nvim",
-        keys = {
-            {
-                "<leader>fs",
-                function()
-                    require("telescope").extensions.luasnip.luasnip()
-                end,
-                { desc = "Snippets" },
-            },
-        },
-    },
-    {
-        "syphar/python-docs.nvim",
-        keys = {
-            {
-                "<leader>fd",
-                function()
-                    require("telescope").extensions.python_docs.python_docs()
-                end,
-                { desc = "Docs" },
-            },
-        },
+        -- stylua: ignore
+        keys = { { "<leader>fb", function() require("telescope").extensions.file_browser.file_browser(M.args()) end, desc = "File Browser" } },
     },
     {
         "tsakirist/telescope-lazy.nvim",
-        keys = {
-            {
-                "<leader>fl",
-                function()
-                    require("telescope").extensions.lazy.lazy()
-                end,
-                { desc = "Lazy Packages" },
-            },
-        },
+        -- stylua: ignore
+        keys = { { "<leader>fl", function() require("telescope").extensions.lazy.lazy() end, desc = "Lazy Packages" } },
     },
     {
         "2kabhishek/nerdy.nvim",
@@ -266,6 +221,102 @@ return {
                 end,
                 { desc = "Nerd Icons" },
             },
+        },
+    },
+    {
+        "SmiteshP/nvim-navic",
+        init = function()
+            vim.g.navic_silence = true
+        end,
+        opts = {
+            highlight = true,
+            lazy_update_context = true,
+            lsp = {
+                auto_attach = true,
+                preference = { "pyright" },
+            },
+        },
+    },
+    {
+        "echasnovski/mini.bufremove",
+        init = function()
+            vim.api.nvim_create_user_command("BDelete", function(args)
+                require("mini.bufremove").delete(0, args.bang)
+            end, { bang = true })
+
+            vim.api.nvim_create_user_command("BWipeout", function(args)
+                require("mini.bufremove").wipeout(0, args.bang)
+            end, { bang = true })
+
+            vim.keymap.set("n", "<leader>bd", function()
+                local bd = require("mini.bufremove").delete
+
+                if vim.bo.modified then
+                    local choice = vim.fn.confirm(("Save changes to %q?"):format(vim.fn.bufname()), "&Yes\n&No\n&Cancel")
+                    if choice == 1 then -- Yes
+                        vim.cmd.write()
+                        bd(0)
+                    elseif choice == 2 then -- No
+                        bd(0, true)
+                    end
+                else
+                    bd(0)
+                end
+            end, { desc = " Delete Buffer" })
+        end,
+        opts = {
+            silent = true,
+        },
+    },
+    {
+        "folke/todo-comments.nvim",
+        cmd = { "TodoTrouble", "TodoTelescope" },
+        -- stylua: ignore
+        keys = {
+            { "]t", function() require("todo-comments").jump_next() end, desc = "Next todo comment" },
+            { "[t", function() require("todo-comments").jump_prev() end, desc = "Previous todo comment" },
+            { "<leader>ft", vim.cmd.TodoTelescope, { desc = "TODOs" } },
+        },
+        opts = true,
+    },
+    {
+        "folke/trouble.nvim",
+        cmd = { "Trouble", "TroubleClose", "TroubleRefresh", "TroubleToggle" },
+        dependencies = "nvim-tree/nvim-web-devicons",
+        keys = { { "<leader>xx", vim.cmd.TroubleToggle, desc = " Trouble" } },
+        opts = {
+            auto_preview = false,
+            use_diagnostic_signs = true,
+        },
+    },
+    {
+        "trmckay/based.nvim",
+        --stylua: ignore
+        keys = {
+            { "<C-b>", function() require("based").convert() end, mode = { "n", "x" }, desc = "Convert to/from hex & decimal." },
+        },
+    },
+    {
+        -- Pattern replacement UI.
+        "AckslD/muren.nvim",
+        cmd = "MurenToggle",
+        opts = {
+            patterns_width = 60,
+            patterns_height = 20,
+            options_width = 40,
+            preview_height = 24,
+        },
+    },
+    {
+        "abecodes/tabout.nvim",
+        opts = {
+            tabkey = "",
+            backwards_tabkey = "",
+            act_as_tab = true,
+            ignore_beginning = true,
+            act_as_shift_tab = false,
+            default_tab = "",
+            default_shift_tab = "",
         },
     },
 }
