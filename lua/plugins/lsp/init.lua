@@ -260,6 +260,7 @@ return {
                         ---@param bufnr integer
                         on_attach = function(client, bufnr)
                             local cmd = require("config.defaults").cmd
+                            local e = require("helpers.event")
 
                             vim.cmd.compiler("cargo")
 
@@ -294,22 +295,21 @@ return {
                                 end, bufnr)
                             end, { desc = "Open Cargo.toml" })
 
-                            vim.api.nvim_create_autocmd("BufWritePost", {
-                                callback = function()
-                                    local handler = function(err)
-                                        if err then
-                                            local msg = string.format("Error reloading Rust workspace: %v", err)
-                                            vim.notify(msg, vim.lsp.log_levels.ERROR, {
-                                                title = "Reloading Rust workspace",
-                                                timeout = 3000,
-                                            })
-                                        else
-                                            vim.notify("Workspace has been reloaded")
-                                        end
+                            e.on(e.BufWritePost, function()
+                                local handler = function(err)
+                                    if err then
+                                        local msg = string.format("Error reloading Rust workspace: %v", err)
+                                        vim.notify(msg, vim.lsp.log_levels.ERROR, {
+                                            title = "Reloading Rust workspace",
+                                            timeout = 3000,
+                                        })
+                                    else
+                                        vim.notify("Workspace has been reloaded")
                                     end
+                                end
 
-                                    client.request("rust-analyzer/reloadWorkspace", nil, handler, bufnr)
-                                end,
+                                client.request("rust-analyzer/reloadWorkspace", nil, handler, bufnr)
+                            end, {
                                 desc = "Apply Cargo.toml changes after edit.",
                                 pattern = "*/Cargo.toml",
                             })

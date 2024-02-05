@@ -1,74 +1,70 @@
---
-vim.api.nvim_create_autocmd({ "FocusGained", "TermClose", "TermLeave" }, {
-    command = "checktime",
+local e = require("helpers.event")
+
+e.on({ e.FocusGained, e.TermClose, e.TermLeave }, function()
+    vim.cmd.checktime()
+end, {
     desc = "Check if we need to reload the file when it changed.",
 })
 
-vim.api.nvim_create_autocmd({ "FileType" }, {
+e.on(e.FileType, function(event)
+    vim.opt_local.spell = false
+    vim.api.nvim_buf_set_name(event.buf, event.match)
+
+    vim.keymap.set("n", "q", function()
+        vim.cmd.BWipeout()
+        vim.cmd.close({ mods = { emsg_silent = true, silent = true } })
+    end, { noremap = true, silent = true, buffer = event.buf })
+end, {
     desc = "Map q to close the buffer.",
     pattern = { "checkhealth", "man", "qf", "tsplayground" },
-    callback = function(event)
-        vim.opt_local.spell = false
-        vim.api.nvim_buf_set_name(event.buf, event.match)
-
-        vim.keymap.set("n", "q", function()
-            vim.cmd.BWipeout()
-            vim.cmd.close({ mods = { emsg_silent = true, silent = true } })
-        end, { noremap = true, silent = true, buffer = event.buf })
-    end,
 })
 
-vim.api.nvim_create_autocmd({ "FileType" }, {
+e.on(e.FileType, function(event)
+    --
+    -- Don't try to close a help buffer if explicitly edited.
+    if #vim.api.nvim_list_bufs() > 1 then
+        vim.keymap.set("n", "q", function()
+            vim.cmd.FloatingHelpClose()
+        end, { noremap = true, silent = true, buffer = event.buf })
+    end
+end, {
     desc = "Map q to close the help buffer.",
     pattern = { "help" },
-    callback = function(event)
-        --
-        -- Don't try to close a help buffer if explicitly edited.
-        if #vim.api.nvim_list_bufs() > 1 then
-            vim.keymap.set("n", "q", function()
-                vim.cmd.FloatingHelpClose()
-            end, { noremap = true, silent = true, buffer = event.buf })
-        end
-    end,
 })
 
-vim.api.nvim_create_autocmd({ "FileType" }, {
+e.on(e.FileType, function()
+    vim.keymap.set("n", "J", function()
+        --
+        return vim.endswith(vim.api.nvim_get_current_line(), [[\]]) and "$xJ" or "J"
+    end, { expr = true, desc = "Remove trailing backslash when joining lines." })
+end, {
     desc = "Keymap for removing backslashes when joining lines.",
     pattern = { "bash", "fish", "make", "sh", "zsh" },
-    callback = function()
-        vim.keymap.set("n", "J", function()
-            --
-            return vim.endswith(vim.api.nvim_get_current_line(), [[\]]) and "$xJ" or "J"
-        end, { expr = true, desc = "Remove trailing backslash when joining lines." })
-    end,
 })
 
-vim.api.nvim_create_autocmd({ "FileType" }, {
+e.on(e.FileType, function()
+    vim.opt_local.formatoptions:remove({ "a", "o", "t" })
+    vim.api.nvim_set_option_value("foldenable", false, { scope = "local", win = 0 })
+end, {
     desc = "Update format options and folding.",
-    callback = function()
-        vim.opt_local.formatoptions:remove({ "a", "o", "t" })
-        vim.api.nvim_set_option_value("foldenable", false, { scope = "local", win = 0 })
-    end,
 })
 
--- vim.api.nvim_create_autocmd({ "BufHidden" }, {
+-- e.on(e.BufHidden, function(event)
+--     if event.file == "" and vim.bo[event.buf].buftype == "" and not vim.bo[event.buf].modified then
+--         vim.schedule(function()
+--             pcall(vim.api.nvim_buf_delete, event.buf, {})
+--         end)
+--     end
+-- end, {
 --     desc = "Delete [No Name] buffers",
---     callback = function(event)
---         if event.file == "" and vim.bo[event.buf].buftype == "" and not vim.bo[event.buf].modified then
---             vim.schedule(function()
---                 pcall(vim.api.nvim_buf_delete, event.buf, {})
---             end)
---         end
---     end,
 -- })
 
-vim.api.nvim_create_autocmd({ "BufReadCmd" }, {
-    callback = function(args)
-        vim.cmd.bdelete({ args.buf, bang = true })
-        vim.cmd.edit(vim.uri_to_fname(args.file))
-    end,
-    pattern = "file:///*",
+e.on(e.BufReadCmd, function(args)
+    vim.cmd.bdelete({ args.buf, bang = true })
+    vim.cmd.edit(vim.uri_to_fname(args.file))
+end, {
     nested = true,
+    pattern = "file:///*",
 })
 
 -- Replace with:
@@ -76,38 +72,37 @@ vim.api.nvim_create_autocmd({ "BufReadCmd" }, {
 --
 -- If the multi-file bug is addressed.
 --
-vim.api.nvim_create_autocmd({ "BufNewFile" }, {
-    callback = function(args)
-        -- Trailing colon, i.e. ':lnum[:colnum[:]]'
-        local pattern = "^([^:]+):(%d*:?%d*):?$"
+e.on(e.BufNewFile, function(args)
+    -- Trailing colon, i.e. ':lnum[:colnum[:]]'
+    local pattern = "^([^:]+):(%d*:?%d*):?$"
 
-        local path, capture = vim.api.nvim_buf_get_name(args.buf):match(pattern)
+    local path, capture = vim.api.nvim_buf_get_name(args.buf):match(pattern)
 
-        path = vim.fn.fnameescape(path)
+    path = vim.fn.fnameescape(path)
 
-        if capture and path and vim.uv.fs_access(path, "R") then
-            --
-            vim.cmd.edit({ path, mods = { keepalt = true } })
+    if capture and path and vim.uv.fs_access(path, "R") then
+        --
+        vim.cmd.edit({ path, mods = { keepalt = true } })
 
-            vim.api.nvim_buf_delete(args.buf, {})
+        vim.api.nvim_buf_delete(args.buf, {})
 
-            local pos = vim.tbl_map(tonumber, vim.split(capture, ":", { trimempty = true }))
+        local pos = vim.tbl_map(tonumber, vim.split(capture, ":", { trimempty = true }))
 
-            vim.api.nvim_win_set_cursor(0, {
-                math.min(pos[1] or 0, vim.api.nvim_buf_line_count(0)),
-                pos[2] and pos[2] - 1 or 0,
-            })
+        vim.api.nvim_win_set_cursor(0, {
+            math.min(pos[1] or 0, vim.api.nvim_buf_line_count(0)),
+            pos[2] and pos[2] - 1 or 0,
+        })
 
-            vim.cmd.normal({ "zz", bang = true })
-            vim.cmd.filetype("detect")
-        end
+        vim.cmd.normal({ "zz", bang = true })
+        vim.cmd.filetype("detect")
+    end
 
-        return path
-    end,
+    return path
+end, {
     nested = true,
 })
 
--- vim.api.nvim_create_autocmd({ "BufReadCmd" }, {
+-- e.on({ e.BufReadCmd }, {
 --     callback = function(args)
 --         -- This must be called for LSP and other events to work.
 --         vim.cmd.doautocmd("BufReadPre")
@@ -182,177 +177,164 @@ vim.api.nvim_create_autocmd({ "BufNewFile" }, {
 --     end,
 -- })
 
-vim.api.nvim_create_autocmd({ "BufReadPost" }, {
-    callback = function()
-        if vim.tbl_contains(require("config.defaults").ignored.buffer_types, vim.bo.buftype) then
-            return
-        end
+e.on(e.BufReadPost, function()
+    if vim.tbl_contains(require("config.defaults").ignored.buffer_types, vim.bo.buftype) then
+        return
+    end
 
-        local row, col = unpack(vim.api.nvim_buf_get_mark(0, '"'))
+    local row, col = unpack(vim.api.nvim_buf_get_mark(0, '"'))
 
-        if row > 0 and row <= vim.api.nvim_buf_line_count(0) then
-            vim.api.nvim_win_set_cursor(0, { row, col })
-        end
+    if row > 0 and row <= vim.api.nvim_buf_line_count(0) then
+        vim.api.nvim_win_set_cursor(0, { row, col })
+    end
 
-        vim.cmd.normal({ "zz", bang = true })
-    end,
+    vim.cmd.normal({ "zz", bang = true })
+end, {
     desc = "Restore cursor to the last known position.",
+    once = true,
 })
 
-vim.api.nvim_create_autocmd({ "BufReadPost", "FileReadPost" }, {
+e.on({ e.BufReadPost, e.FileReadPost }, function()
+    if vim.api.nvim_buf_get_lines(0, 0, 1, true)[1]:sub(-1) == "\r" then
+        vim.cmd(":edit ++ff=dos")
+    end
+end, {
     desc = "Hide Windows line endings.",
-    callback = function()
-        if vim.api.nvim_buf_get_lines(0, 0, 1, true)[1]:sub(-1) == "\r" then
-            vim.cmd(":edit ++ff=dos")
-        end
-    end,
 })
 
-vim.api.nvim_create_autocmd({ "BufReadPost", "FileReadPost" }, {
-    callback = function(args)
-        local stat = vim.uv.fs_stat(args.file)
+e.on({ e.BufReadPost, e.FileReadPost }, function(args)
+    local stat = vim.uv.fs_stat(args.file)
 
-        if not stat or stat.size < vim.g.large_file_size then
-            return
-        end
+    if not stat or stat.size < vim.g.large_file_size then
+        return
+    end
 
-        vim.g.large_file = true
+    vim.g.large_file = true
 
-        vim.notify("File is too large, disabling treesitter, syntax & language servers.")
+    vim.notify("File is too large, disabling treesitter, syntax & language servers.")
 
-        for _, client in pairs(vim.lsp.get_clients({ bufnr = args.buf })) do
-            pcall(vim.lsp.buf_detach_client, args.buf, client.id)
-        end
+    for _, client in pairs(vim.lsp.get_clients({ bufnr = args.buf })) do
+        pcall(vim.lsp.buf_detach_client, args.buf, client.id)
+    end
 
-        -- Create a autocommand just in case.
-        vim.api.nvim_create_autocmd({ "LspAttach" }, {
-            buffer = args.buf,
-            callback = function(a)
-                vim.lsp.buf_detach_client(args.buf, a.data.client_id)
-            end,
-        })
+    -- Create a autocommand just in case.
+    e.on(e.LspAttach, function(a)
+        vim.lsp.buf_detach_client(args.buf, a.data.client_id)
+    end, {
+        buffer = args.buf,
+    })
 
-        vim.diagnostic.disable()
+    vim.diagnostic.disable()
 
-        vim.cmd.TSDisable("highlight")
-        vim.cmd.TSDisable("incremental_selection")
-        vim.cmd.TSDisable("indent")
-        vim.cmd.syntax("off")
+    vim.cmd.TSDisable("highlight")
+    vim.cmd.TSDisable("incremental_selection")
+    vim.cmd.TSDisable("indent")
+    vim.cmd.syntax("off")
 
-        vim.bo.swapfile = false
-        vim.bo.undolevels = -1
+    vim.bo.swapfile = false
+    vim.bo.undolevels = -1
 
-        vim.api.nvim_set_option_value("foldmethod", "manual", { scope = "local", win = 0 })
-        vim.api.nvim_set_option_value("list", false, { scope = "local", win = 0 })
-        vim.api.nvim_set_option_value("spell", false, { scope = "local", win = 0 })
+    vim.api.nvim_set_option_value("foldmethod", "manual", { scope = "local", win = 0 })
+    vim.api.nvim_set_option_value("list", false, { scope = "local", win = 0 })
+    vim.api.nvim_set_option_value("spell", false, { scope = "local", win = 0 })
 
-        vim.opt.undoreload = 0
-    end,
+    vim.opt.undoreload = 0
+end, {
     desc = "Disable features for large files.",
 })
 
-vim.api.nvim_create_autocmd({ "BufWritePre" }, {
-    callback = function()
-        local shebang = vim.api.nvim_buf_get_lines(0, 0, 1, true)[1]
+e.on(e.BufWritePre, function()
+    local shebang = vim.api.nvim_buf_get_lines(0, 0, 1, true)[1]
 
-        if not shebang or not shebang:match("^#!.+") then
+    if not shebang or not shebang:match("^#!.+") then
+        return
+    end
+
+    e.on(e.BufWritePost, function(args)
+        local filename = vim.api.nvim_buf_get_name(args.buf)
+
+        local fileinfo = vim.uv.fs_stat(filename)
+
+        if not fileinfo or bit.band(fileinfo.mode - 32768, 0x40) ~= 0 then
             return
         end
 
-        vim.api.nvim_create_autocmd("BufWritePost", {
-            callback = function(args)
-                local filename = vim.api.nvim_buf_get_name(args.buf)
-
-                local fileinfo = vim.uv.fs_stat(filename)
-
-                if not fileinfo or bit.band(fileinfo.mode - 32768, 0x40) ~= 0 then
-                    return
-                end
-
-                vim.uv.fs_chmod(filename, bit.bor(fileinfo.mode, 493))
-            end,
-            once = true,
-        })
-    end,
+        vim.uv.fs_chmod(filename, bit.bor(fileinfo.mode, 493))
+    end, { once = true })
+end, {
     desc = "Mark script files with shebangs as executable on write.",
 })
-
-vim.api.nvim_create_autocmd({ "BufWritePre" }, {
+e.on(e.BufWritePre, function()
+    vim.opt_local.undofile = false
+end, {
     desc = "Disable the undo file for temporary files.",
     pattern = { "COMMIT_EDITMSG", "MERGE_MSG", "gitcommit", "*.tmp", "*.log" },
-    callback = function()
-        vim.opt_local.undofile = false
-    end,
 })
 
-vim.api.nvim_create_autocmd({ "BufWritePre" }, {
+e.on(e.BufWritePre, function(args)
+    local path = vim.fs.dirname(args.file)
+
+    if path and not vim.uv.fs_stat(path) then
+        vim.uv.fs_mkdir(path, 511)
+    end
+end, {
     desc = "Create parent directories before write.",
-    callback = function(args)
-        local path = vim.fs.dirname(args.file)
-
-        if path and not vim.uv.fs_stat(path) then
-            vim.uv.fs_mkdir(path, 511)
-        end
-    end,
 })
 
-vim.api.nvim_create_autocmd({ "BufWriteCmd" }, {
+e.on(e.BufWriteCmd, function()
+    vim.opt_local.modified = false
+end, {
     desc = "Don't let me write out a file named ';'",
     pattern = ";",
-    callback = function()
-        vim.opt_local.modified = false
-    end,
 })
 
-vim.api.nvim_create_autocmd("BufWritePost", {
-    callback = function(args)
-        --- @type string
-        local file = args.file
+e.on(e.BufWritePost, function(args)
+    --- @type string
+    local file = args.file
 
-        file = file:gsub(".-/chezmoi%-edit%d+", vim.env.HOME)
-        file = file:gsub("dot_", ".")
-        file = file:gsub("private_", "")
-        file = file:gsub(".tmpl", "")
+    file = file:gsub(".-/chezmoi%-edit%d+", vim.env.HOME)
+    file = file:gsub("dot_", ".")
+    file = file:gsub("private_", "")
+    file = file:gsub(".tmpl", "")
 
-        vim.notify("chezmoi: Applying changes to: " .. file, vim.log.DEBUG)
+    vim.notify("chezmoi: Applying changes to: " .. file, vim.log.DEBUG)
 
-        vim.system({ "chezmoi", "apply", "--no-tty", "--exclude", "scripts", file }):wait()
-    end,
+    vim.system({ "chezmoi", "apply", "--no-tty", "--exclude", "scripts", file }):wait()
+end, {
     desc = "Apply chezmoi changes via 'chezmoi edit'",
     pattern = "*/chezmoi-edit*",
 })
 
-vim.api.nvim_create_autocmd("TextYankPost", {
-    callback = function()
-        vim.highlight.on_yank({ higroup = "Visual", timeout = 500 })
+e.on(e.TextYankPost, function()
+    vim.highlight.on_yank({ higroup = "Visual", timeout = 500 })
 
-        -- Copy data to system clipboard only when we are pressing 'y'. 'd', 'x' will be filtered out.
-        if vim.v.operator ~= "y" then
+    -- Copy data to system clipboard only when we are pressing 'y'. 'd', 'x' will be filtered out.
+    if vim.v.operator ~= "y" then
+        return
+    end
+
+    local copy = function(str)
+        local ok, error = pcall(vim.fn.setreg, "+", str)
+
+        if not ok then
+            vim.notify("Failed to copy to clipboard: " .. error, vim.log.levels.ERROR)
             return
         end
+    end
 
-        local copy = function(str)
-            local ok, error = pcall(vim.fn.setreg, "+", str)
+    local present, yank_data = pcall(vim.fn.getreg, '"')
 
-            if not ok then
-                vim.notify("Failed to copy to clipboard: " .. error, vim.log.levels.ERROR)
-                return
-            end
-        end
+    if not present then
+        vim.notify('Failed to get content from register ": ' .. yank_data, vim.log.levels.ERROR)
+        return
+    end
 
-        local present, yank_data = pcall(vim.fn.getreg, '"')
+    if #yank_data < 1 then
+        return
+    end
 
-        if not present then
-            vim.notify('Failed to get content from register ": ' .. yank_data, vim.log.levels.ERROR)
-            return
-        end
-
-        if #yank_data < 1 then
-            return
-        end
-
-        copy(yank_data)
-    end,
+    copy(yank_data)
+end, {
     desc = "Copy and highlight yanked text to system clipboard",
     group = vim.api.nvim_create_augroup("SmartYank", { clear = true }),
 })
