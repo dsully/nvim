@@ -97,6 +97,10 @@ M.on_attach = function(client, buffer)
         vim.lsp.inlay_hint.enable(buffer, false)
     end
 
+    if client.supports_method(methods.textDocument_hover) then
+        vim.keymap.set("n", "K", vim.lsp.buf.hover, { desc = "Documentation  " })
+    end
+
     if client.supports_method(methods.textDocument_codeAction) then
         vim.keymap.set({ "n", "x" }, "<leader>ca", function()
             require("actions-preview").code_actions({ context = { only = { "quickfix" } } })
