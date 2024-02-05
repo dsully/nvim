@@ -1,3 +1,5 @@
+local e = require("helpers.event")
+
 return {
     {
         "rcarriga/nvim-notify",
@@ -31,14 +33,12 @@ return {
             require("bufferline").setup(opts)
 
             -- Fix bufferline when restoring a session
-            vim.api.nvim_create_autocmd("BufAdd", {
-                callback = function()
-                    vim.schedule(function()
-                        ---@diagnostic disable-next-line: undefined-global
-                        pcall(nvim_bufferline)
-                    end)
-                end,
-            })
+            e.on(e.BufAdd, function()
+                vim.schedule(function()
+                    ---@diagnostic disable-next-line: undefined-global
+                    pcall(nvim_bufferline)
+                end)
+            end)
         end,
         event = "VeryLazy",
         init = function()
@@ -60,13 +60,11 @@ return {
             end, { desc = "which_key_ignore" })
 
             -- Always show tabs, but only load it if there is more than one.
-            vim.api.nvim_create_autocmd({ "BufAdd", "TabEnter", "VimEnter", "WinEnter" }, {
-                callback = function()
-                    if #vim.fn.getbufinfo({ buflisted = 1 }) >= 2 then
-                        require("lazy").load({ plugins = { "bufferline.nvim" } })
-                    end
-                end,
-            })
+            e.on({ e.BufAdd, e.TabEnter, e.VimEnter, e.WinEnter }, function()
+                if #vim.fn.getbufinfo({ buflisted = 1 }) >= 2 then
+                    require("lazy").load({ plugins = { "bufferline.nvim" } })
+                end
+            end)
         end,
         opts = {
             options = {
@@ -455,11 +453,10 @@ return {
         "echasnovski/mini.indentscope",
         event = "LazyFile",
         init = function()
-            vim.api.nvim_create_autocmd("FileType", {
+            e.on(e.FileType, function()
+                vim.b.miniindentscope_disable = true
+            end, {
                 pattern = require("config.defaults").ignored.file_types,
-                callback = function()
-                    vim.b.miniindentscope_disable = true
-                end,
             })
         end,
         opts = function()
@@ -564,49 +561,45 @@ return {
             -- Close Lazy and re-open when the dashboard is ready
             if vim.o.filetype == "lazy" then
                 vim.cmd.close()
-                vim.api.nvim_create_autocmd("User", {
-                    callback = require("lazy").show,
+                e.on(e.User, require("lazy").show, {
                     desc = "Close Lazy UI on dashboard load.",
                     pattern = "AlphaReady",
                 })
             end
 
-            vim.api.nvim_create_autocmd("FileType", {
+            e.on(e.FileType, function()
+                vim.opt_local.laststatus = 0
+            end, {
                 desc = "Hide tab line and status lines on startup screen.",
-                callback = function()
-                    vim.opt_local.laststatus = 0
-                end,
                 once = true,
                 pattern = "alpha",
             })
 
-            vim.api.nvim_create_autocmd("BufUnload", {
+            e.on(e.BufUnload, function()
+                vim.opt_local.laststatus = 3
+            end, {
                 buffer = 0,
                 desc = "Re-enable status line.",
-                callback = function()
-                    vim.opt_local.laststatus = 3
-                end,
                 once = true,
             })
 
             require("alpha").setup(dashboard.opts)
 
-            vim.api.nvim_create_autocmd("User", {
-                callback = function()
-                    local stats = require("lazy").stats()
-                    local ms = (math.floor(stats.startuptime * 100 + 0.5) / 100)
+            e.on(e.User, function()
+                local stats = require("lazy").stats()
+                local ms = (math.floor(stats.startuptime * 100 + 0.5) / 100)
 
-                    -- local version = vim.version()
-                    -- local v = ""
-                    --
-                    -- if version ~= nil then
-                    --     v = string.format("v%s.%s.%s ", version.major, version.minor, version.patch)
-                    -- end
+                -- local version = vim.version()
+                -- local v = ""
+                --
+                -- if version ~= nil then
+                --     v = string.format("v%s.%s.%s ", version.major, version.minor, version.patch)
+                -- end
 
-                    dashboard.section.footer.val = "⚡ Neovim loaded " .. stats.loaded .. "/" .. stats.count .. " plugins in " .. ms .. "ms"
+                dashboard.section.footer.val = "⚡ Neovim loaded " .. stats.loaded .. "/" .. stats.count .. " plugins in " .. ms .. "ms"
 
-                    vim.cmd.AlphaRedraw()
-                end,
+                vim.cmd.AlphaRedraw()
+            end, {
                 desc = "Dashboard Footer Update",
                 pattern = "LazyVimStarted",
             })

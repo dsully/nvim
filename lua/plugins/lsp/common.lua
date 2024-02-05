@@ -1,5 +1,7 @@
 local M = {}
 
+local e = require("helpers.event")
+
 -- Hook up autocomplete for LSP to nvim-cmp, see: https://github.com/hrsh7th/cmp-nvim-lsp
 M.capabilities = function()
     --
@@ -26,16 +28,14 @@ M.groups = {
 }
 
 M.setup = function()
-    vim.api.nvim_create_autocmd("LspAttach", {
-        callback = function(args)
-            local buffer = args.buf ---@type number
-            local client = vim.lsp.get_client_by_id(args.data.client_id)
+    e.on(e.LspAttach, function(args)
+        local buffer = args.buf ---@type number
+        local client = vim.lsp.get_client_by_id(args.data.client_id)
 
-            if client then
-                M.on_attach(client, buffer)
-            end
-        end,
-    })
+        if client then
+            M.on_attach(client, buffer)
+        end
+    end)
 
     -- https://github.com/neovim/neovim/issues/24229
     local register_capability = vim.lsp.handlers["client/registerCapability"]
@@ -64,15 +64,13 @@ M.on_attach = function(client, buffer)
     -- https://github.com/neovim/nvim-lspconfig/wiki/UI-Customization#highlight-symbol-under-cursor
 
     if client.supports_method(methods.textDocument_documentHighlight) then
-        vim.api.nvim_create_autocmd({ "CursorHold" }, {
+        e.on(e.CursorHold, vim.lsp.buf.document_highlight, {
             group = M.groups.lsp_highlight,
             buffer = buffer,
-            callback = vim.lsp.buf.document_highlight,
         })
 
-        vim.api.nvim_create_autocmd({ "CursorMoved", "InsertEnter" }, {
+        e.on({ e.CursorMoved, e.InsertEnter }, vim.lsp.buf.clear_references, {
             group = M.groups.lsp_highlight,
-            callback = vim.lsp.buf.clear_references,
         })
     end
 
@@ -117,10 +115,9 @@ M.on_attach = function(client, buffer)
 
     if client.supports_method(methods.textDocument_codeLens) then
         --
-        vim.api.nvim_create_autocmd({ "BufEnter", "InsertLeave", "BufWritePost" }, {
-            desc = "LSP Code Lens Refresh",
-            callback = vim.lsp.codelens.refresh,
+        e.on({ e.BufEnter, e.BufWritePost, e.InsertLeave }, vim.lsp.codelens.refresh, {
             buffer = buffer,
+            desc = "LSP Code Lens Refresh",
             group = M.groups.code_lens,
         })
     end

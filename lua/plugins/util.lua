@@ -12,6 +12,8 @@ return {
     {
         "stevearc/resession.nvim",
         init = function()
+            local e = require("helpers.event")
+
             local function session_name()
                 local cwd = tostring(vim.uv.cwd())
                 local obj = vim.system({ "git", "branch", "--show-current" }, { text = true }):wait()
@@ -25,10 +27,9 @@ return {
                 vim.cmd.doautocmd("VimEnter")
             end, { desc = "Session Load" })
 
-            vim.api.nvim_create_autocmd({ "VimLeavePre" }, {
-                callback = function()
-                    require("resession").save(session_name(), { notify = false })
-                end,
+            e.on(e.VimLeavePre, function()
+                require("resession").save(session_name(), { notify = false })
+            end, {
                 desc = "Save session on exit.",
             })
         end,

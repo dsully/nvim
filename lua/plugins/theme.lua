@@ -3,6 +3,7 @@ return {
     "EdenEast/nightfox.nvim",
     config = function()
         local colors = require("config.defaults").colors
+        local e = require("helpers.event")
 
         local spec = {
             diag = {
@@ -265,14 +266,13 @@ return {
 
         vim.cmd.colorscheme("nordfox")
 
-        vim.api.nvim_create_autocmd("BufWritePost", {
+        e.on(e.BufWritePost, function(args)
+            vim.cmd.source(args.file)
+            vim.cmd.NightfoxCompile()
+            vim.notify("Compiled Nightfox Colorscheme...")
+        end, {
             desc = "Load nightfox config on write.",
             pattern = "*/nightfox.lua",
-            callback = function(args)
-                vim.cmd.source(args.file)
-                vim.cmd.NightfoxCompile()
-                vim.notify("Compiled Nightfox Colorscheme...")
-            end,
         })
     end,
     lazy = false,
