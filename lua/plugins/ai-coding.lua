@@ -209,4 +209,17 @@ return {
             },
         },
     },
+    {
+        "piersolenski/wtf.nvim",
+        dependencies = {
+            "MunifTanjim/nui.nvim",
+        },
+        opts = {
+            openai_model_id = "gpt-4-turbo-preview",
+        },
+        keys = {
+            -- stylua: ignore
+            { "cD", mode = { "n", "x" }, function() require("wtf").ai() end, desc = "Debug diagnostic with AI", },
+        },
+    },
 }
