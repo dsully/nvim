@@ -71,12 +71,6 @@ return {
                     "-data",
                     workspace,
                 },
-                init_options = {
-                    -- https://github.com/j-hui/fidget.nvim/issues/57#issuecomment-1231730001
-                    extendedClientCapabilities = {
-                        progressReportProvider = false,
-                    },
-                },
                 on_attach = common.on_attach,
                 settings = {
                     codeGeneration = {
