@@ -390,6 +390,8 @@ return {
                 {
                     filter = {
                         any = {
+                            -- Only show progress on multiple of 5 percent.
+                            { event = "lsp", kind = "progress", find = "[^05]/" },
                             { event = "lsp", find = "code_action" },
                             {
                                 event = "lsp",
@@ -410,7 +412,15 @@ return {
                 },
             },
             views = {
-                mini = { position = { row = 1 } },
+                mini = {
+                    format = { "{title} ", "{message}" }, -- leave out "{level}"
+                    zindex = 10,
+                },
+                notify = {
+                    -- https://github.com/folke/noice.nvim/discussions/490
+                    replace = true,
+                    title = "",
+                },
                 popupmenu = {
                     relative = "editor",
                     position = {
