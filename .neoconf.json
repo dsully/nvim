@@ -2,7 +2,13 @@
   "neodev": {
     "library": {
       "enabled": true,
-      "plugins": ["crates.nvim", "lazy.nvim", "mason.nvim", "nvim-lspconfig", "lua/"],
+      "plugins": [
+        "crates.nvim",
+        "lazy.nvim",
+        "mason.nvim",
+        "nvim-lspconfig",
+        "lua/"
+      ],
       "runtime": true,
       "types": true
     }
@@ -47,7 +53,13 @@
         "vendor": true
       },
       "completeUnimported": true,
-      "directoryFilters": ["-.git", "-.vscode", "-.idea", "-.vscode-test", "-node_modules"],
+      "directoryFilters": [
+        "-.git",
+        "-.vscode",
+        "-.idea",
+        "-.vscode-test",
+        "-node_modules"
+      ],
       "experimentalPostfixCompletions": true,
       "gofumpt": true,
       "hints": {
@@ -74,12 +86,23 @@
           "workspaceWord": true
         },
         "diagnostics": {
-          "disable": ["missing-fields"],
-          "globals": ["bit", "describe", "it", "vim"],
-          "unusedLocalExclude": ["_*"]
+          "disable": [
+            "missing-fields"
+          ],
+          "globals": [
+            "bit",
+            "describe",
+            "it",
+            "vim"
+          ],
+          "unusedLocalExclude": [
+            "_*"
+          ]
         },
         "doc": {
-          "privateName": ["^_"]
+          "privateName": [
+            "^_"
+          ]
         },
         "format": {
           "enable": false
@@ -121,13 +144,6 @@
       }
     },
     "rust-analyzer": {
-      "cargo": {
-        "allFeatures": true,
-        "allTargets": true,
-        "extraEnv": {
-          "CARGO_INCREMENTAL": "0"
-        }
-      },
       "check": {
         "allTargets": false,
         "command": "clippy",
@@ -148,56 +164,33 @@
           "unused_lifetimes"
         ]
       },
-      "checkOnSave": {
-        "command": "clippy"
-      },
       "completion": {
-        "postfix": {
-          "enable": true
-        },
-        "callable": {
-          "snippets": "fill_arguments"
-        },
         "fullFunctionSignatures": {
           "enable": true
-        },
-        "snippets": {
-          "custom": {
-            "println!": {
-              "postfix": "println",
-              "body": ["println!(\"$0\", ${receiver});"],
-              "description": "println!()",
-              "scope": "expr"
-            },
-            "Ok": {
-              "postfix": "ok",
-              "body": "Ok(${receiver})",
-              "description": "Wrap the expression in a `Result::Ok`",
-              "scope": "expr"
-            },
-            "Err": {
-              "postfix": "err",
-              "body": "Err(${receiver})",
-              "description": "Wrap the expression in a `Result::Err`",
-              "scope": "expr"
-            },
-            "Some": {
-              "postfix": "some",
-              "body": "Some(${receiver})",
-              "description": "Wrap the expression in an `Option::Some`",
-              "scope": "expr"
-            }
-          }
         }
       },
       "diagnostics": {
-        "disabled": ["inactive-code", "macro-error", "unresolved-macro-call"],
+        "disabled": [
+          "inactive-code",
+          "macro-error",
+          "unresolved-macro-call"
+        ],
         "experimental": {
           "enable": true
         }
       },
       "files": {
-        "excludeDirs": [".direnv", ".git", ".vscode", "assets", "ci", "data", "docs", "js", "target"]
+        "excludeDirs": [
+          ".direnv",
+          ".git",
+          ".vscode",
+          "assets",
+          "ci",
+          "data",
+          "docs",
+          "js",
+          "target"
+        ]
       },
       "hover": {
         "actions": {
@@ -218,8 +211,10 @@
         }
       },
       "lens": {
-        "enable": true,
         "references": {
+          "adt": {
+            "enable": true
+          },
           "method": {
             "enable": true
           },
@@ -234,27 +229,30 @@
       "lru": {
         "capacity": 2048
       },
-      "procMacro": {
-        "enable": true
-      },
       "references": {
         "excludeImports": true
       },
       "rust": {
         "analyzerTargetDir": true
       },
+      "typing": {
+        "autoClosingAngleBrackets": {
+          "enable": true
+        }
+      },
       "workspace": {
         "symbol": {
           "search": {
-            "kind": "all_symbols",
-            "scope": "workspace_and_dependencies"
+            "kind": "all_symbols"
           }
         }
       }
     },
     "tsserver": {
       "code_lens": "on",
-      "expose_as_code_actions": ["all"],
+      "expose_as_code_actions": [
+        "all"
+      ],
       "publish_diagnostic_on": "insert_leave",
       "tsserver_file_preferences": {
         "includeInlayEnumMemberValueHints": true,
