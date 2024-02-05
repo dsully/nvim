@@ -280,3 +280,7 @@ stylua
 bufnr
 bufferline
 jedi
+desc
+augroup
+args
+param
