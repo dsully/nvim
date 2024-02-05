@@ -70,7 +70,7 @@ return {
             scroll_up = "<c-u>", -- binding to scroll up inside the pop-up
         },
         window = {
-            border = "none", -- none, single, double, shadow
+            border = vim.g.border,
             position = "bottom", -- bottom, top
             margin = { 1, 0, 1, 0 }, -- extra window margin [top, right, bottom, left]. When between 0 and 1, will be treated as a percentage of the screen size.
             padding = { 1, 2, 2, 2 }, -- extra window padding [top, right, bottom, left]
