@@ -18,7 +18,7 @@ return {
         dependencies = {
             "FelipeLema/cmp-async-path",
             "hrsh7th/cmp-calc",
-            -- "hrsh7th/cmp-cmdline",
+            "hrsh7th/cmp-cmdline",
             "hrsh7th/cmp-nvim-lsp",
             "onsails/lspkind-nvim",
             {
@@ -288,6 +288,15 @@ return {
                 }),
             })
 
+            -- Completions for : command mode
+            cmp.setup.cmdline(":", {
+                mapping = cmp.mapping.preset.cmdline(),
+                sources = cmp.config.sources({
+                    { name = "async_path" },
+                    -- https://github.com/hrsh7th/nvim-cmp/issues/1511
+                    { name = "cmdline", keyword_pattern = [=[[^[:blank:]\!]*]=], option = { ignore_cmds = {} } },
+                }),
+            })
         end,
     },
     {
