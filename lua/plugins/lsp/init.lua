@@ -277,10 +277,10 @@ return {
                                 },
                             }
 
+                            client.server_capabilities.experimental.codeActionGroup = true
                             client.server_capabilities.experimental.hoverActions = true
                             client.server_capabilities.experimental.serverStatusNotification = true
                             client.server_capabilities.experimental.snippetTextEdit = true
-                            client.server_capabilities.experimental.codeActionGroup = true
 
                             vim.keymap.set("n", "<leader>ce", function()
                                 ---
