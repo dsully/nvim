@@ -328,7 +328,7 @@ return {
                 },
             },
             lsp = {
-                documentation = { enabled = false },
+                documentation = { enabled = true },
                 hover = { enabled = true },
                 override = {
                     ["vim.lsp.util.convert_input_to_markdown_lines"] = true,
@@ -391,8 +391,6 @@ return {
                 {
                     filter = {
                         any = {
-                            -- Only show progress on multiple of 5 percent.
-                            { event = "lsp", find = "[^05]/" },
                             { event = "lsp", find = "code_action" },
                             {
                                 event = "lsp",
