@@ -141,7 +141,6 @@ local M = {
         },
         progress = {
             "copilot",
-            "lua_ls",
             "ltex",
             "pylance",
             "pyright",
