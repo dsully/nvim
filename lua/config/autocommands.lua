@@ -191,7 +191,6 @@ e.on(e.BufReadPost, function()
     vim.cmd.normal({ "zz", bang = true })
 end, {
     desc = "Restore cursor to the last known position.",
-    once = true,
 })
 
 e.on({ e.BufReadPost, e.FileReadPost }, function()
@@ -264,6 +263,7 @@ e.on(e.BufWritePre, function()
 end, {
     desc = "Mark script files with shebangs as executable on write.",
 })
+
 e.on(e.BufWritePre, function()
     vim.opt_local.undofile = false
 end, {
