@@ -118,20 +118,24 @@ return {
                         i = function(fallback)
                             if copilot.is_visible() then
                                 copilot.accept()
-                            elseif cmp.visible() and cmp.get_active_entry() then
+                            elseif cmp.visible() then
                                 cmp.confirm({ behavior = cmp.ConfirmBehavior.Insert, select = true })
                             else
                                 fallback()
                             end
                         end,
                         s = cmp.mapping.confirm({ select = true }),
-                        -- c = cmp.mapping.confirm({ behavior = cmp.ConfirmBehavior.Replace, select = true }),
                     }),
                     ["<Tab>"] = cmp.mapping(function(fallback)
                         --
                         -- Terminal
                         if vim.api.nvim_get_mode().mode == "t" then
                             fallback()
+                            return
+                        end
+
+                        if vim.api.nvim_get_mode().mode == "s" then
+                            vim.snippet.jump(1)
                             return
                         end
 
@@ -298,6 +302,21 @@ return {
                 }),
             })
         end,
+    },
+    {
+        "chrisgrieser/nvim-scissors",
+        cmd = { "ScissorsAddNewSnippet", "ScissorsEditSnippet" },
+        keys = {
+            { "<leader>sa", vim.cmd.ScissorsAddNewSnippet, desc = "Add new snippet" },
+            { "<leader>se", vim.cmd.ScissorsEditSnippet, desc = "Add edit snippet" },
+        },
+        opts = {
+            editSnippetPopup = {
+                border = vim.g.border,
+            },
+            jsonFormatter = "jq",
+            snippetDir = vim.fn.stdpath("config") .. "/snippets",
+        },
     },
     {
         "echasnovski/mini.ai",

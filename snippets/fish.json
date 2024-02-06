@@ -1,0 +1,22 @@
+{
+  "Fish if statement": {
+    "prefix": "if",
+    "body": ["if $1", "end"],
+    "description": "Fish if statement"
+  },
+  "Fish else-if statement": {
+    "prefix": "elif",
+    "body": ["else if $1", ""],
+    "description": "Fish else-if statement"
+  },
+  "Fish function": {
+    "prefix": "function",
+    "body": ["function $1", "end"],
+    "description": "Fish function"
+  },
+  "Fish for loop": {
+    "prefix": "for",
+    "body": ["for $1 in $2", "end"],
+    "description": "Fish for loop"
+  }
+}

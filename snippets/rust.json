@@ -1,0 +1,42 @@
+{
+  "Rust async function": {
+    "prefix": "afn",
+    "body": ["async fn $1($2) -> $3 {", "\t$0", "}"],
+    "description": "Create an async function"
+  },
+  "Rust new function": {
+    "prefix": "fnew",
+    "body": ["fn new($1) -> Self {", "\t$0", "}"],
+    "description": "Create a new function for a struct"
+  },
+  "Rust derive enum declaration": {
+    "prefix": "denum",
+    "body": [
+      "#[derive(${1|Debug,Debug\\, Error,Debug\\, Diagnostic\\, Error,Debug\\, PartialEq,Debug\\, PartialEq\\, Clone|})]",
+      "enum $2 {",
+      "\t$0",
+      "}"
+    ],
+    "description": "Declare enum with derive attributes"
+  },
+  "Rust derive struct declaration": {
+    "prefix": "dstruct",
+    "body": [
+      "#[derive(${1|Debug,Debug\\, Error,Debug\\, Diagnostic\\, Error,Debug\\, PartialEq,Debug\\, PartialEq\\, Clone|})]",
+      "struct $2 {",
+      "\t$0",
+      "}"
+    ],
+    "description": "Declare struct with derive attributes"
+  },
+  "Rust println debug": {
+    "prefix": "pd",
+    "body": ["println!(\"$1: {:?}\", $1);"],
+    "description": "Print a debug format of a variable"
+  },
+  "Rust test module": {
+    "prefix": "testmod",
+    "body": ["#[cfg(test)]", "mod tests {", "    use super::*;", "    ", "    $0", "}"],
+    "description": "Create a test module"
+  }
+}
