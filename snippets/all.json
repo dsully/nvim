@@ -1,0 +1,7 @@
+{
+  "Insert TODO/FIXME comment": {
+    "prefix": "todo",
+    "body": ["${1|TODO(dsully): ,FIXME(dsully): |}$0"],
+    "description": "Insert a TODO or FIXME comment"
+  }
+}

@@ -1,0 +1,20 @@
+{
+  "contributes": {
+    "snippets": [
+      {
+        "language": ["all"],
+        "path": "./all.json"
+      },
+      {
+        "language": ["fish"],
+        "path": "./fish.json"
+      },
+      {
+        "language": ["rust"],
+        "path": "./rust.json"
+      }
+    ]
+  },
+  "description": "My Snippets",
+  "name": "my-snippets"
+}
