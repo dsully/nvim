@@ -727,4 +727,41 @@ return {
         },
         ft = { "bash", "sh", "zsh" },
     },
+    {
+        "vrslev/cmp-pypi",
+        config = function()
+            require("cmp").setup.buffer({
+                sources = {
+                    { name = "pypi" },
+                    { name = "buffer" },
+                },
+            })
+        end,
+        dependencies = "hrsh7th/cmp-buffer",
+        event = { "BufRead pyproject.toml" },
+    },
+    {
+        "MeanderingProgrammer/py-requirements.nvim",
+        config = function()
+            local requirements = require("py-requirements")
+
+            vim.keymap.set("n", "<leader>ru", requirements.upgrade, { buffer = true, desc = "Requirements: Upgrade" })
+            vim.keymap.set("n", "<leader>rU", requirements.upgrade_all, { buffer = true, desc = "Requirements: Upgrade All" })
+            vim.keymap.set("n", "K", requirements.show_description, { buffer = true, desc = "Requirements: Show package description" })
+
+            requirements.setup({
+                enable_cmp = true,
+                float_opts = { border = vim.g.border },
+            })
+
+            require("cmp").setup.buffer({
+                sources = {
+                    { name = "py-requirements" },
+                    { name = "buffer" },
+                },
+            })
+        end,
+        dependencies = "hrsh7th/cmp-buffer",
+        ft = "requirements",
+    },
 }
