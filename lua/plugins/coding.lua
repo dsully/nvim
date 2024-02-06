@@ -328,7 +328,7 @@ return {
     },
     {
         "echasnovski/mini.pairs",
-        enabled = false,
+        enabled = true,
         event = "InsertEnter",
         opts = {
             mappings = {
@@ -340,11 +340,11 @@ return {
                 ["<"] = { action = "open", pair = "<>", neigh_pattern = "[^\\][%s]" },
                 [">"] = { action = "close", pair = "<>", neigh_pattern = "[^\\]." },
 
-                -- ['"'] = { action = "closeopen", pair = '""', neigh_pattern = "[^\\][]%s)}'\"]", register = { cr = false } },
-                -- ["'"] = { action = "closeopen", pair = "''", neigh_pattern = "[^%a\\][]%s)}'\"]", register = { cr = false } },
-                -- ["`"] = { action = "closeopen", pair = "``", neigh_pattern = "[^\\][]%s)}'\"]", register = { cr = false } },
+                ['"'] = { action = "closeopen", pair = '""', neigh_pattern = "[^\\][]%s)}'\"]", register = { cr = false } },
+                ["'"] = { action = "closeopen", pair = "''", neigh_pattern = "[^%a\\][]%s)}'\"]", register = { cr = false } },
+                ["`"] = { action = "closeopen", pair = "``", neigh_pattern = "[^\\][]%s)}'\"]", register = { cr = false } },
 
-                ["`"] = { action = "closeopen", pair = "``", neigh_pattern = "[^%S][^%S]", register = { cr = false } },
+                -- ["`"] = { action = "closeopen", pair = "``", neigh_pattern = "[^%S][^%S]", register = { cr = false } },
             },
         },
     },
