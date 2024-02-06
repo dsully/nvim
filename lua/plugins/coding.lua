@@ -96,7 +96,7 @@ return {
                     end,
                 },
                 mapping = cmp.mapping({
-                    ["<C-a>"] = cmp.mapping(function()
+                    ["<S-CR>"] = cmp.mapping(function()
                         if vim.snippet.active() then
                             vim.snippet.exit()
                         elseif cmp.visible() then
@@ -114,7 +114,7 @@ return {
                     ["<Down>"] = cmp.mapping.select_next_item({ behavior = cmp.SelectBehavior.Select }),
 
                     -- https://github.com/hrsh7th/nvim-cmp/wiki/Example-mappings#safely-select-entries-with-cr
-                    ["<CR>"] = cmp.mapping({
+                    ["<C-CR>"] = cmp.mapping({
                         i = function(fallback)
                             if copilot.is_visible() then
                                 copilot.accept()
