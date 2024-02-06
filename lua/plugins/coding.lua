@@ -350,31 +350,14 @@ return {
     },
     {
         "echasnovski/mini.surround",
-        config = function()
-            require("mini.surround").setup({
-                custom_surroundings = {
-                    -- Use tree-sitter to search for function call
-                    f = {
-                        input = require("mini.surround").gen_spec.input.treesitter({ outer = "@call.outer", inner = "@call.inner" }, {}),
-                    },
-                    ["("] = { output = { left = "(", right = ")" } },
-                    [")"] = { output = { left = "(", right = ")" } },
-                    ["["] = { output = { left = "[", right = "]" } },
-                    ["]"] = { output = { left = "[", right = "]" } },
-                },
-                mappings = {
-                    add = "gza", -- Add surrounding in Normal and Visual modes
-                    delete = "gzd", -- Delete surrounding
-                    find = "gzf", -- Find surrounding (to the right)
-                    find_left = "gzF", -- Find surrounding (to the left)
-                    highlight = "gzh", -- Highlight surrounding
-                    replace = "gzr", -- Replace surrounding
-                    update_n_lines = "gzn", -- Update `n_lines`
-                },
-            })
+        event = "VeryLazy",
+        init = function()
+            -- Add surround mappings for visual mode.
+            vim.keymap.set("x", "S", [[:<C-u>lua MiniSurround.add('visual')<CR>]], { silent = true })
         end,
-        event = { "BufRead", "BufNewFile" },
-        keys = { { "gz", desc = "+ Surround" } },
+        opts = {
+            silent = true,
+        },
     },
     {
         "ThePrimeagen/refactoring.nvim",
