@@ -96,7 +96,7 @@ return {
                     end,
                 },
                 mapping = cmp.mapping({
-                    ["<S-CR>"] = cmp.mapping(function()
+                    ["<C-e>"] = cmp.mapping(function()
                         if vim.snippet.active() then
                             vim.snippet.exit()
                         elseif cmp.visible() then
@@ -114,18 +114,11 @@ return {
                     ["<Down>"] = cmp.mapping.select_next_item({ behavior = cmp.SelectBehavior.Select }),
 
                     -- https://github.com/hrsh7th/nvim-cmp/wiki/Example-mappings#safely-select-entries-with-cr
-                    ["<C-CR>"] = cmp.mapping({
-                        i = function(fallback)
-                            if copilot.is_visible() then
-                                copilot.accept()
-                            elseif cmp.visible() then
-                                cmp.confirm({ behavior = cmp.ConfirmBehavior.Insert, select = true })
-                            else
-                                fallback()
-                            end
-                        end,
-                        s = cmp.mapping.confirm({ select = true }),
-                    }),
+                    ["<CR>"] = cmp.mapping.confirm({ behavior = cmp.ConfirmBehavior.Insert, select = true }),
+                    ["<C-CR>"] = cmp.mapping(function(fallback)
+                        cmp.abort()
+                        fallback()
+                    end),
                     ["<Tab>"] = cmp.mapping(function(fallback)
                         --
                         -- Terminal
