@@ -38,5 +38,10 @@
     "prefix": "testmod",
     "body": ["#[cfg(test)]", "mod tests {", "    use super::*;", "    ", "    $0", "}"],
     "description": "Create a test module"
+  },
+  "Rust allow dead code": {
+    "prefix": "dead",
+    "body": ["#[allow(dead_code)]"],
+    "description": "Allow dead code macro."
   }
 }
