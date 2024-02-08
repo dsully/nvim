@@ -58,22 +58,16 @@ return {
                 local clients = vim.lsp.get_clients({ bufnr = vim.api.nvim_get_current_buf() })
                 local lines = {}
 
-                local defaults = require("config.defaults")
-
                 for i, client in pairs(clients) do
-                    if not vim.tbl_contains(defaults.ignored.lsp, client.name) then
-                        table.insert(lines, "# " .. client.name:upper())
-                        table.insert(lines, "```lua")
+                    table.insert(lines, client.name:upper() .. ": ")
+                    table.insert(lines, "")
 
-                        for s in vim.inspect(client.server_capabilities):gmatch("[^\r\n]+") do
-                            table.insert(lines, s)
-                        end
+                    for s in vim.inspect(client.server_capabilities):gmatch("[^\r\n]+") do
+                        table.insert(lines, s)
+                    end
 
-                        table.insert(lines, "```")
-
-                        if i < #clients then
-                            table.insert(lines, "")
-                        end
+                    if i < #clients then
+                        table.insert(lines, "")
                     end
                 end
 

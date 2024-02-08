@@ -1,12 +1,15 @@
 local M = {}
 
+---@param lines string[]
 function M.open(lines)
     local popup = require("nui.popup")({
         border = {
             style = vim.g.border,
         },
         buf_options = {
-            filetype = "markdown",
+            filetype = "lua",
+            modifiable = false,
+            readonly = true,
         },
         enter = true,
         focusable = true,
