@@ -160,7 +160,7 @@ return {
                                 client_id = vim.lsp.get_clients({ bufnr = vim.api.nvim_get_current_buf() })[1].id,
                                 bufnr = vim.api.nvim_get_current_buf(),
                             }, nil)
-                        elseif col >= indent then
+                        elseif col >= indent and col ~= 0 then
                             require("tabout").tabout()
                         else
                             fallback()
