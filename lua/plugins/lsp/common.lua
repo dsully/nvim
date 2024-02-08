@@ -52,6 +52,57 @@ M.setup = function()
         return register_capability(err, res, ctx)
     end
 
+    -- Jump directly to the first available definition every time.
+    -- Use Telescope if there is more than one result.
+    vim.lsp.handlers["textDocument/definition"] = function(_, result, ctx)
+        if not result or vim.tbl_isempty(result) then
+            vim.api.nvim_echo({ { "LSP: Could not find definition" } }, false, {})
+            return
+        end
+
+        local client = vim.lsp.get_client_by_id(ctx.client_id)
+
+        if not client then
+            return
+        end
+
+        if vim.tbl_islist(result) then
+            local results = vim.lsp.util.locations_to_items(result, client.offset_encoding)
+            local lnum, filename = results[1].lnum, results[1].filename
+
+            for _, val in pairs(results) do
+                if val.lnum ~= lnum or val.filename ~= filename then
+                    return require("telescope.builtin").lsp_definitions()
+                end
+            end
+
+            vim.lsp.util.jump_to_location(result[1], client.offset_encoding, false)
+        else
+            vim.lsp.util.jump_to_location(result, client.offset_encoding, true)
+        end
+    end
+
+    -- De-duplicate diagnostics, in particular from rust-analyzer/rustc
+    vim.lsp.handlers["textDocument/publishDiagnostics"] = vim.lsp.with(function(_, result, ...)
+        --
+        ---@type table<string, boolean>>
+        local seen = {}
+
+        ---@param diagnostic lsp.Diagnostic
+        result.diagnostics = vim.iter.filter(function(diagnostic)
+            local key = string.format("%s:%s", diagnostic.code, diagnostic.range.start.line)
+
+            if not seen[key] then
+                seen[key] = true
+                return true
+            end
+
+            return false
+        end, result.diagnostics)
+
+        vim.lsp.diagnostic.on_publish_diagnostics(_, result, ...)
+    end, {})
+
     return M.capabilities()
 end
 

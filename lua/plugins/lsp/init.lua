@@ -10,7 +10,6 @@ return {
         ---@param opts PluginLspOpts
         config = function(_, opts)
             require("lspconfig.ui.windows").default_options.border = vim.g.border
-            require("plugins.lsp.handlers").setup()
 
             vim.diagnostic.config(vim.deepcopy(opts.diagnostics))
 
@@ -52,27 +51,6 @@ return {
         event = "LazyFile",
         init = function()
             vim.lsp.set_log_level(vim.log.levels.ERROR)
-
-            -- De-duplicate diagnostics, in particular from rust-analyzer/rustc
-            vim.lsp.handlers["textDocument/publishDiagnostics"] = vim.lsp.with(function(_, result, ...)
-                --
-                ---@type table<string, boolean>>
-                local seen = {}
-
-                ---@param diagnostic lsp.Diagnostic
-                result.diagnostics = vim.iter.filter(function(diagnostic)
-                    local key = string.format("%s:%s", diagnostic.code, diagnostic.range.start.line)
-
-                    if not seen[key] then
-                        seen[key] = true
-                        return true
-                    end
-
-                    return false
-                end, result.diagnostics)
-
-                vim.lsp.diagnostic.on_publish_diagnostics(_, result, ...)
-            end, {})
 
             vim.api.nvim_create_user_command("LspCapabilities", function()
                 ---@type lsp.Client[]
