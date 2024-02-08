@@ -218,7 +218,7 @@ return {
                     },
                     jsonls = {
                         on_new_config = function(c)
-                            c.settings.json.schemas = vim.tbl_deep_extend("force", c.settings.json.schemas or {}, require("schemastore").json.schemas())
+                            c.settings = vim.tbl_deep_extend("force", c.settings, { json = { schemas = require("schemastore").json.schemas() } })
                         end,
                     },
                     ruff_lsp = {
@@ -242,13 +242,13 @@ return {
                         on_attach = function(client)
                             client.server_capabilities.hoverProvider = false
                         end,
-                        ---@param new_config lspconfig.Config
-                        on_new_config = function(new_config)
+                        ---@param c lspconfig.Config
+                        on_new_config = function(c)
                             local ruff = require("helpers.ruff")
 
                             -- We need to check our probe directories because they may have changed.
                             ---@diagnostic disable-next-line: inject-field
-                            new_config.settings = vim.tbl_deep_extend("keep", new_config.settings, {
+                            c.settings = vim.tbl_deep_extend("keep", c.settings, {
                                 format = {
                                     args = ruff.format_args(),
                                 },
@@ -333,9 +333,21 @@ return {
                         standalone = false,
                     },
                     yamlls = {
+                        commands = {
+                            YAMLSchema = {
+                                function()
+                                    local schema = require("yaml-companion").get_buf_schema(vim.api.nvim_get_current_buf())
+
+                                    if schema.result[1].name ~= "none" then
+                                        vim.notify(schema.result[1].name)
+                                    end
+                                end,
+                                desc = "Show YAML schema",
+                            },
+                        },
                         filetypes = { "yaml", "yaml.ghaction", "!yaml.ansible" },
                         on_new_config = function(c)
-                            c.settings.yaml.schemas = vim.tbl_deep_extend("force", c.settings.yaml.schemas or {}, require("schemastore").yaml.schemas())
+                            c.settings = vim.tbl_deep_extend("force", c.settings, { yaml = { schemas = require("schemastore").yaml.schemas() } })
 
                             require("yaml-companion").setup({
                                 builtin_matchers = {
@@ -343,6 +355,13 @@ return {
                                     kubernetes = { enabled = false },
                                 },
                             })
+
+                            -- vs = View Schema
+                            vim.keymap.set("n", "<leader>vs", vim.cmd.YAMLSchema, { buffer = true, desc = "Show YAML schema" })
+
+                            vim.keymap.set("n", "<leader>fy", function()
+                                require("telescope").extensions.yaml_schema.yaml_schema()
+                            end, { buffer = true, desc = "YAML Schemas" })
                         end,
                     },
                 },
