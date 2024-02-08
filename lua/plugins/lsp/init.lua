@@ -53,6 +53,27 @@ return {
         init = function()
             vim.lsp.set_log_level(vim.log.levels.ERROR)
 
+            -- De-duplicate diagnostics, in particular from rust-analyzer/rustc
+            vim.lsp.handlers["textDocument/publishDiagnostics"] = vim.lsp.with(function(_, result, ...)
+                --
+                ---@type table<string, boolean>>
+                local seen = {}
+
+                ---@param diagnostic lsp.Diagnostic
+                result.diagnostics = vim.iter.filter(function(diagnostic)
+                    local key = string.format("%s:%s", diagnostic.code, diagnostic.range.start.line)
+
+                    if not seen[key] then
+                        seen[key] = true
+                        return true
+                    end
+
+                    return false
+                end, result.diagnostics)
+
+                vim.lsp.diagnostic.on_publish_diagnostics(_, result, ...)
+            end, {})
+
             vim.api.nvim_create_user_command("LspCapabilities", function()
                 ---@type lsp.Client[]
                 local clients = vim.lsp.get_clients({ bufnr = vim.api.nvim_get_current_buf() })
@@ -91,9 +112,10 @@ return {
                     float = {
                         border = vim.g.border,
                         focusable = true,
-                        header = { " Issues:" },
-                        max_height = math.min(math.floor(vim.o.lines * 0.3), 30),
-                        max_width = math.min(math.floor(vim.o.columns * 0.7), 100),
+                        -- header = { " Issues:" },
+                        header = { "" },
+                        -- max_height = math.min(math.floor(vim.o.lines * 0.3), 30),
+                        -- max_width = math.min(math.floor(vim.o.columns * 0.7), 100),
                         severity_sort = true,
                         spacing = 2,
                         source = "if_many",
