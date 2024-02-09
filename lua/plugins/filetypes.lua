@@ -11,6 +11,8 @@ return {
     -- Markdown helper.
     { "oncomouse/markdown.nvim", ft = "markdown", opts = {} },
 
+    { "direnv/direnv.vim", ft = "direnv" },
+
     -- JSON Sorting
     { "2nthony/sortjson.nvim", ft = "json", opts = true },
 
