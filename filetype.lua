@@ -1,6 +1,6 @@
 vim.filetype.add({
     filename = {
-        [".envrc"] = "bash",
+        [".envrc"] = "direnv",
         [".flake8"] = "ini",
         ["Brewfile"] = "Brewfile",
         ["Caddyfile"] = "caddyfile",
