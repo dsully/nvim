@@ -96,7 +96,7 @@ return {
                         -- max_width = math.min(math.floor(vim.o.columns * 0.7), 100),
                         severity_sort = true,
                         spacing = 2,
-                        source = "if_many",
+                        source = "always",
                         suffix = function(diag)
                             local text = ""
 
@@ -272,21 +272,33 @@ return {
                                 },
                             }
 
-                            client.server_capabilities.experimental.codeActionGroup = true
+                            client.server_capabilities.experimental.codeActionGroup = false
+                            client.server_capabilities.experimental.localDocs = false
                             client.server_capabilities.experimental.hoverActions = true
                             client.server_capabilities.experimental.serverStatusNotification = true
                             client.server_capabilities.experimental.snippetTextEdit = true
 
+                            vim.keymap.set({ "n", "x" }, "gx", function()
+                                client.request("experimental/externalDocs", vim.lsp.util.make_position_params(), function(_, url)
+                                    if url then
+                                        vim.system({ vim.g.opener, "--background", url }):wait()
+                                    else
+                                        vim.cmd.Browse()
+                                    end
+                                end, vim.api.nvim_get_current_buf())
+                            end)
+
                             vim.keymap.set("n", "<leader>ce", function()
                                 ---
+                                -- method, parameters, callback, bufnr
                                 client.request("experimental/openCargoToml", {
-                                    textDocument = vim.lsp.util.make_text_document_params(bufnr),
+                                    textDocument = vim.lsp.util.make_text_document_params(),
                                 }, function(_, result, ctx)
                                     --
                                     if result ~= nil then
                                         vim.lsp.util.jump_to_location(result, vim.lsp.get_client_by_id(ctx.client_id).offset_encoding)
                                     end
-                                end, bufnr)
+                                end, vim.api.nvim_get_current_buf())
                             end, { desc = "Open Cargo.toml" })
 
                             e.on(e.BufWritePost, function()
