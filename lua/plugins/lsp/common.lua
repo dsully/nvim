@@ -116,11 +116,12 @@ M.on_attach = function(client, buffer)
 
     if client.supports_method(methods.textDocument_documentHighlight) then
         e.on(e.CursorHold, vim.lsp.buf.document_highlight, {
-            group = M.groups.lsp_highlight,
             buffer = buffer,
+            group = M.groups.lsp_highlight,
         })
 
         e.on({ e.CursorMoved, e.InsertEnter }, vim.lsp.buf.clear_references, {
+            buffer = buffer,
             group = M.groups.lsp_highlight,
         })
     end
