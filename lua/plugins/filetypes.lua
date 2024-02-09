@@ -11,6 +11,14 @@ return {
     -- Markdown helper.
     { "oncomouse/markdown.nvim", ft = "markdown", opts = {} },
 
+    -- Apple's PKL language.
+    {
+        "apple/pkl-neovim",
+        build = ":TSInstall! pkl",
+        event = "BufReadPre *.pkl",
+    },
+
+    -- Direnv highlighting & more.
     { "direnv/direnv.vim", ft = "direnv" },
 
     -- JSON Sorting
