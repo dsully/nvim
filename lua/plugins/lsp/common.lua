@@ -223,8 +223,10 @@ end
 M.find_root = function()
     local defaults = require("config.defaults")
 
+    local bufnr = vim.api.nvim_get_current_buf()
+
     ---@type string?
-    local path = vim.api.nvim_buf_get_name(0)
+    local path = vim.api.nvim_buf_get_name(bufnr)
     path = path ~= "" and vim.uv.fs_realpath(path) or nil
 
     ---@type string[]
@@ -232,7 +234,7 @@ M.find_root = function()
     local cwd = vim.uv.cwd()
 
     if path then
-        for _, client in pairs(vim.lsp.get_clients({ bufnr = 0 })) do
+        for _, client in pairs(vim.lsp.get_clients({ bufnr = bufnr })) do
             if not vim.tbl_contains(defaults.ignored.lsp, client.name) then
                 local workspace = client.config.workspace_folders
 
