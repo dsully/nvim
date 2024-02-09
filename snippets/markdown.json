@@ -1,0 +1,7 @@
+{
+  "Markdown Comment": {
+    "prefix": "comment",
+    "body": ["[//]: # \"$1\""],
+    "description": "Markdown Comment"
+  }
+}
