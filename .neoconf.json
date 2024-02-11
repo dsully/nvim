@@ -9,6 +9,7 @@
         "mason.nvim",
         "noice.nvim",
         "nvim-cmp",
+        "nvim-insx",
         "nvim-lspconfig",
         "nvim-treesitter",
         "resession.nvim"
