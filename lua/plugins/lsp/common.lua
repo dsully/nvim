@@ -110,56 +110,63 @@ end
 ---@param buffer integer
 M.on_attach = function(client, buffer)
     local methods = vim.lsp.protocol.Methods
+    local keys = require("helpers.keys")
+
+    local bmap = function(lhs, rhs, opts)
+        keys.bmap(buffer, "n", lhs, rhs, opts)
+    end
 
     --
     -- https://github.com/neovim/nvim-lspconfig/wiki/UI-Customization#highlight-symbol-under-cursor
 
     if client.supports_method(methods.textDocument_documentHighlight) then
+        --
         e.on(e.CursorHold, vim.lsp.buf.document_highlight, {
             buffer = buffer,
+            desc = ("LSP Document Highlight for: %s/%s"):format(client.name, buffer),
             group = M.groups.lsp_highlight,
         })
 
         e.on({ e.CursorMoved, e.InsertEnter }, vim.lsp.buf.clear_references, {
             buffer = buffer,
+            desc = ("LSP Clear References for: %s/%s"):format(client.name, buffer),
             group = M.groups.lsp_highlight,
         })
     end
 
     -- General diagnostics.
-    vim.keymap.set("n", "]d", vim.diagnostic.goto_next, { desc = "󰙨󰙨 Next Diagnostic" })
-    vim.keymap.set("n", "[d", vim.diagnostic.goto_prev, { desc = "󰙨󰙨 Previous Diagnostic" })
-    vim.keymap.set("n", "<leader>xr", vim.diagnostic.reset, { desc = " Reset" })
-    vim.keymap.set("n", "<leader>xs", vim.diagnostic.open_float, { desc = "󰙨 Show" })
+    bmap("]d", vim.diagnostic.goto_next, { desc = "󰙨󰙨 Next Diagnostic" })
+    bmap("[d", vim.diagnostic.goto_prev, { desc = "󰙨󰙨 Previous Diagnostic" })
+    bmap("<leader>xr", vim.diagnostic.reset, { desc = " Reset" })
+    bmap("<leader>xs", vim.diagnostic.open_float, { desc = "󰙨 Show" })
 
     if client.supports_method(methods.textDocument_signatureHelp) then
-        vim.keymap.set("n", "<leader>ch", vim.lsp.buf.signature_help, { desc = "󰞂 Signature Help" })
-        vim.keymap.set("i", "<C-h>", vim.lsp.buf.signature_help, { desc = "󰞂 Signature Help" })
+        bmap("<leader>ch", vim.lsp.buf.signature_help, { desc = "󰞂 Signature Help" })
     end
 
     if client.supports_method(methods.textDocument_declaration) then
-        vim.keymap.set("n", "gD", vim.lsp.buf.declaration, { desc = "󰁴 Go To Declaration" })
+        bmap("gD", vim.lsp.buf.declaration, { desc = "󰁴 Go To Declaration" })
     end
 
     if client.supports_method(methods.textDocument_inlayHint) then
-        vim.keymap.set("n", "<space>i", vim.lsp.inlay_hint.enable, { desc = " Toggle Inlay Hints" })
+        bmap("<space>i", vim.lsp.inlay_hint.enable, { desc = " Toggle Inlay Hints" })
 
         vim.lsp.inlay_hint.enable(buffer, false)
     end
 
     if client.supports_method(methods.textDocument_hover) then
-        vim.keymap.set("n", "K", vim.lsp.buf.hover, { desc = "Documentation  " })
+        bmap("K", vim.lsp.buf.hover, { desc = "Documentation  " })
     end
 
     if client.supports_method(methods.textDocument_codeAction) then
         vim.keymap.set({ "n", "x" }, "<leader>ca", function()
             require("actions-preview").code_actions({ context = { only = { "quickfix" } } })
-        end, { desc = "󰅯 Actions" })
+        end, { buffer = buffer, desc = "󰅯 Actions" })
     end
 
     -- https://github.com/smjonas/inc-rename.nvim
     if client.supports_method(methods.textDocument_rename) then
-        vim.keymap.set("n", "<leader>cr", function()
+        bmap("<leader>cr", function()
             --
             return ":" .. require("inc_rename").config.cmd_name .. " " .. vim.fn.expand("<cword>")
         end, { desc = "  Rename", expr = true })
@@ -167,48 +174,57 @@ M.on_attach = function(client, buffer)
 
     if client.supports_method(methods.textDocument_codeLens) then
         --
-        e.on({ e.BufEnter, e.BufWritePost, e.InsertLeave }, vim.lsp.codelens.refresh, {
+        local desc = ("LSP Code Lens Refresh for: %s/%s"):format(client.name, buffer)
+
+        e.on({ e.BufEnter }, vim.lsp.codelens.refresh, {
             buffer = buffer,
-            desc = "LSP Code Lens Refresh",
+            desc = desc,
+            group = M.groups.code_lens,
+            once = true,
+        })
+
+        e.on({ e.BufWritePost, e.InsertLeave }, vim.lsp.codelens.refresh, {
+            buffer = buffer,
+            desc = desc,
             group = M.groups.code_lens,
         })
     end
 
     -- Telescope based finders.
     if client.supports_method(methods.textDocument_definition) then
-        vim.keymap.set("n", "gd", vim.lsp.buf.definition, { desc = "󰁴 Go To Definition(s)" })
+        bmap("gd", vim.lsp.buf.definition, { desc = "󰁴 Go To Definition(s)" })
     end
 
     if client.supports_method(methods.textDocument_implementation) then
-        vim.keymap.set("n", "gi", function()
+        bmap("gi", function()
             vim.cmd.Telescope("lsp_implementations")
         end, { desc = "󰘲 Go To Implementations(s)" })
     end
 
     if client.supports_method(methods.textDocument_references) then
-        vim.keymap.set("n", "<leader>fR", function()
+        bmap("<leader>fR", function()
             vim.cmd.Telescope("lsp_references")
         end, { desc = "󰆋 References" })
     end
 
     if client.supports_method(methods.textDocument_documentSymbol) then
-        vim.keymap.set("n", "<leader>fS", function()
+        bmap("<leader>fS", function()
             vim.cmd.Telescope("lsp_document_symbols")
         end, { desc = "󰆋 Symbols" })
     end
 
     if client.supports_method(methods.workspace_symbol) then
-        vim.keymap.set("n", "<leader>fW", function()
+        bmap("<leader>fW", function()
             vim.cmd.Telescope("lsp_dynamic_workspace_symbols")
         end, { desc = "󰆋 Workspace Symbols" })
     end
 
     -- Diagnostics
-    vim.keymap.set("n", "<leader>xl", function()
+    bmap("<leader>xl", function()
         vim.cmd.Telescope("loclist")
     end, { desc = " Location List" })
 
-    vim.keymap.set("n", "<leader>xq", function()
+    bmap("<leader>xq", function()
         vim.cmd.Telescope("quickfix")
     end, { desc = "󰁨 Quickfix" })
 end
