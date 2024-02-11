@@ -320,37 +320,222 @@ return {
         opts = {},
     },
     {
-        "echasnovski/mini.pairs",
-        enabled = true,
-        event = "InsertEnter",
-        opts = {
-            mappings = {
-                -- https://gitspartv.github.io/lua-patterns/?pattern=%5B%5E%25a%5C%5C%3C%26%5D.
-                ["("] = { action = "open", pair = "()", neigh_pattern = "[^\\][]%s)}']" },
-                ["["] = { action = "open", pair = "[]", neigh_pattern = "[^\\][]%s)}']" },
-                ["{"] = { action = "open", pair = "{}", neigh_pattern = "[^\\][]%s)}']" },
+        "hrsh7th/nvim-insx",
+        config = function()
+            local insx = require("insx")
+            local esc = insx.helper.regex.esc
 
-                ["<"] = { action = "open", pair = "<>", neigh_pattern = "[^\\][%s]" },
-                [">"] = { action = "close", pair = "<>", neigh_pattern = "[^\\]." },
+            local endwise = require("insx.recipe.endwise")
+            local jump = require("insx.recipe.jump_next")
+            local pair = require("insx.recipe.auto_pair")
+            local delete = require("insx.recipe.delete_pair")
+            local fast_break = require("insx.recipe.fast_break")
+            local fast_wrap = require("insx.recipe.fast_wrap")
 
-                ['"'] = { action = "closeopen", pair = '""', neigh_pattern = "[^\\][]%s)}'\"]", register = { cr = false } },
-                ["'"] = { action = "closeopen", pair = "''", neigh_pattern = "[^%a\\][]%s)}'\"]", register = { cr = false } },
-                ["`"] = { action = "closeopen", pair = "``", neigh_pattern = "[^\\][]%s)}'\"]", register = { cr = false } },
+            insx.add("<CR>", endwise(endwise.builtin))
 
-                -- ["`"] = { action = "closeopen", pair = "``", neigh_pattern = "[^%S][^%S]", register = { cr = false } },
-            },
-        },
-    },
-    {
-        "echasnovski/mini.surround",
-        event = "VeryLazy",
-        init = function()
-            -- Add surround mappings for visual mode.
-            vim.keymap.set("x", "S", [[:<C-u>lua MiniSurround.add('visual')<CR>]], { silent = true })
+            -- https://gitspartv.github.io/lua-patterns/
+            for open, close in pairs({
+                ["("] = ")",
+                ["["] = "]",
+                ["{"] = "}",
+            }) do
+                insx.add(close, jump({ jump_pat = { [[\%#]] .. esc(close) .. [[\zs]] } }))
+
+                insx.add(
+                    open,
+                    insx.with(
+                        pair({
+                            open = open,
+                            close = close,
+                        }),
+                        {
+                            insx.with.in_string(false),
+                            insx.with.in_comment(false),
+                            -- insx.with.nomatch([[\%#\w]]),
+                            insx.with.undopoint(false),
+                        }
+                    )
+                )
+
+                insx.add("<BS>", delete({ open_pat = esc(open), close_pat = esc(close) }))
+
+                -- fast_break
+                insx.add("<CR>", fast_break({ open_pat = esc(open), close_pat = esc(close), html_attrs = true, arguments = true }))
+
+                -- fast_wrap
+                insx.add("<C-]>", fast_wrap({ close = close }))
+            end
+
+            for _, quote in ipairs({ '"', "`" }) do
+                -- Jump_out
+                insx.add(quote, jump({ jump_pat = { [[\\\@<!\%#]] .. esc(quote) .. [[\zs]] } }))
+
+                insx.add(
+                    quote,
+                    insx.with(pair({ open = quote, close = quote }), {
+                        insx.with.in_string(false),
+                        insx.with.in_comment(false),
+                        -- insx.with.nomatch([[\%#\W]]), -- Don't match if there is a non-word character after the cursor.
+                        insx.with.nomatch([[[.-]\%#]]), -- Don't match if there is a dot or dash before the cursor.
+                        insx.with.undopoint(false),
+                    })
+                )
+
+                insx.add(
+                    "<BS>",
+                    insx.with(delete.strings({ open_pat = esc(quote), close_pat = esc(quote) }), {
+                        insx.with.in_string(false),
+                        insx.with.in_comment(false),
+                        insx.with.nomatch(([[\\%s\%%#]]):format(esc(quote))),
+                    })
+                )
+
+                insx.add("<C-]>", insx.with(fast_wrap({ close = quote }), { insx.with.undopoint(false) }))
+            end
+
+            insx.add("'", jump({ jump_pat = { [[\\\@<!\%#]] .. esc("'") .. [[\zs]] } }))
+
+            insx.add(
+                "'",
+                insx.with(pair.strings({ open = "'", close = "'", ignore_pat = { [[\%#\w]], [[\a\%#]] } }), {
+                    insx.with.in_string(false),
+                    insx.with.in_comment(false),
+                    insx.with.nomatch([[\%#\w]]),
+                    insx.with.nomatch([[\a\%#]]),
+                    insx.with.undopoint(false),
+                    insx.with.priority(0),
+                })
+            )
+
+            insx.add(
+                "<BS>",
+                insx.with(delete.strings({ open_pat = esc("'"), close_pat = esc("'") }), {
+                    insx.with.in_string(false),
+                    insx.with.in_comment(false),
+                    insx.with.nomatch(([[\\%s\%%#]]):format(esc("'"))),
+                })
+            )
+
+            -- Auto HTML tags.
+            insx.add(
+                ">",
+                insx.with(
+                    require("insx.recipe.substitute")({
+                        pattern = [[<\(\w\+\).\{-}\%#]],
+                        replace = [[\0>\%#</\1>]],
+                    }),
+                    {
+                        insx.with.filetype({ "html" }),
+                        insx.with.priority(1),
+                    }
+                )
+            )
+            -- Delete HTML tags.
+            insx.add(
+                "<BS>",
+                insx.with(
+                    require("insx.recipe.substitute")({
+                        pattern = [[<\(\w\+\).\{-}>\%#</.\{-}>]],
+                        replace = [[\%#]],
+                    }),
+                    {
+                        insx.with.filetype({ "html" }),
+                        insx.with.priority(1),
+                    }
+                )
+            )
+
+            insx.add(
+                "<CR>",
+                insx.with(fast_break({ open_pat = [[```\w*]], close_pat = "```", indent = 0 }), {
+                    insx.with.filetype({ "markdown", "typst" }),
+                    insx.with.priority(1),
+                })
+            )
+
+            insx.add(
+                "<CR>",
+                require("insx.recipe.fast_break")({
+                    open_pat = insx.helper.search.Tag.Open,
+                    close_pat = insx.helper.search.Tag.Close,
+                })
+            )
+
+            -- Python triple quotes.
+            insx.add([["]], {
+                enabled = function(ctx)
+                    return ctx.match([["\%#"]]) and ctx.filetype == "python"
+                end,
+                action = function(ctx)
+                    if ctx.match([["""\%#"""]]) then
+                        return
+                    end
+                    ctx.send([[""<Left>]])
+                    ctx.send([[""<Left>]])
+                end,
+                priority = 1,
+            })
+
+            insx.add(
+                "<CR>",
+                insx.with(
+                    fast_break({
+                        open_pat = [["""\w*]],
+                        close_pat = [["""]],
+                        indent = 0,
+                    }),
+                    {
+                        insx.with.filetype({ "python" }),
+                        insx.with.priority(1),
+                    }
+                )
+            )
+
+            -- Rust lifetime and <> behavior.
+            insx.add(
+                "<",
+                insx.with(pair({ open = "<", close = ">" }), {
+                    insx.with.filetype({ "rust" }),
+                    insx.with.in_string(false),
+                    insx.with.in_comment(false),
+                    insx.with.match([[[\a:].\%#]]),
+                    insx.with.undopoint(false),
+                    insx.with.priority(1),
+                })
+            )
+
+            -- Don't pair '' in a lifetime position.
+            insx.add(
+                "'",
+                insx.with(pair.strings({ open = "'", close = "'", ignore_pat = { [[\%#\w]], [[\a\%#]] } }), {
+                    insx.with.filetype({ "rust" }),
+                    insx.with.in_string(false),
+                    insx.with.in_comment(false),
+                    insx.with.nomatch([[\%#^%a\\<&].]]),
+                    insx.with.undopoint(false),
+                    insx.with.priority(1),
+                })
+            )
+
+            insx.add("<Tab>", {
+                ---@param ctx insx.Context
+                action = function(ctx)
+                    local row, col = ctx.row(), ctx.col()
+
+                    if vim.snippet.jumpable(1) then
+                        ctx.send(":lua vim.snippet.jump(1)")
+                    else
+                        if vim.iter({ [["]], "'", "]", "}", ")", "`", "$" }):find(ctx.after():sub(1, 1)) ~= nil then
+                            ctx.move(row, col + 1)
+                        else
+                            ctx.send("<Tab>")
+                        end
+                    end
+                end,
+            })
         end,
-        opts = {
-            silent = true,
-        },
+        event = "InsertEnter",
     },
     {
         "ThePrimeagen/refactoring.nvim",
