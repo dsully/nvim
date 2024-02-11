@@ -42,8 +42,6 @@ return {
     {
         "mfussenegger/nvim-jdtls",
         config = function()
-            local common = require("plugins.lsp.common")
-
             local base = require("mason-registry").get_package("jdtls"):get_install_path()
             local configuration = ""
 
@@ -58,7 +56,7 @@ return {
             vim.uv.fs_mkdir(workspace, 511)
 
             require("jdtls").start_or_attach({
-                capabilities = common.capabilities(),
+                capabilities = require("plugins.lsp.common").capabilities(),
                 cmd = {
                     "java",
                     "-Declipse.application=org.eclipse.jdt.ls.core.id1",
@@ -81,7 +79,6 @@ return {
                     "-data",
                     workspace,
                 },
-                on_attach = common.on_attach,
                 settings = {
                     codeGeneration = {
                         toString = {

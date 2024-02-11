@@ -39,11 +39,8 @@ do
                     check:stop()
 
                     vim.schedule(function()
-                        local common = require("plugins.lsp.common")
-
                         require("lspconfig")["dmypyls"].setup({
-                            capabilities = common.capabilities(),
-                            on_attach = common.on_attach,
+                            capabilities = require("plugins.lsp.common").capabilities(),
                         })
 
                         vim.cmd.doautocmd("FileType")

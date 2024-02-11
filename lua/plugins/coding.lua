@@ -332,8 +332,6 @@ return {
             local fast_break = require("insx.recipe.fast_break")
             local fast_wrap = require("insx.recipe.fast_wrap")
 
-            insx.add("<CR>", endwise(endwise.builtin))
-
             -- https://gitspartv.github.io/lua-patterns/
             for open, close in pairs({
                 ["("] = ")",
@@ -733,7 +731,6 @@ return {
                 completion = true,
                 enabled = true,
                 hover = true,
-                on_attach = require("plugins.lsp.common").on_attach,
             },
             on_attach = function()
                 require("cmp").setup.buffer({
