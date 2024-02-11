@@ -518,6 +518,24 @@ return {
                 })
             )
 
+            -- Add additional end-wise matches.
+            endwise.builtin["fish"] = {
+                endwise.simple([[\<begin\>.*]], "end"),
+                endwise.simple([[\<for\>.*]], "end"),
+                endwise.simple([[\<function\>.*]], "end"),
+                endwise.simple([[\<if\>.*]], "end"),
+                endwise.simple([[\<switch\>.*]], "end"),
+                endwise.simple([[\<while\>.*]], "end"),
+            }
+
+            endwise.builtin["sh"] = {
+                endwise.simple([[\<case\>.*\<in\>]], "esac"),
+                endwise.simple([[\<if\>.*\<then\>]], "fi"),
+                endwise.simple([[\<while\>.*\<do\>]], "done"),
+            }
+
+            insx.add("<CR>", endwise(endwise.builtin))
+
             insx.add("<Tab>", {
                 ---@param ctx insx.Context
                 action = function(ctx)
