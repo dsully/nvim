@@ -183,7 +183,7 @@ M.on_attach = function(client, buffer)
             once = true,
         })
 
-        e.on({ e.BufWritePost, e.InsertLeave }, vim.lsp.codelens.refresh, {
+        e.on({ e.BufWritePost, e.FocusGained, e.InsertLeave }, vim.lsp.codelens.refresh, {
             buffer = buffer,
             desc = desc,
             group = M.groups.code_lens,
