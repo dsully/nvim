@@ -21,12 +21,6 @@ M.capabilities = function()
     return vim.json.decode(vim.fn.readfile(path)[1])
 end
 
-M.groups = {
-    code_lens = vim.api.nvim_create_augroup("LSP Code Lens", { clear = false }),
-    inlay_hints = vim.api.nvim_create_augroup("LSP Inlay Hints Refresh", { clear = false }),
-    lsp_highlight = vim.api.nvim_create_augroup("LSP Highlight References", { clear = false }),
-}
-
 M.setup = function()
     e.on(e.LspAttach, function(args)
         local buffer = args.buf ---@type number
@@ -120,17 +114,18 @@ M.on_attach = function(client, buffer)
     -- https://github.com/neovim/nvim-lspconfig/wiki/UI-Customization#highlight-symbol-under-cursor
 
     if client.supports_method(methods.textDocument_documentHighlight) then
-        --
-        e.on(e.CursorHold, vim.lsp.buf.document_highlight, {
+        local group = vim.api.nvim_create_augroup("LSP Highlight References", { clear = false })
+
+        e.on({ e.BufEnter, e.CursorHold, e.InsertLeave }, vim.lsp.buf.document_highlight, {
             buffer = buffer,
             desc = ("LSP Document Highlight for: %s/%s"):format(client.name, buffer),
-            group = M.groups.lsp_highlight,
+            group = group,
         })
 
-        e.on({ e.CursorMoved, e.InsertEnter }, vim.lsp.buf.clear_references, {
+        e.on({ e.BufLeave, e.CursorMoved, e.InsertEnter }, vim.lsp.buf.clear_references, {
             buffer = buffer,
             desc = ("LSP Clear References for: %s/%s"):format(client.name, buffer),
-            group = M.groups.lsp_highlight,
+            group = group,
         })
     end
 
@@ -175,18 +170,19 @@ M.on_attach = function(client, buffer)
     if client.supports_method(methods.textDocument_codeLens) then
         --
         local desc = ("LSP Code Lens Refresh for: %s/%s"):format(client.name, buffer)
+        local group = vim.api.nvim_create_augroup("LSP Code Lens", { clear = false })
 
         e.on({ e.BufEnter }, vim.lsp.codelens.refresh, {
             buffer = buffer,
             desc = desc,
-            group = M.groups.code_lens,
+            group = group,
             once = true,
         })
 
         e.on({ e.BufWritePost, e.FocusGained, e.InsertLeave }, vim.lsp.codelens.refresh, {
             buffer = buffer,
             desc = desc,
-            group = M.groups.code_lens,
+            group = group,
         })
     end
 
