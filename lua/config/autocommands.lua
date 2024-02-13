@@ -6,7 +6,7 @@ end, {
     desc = "Check if we need to reload the file when it changed.",
 })
 
-e.on(e.FileType, function(event)
+e.on({ e.BufEnter, e.FileType }, function(event)
     vim.opt_local.spell = false
     vim.api.nvim_buf_set_name(event.buf, event.match)
 
@@ -16,7 +16,7 @@ e.on(e.FileType, function(event)
     end, { noremap = true, silent = true, buffer = event.buf })
 end, {
     desc = "Map q to close the buffer.",
-    pattern = { "checkhealth", "man", "qf", "tsplayground" },
+    pattern = { "checkhealth", "man", "nofile", "qf", "tsplayground" },
 })
 
 e.on(e.FileType, function(event)
