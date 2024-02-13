@@ -133,7 +133,6 @@ return {
                 "yaml",
                 "xml",
             },
-            autotag = { enable = true },
             highlight = { enable = true },
             indent = { enable = true },
             matchup = { enable = true },
@@ -155,17 +154,8 @@ return {
 
             vim.g.matchup_matchparen_deferred = 1
             vim.g.matchup_matchparen_offscreen = { method = "status_manual" }
-
-            -- Wrong matching for HTML: https://github.com/andymass/vim-matchup/issues/19
-            vim.g.matchup_matchpref = { html = { nolists = 1 } }
         end,
         event = "LazyFile",
-    },
-    {
-        -- Use treesitter to auto-close and auto-rename HTML tags.
-        "windwp/nvim-ts-autotag",
-        ft = { "html", "javascript", "markdown", "xml" },
-        opts = {},
     },
 
     -- Build treesitter queries.
