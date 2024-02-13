@@ -384,6 +384,8 @@ return {
                         any = {
                             -- Only show progress on multiple of 5 percent.
                             { event = "lsp", kind = "progress", find = "[^05]/" },
+                            -- lua-ls is noisy.
+                            { event = "lsp", kind = "progress", find = "Diagnosing" },
                             { event = "lsp", find = "code_action" },
                             {
                                 event = "lsp",
