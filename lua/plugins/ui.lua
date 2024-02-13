@@ -8,13 +8,6 @@ return {
             { "<leader>fn", function() vim.cmd.Telescope("notify") end, desc = "Notifications" },
             { "<leader>nd", function() require("notify").dismiss({ silent = true, pending = true }) end, desc = "Delete all Notifications" },
         },
-        -- init = function()
-        --     ---@diagnostic disable-next-line: duplicate-set-field
-        --     vim.notify = function(...)
-        --         require("lazy").load({ plugins = { "nvim-notify" } })
-        --         vim.notify(...)
-        --     end
-        -- end,
         opts = {
             background_colour = "#2e3440",
             focusable = false,
@@ -22,7 +15,7 @@ return {
             max_height = function()
                 return math.floor(vim.o.lines * 0.75)
             end,
-            max_width = 65,
+            -- max_width = 65,
             minimum_width = 65,
             render = "compact",
             timeout = 3000,
