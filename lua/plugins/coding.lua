@@ -330,6 +330,8 @@ return {
             local pair = require("insx.recipe.auto_pair")
             local delete = require("insx.recipe.delete_pair")
             local fast_break = require("insx.recipe.fast_break")
+
+            -- Wrap next token: `(|)function(...)` -> `)` -> `(function(...)|)`
             local fast_wrap = require("insx.recipe.fast_wrap")
 
             -- https://gitspartv.github.io/lua-patterns/
@@ -337,31 +339,13 @@ return {
                 ["("] = ")",
                 ["["] = "]",
                 ["{"] = "}",
+                ["<"] = ">",
             }) do
                 insx.add(close, jump({ jump_pat = { [[\%#]] .. esc(close) .. [[\zs]] } }))
-
-                insx.add(
-                    open,
-                    insx.with(
-                        pair({
-                            open = open,
-                            close = close,
-                        }),
-                        {
-                            insx.with.in_string(false),
-                            insx.with.in_comment(false),
-                            -- insx.with.nomatch([[\%#\w]]),
-                            insx.with.undopoint(false),
-                        }
-                    )
-                )
+                insx.add(open, pair.strings({ open = open, close = close }))
 
                 insx.add("<BS>", delete({ open_pat = esc(open), close_pat = esc(close) }))
-
-                -- fast_break
                 insx.add("<CR>", fast_break({ open_pat = esc(open), close_pat = esc(close), html_attrs = true, arguments = true }))
-
-                -- fast_wrap
                 insx.add("<C-]>", fast_wrap({ close = close }))
             end
 
@@ -401,6 +385,11 @@ return {
                     insx.with.in_comment(false),
                     insx.with.nomatch([[\%#\w]]),
                     insx.with.nomatch([[\a\%#]]),
+
+                    -- Don't pair '' in a Rust lifetime position.
+                    insx.with.nomatch([[&\%#]]),
+                    insx.with.nomatch([[\h\w*<.*\%#]]),
+
                     insx.with.undopoint(false),
                     insx.with.priority(0),
                 })
@@ -452,13 +441,7 @@ return {
                 })
             )
 
-            insx.add(
-                "<CR>",
-                require("insx.recipe.fast_break")({
-                    open_pat = insx.helper.search.Tag.Open,
-                    close_pat = insx.helper.search.Tag.Close,
-                })
-            )
+            insx.add("<CR>", fast_break({ open_pat = insx.helper.search.Tag.Open, close_pat = insx.helper.search.Tag.Close }))
 
             -- Python triple quotes.
             insx.add([["]], {
@@ -477,17 +460,10 @@ return {
 
             insx.add(
                 "<CR>",
-                insx.with(
-                    fast_break({
-                        open_pat = [["""\w*]],
-                        close_pat = [["""]],
-                        indent = 0,
-                    }),
-                    {
-                        insx.with.filetype({ "python" }),
-                        insx.with.priority(1),
-                    }
-                )
+                insx.with(fast_break({ open_pat = [["""\w*]], close_pat = [["""]], indent = 0 }), {
+                    insx.with.filetype({ "python" }),
+                    insx.with.priority(1),
+                })
             )
 
             -- Rust lifetime and <> behavior.
@@ -498,19 +474,6 @@ return {
                     insx.with.in_string(false),
                     insx.with.in_comment(false),
                     insx.with.match([[[\a:].\%#]]),
-                    insx.with.undopoint(false),
-                    insx.with.priority(1),
-                })
-            )
-
-            -- Don't pair '' in a lifetime position.
-            insx.add(
-                "'",
-                insx.with(pair.strings({ open = "'", close = "'", ignore_pat = { [[\%#\w]], [[\a\%#]] } }), {
-                    insx.with.filetype({ "rust" }),
-                    insx.with.in_string(false),
-                    insx.with.in_comment(false),
-                    insx.with.nomatch([[\%#^%a\\<&].]]),
                     insx.with.undopoint(false),
                     insx.with.priority(1),
                 })
