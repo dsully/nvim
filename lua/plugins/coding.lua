@@ -789,4 +789,27 @@ return {
         dependencies = "hrsh7th/cmp-buffer",
         ft = "requirements",
     },
+    {
+        "nvimdev/dyninput.nvim",
+        ft = { "rust" },
+        opts = function()
+            local rs = require("dyninput.lang.rust")
+            local ms = require("dyninput.lang.misc")
+
+            return {
+                rust = {
+                    [";"] = {
+                        { "::", rs.double_colon },
+                        { ": ", rs.single_colon },
+                    },
+                    ["="] = { " => ", rs.fat_arrow },
+                    ["-"] = {
+                        { " -> ", rs.thin_arrow },
+                        { "_", ms.snake_case },
+                    },
+                    ["\\"] = { "|!| {}", rs.closure_fn },
+                },
+            }
+        end,
+    },
 }
