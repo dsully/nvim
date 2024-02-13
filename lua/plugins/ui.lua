@@ -2,7 +2,9 @@ local e = require("helpers.event")
 
 return {
     {
-        "rcarriga/nvim-notify",
+        -- "rcarriga/nvim-notify",
+        "ls-devs/nvim-notify",
+        branch = "fix/fix_index_value",
         -- stylua: ignore
         keys = {
             { "<leader>fn", function() vim.cmd.Telescope("notify") end, desc = "Notifications" },
@@ -304,7 +306,7 @@ return {
         event = "VeryLazy",
         -- stylua: ignore
         keys = {
-            { "<S-Enter>", function() require("noice").redirect(vim.fn.getcmdline()) end, mode = "c", desc = "Redirect Cmdline" },
+            -- { "<S-Enter>", function() require("noice").redirect(vim.fn.getcmdline()) end, mode = "c", desc = "Redirect Cmdline" },
             { "<leader>vd", vim.cmd.NoiceDismiss, desc = "Dismiss Messages" },
             { "<leader>vm", vim.cmd.Noice, desc = "View Messages" },
             { "<leader>fN", function() vim.cmd.Noice("telescope") end, { desc = "Noice" } },
@@ -316,6 +318,8 @@ return {
                     input = { icon = " ", lang = "text", view = "cmdline_popup", title = "" },
                     read = { pattern = "^:%s*r!", icon = "$", lang = "bash" },
                     substitute = { pattern = "^:%%?s/", icon = " ", ft = "regex", title = "" },
+                    session = { pattern = { "^:Session%s+" }, icon = "", lang = "vim", title = " session " },
+                    git = { pattern = { "^:Gitsigns%s+", "^:Neogit%s+", "^:GitLink%s+" }, icon = "", lang = "vim", title = " git " },
                 },
             },
             lsp = {
@@ -327,7 +331,7 @@ return {
                     ["cmp.entry.get_documentation"] = true,
                 },
                 progress = { enabled = true },
-                signature = { enabled = true },
+                signature = { enabled = false },
             },
             messages = { enabled = true },
             notify = { enabled = true },
@@ -346,39 +350,60 @@ return {
                 {
                     filter = {
                         any = {
-                            { event = "msg_show", find = "%d+L, %d+B" }, -- Disable file write notifications.
-                            { event = "msg_show", find = "^E486:" }, -- Pattern not found.
-                            { event = "msg_show", find = "^E492:" }, -- Not an editor command.
-                            { event = "msg_show", find = "%d+ change" }, -- Editor noisiness.
-                            { event = "msg_show", find = "%d+ more line" }, -- Yank / undo noise.
-                            { event = "msg_show", find = "%d+ line. less" }, -- Yank / undo noise.
-                            { event = "msg_show", find = "bufnr=%d client_id=%d doesn't exists" },
-                            { event = "msg_show", find = "%d+ lines yanked" },
-
-                            { event = "msg_show", find = "written" },
-                            { event = "msg_show", find = "%d+ lines, %d+ bytes" },
-                            { event = "msg_show", kind = "search_count" },
-                            { event = "msg_show", find = "search hit" },
-                            { event = "msg_show", find = "^Hunk %d+ of %d" },
-                            { event = "msg_show", find = "%d+ fewer lines" },
+                            -- Yank / undo noise
+                            { event = "msg_show", find = "%d+ more line" },
                             { event = "msg_show", find = "%d+ line less" },
+                            { event = "msg_show", find = "%d+ fewer lines" },
+                            -- { event = "msg_show", find = "%d+ lines yanked" },
+
+                            { find = "^%d+ change[s]?; before #%d+" },
+                            { find = "^%d+ change[s]?; after #%d+" },
+                            { find = "^%-%-No lines in buffer%-%-$" },
+
+                            -- { event = "msg_show", find = "bufnr=%d client_id=%d doesn't exists" },
+                            -- { event = "msg_show", find = "^Hunk %d+ of %d" },
+
+                            -- When I'm offline, and Copilot wants to connect.
                             { event = "msg_show", find = "getaddrinfo" },
-                            -- { event = "msg_show", find = "%d+ line" }, -- This hides Ctrl-g file information.
-                            -- { find = "No active Snippet" },
-                            -- { find = "No signature help available" },
-                            -- { find = "Running provider" },
-                            -- { find = "The coroutine failed with this message" },
-                            -- { find = "^<$" },
+
+                            -- Fix jedi bug https://github.com/pappasam/jedi-language-server/issues/296
+                            { event = "msg_show", find = "^}$" },
+
+                            -- Fix lsp signature bug
+                            { event = "msg_show", find = "lsp_signature? handler RPC" },
                         },
                     },
                     opts = { skip = true },
                 },
-                {
-                    -- Search messages.
-                    filter = { find = "^[/?]" },
-                    opts = { skip = true },
-                    view = "cmdline",
-                },
+
+                -- Redirect to pop-up when message is long
+                { filter = { min_height = 10 }, view = "popup" },
+
+                -- "Not an editor command" to mini
+                { filter = { event = "msg_show", find = "^E492:" }, view = "mini" },
+
+                -- Write/deletion messages
+                { filter = { event = "msg_show", find = "%d+B written$" }, view = "mini" },
+                { filter = { event = "msg_show", find = "%d+L, %d+B$" }, view = "mini" },
+                { filter = { event = "msg_show", find = "%-%-No lines in buffer%-%-" }, view = "mini" },
+
+                -- Yank messages
+                { filter = { event = "msg_show", find = "%d+ lines yanked" }, view = "mini" },
+
+                -- Unneeded info on search patterns
+                { filter = { event = "msg_show", find = "^[/?]." }, skip = true },
+                { filter = { event = "msg_show", find = "^E486: Pattern not found" }, view = "mini" },
+
+                -- Word added to spellfile via `zg`
+                { filter = { event = "msg_show", find = "^Word .*%.add$" }, view = "mini" },
+
+                -- Diagnostics
+                { filter = { event = "msg_show", find = "No more valid diagnostics to move to" }, view = "mini" },
+
+                -- Route nvim-treesitter to the mini view.
+                { filter = { event = "msg_show", find = "^%[nvim%-treesitter%]" }, view = "mini" },
+                { filter = { event = "notify", find = "All parsers are up%-to%-date" }, view = "mini" },
+
                 {
                     filter = {
                         any = {
