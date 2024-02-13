@@ -168,9 +168,6 @@ return {
         opts = {},
     },
 
-    -- f-string manipulation.
-    { "chrisgrieser/nvim-puppeteer", ft = "python" },
-
     -- Build treesitter queries.
     {
         "ziontee113/query-secretary",
