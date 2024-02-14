@@ -313,11 +313,25 @@ return {
     },
     {
         "echasnovski/mini.comment",
-        keys = {
-            { "gc", mode = { "n", "x" }, desc = "Comment Line(s)" },
-            { "gcc", mode = { "n", "x" }, desc = "Uncomment Line(s)" },
+        dependencies = {
+            {
+                "JoosepAlviste/nvim-ts-context-commentstring",
+                opts = {
+                    enable_autocmd = false,
+                },
+            },
         },
-        opts = {},
+        keys = {
+            { "gc", mode = { "n", "x" } },
+            { "gcc", mode = { "n", "x" } },
+        },
+        opts = {
+            options = {
+                custom_commentstring = function()
+                    return require("ts_context_commentstring.internal").calculate_commentstring() or vim.bo.commentstring
+                end,
+            },
+        },
     },
     {
         "hrsh7th/nvim-insx",
