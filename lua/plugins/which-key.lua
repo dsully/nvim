@@ -1,6 +1,5 @@
 return {
     "folke/which-key.nvim",
-    cond = true,
     config = function(_, opts)
         local wk = require("which-key")
 
@@ -30,6 +29,10 @@ return {
         end
     end,
     event = "LazyFile",
+    init = function()
+        vim.o.timeout = true
+        vim.o.timeoutlen = 500
+    end,
     opts = {
         plugins = {
             marks = false,
@@ -42,8 +45,8 @@ return {
                 motions = true, -- adds help for motions
                 text_objects = true, -- help for text objects triggered after entering an operator
                 windows = true, -- default bindings on <c-w>
-                nav = false, -- misc bindings to work with windows
-                z = false, -- bindings for folds, spelling and others prefixed with z
+                nav = true, -- misc bindings to work with windows
+                z = true, -- bindings for folds, spelling and others prefixed with z
                 g = true, -- bindings for prefixed with g
             },
         },

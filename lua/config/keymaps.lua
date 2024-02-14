@@ -25,9 +25,9 @@ end, { desc = "Quit without saving" })
 
 -- Disable recording / annoying exmode.
 -- https://stackoverflow.com/questions/1527784/what-is-vim-recording-and-how-can-it-be-disabled
-vim.keymap.set("n", "q", "<Nop>", { desc = "hidden" })
-vim.keymap.set("n", "Q", "<Nop>", { desc = "hidden" })
-vim.keymap.set("n", "q:", "<Nop>", { desc = "hidden" })
+vim.keymap.set("n", "q", "<Nop>", { desc = "which_key_ignore" })
+vim.keymap.set("n", "Q", "<Nop>", { desc = "which_key_ignore" })
+vim.keymap.set("n", "q:", "<Nop>", { desc = "which_key_ignore" })
 
 vim.keymap.set({ "n", "x" }, "Y", "y$", { desc = "Yank to clipboard" })
 -- vim.keymap.set({ "n", "x" }, "gY", '"*y$', { desc = "Yank until end of line to system clipboard" })
@@ -37,9 +37,9 @@ vim.keymap.set({ "n", "x" }, "gp", '"*p', { desc = "Paste from system clipboard"
 vim.keymap.set("n", "<leader>a", "<cmd>%y<cr>", { desc = "Yank All Lines" })
 
 -- Don't delete into the system clipboard.
-vim.keymap.set({ "n", "x" }, "dw", '"_dw', { noremap = true })
-vim.keymap.set({ "n", "x" }, "c", '"_c', { noremap = true })
-vim.keymap.set({ "n", "x" }, "C", '"_C', { noremap = true })
+vim.keymap.set({ "n", "x" }, "dw", '"_dw', { desc = "which_key_ignore", noremap = true })
+vim.keymap.set({ "n", "x" }, "c", '"_c', { desc = "which_key_ignore", noremap = true })
+vim.keymap.set({ "n", "x" }, "C", '"_C', { desc = "which_key_ignore", noremap = true })
 
 -- Create/edit file within the current directory
 vim.keymap.set("n", "<localleader><localleader>e", function()
