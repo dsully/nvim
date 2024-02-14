@@ -309,7 +309,7 @@ return {
             -- { "<S-Enter>", function() require("noice").redirect(vim.fn.getcmdline()) end, mode = "c", desc = "Redirect Cmdline" },
             { "<leader>vd", vim.cmd.NoiceDismiss, desc = "Dismiss Messages" },
             { "<leader>vm", vim.cmd.Noice, desc = "View Messages" },
-            { "<leader>fN", function() vim.cmd.Noice("telescope") end, { desc = "Noice" } },
+            { "<leader>fN", function() vim.cmd.Noice("telescope") end, desc = "Noice" },
         },
         opts = {
             cmdline = {

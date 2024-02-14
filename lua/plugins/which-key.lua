@@ -6,13 +6,20 @@ return {
         wk.setup(opts)
 
         for _, menu in pairs({
-            { key = "g", opts = {} },
+            { key = [[\\]], opts = { desc = "Local" } },
+            { key = "g", opts = { desc = "Go" } },
+            -- { key = "gc", opts = { desc = "Comments" } },
+            -- { key = "g?", opts = { desc = "Debug" } },
+            { key = "q", opts = { desc = "Quit" } },
+            { key = "z", opts = { desc = "Spelling & Folds" } },
             { key = "<leader>", opts = {} },
-            { key = "<space>", opts = {} },
+            { key = "<space>", opts = { desc = "Actions" } },
+            { key = "<c-w>", opts = { desc = "Windows" } },
             { key = "]", opts = { desc = "Next 󰒭" } },
             { key = "[", opts = { desc = "Previous 󰒮" } },
             { key = "<leader>b", opts = { desc = " Buffers" } },
             { key = "<leader>c", opts = { desc = " Code" }, mode = { "n", "t" } },
+            { key = "<leader>d", opts = { desc = " Debug" } },
             { key = "<leader>f", opts = { desc = " Find" } },
             { key = "<leader>g", opts = { desc = " Git" } },
             { key = "<leader>l", opts = { desc = " LSP" } },
@@ -20,10 +27,17 @@ return {
             { key = "<leader>n", opts = { desc = " Notifications" } },
             { key = "<leader>p", opts = { desc = " Plugins" } },
             { key = "<leader>q", opts = { desc = "󰗼 Quit" } },
-            { key = "<leader>r", opts = { desc = " Refactor" }, mode = { "n", "t" } },
+            { key = "<leader>r", opts = { desc = " Rules" } },
+            { key = "<leader>s", opts = { desc = " Snippets" } },
             { key = "<leader>t", opts = { desc = " Test" } },
             { key = "<leader>v", opts = { desc = " View" } },
             { key = "<leader>x", opts = { desc = " Diagnostics" } },
+            -- Ignore junk
+            { key = "<2-LeftMouse>", opts = { desc = "which_key_ignore" } },
+            { key = "<C-L>", opts = { desc = "which_key_ignore" } },
+            { key = "<SNR>", opts = { desc = "which_key_ignore" } },
+            -- vim-matchup
+            { key = "z%", opts = { desc = "which_key_ignore" } },
         }) do
             wk.register({ [menu.key] = { name = menu.opts.desc } }, { mode = menu.opts.mode or "n" })
         end
@@ -87,12 +101,22 @@ return {
             align = "left", -- align columns left, center or right
         },
         ignore_missing = false, -- enable this to hide mappings for which you didn't specify a label
-        hidden = { "<silent>", "<cmd>", "<Cmd>", "<CR>", "^:", "^ ", "^call ", "^lua " }, -- hide mapping boilerplate
+        hidden = {
+            "<silent>",
+            "<cmd>",
+            "<Cmd>",
+            "<CR>",
+            "<Nop>",
+            "^:",
+            "^ ",
+            "^call ",
+            "^lua ",
+        },
         show_help = true, -- show a help message in the command line for using WhichKey
         show_keys = true, -- show the currently pressed key and its label as a message in the command line
         triggers = "auto", -- automatically setup triggers
         -- triggers = {"<leader>"} -- or specify a list manually
-        -- list of triggers, where WhichKey should not wait for timeoutlen and show immediately
+        -- List of triggers, where WhichKey should not wait for timeoutlen and show immediately
         triggers_nowait = {
             -- registers
             '"',
@@ -101,8 +125,8 @@ return {
             "z=",
         },
         triggers_blacklist = {
-            -- list of mode / prefixes that should never be hooked by WhichKey
-            -- this is mostly relevant for key-maps that start with a native binding
+            -- List of mode / prefixes that should never be hooked by WhichKey
+            -- This is mostly relevant for key-maps that start with a native binding
             i = { "j", "k" },
             v = { "j", "k" },
         },

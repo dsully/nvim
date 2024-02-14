@@ -164,7 +164,7 @@ M.on_attach = function(client, buffer)
         bmap("<leader>cr", function()
             --
             return ":" .. require("inc_rename").config.cmd_name .. " " .. vim.fn.expand("<cword>")
-        end, { desc = "  Rename", expr = true })
+        end, { desc = " Rename", expr = true })
     end
 
     if client.supports_method(methods.textDocument_codeLens) then
