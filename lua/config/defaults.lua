@@ -46,6 +46,7 @@ local M = {
         },
     },
 
+    ---@type table<string, conform.FormatterUnit[]>
     formatters = {
         bash = { "shellcheck", "shellharden", "shfmt" },
         bzl = { "buildifier" },
