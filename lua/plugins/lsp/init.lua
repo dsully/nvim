@@ -74,6 +74,22 @@ return {
             end, { desc = "Show LSP Capabilities" })
         end,
         keys = {
+            { "]d", vim.diagnostic.goto_next, desc = "󰙨󰙨 Next Diagnostic" },
+            { "[d", vim.diagnostic.goto_prev, desc = "󰙨󰙨 Previous Diagnostic" },
+            { "<leader>xr", vim.diagnostic.reset, desc = " Reset" },
+            { "<leader>xs", vim.diagnostic.open_float, desc = "󰙨 Show" },
+            {
+                "dt",
+                function()
+                    if vim.diagnostic.is_disabled() then
+                        vim.diagnostic.enable()
+                    else
+                        vim.diagnostic.disable()
+                    end
+                end,
+                noremap = true,
+                desc = "Diagnostics Toggle",
+            },
             { "<leader>lc", vim.cmd.LspCapabilities, desc = " LSP Capabilities" },
             { "<leader>li", vim.cmd.LspInfo, desc = " LSP Info" },
             { "<leader>ll", vim.cmd.LspLog, desc = " LSP Log" },

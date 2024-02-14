@@ -1,17 +1,3 @@
--- General diagnostics.
-vim.keymap.set("n", "]d", vim.diagnostic.goto_next, { desc = "󰙨󰙨 Next Diagnostic" })
-vim.keymap.set("n", "[d", vim.diagnostic.goto_prev, { desc = "󰙨󰙨 Previous Diagnostic" })
-vim.keymap.set("n", "<leader>xr", vim.diagnostic.reset, { desc = " Reset" })
-vim.keymap.set("n", "<leader>xs", vim.diagnostic.open_float, { desc = "󰙨 Show" })
-
-vim.keymap.set("n", "dt", function()
-    if vim.diagnostic.is_disabled() then
-        vim.diagnostic.enable()
-    else
-        vim.diagnostic.disable()
-    end
-end, { noremap = true, desc = "Diagnostics Toggle" })
-
 -- Buffers
 vim.keymap.set("n", "]b", vim.cmd.bnext, { desc = " Next Buffer" })
 vim.keymap.set("n", "[b", vim.cmd.bprev, { desc = " Previous Buffer" })
@@ -52,3 +38,14 @@ end, { silent = true, expr = false, desc = "Create relative to current buffer" }
 
 -- Close floating windows [Neovim 0.10 and above]
 vim.keymap.set("n", "<leader>fq", vim.cmd.fclose, { silent = true, desc = "Close all floating windows" })
+
+-- Open in the filetype default application (macOS)
+if vim.g.os == "Darwin" then
+    vim.keymap.set("n", "<leader>o", function()
+        local filename = vim.api.nvim_buf_get_name(0)
+
+        vim.notify("󰏋 Opening " .. vim.fs.basename(filename))
+
+        vim.system({ "open", filename }):wait()
+    end, { desc = "󰏋 Open in App" })
+end
