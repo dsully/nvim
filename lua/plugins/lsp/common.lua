@@ -172,14 +172,18 @@ M.on_attach = function(client, buffer)
         local desc = ("LSP Code Lens Refresh for: %s/%s"):format(client.name, buffer)
         local group = vim.api.nvim_create_augroup("LSP Code Lens", { clear = false })
 
-        e.on({ e.BufEnter }, vim.lsp.codelens.refresh, {
+        local refresh = function(args)
+            vim.lsp.codelens.refresh({ bufnr = args.buf })
+        end
+
+        e.on({ e.BufEnter }, refresh, {
             buffer = buffer,
             desc = desc,
             group = group,
             once = true,
         })
 
-        e.on({ e.BufWritePost, e.FocusGained, e.InsertLeave }, vim.lsp.codelens.refresh, {
+        e.on({ e.BufWritePost, e.FocusGained, e.InsertLeave }, refresh, {
             buffer = buffer,
             desc = desc,
             group = group,
