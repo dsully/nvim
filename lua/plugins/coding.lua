@@ -828,4 +828,16 @@ return {
             }
         end,
     },
+    {
+        "andrewferrier/debugprint.nvim",
+        -- stylua: ignore
+        keys = {
+            { "g?", desc = " Debug" },
+            { "g?p", function() require("debugprint").print() end, desc = "Print (Below)" },
+            { "g?P", function() require("debugprint").print({ above = true }) end, desc = "Print (Above)" },
+            { "g?v", function() require("debugprint").print({ variable = true }) end, desc = "Print Variable (Below)" },
+            { "g?v", function() require("debugprint").print({ above = true, variable = true }) end, desc = "Print Variable (Above)" },
+            { "g?d", function() require("debugprint").deleteprints() end, desc = "Delete Prints" },
+        },
+    },
 }
