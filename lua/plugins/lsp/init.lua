@@ -220,12 +220,11 @@ return {
                         on_attach = function(client)
                             client.server_capabilities.hoverProvider = false
                         end,
-                        ---@param c lspconfig.Config
+                        ---@param c lsp.ClientConfig
                         on_new_config = function(c)
                             local ruff = require("helpers.ruff")
 
                             -- We need to check our probe directories because they may have changed.
-                            ---@diagnostic disable-next-line: inject-field
                             c.settings = vim.tbl_deep_extend("keep", c.settings, {
                                 format = {
                                     args = ruff.format_args(),
