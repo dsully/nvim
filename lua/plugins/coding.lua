@@ -322,8 +322,8 @@ return {
             },
         },
         keys = {
-            { "gc", mode = { "n", "x" } },
-            { "gcc", mode = { "n", "x" } },
+            { "gc", mode = { "n", "x" }, desc = "# Comments" },
+            { "gcc", mode = { "n", "x" }, desc = "Current line" },
         },
         opts = {
             options = {
@@ -542,7 +542,7 @@ return {
                 function()
                     require("refactoring").select_refactor({})
                 end,
-                desc = "  Refactor",
+                desc = " Refactor",
                 mode = { "n", "x" },
                 noremap = true,
                 silent = true,
@@ -693,9 +693,10 @@ return {
         "chrisgrieser/nvim-rulebook",
         -- stylua: ignore
         keys = {
-            { "<leader>ri", function() require("rulebook").ignoreRule() end, desc = "  Ignore Rule" },
-            { "<leader>rl", function() require("rulebook").lookupRule() end, desc = "  Look up Rule" },
-            { "<leader>ry", function() require("rulebook").yankDiagnosticCode() end, desc = "  Yank Diag Code" },
+            { "<leader>r", desc = " Rules" },
+            { "<leader>ri", function() require("rulebook").ignoreRule() end, desc = " Ignore" },
+            { "<leader>rl", function() require("rulebook").lookupRule() end, desc = " Look Up" },
+            { "<leader>ry", function() require("rulebook").yankDiagnosticCode() end, desc = " Yank Diagnostic" },
         },
     },
     -- Load Lua plugin files without needing to have them in the LSP workspace.

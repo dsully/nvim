@@ -74,10 +74,10 @@ return {
             end, { desc = "Show LSP Capabilities" })
         end,
         keys = {
-            { "<leader>lc", vim.cmd.LspCapabilities, desc = "  LSP Capabilities" },
-            { "<leader>li", vim.cmd.LspInfo, desc = "  LSP Info" },
+            { "<leader>lc", vim.cmd.LspCapabilities, desc = " LSP Capabilities" },
+            { "<leader>li", vim.cmd.LspInfo, desc = " LSP Info" },
             { "<leader>ll", vim.cmd.LspLog, desc = " LSP Log" },
-            { "<leader>lr", vim.cmd.LspRestart, desc = "  LSP Restart" },
+            { "<leader>lr", vim.cmd.LspRestart, desc = " LSP Restart" },
             { "<leader>ls", vim.cmd.LspStop, desc = " LSP Stop" },
         },
         opts = function()
