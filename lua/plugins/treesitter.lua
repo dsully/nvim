@@ -50,7 +50,7 @@ return {
                 ---@type table<string, boolean>
                 local added = {}
 
-                opts.ensure_installed = vim.tbl_filter(function(lang)
+                opts.ensure_installed = vim.iter.filter(function(lang)
                     if added[lang] then
                         return false
                     end

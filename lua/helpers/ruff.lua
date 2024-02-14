@@ -66,7 +66,7 @@ local toml_query = [[
 ]]
 
 local function exclude_ignores(table)
-    return vim.tbl_filter(function(str)
+    return vim.iter.filter(function(str)
         for _, prefix in ipairs(ruff_prefixes) do
             if string.sub(str, 1, #prefix) == prefix then
                 return false
