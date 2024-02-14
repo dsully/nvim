@@ -681,6 +681,7 @@ return {
         keys = {
             { "<leader>ri", function() require("rulebook").ignoreRule() end, desc = "  Ignore Rule" },
             { "<leader>rl", function() require("rulebook").lookupRule() end, desc = "  Look up Rule" },
+            { "<leader>ry", function() require("rulebook").yankDiagnosticCode() end, desc = "  Yank Diag Code" },
         },
     },
     -- Load Lua plugin files without needing to have them in the LSP workspace.
