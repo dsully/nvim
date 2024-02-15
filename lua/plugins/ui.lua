@@ -2,9 +2,7 @@ local e = require("helpers.event")
 
 return {
     {
-        -- "rcarriga/nvim-notify",
-        "ls-devs/nvim-notify",
-        branch = "fix/fix_index_value",
+        "rcarriga/nvim-notify",
         -- stylua: ignore
         keys = {
             { "<leader>fn", function() vim.cmd.Telescope("notify") end, desc = "Notifications" },
