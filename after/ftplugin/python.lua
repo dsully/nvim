@@ -14,7 +14,16 @@ do
         if not vim.uv.fs_access(dmypy, "RX") then
             vim.notify("Installing dmypy-ls in virtual env...")
 
-            vim.system({ "python", "-m", "pip", "install", vim.env.HOME .. "/src/dmypy-ls/dist/dmypy_ls-1.20-py3-none-any.whl" }, { text = true }, function(obj)
+            local pip = vim.env.VIRTUAL_ENV .. "/bin/pip"
+            local args
+
+            if vim.uv.fs_access(pip, "RX") then
+                args = { "python", "-m", "pip", "install", vim.env.HOME .. "/src/dmypy-ls/dist/dmypy_ls-1.20-py3-none-any.whl" }
+            else
+                args = { "uv", "pip", "install", "dmypy-ls" }
+            end
+
+            vim.system(args, { text = true }, function(obj)
                 if obj.code == 0 then
                     vim.notify("dmypy-ls installed!")
                 else
