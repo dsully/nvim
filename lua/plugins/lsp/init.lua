@@ -156,6 +156,9 @@ return {
                     lua_ls = {},
                     marksman = {}, -- Markdown
                     terraformls = {},
+                    taplo = {
+                        filetypes = { "toml", "toml.pyproject" },
+                    },
                     typos_lsp = {},
                     clangd = {
                         filetypes = { "c", "cpp", "cuda" }, -- Let SourceKit handle objective-c and objective-cpp.
