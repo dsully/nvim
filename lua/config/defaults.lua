@@ -61,6 +61,7 @@ local M = {
         just = { "just" },
         lua = { "stylua" },
         markdown = { "markdownlint" },
+        toml = { "taplo" },
         sh = { "shellcheck", "shellharden", "shfmt" },
         zsh = { "shellcheck", "shellharden", "shfmt" },
     },

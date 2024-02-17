@@ -24,6 +24,10 @@ return {
             markdownlint = {
                 prepend_args = { string.format("--config=%s/markdownlint/config.yaml", vim.env.XDG_CONFIG_HOME) },
             },
+            -- Remove when https://github.com/tamasfe/taplo/issues/560 is addressed.
+            taplo = {
+                args = { "format", "--config=" .. vim.env.XDG_CONFIG_HOME .. "/taplo.toml", "-" },
+            },
             shfmt = {
                 prepend_args = { "-i", "2", "-ci", "-sr", "-s", "-bn" },
             },
