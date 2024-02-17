@@ -158,6 +158,34 @@ return {
                     terraformls = {},
                     taplo = {
                         filetypes = { "toml", "toml.pyproject" },
+                        ---@param client lsp.Client
+                        on_attach = function(client)
+                            -- Use conform until bug below is fixed.
+                            client.server_capabilities.documentFormattingProvider = false
+                            client.server_capabilities.hoverProvider = false
+
+                            vim.keymap.set("n", "<leader>vs", function()
+                                local bufnr = vim.api.nvim_get_current_buf()
+
+                                client.request(
+                                    "taplo/associatedSchema",
+                                    vim.tbl_extend("force", vim.lsp.util.make_position_params(), { documentUri = vim.uri_from_bufnr(bufnr) }),
+                                    function(_, result)
+                                        vim.notify(vim.inspect(result))
+                                    end,
+                                    bufnr
+                                )
+                            end, { buffer = true, desc = "Show associated TOML schema" })
+                        end,
+                        -- This doesn't work. https://github.com/tamasfe/taplo/issues/560
+                        settings = {
+                            taplo = {
+                                config_file = {
+                                    enabled = true,
+                                    path = vim.env.XDG_CONFIG_HOME .. "/taplo.toml",
+                                },
+                            },
+                        },
                     },
                     typos_lsp = {},
                     clangd = {
