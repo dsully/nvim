@@ -162,7 +162,6 @@ return {
                         on_attach = function(client)
                             -- Use conform until bug below is fixed.
                             client.server_capabilities.documentFormattingProvider = false
-                            client.server_capabilities.hoverProvider = false
 
                             vim.keymap.set("n", "<leader>vs", function()
                                 local bufnr = vim.api.nvim_get_current_buf()
