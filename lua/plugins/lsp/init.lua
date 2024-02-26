@@ -72,6 +72,31 @@ return {
 
                 require("helpers.float").open(lines)
             end, { desc = "Show LSP Capabilities" })
+
+            vim.api.nvim_create_user_command("LspRestartBuffer", function()
+                local bufnr = vim.api.nvim_get_current_buf()
+
+                ---@type lsp.Client[]
+                local clients = vim.iter.filter(function(client)
+                    return not vim.tbl_contains(require("config.defaults").ignored.lsp, client.name)
+                end, vim.lsp.get_clients({ bufnr = bufnr }))
+
+                for _, client in pairs(clients) do
+                    vim.lsp.stop_client(client.id, true)
+                end
+
+                vim.notify(("Restarting LSPs for: %s -> %s"):format(
+                    vim.fs.basename(vim.api.nvim_buf_get_name(bufnr)),
+                    vim.fn.join(
+                        vim.tbl_map(function(client)
+                            return client.name
+                        end, clients),
+                        ", "
+                    )
+                ))
+
+                vim.cmd([[e]])
+            end, { desc = "Restart Language Server for Buffer" })
         end,
         keys = {
             { "]d", vim.diagnostic.goto_next, desc = "󰙨󰙨 Next Diagnostic" },
@@ -93,7 +118,7 @@ return {
             { "<leader>lc", vim.cmd.LspCapabilities, desc = " LSP Capabilities" },
             { "<leader>li", vim.cmd.LspInfo, desc = " LSP Info" },
             { "<leader>ll", vim.cmd.LspLog, desc = " LSP Log" },
-            { "<leader>lr", vim.cmd.LspRestart, desc = " LSP Restart" },
+            { "<leader>lr", vim.cmd.LspRestartBuffer, desc = " LSP Restart" },
             { "<leader>ls", vim.cmd.LspStop, desc = " LSP Stop" },
         },
         opts = function()
@@ -416,6 +441,7 @@ return {
             "MasonToolsUpdate",
         },
         opts = {
+            PATH = "append",
             ensure_installed = {
                 "codelldb",
                 "gitui",

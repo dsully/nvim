@@ -100,6 +100,11 @@ M.setup = function()
     return M.capabilities()
 end
 
+M.groups = {
+    codelens = vim.api.nvim_create_augroup("LSP Code Lens", { clear = true }),
+    highlights = vim.api.nvim_create_augroup("LSP Highlight References", { clear = true }),
+}
+
 ---@param client lsp.Client
 ---@param buffer integer
 M.on_attach = function(client, buffer)
@@ -114,26 +119,20 @@ M.on_attach = function(client, buffer)
     -- https://github.com/neovim/nvim-lspconfig/wiki/UI-Customization#highlight-symbol-under-cursor
 
     if client.supports_method(methods.textDocument_documentHighlight) then
-        local group = vim.api.nvim_create_augroup("LSP Highlight References", { clear = false })
+        local group = M.groups["highlights"]
 
-        e.on({ e.BufEnter, e.CursorHold, e.InsertLeave }, vim.lsp.buf.document_highlight, {
+        e.on({ e.CursorHold, e.CursorHoldI }, vim.lsp.buf.document_highlight, {
             buffer = buffer,
             desc = ("LSP Document Highlight for: %s/%s"):format(client.name, buffer),
             group = group,
         })
 
-        e.on({ e.BufLeave, e.CursorMoved, e.InsertEnter }, vim.lsp.buf.clear_references, {
+        e.on({ e.BufLeave, e.CursorMoved, e.CursorMovedI }, vim.lsp.buf.clear_references, {
             buffer = buffer,
             desc = ("LSP Clear References for: %s/%s"):format(client.name, buffer),
             group = group,
         })
     end
-
-    -- General diagnostics.
-    bmap("]d", vim.diagnostic.goto_next, { desc = "󰙨󰙨 Next Diagnostic" })
-    bmap("[d", vim.diagnostic.goto_prev, { desc = "󰙨󰙨 Previous Diagnostic" })
-    bmap("<leader>xr", vim.diagnostic.reset, { desc = " Reset" })
-    bmap("<leader>xs", vim.diagnostic.open_float, { desc = "󰙨 Show" })
 
     if client.supports_method(methods.textDocument_signatureHelp) then
         bmap("<leader>ch", vim.lsp.buf.signature_help, { desc = "󰞂 Signature Help" })
@@ -172,7 +171,7 @@ M.on_attach = function(client, buffer)
     if client.supports_method(methods.textDocument_codeLens) then
         --
         local desc = ("LSP Code Lens Refresh for: %s/%s"):format(client.name, buffer)
-        local group = vim.api.nvim_create_augroup("LSP Code Lens", { clear = false })
+        local group = M.groups["codelens"]
 
         local refresh = function(args)
             vim.lsp.codelens.refresh({ bufnr = args.buf })
