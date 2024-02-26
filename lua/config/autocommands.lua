@@ -88,10 +88,13 @@ e.on(e.BufNewFile, function(args)
 
         local pos = vim.tbl_map(tonumber, vim.split(capture, ":", { trimempty = true }))
 
-        vim.api.nvim_win_set_cursor(0, {
-            math.min(pos[1] or 0, vim.api.nvim_buf_line_count(0)),
-            pos[2] and pos[2] - 1 or 0,
-        })
+        -- If the file was opened with '/path/to/filename:' we won't have a position.
+        if not vim.tbl_isempty(pos) then
+            vim.api.nvim_win_set_cursor(0, {
+                math.min(pos[1] or 0, vim.api.nvim_buf_line_count(0)),
+                pos[2] and pos[2] - 1 or 0,
+            })
+        end
 
         vim.cmd.normal({ "zz", bang = true })
         vim.cmd.filetype("detect")
