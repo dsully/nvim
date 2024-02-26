@@ -59,13 +59,7 @@
         "vendor": true
       },
       "completeUnimported": true,
-      "directoryFilters": [
-        "-.git",
-        "-.vscode",
-        "-.idea",
-        "-.vscode-test",
-        "-node_modules"
-      ],
+      "directoryFilters": ["-.git", "-.vscode", "-.idea", "-.vscode-test", "-node_modules"],
       "experimentalPostfixCompletions": true,
       "gofumpt": true,
       "hints": {
@@ -92,23 +86,12 @@
           "workspaceWord": true
         },
         "diagnostics": {
-          "disable": [
-            "missing-fields"
-          ],
-          "globals": [
-            "bit",
-            "describe",
-            "it",
-            "vim"
-          ],
-          "unusedLocalExclude": [
-            "_*"
-          ]
+          "disable": ["missing-fields"],
+          "globals": ["bit", "describe", "it", "vim"],
+          "unusedLocalExclude": ["_*"]
         },
         "doc": {
-          "privateName": [
-            "^_"
-          ]
+          "privateName": ["^_"]
         },
         "format": {
           "enable": false
@@ -151,53 +134,46 @@
       }
     },
     "rust-analyzer": {
+      "cargo": {
+        "autoreload": true,
+        "features": "all"
+      },
       "check": {
         "allTargets": false,
         "command": "clippy",
         "extraArgs": [
-          "--no-deps",
-          "--",
-          "-W",
-          "correctness",
-          "-W",
-          "keyword_idents",
-          "-W",
-          "rust_2021_prelude_collisions",
-          "-W",
-          "trivial_casts",
-          "-W",
-          "trivial_numeric_casts",
-          "-W",
-          "unused_lifetimes"
+          "--no-deps"
+          // "--",
+          // "-W",
+          // "correctness",
+          // "-W",
+          // "keyword_idents",
+          // "-W",
+          // "rust_2021_prelude_collisions",
+          // "-W",
+          // "trivial_casts",
+          // "-W",
+          // "trivial_numeric_casts",
+          // "-W",
+          // "unused_lifetimes"
         ]
       },
+      "checkOnSave": true,
       "completion": {
+        "autoimport": true,
+        "autoself": true,
         "fullFunctionSignatures": {
           "enable": true
         }
       },
       "diagnostics": {
-        "disabled": [
-          "inactive-code",
-          "macro-error",
-          "unresolved-macro-call"
-        ],
+        "disabled": ["inactive-code", "macro-error", "unresolved-macro-call"],
         "experimental": {
           "enable": true
         }
       },
       "files": {
-        "excludeDirs": [
-          ".direnv",
-          ".git",
-          ".vscode",
-          "assets",
-          "ci",
-          "data",
-          "docs",
-          "js",
-          "target"
-        ]
+        "excludeDirs": [".direnv", ".git", ".vscode", "assets", "ci", "data", "docs", "js", "target"]
       },
       "hover": {
         "actions": {
@@ -206,9 +182,15 @@
           }
         }
       },
+      "imports": {
+        "granularity": {
+          "group": "module"
+        },
+        "prefix": "self"
+      },
       "inlayHints": {
         "chainingHints": {
-          "enable": false
+          "enable": true
         },
         "closureReturnTypeHints": {
           "enable": "with_block"
@@ -216,6 +198,9 @@
         "parameterHints": {
           "enable": false
         }
+      },
+      "interpret": {
+        "tests": true
       },
       "lens": {
         "references": {
@@ -234,13 +219,20 @@
         }
       },
       "lru": {
-        "capacity": 2048
+        "capacity": 512
       },
       "references": {
         "excludeImports": true
       },
       "rust": {
         "analyzerTargetDir": true
+      },
+      "semanticHighlighting": {
+        "operator": {
+          "specialization": {
+            "enable": true
+          }
+        }
       },
       "typing": {
         "autoClosingAngleBrackets": {
@@ -257,9 +249,7 @@
     },
     "tsserver": {
       "code_lens": "on",
-      "expose_as_code_actions": [
-        "all"
-      ],
+      "expose_as_code_actions": ["all"],
       "publish_diagnostic_on": "insert_leave",
       "tsserver_file_preferences": {
         "includeInlayEnumMemberValueHints": true,

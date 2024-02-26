@@ -159,7 +159,8 @@ local M = {
 
     root_patterns = {
         ".chezmoiroot",
-        ".neoconf.conf",
+        ".neoconf.json",
+        ".neoconf.jsonc",
         ".stylua.toml",
         "configure",
         "package.json",
