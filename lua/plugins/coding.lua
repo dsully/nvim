@@ -194,9 +194,8 @@ return {
                 },
                 sorting = {
                     comparators = {
-                        cmp.config.compare.offset,
-                        cmp.config.compare.exact,
-                        cmp.config.compare.scopes,
+                        cmp.config.compare.locality,
+                        cmp.config.compare.score, -- based on :  score = score + ((#sources - (source_index - 1)) * sorting.priority_weight)
                         function(entry1, entry2) -- sort by length ignoring "=~"
                             local len1 = string.len(string.gsub(entry1.completion_item.label, "[=~()_]", ""))
                             local len2 = string.len(string.gsub(entry2.completion_item.label, "[=~()_]", ""))
@@ -212,14 +211,15 @@ return {
                             end
                         end,
                         cmp.config.compare.sort_text,
-                        cmp.config.compare.score,
                         cmp.config.compare.order,
                     },
+                    priority_weight = 1.0,
                 },
                 sources = cmp.config.sources({
                     {
                         name = "snippets",
                         max_item_count = 3,
+                        priority = 8,
                     },
                     {
                         name = "nvim_lsp",
@@ -257,9 +257,16 @@ return {
 
                             return true
                         end,
+                        priority = 7,
                     },
-                    { name = "calc" },
-                    { name = "async_path" },
+                    {
+                        name = "calc",
+                        priority = 3,
+                    },
+                    {
+                        name = "async_path",
+                        priority = 4,
+                    },
                 }),
                 view = {
                     entries = "custom", -- "native | wildmenu"
