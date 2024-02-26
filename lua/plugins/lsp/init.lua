@@ -41,7 +41,14 @@ return {
             {
                 "folke/neodev.nvim",
                 dependencies = {
-                    { "folke/neoconf.nvim", cmd = "Neoconf", opts = true },
+                    {
+                        "folke/neoconf.nvim",
+                        cmd = "Neoconf",
+                        opts = {
+                            local_settings = ".neoconf.jsonc",
+                            global_settings = "neoconf.jsonc",
+                        },
+                    },
                 },
                 opts = true,
             },
