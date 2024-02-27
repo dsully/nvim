@@ -451,6 +451,7 @@ return {
             PATH = "append",
             ensure_installed = {
                 "codelldb",
+                "dprint",
                 "gitui",
                 "jdtls",
                 "write-good",
