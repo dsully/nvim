@@ -1,11 +1,12 @@
 [default]
 extend-ignore-identifiers-re = [
+
 ]
 
 [files]
 extend-exclude = [
-]
 
+]
 
 [default.extend-words]
 # Ignore false-positives

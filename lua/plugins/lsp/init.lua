@@ -170,14 +170,37 @@ return {
                 },
                 servers = {
                     bashls = {},
-                    biome = {
-                        single_file_support = true,
-                    },
                     bufls = {},
                     bzl = {},
                     cmake = {},
                     cssls = {},
-                    dockerls = {},
+                    dockerls = {
+                        on_attach = function(client)
+                            -- Let dprint handle formatting.
+                            client.server_capabilities.documentFormattingProvider = false
+                            client.server_capabilities.documentRangeFormattingProvider = false
+                        end,
+                    },
+                    dprint = {
+                        cmd = { "dprint", "lsp", "--config", vim.env.XDG_CONFIG_HOME .. "/dprint.jsonc" },
+                        filetypes = {
+                            "css",
+                            "dockerfile",
+                            "html",
+                            "javascript",
+                            "javascriptreact",
+                            "jinja",
+                            "json",
+                            "jsonc",
+                            "lua",
+                            "markdown",
+                            "sql",
+                            "toml",
+                            "toml.pyproject",
+                            "typescript",
+                            "typescriptreact",
+                        },
+                    },
                     esbonio = {}, -- RestructuredText
                     gradle_ls = {},
                     graphql = {},
@@ -185,7 +208,6 @@ return {
                     jedi_language_server = {},
                     kotlin_language_server = {},
                     lemminx = {}, -- XML
-                    lua_ls = {},
                     marksman = {}, -- Markdown
                     terraformls = {},
                     clangd = {
@@ -242,8 +264,20 @@ return {
                         end,
                     },
                     jsonls = {
+                        on_attach = function(client)
+                            -- Let dprint handle formatting.
+                            client.server_capabilities.documentFormattingProvider = false
+                            client.server_capabilities.documentRangeFormattingProvider = false
+                        end,
                         on_new_config = function(c)
                             c.settings = vim.tbl_deep_extend("force", c.settings, { json = { schemas = require("schemastore").json.schemas() } })
+                        end,
+                    },
+                    lua_ls = {
+                        on_attach = function(client)
+                            -- Let dprint handle formatting.
+                            client.server_capabilities.documentFormattingProvider = false
+                            client.server_capabilities.documentRangeFormattingProvider = false
                         end,
                     },
                     ruff_lsp = {
@@ -372,8 +406,9 @@ return {
                         filetypes = { "toml", "toml.pyproject" },
                         ---@param client lsp.Client
                         on_attach = function(client)
-                            -- Use conform until bug below is fixed.
+                            -- Let dprint handle formatting.
                             client.server_capabilities.documentFormattingProvider = false
+                            client.server_capabilities.documentRangeFormattingProvider = false
 
                             vim.keymap.set("n", "<leader>vs", function()
                                 local bufnr = vim.api.nvim_get_current_buf()
