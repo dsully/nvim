@@ -59,7 +59,13 @@
         "vendor": true
       },
       "completeUnimported": true,
-      "directoryFilters": ["-.git", "-.vscode", "-.idea", "-.vscode-test", "-node_modules"],
+      "directoryFilters": [
+        "-.git",
+        "-.vscode",
+        "-.idea",
+        "-.vscode-test",
+        "-node_modules"
+      ],
       "experimentalPostfixCompletions": true,
       "gofumpt": true,
       "hints": {
@@ -173,7 +179,17 @@
         }
       },
       "files": {
-        "excludeDirs": [".direnv", ".git", ".vscode", "assets", "ci", "data", "docs", "js", "target"]
+        "excludeDirs": [
+          ".direnv",
+          ".git",
+          ".vscode",
+          "assets",
+          "ci",
+          "data",
+          "docs",
+          "js",
+          "target"
+        ]
       },
       "hover": {
         "actions": {
