@@ -49,7 +49,7 @@ return {
     end,
     opts = {
         plugins = {
-            marks = false,
+            marks = true,
             registers = true,
             spelling = {
                 enabled = false, -- enabling this will show WhichKey when pressing z= to select spelling suggestions

@@ -252,6 +252,7 @@ return {
                 },
                 neotest = true,
                 notify = true,
+                treesitter = true,
                 whickey = true,
             },
         }

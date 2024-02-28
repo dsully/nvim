@@ -1,23 +1,22 @@
+local e = require("helpers.event")
+
 local M = {
     lazypath = vim.fn.stdpath("data") .. "/lazy/lazy.nvim",
-    use_lazy_file = true,
-    lazy_file_events = { "BufReadPost", "BufNewFile", "BufWritePre" },
+    lazy_file_events = { e.BufReadPost, e.BufNewFile, e.BufWritePre },
 }
 
 -- Properly load file based plugins without blocking the UI
 function M.lazy_file()
-    M.use_lazy_file = M.use_lazy_file and vim.fn.argc(-1) > 0
-
     -- Add support for the LazyFile event
     local Event = require("lazy.core.handler.event")
 
-    if M.use_lazy_file then
+    if vim.fn.argc(-1) > 0 then
         -- We'll handle delayed execution of events ourselves
-        Event.mappings.LazyFile = { id = "LazyFile", event = "User", pattern = "LazyFile" }
+        Event.mappings.LazyFile = { id = "LazyFile", event = e.User, pattern = "LazyFile" }
         Event.mappings["User LazyFile"] = Event.mappings.LazyFile
     else
         -- Don't delay execution of LazyFile events, but let lazy know about the mapping
-        Event.mappings.LazyFile = { id = "LazyFile", event = { "BufReadPost", "BufNewFile", "BufWritePre" } }
+        Event.mappings.LazyFile = { id = "LazyFile", event = M.lazy_file_events }
         Event.mappings["User LazyFile"] = Event.mappings.LazyFile
         return
     end
@@ -40,7 +39,7 @@ function M.lazy_file()
             skips[event.event] = skips[event.event] or Event.get_augroups(event.event)
         end
 
-        vim.api.nvim_exec_autocmds("User", { pattern = "LazyFile", modeline = false })
+        vim.api.nvim_exec_autocmds(e.User, { pattern = "LazyFile", modeline = false })
 
         for _, event in ipairs(events) do
             if vim.api.nvim_buf_is_valid(event.buf) then
@@ -52,14 +51,14 @@ function M.lazy_file()
                 })
                 if vim.bo[event.buf].filetype then
                     Event.trigger({
-                        event = "FileType",
+                        event = e.FileType,
                         buf = event.buf,
                     })
                 end
             end
         end
 
-        vim.api.nvim_exec_autocmds("CursorMoved", { modeline = false })
+        vim.api.nvim_exec_autocmds(e.CursorMoved, { modeline = false })
 
         events = {}
     end
