@@ -225,6 +225,7 @@ return {
     },
     {
         "SmiteshP/nvim-navic",
+        event = "LazyFile",
         init = function()
             vim.g.navic_silence = true
         end,
