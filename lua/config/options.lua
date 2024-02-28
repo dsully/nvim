@@ -1,5 +1,5 @@
 vim.opt.backup = false
-vim.opt.cmdheight = 1 -- (Disabled) A little more screen real estate.
+vim.opt.cmdheight = 0  -- Set to 0 if using Noice
 vim.opt.completeopt = { "menu", "menuone", "noselect" }
 vim.opt.expandtab = true
 vim.opt.exrc = true

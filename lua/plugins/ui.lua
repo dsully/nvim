@@ -29,12 +29,11 @@ return {
             -- Fix bufferline when restoring a session
             e.on(e.BufAdd, function()
                 vim.schedule(function()
-                    ---@diagnostic disable-next-line: undefined-global
-                    pcall(nvim_bufferline)
+                    pcall(nvim_bufferline) ---@diagnostic disable-line: undefined-global
                 end)
             end)
         end,
-        event = "VeryLazy",
+        event = "UIEnter",
         init = function()
             --
             for i = 1, 9 do
@@ -52,13 +51,6 @@ return {
             vim.keymap.set("n", "<leader>$", function()
                 require("bufferline").go_to(-1, true)
             end, { desc = "which_key_ignore" })
-
-            -- Always show tabs, but only load it if there is more than one.
-            e.on({ e.BufAdd, e.TabEnter, e.VimEnter, e.WinEnter }, function()
-                if #vim.fn.getbufinfo({ buflisted = 1 }) >= 2 then
-                    require("lazy").load({ plugins = { "bufferline.nvim" } })
-                end
-            end)
         end,
         opts = {
             options = {
@@ -183,6 +175,7 @@ return {
                     filetype_name,
                 },
                 hidden = vim.bo.filetype == nil,
+                hl = { bg = colors.bg0, fg = colors.white.base },
             })
 
             local git_status = require("nougat.nut.git.branch").create({
@@ -295,7 +288,7 @@ return {
                 return ctx.is_focused and statusline or stl_inactive
             end)
         end,
-        event = "VeryLazy",
+        event = "UIEnter",
     },
     {
         "folke/noice.nvim",
