@@ -7,7 +7,9 @@ return {
 
         local spec = {
             diag = {
+                error = colors.red,
                 hint = colors.blue.bright,
+                warn = colors.yellow,
             },
             diff = {
                 change = colors.yellow,
@@ -85,7 +87,10 @@ return {
 
             -- Treesitter
             ["@attribute"] = { fg = spec.syntax.attribute },
-            ["@comment.todo"] = { fg = colors.orange, bg = "NONE" },
+            ["@comment.error"] = { fg = spec.diag.error, bg = "NONE" }, -- error-type comments (e.g. `ERROR`, `FIXME`, `DEPRECATED:`)
+            ["@comment.note"] = { fg = colors.blue, bg = "NONE" }, -- note-type comments (e.g. `NOTE:`, `INFO:`, `XXX`)
+            ["@comment.todo"] = { fg = colors.orange, bg = "NONE" }, -- todo-type comments (e.g. `TODO:`, `WIP:`, `FIXME:`)
+            ["@comment.warning"] = { fg = spec.diag.warn, bg = "NONE" }, -- warning-type comments (e.g. `WARNING:`, `FIX:`, `HACK:`)
             ["@constructor"] = { fg = spec.syntax.ident, style = "italic" },
             ["@function.macro"] = { fg = spec.syntax.builtin0, style = "italic" },
             ["@keyword.exception"] = { fg = spec.syntax.builtin0 },
@@ -140,16 +145,6 @@ return {
             CodewindowBorder = { fg = colors.gray },
             CodewindowDeletion = { fg = colors.red },
 
-            DiagnosticFloatingError = { link = "DiagnosticError" },
-            DiagnosticFloatingWarn = { link = "DiagnosticWarn" },
-            DiagnosticFloatingInfo = { link = "DiagnosticInfo" },
-            DiagnosticFloatingHint = { link = "DiagnosticHint" },
-
-            DiagnosticVirtualTextError = { link = "DiagnosticError" },
-            DiagnosticVirtualTextWarn = { link = "DiagnosticWarn" },
-            DiagnosticVirtualTextInfo = { link = "DiagnosticInfo" },
-            DiagnosticVirtualTextHint = { link = "DiagnosticHint" },
-
             DiagnosticUnderlineError = { style = "underline", fg = colors.red },
             DiagnosticUnderlineWarn = { style = "underline", fg = colors.yellow },
             DiagnosticUnderlineInfo = { style = "underline", fg = colors.green },
@@ -198,10 +193,8 @@ return {
 
             NoiceFormatProgressDone = { fg = colors.white.bright, bg = colors.bg1 },
             NoiceFormatProgressTodo = { fg = colors.white.bright, bg = colors.bg1 },
-
             NoiceLspProgressClient = { fg = colors.blue },
             NoiceLspProgressSpinner = { fg = colors.cyan.bright },
-
             NoiceLspProgressTitle = { fg = colors.white.bright },
 
             TelescopeBorder = { fg = colors.gray.base, bg = colors.gray.dim },
@@ -244,7 +237,12 @@ return {
             modules = {
                 alpha = true,
                 dap_ui = true,
+                diagnostic = {
+                    enable = true,
+                    background = false,
+                },
                 gitsigns = true,
+                lazy = true,
                 lsp_semantic_tokens = true,
                 lsp_trouble = true,
                 mini = true,
@@ -254,6 +252,7 @@ return {
                 },
                 neotest = true,
                 notify = true,
+                whickey = true,
             },
         }
 
@@ -272,7 +271,7 @@ return {
             vim.notify("Compiled Nightfox Colorscheme...")
         end, {
             desc = "Load nightfox config on write.",
-            pattern = "*/nightfox.lua",
+            pattern = "*/theme.lua",
         })
     end,
     lazy = false,
