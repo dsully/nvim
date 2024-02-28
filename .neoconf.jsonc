@@ -3,7 +3,6 @@
     "library": {
       "enabled": true,
       "plugins": [
-        "conform.nvim",
         "crates.nvim",
         "lazy.nvim",
         "lua/",

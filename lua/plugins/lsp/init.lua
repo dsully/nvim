@@ -467,12 +467,7 @@ return {
             "MasonToolsUpdate",
         },
         opts = {
-            ensure_installed = {
-                "codelldb",
-                "gitui",
-                "jdtls",
-                "write-good",
-            },
+            ensure_installed = require("config.defaults").tools,
             ui = {
                 border = vim.g.border,
             },
@@ -481,17 +476,8 @@ return {
         config = function(_, opts)
             require("mason").setup(opts)
 
-            vim.schedule_wrap(function()
-                local defaults = require("config.defaults")
+            vim.schedule(function()
                 local mr = require("mason-registry")
-
-                vim.list_extend(opts.ensure_installed, defaults.formatters.tools)
-                vim.list_extend(opts.ensure_installed, vim.tbl_flatten(vim.tbl_values(defaults.linters)))
-
-                -- Remove built-ins / formatters that are not in Mason.
-                opts.ensure_installed = vim.iter.filter(function(t)
-                    return not vim.tbl_contains(defaults.ignored.tools, t)
-                end, opts.ensure_installed)
 
                 vim.iter(opts.ensure_installed):each(function(tool)
                     local p = mr.get_package(tool)

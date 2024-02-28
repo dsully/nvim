@@ -71,14 +71,6 @@ local M = {
             "typescriptreact",
             "zsh",
         },
-        tools = {
-            "buildifier",
-            "dprint",
-            "gofumpt",
-            "shellharden",
-            "shellharden",
-            "shfmt",
-        },
     },
 
     linters = {
@@ -95,6 +87,27 @@ local M = {
         sh = { "shellcheck" },
         text = { "write_good" },
         yaml = { "yamllint" },
+    },
+
+    tools = {
+        "actionlint",
+        "buildifier",
+        "codelldb",
+        "curlylint",
+        "dprint",
+        "gitlint",
+        "gitui",
+        "gofumpt",
+        "jdtls",
+        "markdownlint",
+        "protolint",
+        "revive",
+        "rstcheck",
+        "shellharden",
+        "shellharden",
+        "shfmt",
+        "write-good",
+        "yamllint",
     },
 
     -- Diagnostic symbols in the gutter.
@@ -162,13 +175,6 @@ local M = {
             "pylance",
             "pyright",
             "ruff_lsp",
-        },
-        tools = {
-            "caddy",
-            "fish",
-            "fish_indent",
-            "just",
-            "write_good",
         },
     },
 
