@@ -3,8 +3,6 @@ vim.keymap.set("n", "]b", vim.cmd.bnext, { desc = " Next Buffer" })
 vim.keymap.set("n", "[b", vim.cmd.bprev, { desc = " Previous Buffer" })
 
 -- Quitting / Sessions
-vim.keymap.set("n", "qq", vim.cmd.quitall, { desc = "Quit" })
-vim.keymap.set("n", "qw", vim.cmd.wqall, { desc = "Quit & Write All" })
 vim.keymap.set("n", "q!", function()
     vim.cmd.quitall({ bang = true })
 end, { desc = "Quit without saving" })
