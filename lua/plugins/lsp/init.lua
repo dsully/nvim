@@ -183,23 +183,7 @@ return {
                     },
                     dprint = {
                         cmd = { "dprint", "lsp", "--config", vim.env.XDG_CONFIG_HOME .. "/dprint.jsonc" },
-                        filetypes = {
-                            "css",
-                            "dockerfile",
-                            "html",
-                            "javascript",
-                            "javascriptreact",
-                            "jinja",
-                            "json",
-                            "jsonc",
-                            "lua",
-                            "markdown",
-                            "sql",
-                            "toml",
-                            "toml.pyproject",
-                            "typescript",
-                            "typescriptreact",
-                        },
+                        filetypes = defaults.formatters.filetypes,
                     },
                     esbonio = {}, -- RestructuredText
                     gradle_ls = {},
@@ -483,10 +467,8 @@ return {
             "MasonToolsUpdate",
         },
         opts = {
-            PATH = "append",
             ensure_installed = {
                 "codelldb",
-                "dprint",
                 "gitui",
                 "jdtls",
                 "write-good",
@@ -503,7 +485,7 @@ return {
                 local defaults = require("config.defaults")
                 local mr = require("mason-registry")
 
-                vim.list_extend(opts.ensure_installed, vim.tbl_flatten(vim.tbl_values(defaults.formatters)))
+                vim.list_extend(opts.ensure_installed, defaults.formatters.tools)
                 vim.list_extend(opts.ensure_installed, vim.tbl_flatten(vim.tbl_values(defaults.linters)))
 
                 -- Remove built-ins / formatters that are not in Mason.

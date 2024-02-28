@@ -12,9 +12,13 @@ return {
     },
     opts = {
         format_on_save = function(bufnr)
-            -- if vim.tbl_contains(ignore_filetypes, vim.bo[bufnr].filetype) then
-            --     return
-            -- end
+            if vim.tbl_contains(require("config.defaults").ignored.file_types, vim.bo[bufnr].filetype) then
+                return
+            end
+
+            if vim.tbl_contains(require("config.defaults").ignored.buffer_types, vim.bo[bufnr].buftype) then
+                return
+            end
 
             -- Disable with a global or buffer-local variable
             if vim.g.disable_autoformat or vim.b[bufnr].disable_autoformat then
@@ -30,20 +34,8 @@ return {
 
             return { timeout_ms = 500, lsp_fallback = true }
         end,
-
-        ---@type table<string, conform.FormatterUnit[]>
-        formatters_by_ft = require("config.defaults").formatters,
-
-        ---@type table<string, conform.FormatterConfigOverride|fun(bufnr: integer): nil|conform.FormatterConfigOverride>
-        formatters = {
-            caddy = {
-                command = "caddy",
-                args = { "fmt", "-" },
-                stdin = true,
-            },
-            shfmt = {
-                prepend_args = { "-i", "2", "-ci", "-sr", "-s", "-bn" },
-            },
+        formatters_by_ft = {
+            just = { "just" },
         },
     },
 }
