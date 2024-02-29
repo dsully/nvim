@@ -86,6 +86,7 @@
     "lua_ls": {
       "Lua": {
         "completion": {
+          "autoRequire": false,
           "callSnippet": "Replace",
           "keywordSnippet": "Both",
           "workspaceWord": true
