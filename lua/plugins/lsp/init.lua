@@ -20,9 +20,13 @@ return {
                 require("lspconfig").sourcekit.setup({
                     capabilities = capabilities,
                     filetypes = { "objective-c", "objective-cpp", "swift" }, -- Handle Swift. Let clangd handle C/C++
-                    settings = {},
                 })
             end
+
+            require("lspconfig").markdown_oxide.setup({
+                capabilities = capabilities,
+                filetypes = { "markdown" },
+            })
 
             for name, handler in pairs(opts.servers) do
                 handlers[name] = function()
@@ -192,7 +196,6 @@ return {
                     jedi_language_server = {},
                     kotlin_language_server = {},
                     lemminx = {}, -- XML
-                    marksman = {}, -- Markdown
                     terraformls = {},
                     clangd = {
                         filetypes = { "c", "cpp", "cuda" }, -- Let SourceKit handle objective-c and objective-cpp.
