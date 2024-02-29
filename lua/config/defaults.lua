@@ -130,7 +130,6 @@ local M = {
             "trouble",
         },
         file_types = {
-            "",
             "Codewindow",
             "DressingInput",
             "TelescopePrompt",
