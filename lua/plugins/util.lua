@@ -24,7 +24,7 @@ return {
             vim.api.nvim_create_user_command("SessionLoad", function()
                 require("resession").load(session_name(), { silence_errors = false })
 
-                vim.cmd.doautocmd("VimEnter")
+                vim.cmd.doautoall(e.BufReadPost)
             end, { desc = "Session Load" })
 
             e.on(e.VimLeavePre, function()
@@ -33,7 +33,6 @@ return {
                 desc = "Save session on exit.",
             })
         end,
-        lazy = false,
         opts = {
             buf_filter = function(bufnr)
                 local buftype = vim.bo[bufnr].buftype
@@ -107,7 +106,7 @@ return {
         "chrishrb/gx.nvim",
         cmd = "Browse",
         config = true,
-        keys = { { "gx", vim.cmd.Browse, mode = { "n", "x" }, desc = "Open URL in Browser"} },
+        keys = { { "gx", vim.cmd.Browse, mode = { "n", "x" }, desc = "Open URL in Browser" } },
     },
 
     -- Wezterm

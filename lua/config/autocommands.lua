@@ -180,14 +180,23 @@ end, {
 --     end,
 -- })
 
-e.on(e.BufReadPost, function()
-    if vim.tbl_contains(require("config.defaults").ignored.buffer_types, vim.bo.buftype) then
+e.on(e.BufReadPost, function(args)
+    local buf = args.buf
+
+    if vim.tbl_contains(require("config.defaults").ignored.file_types, vim.bo[buf].filetype) then
+        vim.notify("Skipping position restore for: " .. vim.bo[buf].filetype, vim.log.levels.WARN)
         return
     end
 
-    local row, col = unpack(vim.api.nvim_buf_get_mark(0, '"'))
+    -- Skip restoring if we're in a session restore already.
+    ---@diagnostic disable-next-line: undefined-field
+    if vim.b[buf].resession_restore_last_pos then
+        return
+    end
 
-    if row > 0 and row <= vim.api.nvim_buf_line_count(0) then
+    local row, col = unpack(vim.api.nvim_buf_get_mark(buf, '"'))
+
+    if row > 0 and row <= vim.api.nvim_buf_line_count(buf) then
         vim.api.nvim_win_set_cursor(0, { row, col })
     end
 
