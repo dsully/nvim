@@ -33,7 +33,7 @@ return {
                 end)
             end)
         end,
-        event = "UIEnter",
+        event = "VeryLazy",
         init = function()
             --
             for i = 1, 9 do
