@@ -65,7 +65,7 @@ return {
             vim.lsp.set_log_level(vim.log.levels.ERROR)
 
             vim.api.nvim_create_user_command("LspCapabilities", function()
-                ---@type lsp.Client[]
+                ---@type vim.lsp.Client[]
                 local clients = vim.lsp.get_clients({ bufnr = vim.api.nvim_get_current_buf() })
                 local lines = {}
 
@@ -88,7 +88,7 @@ return {
             vim.api.nvim_create_user_command("LspRestartBuffer", function()
                 local bufnr = vim.api.nvim_get_current_buf()
 
-                ---@type lsp.Client[]
+                ---@type vim.lsp.Client[]
                 local clients = vim.iter.filter(function(client)
                     return not vim.tbl_contains(require("config.defaults").ignored.lsp, client.name)
                 end, vim.lsp.get_clients({ bufnr = bufnr }))
@@ -222,7 +222,7 @@ return {
                         init_options = {
                             usePlaceholders = true,
                         },
-                        ---@param client lsp.Client
+                        ---@param client vim.lsp.Client
                         on_attach = function(client)
                             -- As of v0.11.0, gopls does not send a Semantic Token legend (in a
                             -- client/registerCapability message) unless the client supports dynamic
@@ -268,24 +268,24 @@ return {
                         commands = {
                             RuffAutoFix = {
                                 function()
-                                    vim.lsp.buf.code_action({ context = { only = { "source.fixAll.ruff" } }, apply = true })
+                                    vim.lsp.buf.code_action({ context = { only = { "source.fixAll" } }, apply = true })
                                 end,
                                 description = "Ruff: Auto Fix",
                             },
 
                             RuffOrganizeImports = {
                                 function()
-                                    vim.lsp.buf.code_action({ context = { only = { "source.organizeImports.ruff" } }, apply = true })
+                                    vim.lsp.buf.code_action({ context = { only = { "source.organizeImports" } }, apply = true })
                                 end,
                                 description = "Ruff: Organize Imports",
                             },
                         },
                         filetypes = { "python", "toml.pyproject" },
-                        ---@param client lsp.Client
+                        ---@param client vim.lsp.Client
                         on_attach = function(client)
                             client.server_capabilities.hoverProvider = false
                         end,
-                        ---@param c lsp.ClientConfig
+                        ---@param c vim.lsp.ClientConfig
                         on_new_config = function(c)
                             local ruff = require("helpers.ruff")
 
@@ -314,7 +314,7 @@ return {
                         },
                     },
                     rust_analyzer = {
-                        ---@param client lsp.Client
+                        ---@param client vim.lsp.Client
                         ---@param bufnr integer
                         on_attach = function(client, bufnr)
                             local cmd = require("config.defaults").cmd
@@ -388,7 +388,7 @@ return {
                     },
                     taplo = {
                         filetypes = { "toml", "toml.pyproject" },
-                        ---@param client lsp.Client
+                        ---@param client vim.lsp.Client
                         on_attach = function(client)
                             -- Let dprint handle formatting.
                             client.server_capabilities.documentFormattingProvider = false

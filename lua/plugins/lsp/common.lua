@@ -105,7 +105,7 @@ M.groups = {
     highlights = vim.api.nvim_create_augroup("LSP Highlight References", { clear = true }),
 }
 
----@param client lsp.Client
+---@param client vim.lsp.Client
 ---@param buffer integer
 M.on_attach = function(client, buffer)
     local methods = vim.lsp.protocol.Methods
@@ -280,6 +280,7 @@ M.find_root = function()
     local root = roots[1]
 
     if not root then
+        --@type string
         path = path and vim.fs.dirname(path) or cwd
 
         ---@type string?
