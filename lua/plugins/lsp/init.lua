@@ -186,10 +186,6 @@ return {
                             client.server_capabilities.documentRangeFormattingProvider = false
                         end,
                     },
-                    dprint = {
-                        cmd = { "dprint", "lsp", "--config", vim.env.XDG_CONFIG_HOME .. "/dprint.jsonc" },
-                        filetypes = defaults.formatters.filetypes,
-                    },
                     esbonio = {}, -- RestructuredText
                     gradle_ls = {},
                     graphql = {},
