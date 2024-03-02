@@ -301,6 +301,13 @@ return {
                     { name = "cmdline", keyword_pattern = [=[[^[:blank:]\!]*]=], option = { ignore_cmds = {} } },
                 }),
             })
+
+            -- https://github.com/hrsh7th/cmp-cmdline/issues/94
+            vim.api.nvim_create_autocmd("CmdWinEnter", {
+                callback = function()
+                    require("cmp").close()
+                end,
+            })
         end,
     },
     {
