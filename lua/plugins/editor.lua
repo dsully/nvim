@@ -5,16 +5,21 @@ vim.b._use_git_root = false
 M.cwd = function()
     if vim.b._use_git_root and not vim.b._telescope_cwd then
         --
-        local paths = vim.fs.find(".git", {
-            limit = 1,
-            path = vim.fs.dirname(vim.api.nvim_buf_get_name(0)),
-            stop = vim.uv.os_homedir(),
-            type = "directory",
-            upward = true,
-        })
+        local path = vim.fs.dirname(vim.api.nvim_buf_get_name(0))
+        local stop = vim.uv.os_homedir()
 
-        if #paths > 0 then
-            vim.b._telescope_cwd = paths[1]
+        if path and stop then
+            local paths = vim.fs.find(".git", {
+                limit = 1,
+                path = path,
+                stop = stop,
+                type = "directory",
+                upward = true,
+            })
+
+            if #paths > 0 then
+                vim.b._telescope_cwd = paths[1]
+            end
         end
     end
 
