@@ -464,38 +464,6 @@ return {
         },
     },
     {
-        "echasnovski/mini.indentscope",
-        event = "LazyFile",
-        init = function()
-            e.on(e.FileType, function()
-                vim.b.miniindentscope_disable = true
-            end, {
-                pattern = require("config.defaults").ignored.file_types,
-            })
-        end,
-        opts = function()
-            return {
-                draw = {
-                    animation = require("mini.indentscope").gen_animation.none(),
-                },
-                symbol = "│",
-                options = { try_as_border = true },
-            }
-        end,
-    },
-    {
-        -- Show hex colors as colors.
-        "echasnovski/mini.hipatterns",
-        event = "LazyFile",
-        opts = function()
-            return {
-                highlighters = {
-                    hex_color = require("mini.hipatterns").gen_highlighter.hex_color(),
-                },
-            }
-        end,
-    },
-    {
         "nvim-tree/nvim-web-devicons",
         init = function()
             require("lazy.core.loader").disable_rtp_plugin("nvim-web-devicons")

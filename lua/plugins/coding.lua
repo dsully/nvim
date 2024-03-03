@@ -326,25 +326,97 @@ return {
         },
     },
     {
-        "echasnovski/mini.comment",
-        dependencies = {
-            {
-                "JoosepAlviste/nvim-ts-context-commentstring",
-                opts = {
-                    enable_autocmd = false,
+        "echasnovski/mini.nvim",
+        config = function()
+            local e = require("helpers.event")
+
+            -- Better Around/Inside text-objects
+            --
+            -- Examples:
+            --  - va)  - Visually select [A]round [)]parenthesis
+            --  - yinq - Yank Inside [N]ext [']quote
+            --  - ci'  - Change Inside [']quote
+            require("mini.ai").setup({
+                n_lines = 500,
+                custom_textobjects = {
+                    o = require("mini.ai").gen_spec.treesitter({
+                        a = { "@block.outer", "@conditional.outer", "@loop.outer" },
+                        i = { "@block.inner", "@conditional.inner", "@loop.inner" },
+                    }, {}),
+                    f = require("mini.ai").gen_spec.treesitter({ a = "@function.outer", i = "@function.inner" }, {}),
+                    c = require("mini.ai").gen_spec.treesitter({ a = "@class.outer", i = "@class.inner" }, {}),
                 },
-            },
-        },
+            })
+
+            -- Cleanly remove buffers
+            require("mini.bufremove").setup({ silent = true })
+
+            vim.api.nvim_create_user_command("BDelete", function(args)
+                require("mini.bufremove").delete(0, args.bang)
+            end, { bang = true })
+
+            vim.api.nvim_create_user_command("BWipeout", function(args)
+                require("mini.bufremove").wipeout(0, args.bang)
+            end, { bang = true })
+
+            -- Commenting
+            require("mini.comment").setup()
+
+            -- Show hex colors as colors.
+            require("mini.hipatterns").setup({
+                highlighters = {
+                    hex_color = require("mini.hipatterns").gen_highlighter.hex_color(),
+                },
+            })
+
+            -- Fancy indent lines.
+            e.on(e.FileType, function()
+                vim.b.miniindentscope_disable = true
+            end, {
+                pattern = require("config.defaults").ignored.file_types,
+            })
+
+            require("mini.indentscope").setup({
+                draw = {
+                    animation = require("mini.indentscope").gen_animation.none(),
+                },
+                symbol = "│",
+                options = { try_as_border = true },
+            })
+
+            -- Add/delete/replace surroundings (brackets, quotes, etc.)
+            --
+            -- saiw) - Surround Add Inner Word [)]Parenthesis
+            -- sd'   - Surround Delete [']quotes
+            -- sr)'  - Surround Replace [)] [']
+            -- sff`  - Surround Find part of surrounding function call (`f`).
+            -- sh}   - Surround Highlight [}]
+            require("mini.surround").setup()
+        end,
+        event = "LazyFile",
         keys = {
+            {
+                "<leader>bd",
+                function()
+                    local bd = require("mini.bufremove").delete
+
+                    if vim.bo.modified then
+                        local choice = vim.fn.confirm(("Save changes to %q?"):format(vim.api.nvim_buf_get_name(0), "&Yes\n&No\n&Cancel"))
+
+                        if choice == 1 then -- Yes
+                            vim.cmd.write()
+                            bd(0)
+                        elseif choice == 2 then -- No
+                            bd(0, true)
+                        end
+                    else
+                        bd(0)
+                    end
+                end,
+                desc = " Delete Buffer",
+            },
             { "gc", mode = { "n", "x" }, desc = "# Comments" },
             { "gcc", mode = { "n", "x" }, desc = "Current line" },
-        },
-        opts = {
-            options = {
-                custom_commentstring = function()
-                    return require("ts_context_commentstring.internal").calculate_commentstring() or vim.bo.commentstring
-                end,
-            },
         },
     },
     {
