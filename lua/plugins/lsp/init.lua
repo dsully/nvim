@@ -193,6 +193,11 @@ return {
                     kotlin_language_server = {},
                     lemminx = {}, -- XML
                     terraformls = {},
+                    typos_lsp = {
+                        init_options = {
+                            config = vim.env.HOME .. "/.typos.toml",
+                        },
+                    },
                     clangd = {
                         filetypes = { "c", "cpp", "cuda" }, -- Let SourceKit handle objective-c and objective-cpp.
                         init_options = {
