@@ -94,7 +94,7 @@ return {
                             ["<C-w>"] = actions.send_selected_to_qflist,
                         },
                     },
-                    path_display = { "smart" },
+                    path_display = { "truncate" },
                     prompt_prefix = " ❯ ",
                     scroll_strategy = "cycle",
                 }),
