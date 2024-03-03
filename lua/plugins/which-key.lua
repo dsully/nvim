@@ -11,6 +11,7 @@ return {
             -- { key = "gc", opts = { desc = "Comments" } },
             -- { key = "g?", opts = { desc = "Debug" } },
             { key = "q", opts = { desc = "Quit" } },
+            { key = "s", opts = { desc = "Surround" } },
             { key = "z", opts = { desc = "Spelling & Folds" } },
             { key = "<leader>", opts = {} },
             { key = "<space>", opts = { desc = "Actions" } },
