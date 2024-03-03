@@ -199,6 +199,9 @@ return {
                         },
                     },
                     clangd = {
+                        capabilities = {
+                            offsetEncoding = { "utf-16" },
+                        },
                         filetypes = { "c", "cpp", "cuda" }, -- Let SourceKit handle objective-c and objective-cpp.
                         init_options = {
                             clangdFileStatus = true,
@@ -264,7 +267,9 @@ return {
                     lua_ls = {
                         before_init = function(params, config)
                             -- Add libuv to the workspace library for type hints.
-                            table.insert(config.settings.Lua.workspace.library, "${3rd}/luv/library")
+                            if config.settings.Lua then
+                                table.insert(config.settings.Lua.workspace.library, "${3rd}/luv/library")
+                            end
 
                             return require("neodev.lsp").before_init(params, config)
                         end,
