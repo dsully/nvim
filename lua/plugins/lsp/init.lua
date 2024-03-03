@@ -44,7 +44,6 @@ return {
             { "b0o/schemastore.nvim", version = false },
             {
                 "folke/neodev.nvim",
-                commit = "f7f249b361e9fb245eea24cbcd9f5502e796c6ea", -- next commit breaks vim.uv types
                 dependencies = {
                     {
                         "folke/neoconf.nvim",
@@ -258,6 +257,12 @@ return {
                         end,
                     },
                     lua_ls = {
+                        before_init = function(params, config)
+                            -- Add libuv to the workspace library for type hints.
+                            table.insert(config.settings.Lua.workspace.library, "${3rd}/luv/library")
+
+                            return require("neodev.lsp").before_init(params, config)
+                        end,
                         on_attach = function(client)
                             -- Let dprint handle formatting.
                             client.server_capabilities.documentFormattingProvider = false
