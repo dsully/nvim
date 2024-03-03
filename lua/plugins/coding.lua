@@ -348,6 +348,15 @@ return {
                 },
             })
 
+            -- Use [ and ] to move between various things.
+            require("mini.bracketed").setup({
+                jump = { suffix = "" },
+                oldfile = { suffix = "" },
+                treesitter = { suffix = "" },
+                undo = { suffix = "" },
+                yank = { suffix = "" },
+            })
+
             -- Cleanly remove buffers
             require("mini.bufremove").setup({ silent = true })
 
@@ -415,8 +424,6 @@ return {
                 end,
                 desc = " Delete Buffer",
             },
-            { "gc", mode = { "n", "x" }, desc = "# Comments" },
-            { "gcc", mode = { "n", "x" }, desc = "Current line" },
         },
     },
     {
