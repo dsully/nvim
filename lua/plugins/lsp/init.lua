@@ -110,8 +110,6 @@ return {
             end, { desc = "Restart Language Server for Buffer" })
         end,
         keys = {
-            { "]d", vim.diagnostic.goto_next, desc = "󰙨󰙨 Next Diagnostic" },
-            { "[d", vim.diagnostic.goto_prev, desc = "󰙨󰙨 Previous Diagnostic" },
             { "<leader>xr", vim.diagnostic.reset, desc = " Reset" },
             { "<leader>xs", vim.diagnostic.open_float, desc = "󰙨 Show" },
             {
@@ -194,8 +192,9 @@ return {
                     lemminx = {}, -- XML
                     terraformls = {},
                     typos_lsp = {
+                        cmd = { "typos-lsp", "--config", vim.env.HOME .. "/.typos.toml" },
                         init_options = {
-                            config = vim.env.HOME .. "/.typos.toml",
+                            diagnosticSeverity = "Warning",
                         },
                     },
                     clangd = {

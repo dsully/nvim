@@ -1,7 +1,3 @@
--- Buffers
-vim.keymap.set("n", "]b", vim.cmd.bnext, { desc = " Next Buffer" })
-vim.keymap.set("n", "[b", vim.cmd.bprev, { desc = " Previous Buffer" })
-
 -- Quitting / Sessions
 vim.keymap.set("n", "q!", function()
     vim.cmd.quitall({ bang = true })
@@ -22,8 +18,6 @@ vim.keymap.set("n", "<leader>a", "<cmd>%y<cr>", { desc = "Yank All Lines" })
 
 -- Don't delete into the system clipboard.
 vim.keymap.set({ "n", "x" }, "dw", '"_dw', { desc = "which_key_ignore", noremap = true })
-vim.keymap.set({ "n", "x" }, "c", '"_c', { desc = "which_key_ignore", noremap = true })
-vim.keymap.set({ "n", "x" }, "C", '"_C', { desc = "which_key_ignore", noremap = true })
 
 -- Create/edit file within the current directory
 vim.keymap.set("n", "<localleader><localleader>e", function()

@@ -8,8 +8,6 @@ return {
         for _, menu in pairs({
             { key = [[\\]], opts = { desc = "Local" } },
             { key = "g", opts = { desc = "Go" } },
-            -- { key = "gc", opts = { desc = "Comments" } },
-            -- { key = "g?", opts = { desc = "Debug" } },
             { key = "q", opts = { desc = "Quit" } },
             { key = "s", opts = { desc = "Surround" } },
             { key = "z", opts = { desc = "Spelling & Folds" } },
@@ -67,7 +65,7 @@ return {
         },
         -- add operators that will trigger motion and text object completion
         -- to enable all native operators, set the preset / operators plugin above
-        operators = { gc = "Comments" },
+        operators = {},
         key_labels = {
             -- override the label used to display some keys. It doesn't effect WK in any other way.
             -- For example:

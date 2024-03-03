@@ -191,7 +191,7 @@ return {
                 desc = "Find Files",
             },
             {
-                "<leader>ftr",
+                "<leader>fT",
                 function()
                     vim.b._use_git_root = not vim.b._use_git_root
 
