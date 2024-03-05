@@ -38,7 +38,6 @@ return {
             local types = require("cmp.types.lsp")
 
             local copilot = require("copilot.suggestion")
-            local treesitter = require("nvim-treesitter.indent")
 
             local lspkind = require("lspkind").cmp_format({
                 maxwidth = 50,
@@ -132,36 +131,10 @@ return {
                             return
                         end
 
-                        local row, col = unpack(vim.api.nvim_win_get_cursor(0))
-                        local line = vim.api.nvim_buf_get_lines(0, row - 1, row, true)[1]
-                        local ok, indent = pcall(treesitter.get_indent, row)
-
-                        if not ok then
-                            indent = 0
-                        end
-
-                        -- https://www.reddit.com/r/neovim/comments/1817q4a/how_to_replicate_vscode_copilot_ghost_text/
-                        -- https://github.com/willothy/nvim-config/blob/main/lua/configs/editor/cmp.lua
-                        --
                         if cmp.visible() then
                             cmp.select_next_item({ behavior = cmp.SelectBehavior.Select })
                         elseif vim.snippet.jumpable(1) then
                             vim.snippet.jump(1)
-                        elseif col < indent and line:sub(1, col):gsub("^%s+", "") == "" then
-                            --
-                            -- Smart indent like VSCode - indent to the correct level when pressing tab at the beginning of a line.
-                            vim.api.nvim_buf_set_lines(0, row - 1, row, true, {
-                                string.rep(" ", indent or 0) .. line:sub(col),
-                            })
-
-                            vim.api.nvim_win_set_cursor(0, { row, math.max(0, indent) })
-
-                            vim.lsp.inlay_hint.on_refresh(nil, nil, {
-                                client_id = vim.lsp.get_clients({ bufnr = vim.api.nvim_get_current_buf() })[1].id,
-                                bufnr = vim.api.nvim_get_current_buf(),
-                            }, nil)
-                        elseif col >= indent and col ~= 0 then
-                            require("tabout").tabout()
                         else
                             fallback()
                         end

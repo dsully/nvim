@@ -282,16 +282,4 @@ return {
             preview_height = 24,
         },
     },
-    {
-        "abecodes/tabout.nvim",
-        opts = {
-            tabkey = "",
-            backwards_tabkey = "",
-            act_as_tab = true,
-            ignore_beginning = true,
-            act_as_shift_tab = false,
-            default_tab = "",
-            default_shift_tab = "",
-        },
-    },
 }
