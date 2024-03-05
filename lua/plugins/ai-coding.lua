@@ -1,3 +1,5 @@
+local model = "gpt-4-turbo-preview"
+
 return {
     {
         "jackmort/chatgpt.nvim",
@@ -26,11 +28,6 @@ return {
                 end, { desc = map.desc })
             end
         end,
-        dependencies = {
-            "MunifTanjim/nui.nvim",
-            "nvim-lua/plenary.nvim",
-            "nvim-telescope/telescope.nvim",
-        },
         opts = {
             chat = {
                 answer_sign = "",
@@ -59,11 +56,11 @@ return {
                 },
             },
             openai_params = {
-                model = "gpt-4-turbo-preview",
+                model = model,
                 max_tokens = 600,
             },
             openai_edit_params = {
-                model = "gpt-4-turbo-preview",
+                model = model,
                 max_tokens = 600,
             },
             popup_input = {
@@ -126,100 +123,37 @@ return {
         },
     },
     {
-        "robitx/gp.nvim",
-        build = function()
-            vim.uv.fs_mkdir(vim.fn.stdpath("data") .. "/gp", 511)
-        end,
-        cmd = {
-            "GpChatNew",
-            "GpChatToggle",
-            "GpContext",
-            "GpNextAgent",
-            "GpStop",
-        },
-        opts = {},
-    },
-    {
-        "huggingface/llm.nvim",
-        cmd = {
-            "LLMSuggestion",
-            "LLMToggleAutoSuggest",
-        },
-        config = function(_, opts)
-            require("llm").setup(opts)
-
-            local ok, cmp = pcall(require, "cmp")
-
-            if ok then
-                cmp.event:on("menu_opened", function()
-                    require("llm.completion").suggestions_enabled = false
-                end)
-
-                cmp.event:on("menu_closed", function()
-                    require("llm.completion").suggestions_enabled = true
-                end)
-            end
-        end,
-        init = function()
-            vim.api.nvim_create_user_command("StarCoder", function()
-                require("llm.completion").complete()
-            end, {})
-        end,
-        opts = {
-            api_token = vim.env.HF_TOKEN,
-            -- accept_keymap = "<Left>",
-            -- dismiss_keymap = "<Right>",
-            accept_keymap = "<Tab>",
-            dismiss_keymap = "<S-Tab>",
-            enable_suggestions_on_files = require("config.defaults").ai_file_types,
-            model = "bigcode/starcoder",
-            query_params = {
-                max_new_tokens = 200,
-            },
-        },
-    },
-    {
-        "Bryley/neoai.nvim",
-        dependencies = {
-            "MunifTanjim/nui.nvim",
-        },
-        cmd = {
-            "NeoAI",
-            "NeoAIOpen",
-            "NeoAIClose",
-            "NeoAIToggle",
-            "NeoAIContext",
-            "NeoAIContextOpen",
-            "NeoAIContextClose",
-            "NeoAIInject",
-            "NeoAIInjectCode",
-            "NeoAIInjectContext",
-            "NeoAIInjectContextCode",
-        },
-        keys = {
-            { "<leader>as", desc = "Summarize text" },
-            { "<leader>ag", desc = "Generate commit message." },
-        },
-        opts = {
-            models = {
-                {
-                    name = "openai",
-                    model = "gpt-4-turbo-preview",
-                },
-            },
-        },
-    },
-    {
         "piersolenski/wtf.nvim",
-        dependencies = {
-            "MunifTanjim/nui.nvim",
-        },
         opts = {
-            openai_model_id = "gpt-4-turbo-preview",
+            openai_model_id = model,
         },
         keys = {
             -- stylua: ignore
             { "cD", mode = { "n", "x" }, function() require("wtf").ai() end, desc = "Debug diagnostic with AI", },
+        },
+    },
+    {
+        "olimorris/codecompanion.nvim",
+        cmd = { "CodeCompanion", "CodeCompanionChat", "CodeCompanionToggle", "CodeCompanionActions" },
+        config = function(_, opts)
+            -- Ensure that telescope.ui is loaded.
+            require("telescope")
+            require("codecompanion").setup(opts)
+        end,
+        opts = {
+            ai_settings = {
+                chat = { model = model },
+                inline = { model = model },
+            },
+            keymaps = {
+                ["<C-y>"] = "keymaps.save",
+            },
+            silence_notifications = true,
+        },
+        keys = {
+            --stylua: ignore
+            { "<C-a>", vim.cmd.CodeCompanionActions, mode = { "n", "x" }, desc = "Code Companion Actions" },
+            { "<localleader>a", vim.cmd.CodeCompanionToggle, mode = { "n", "x" }, desc = "Code Companion Chat" },
         },
     },
 }
