@@ -16,20 +16,36 @@ e.on({ e.BufEnter, e.FileType }, function(event)
     end, { noremap = true, silent = true, buffer = event.buf })
 end, {
     desc = "Map q to close the buffer.",
-    pattern = { "checkhealth", "man", "nofile", "qf", "tsplayground" },
+    pattern = { "checkhealth", "man", "nofile", "notify", "qf", "tsplayground" },
 })
 
-e.on(e.FileType, function(event)
+e.on(e.BufWinEnter, function(event)
     --
     -- Don't try to close a help buffer if explicitly edited.
-    if #vim.api.nvim_list_bufs() > 1 then
-        vim.keymap.set("n", "q", function()
-            vim.cmd.FloatingHelpClose()
-        end, { noremap = true, silent = true, buffer = event.buf })
+    if #vim.api.nvim_list_bufs() == 1 then
+        return
+    end
+
+    local filetype = vim.bo[event.buf].filetype
+    local file_path = event.match
+
+    if file_path:match("/doc/") ~= nil then
+        --
+        if filetype == "help" or filetype == "markdown" then
+            local help_win = vim.api.nvim_get_current_win()
+
+            require("helpers.float").open({
+                anchor = "E",
+                filetype = filetype,
+                lines = vim.api.nvim_buf_get_lines(event.buf, 0, -1, false),
+            })
+
+            -- Close the initial help split window.
+            vim.api.nvim_win_close(help_win, false)
+        end
     end
 end, {
-    desc = "Map q to close the help buffer.",
-    pattern = { "help" },
+    desc = "Open Help in a floating window.",
 })
 
 e.on(e.FileType, function()
