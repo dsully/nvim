@@ -112,27 +112,5 @@ return {
     -- Wezterm
     { "justinsgithub/wezterm-types" },
 
-    {
-        "Tyler-Barham/floating-help.nvim",
-        cmd = {
-            "FloatingHelp",
-            "FloatingHelpClose",
-        },
-        init = function()
-            -- Only replace cmds, not search; only replace the first instance
-            local function cmd_abbrev(abbrev, expansion)
-                vim.cmd("cabbr " .. abbrev .. ' <c-r>=(getcmdpos() == 1 && getcmdtype() == ":" ? "' .. expansion .. '" : "' .. abbrev .. '")<CR>')
-            end
-
-            cmd_abbrev("h", "FloatingHelp")
-            cmd_abbrev("help", "FloatingHelp")
-            cmd_abbrev("helpc", "FloatingHelpClose")
-            cmd_abbrev("helpclose", "FloatingHelpClose")
-        end,
-        opts = {
-            borderchars = require("config.defaults").borderchars,
-        },
-    },
-
     -- { "lewis6991/fileline.nvim", lazy = false },
 }

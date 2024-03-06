@@ -81,7 +81,7 @@ return {
                     end
                 end
 
-                require("helpers.float").open(lines)
+                require("helpers.float").open({ filetype = "lua", lines = lines, width = 0.8 })
             end, { desc = "Show LSP Capabilities" })
 
             vim.api.nvim_create_user_command("LspRestartBuffer", function()
