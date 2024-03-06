@@ -309,6 +309,8 @@ return {
             --  - va)  - Visually select [A]round [)]parenthesis
             --  - yinq - Yank Inside [N]ext [']quote
             --  - ci'  - Change Inside [']quote
+            --
+            -- https://www.reddit.com/r/neovim/comments/10qmicv/help_understanding_miniai_custom_textobjects/
             require("mini.ai").setup({
                 n_lines = 500,
                 custom_textobjects = {
@@ -316,6 +318,9 @@ return {
                         a = { "@block.outer", "@conditional.outer", "@loop.outer" },
                         i = { "@block.inner", "@conditional.inner", "@loop.inner" },
                     }, {}),
+
+                    -- 'vaF' to select around function definition.
+                    -- 'diF' to delete inside function definition.
                     f = require("mini.ai").gen_spec.treesitter({ a = "@function.outer", i = "@function.inner" }, {}),
                     c = require("mini.ai").gen_spec.treesitter({ a = "@class.outer", i = "@class.inner" }, {}),
                 },
