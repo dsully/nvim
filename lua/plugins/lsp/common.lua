@@ -100,6 +100,21 @@ M.setup = function()
     return M.capabilities()
 end
 
+---@param ms number
+---@param fn function
+M.debounce = function(ms, fn)
+    local timer = assert(vim.uv.new_timer())
+    return function(...)
+        local argc, argv = select("#", ...), { ... }
+        timer:start(ms, 0, function()
+            timer:stop()
+            vim.schedule(function()
+                fn(unpack(argv, 1, argc))
+            end)
+        end)
+    end
+end
+
 M.groups = {
     codelens = vim.api.nvim_create_augroup("LSP Code Lens", { clear = true }),
     highlights = vim.api.nvim_create_augroup("LSP Highlight References", { clear = true }),
@@ -121,13 +136,18 @@ M.on_attach = function(client, buffer)
     if client.supports_method(methods.textDocument_documentHighlight) then
         local group = M.groups["highlights"]
 
-        e.on({ e.CursorHold, e.CursorHoldI }, vim.lsp.buf.document_highlight, {
+        e.on({ e.BufEnter, e.CursorHold, e.CursorHoldI, e.CursorMoved, e.FocusGained, e.WinEnter }, function()
+            M.debounce(200, function()
+                vim.lsp.buf.clear_references()
+                vim.lsp.buf.document_highlight()
+            end)
+        end, {
             buffer = buffer,
             desc = ("LSP Document Highlight for: %s/%s"):format(client.name, buffer),
             group = group,
         })
 
-        e.on({ e.BufLeave, e.CursorMoved, e.CursorMovedI }, vim.lsp.buf.clear_references, {
+        e.on({ e.BufLeave, e.FocusLost, e.WinLeave }, vim.lsp.buf.clear_references, {
             buffer = buffer,
             desc = ("LSP Clear References for: %s/%s"):format(client.name, buffer),
             group = group,
