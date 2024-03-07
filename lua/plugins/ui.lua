@@ -324,7 +324,10 @@ return {
                     ["cmp.entry.get_documentation"] = true,
                 },
                 progress = { enabled = true },
-                signature = { enabled = false },
+                signature = {
+                    auto_open = { enabled = false },
+                    enabled = true,
+                },
             },
             messages = { enabled = true },
             notify = { enabled = true },
