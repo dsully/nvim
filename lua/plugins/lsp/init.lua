@@ -356,6 +356,10 @@ return {
                             client.server_capabilities.experimental.serverStatusNotification = true
                             client.server_capabilities.experimental.snippetTextEdit = true
 
+                            -- Let dprint handle formatting to not block rust-analyzer.
+                            client.server_capabilities.documentFormattingProvider = false
+                            client.server_capabilities.documentRangeFormattingProvider = false
+
                             vim.keymap.set({ "n", "x" }, "gx", function()
                                 client.request("experimental/externalDocs", vim.lsp.util.make_position_params(), function(_, url)
                                     if url then
