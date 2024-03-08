@@ -462,6 +462,13 @@ return {
                                 require("telescope").extensions.yaml_schema.yaml_schema()
                             end, { buffer = true, desc = "YAML Schemas" })
                         end,
+                        settings = {
+                            yaml = {
+                                validate = true,
+                                format = { enable = true },
+                                hover = true,
+                            },
+                        },
                     },
                 },
             }
