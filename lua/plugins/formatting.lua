@@ -37,7 +37,7 @@ return {
                     return
                 end
 
-                return { timeout_ms = 99999, lsp_fallback = true }
+                return { async = true, timeout_ms = 99999, lsp_fallback = true }
             end,
             formatters = {
                 dprint = {
