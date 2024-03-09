@@ -1,3 +1,5 @@
+local e = require("helpers.event")
+
 return {
     {
         "nvim-treesitter/nvim-treesitter",
@@ -139,7 +141,7 @@ return {
             query_linter = {
                 enable = true,
                 use_virtual_text = true,
-                lint_events = { "BufWrite", "CursorHold" },
+                lint_events = { e.BufWrite, e.CursorHold },
             },
         },
     },
