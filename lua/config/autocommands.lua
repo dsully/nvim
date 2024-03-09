@@ -8,7 +8,8 @@ end, {
 
 e.on({ e.BufEnter, e.FileType }, function(event)
     vim.opt_local.spell = false
-    vim.api.nvim_buf_set_name(event.buf, event.match)
+
+    pcall(vim.api.nvim_buf_set_name, event.buf, event.match)
 
     vim.keymap.set("n", "q", function()
         vim.cmd.BWipeout()
@@ -290,6 +291,7 @@ e.on(e.BufWritePre, function()
     end, { once = true })
 end, {
     desc = "Mark script files with shebangs as executable on write.",
+    pattern = { "bash", "python", "sh", "zsh" },
 })
 
 e.on(e.BufWritePre, function()
