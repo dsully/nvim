@@ -140,13 +140,10 @@ return {
                     float = {
                         border = vim.g.border,
                         focusable = true,
-                        -- header = { " Issues:" },
                         header = { "" },
-                        -- max_height = math.min(math.floor(vim.o.lines * 0.3), 30),
-                        -- max_width = math.min(math.floor(vim.o.columns * 0.7), 100),
                         severity_sort = true,
                         spacing = 2,
-                        source = "always",
+                        source = true,
                         suffix = function(diag)
                             local text = ""
 
