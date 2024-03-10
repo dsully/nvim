@@ -66,7 +66,7 @@ local toml_query = [[
 ]]
 
 local function exclude_ignores(table)
-    return vim.iter.filter(function(str)
+    return vim.iter(table):filter(function(str)
         for _, prefix in ipairs(ruff_prefixes) do
             if string.sub(str, 1, #prefix) == prefix then
                 return false
@@ -79,7 +79,7 @@ local function exclude_ignores(table)
         end
 
         return true
-    end, table)
+    end)
 end
 
 local find_file = function(filename)
