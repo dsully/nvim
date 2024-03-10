@@ -477,7 +477,7 @@ return {
             override = {
                 brewfile = {
                     icon = "🍺",
-                    name = "Brewfile",
+                    name = "brewfile",
                 },
             },
         },
