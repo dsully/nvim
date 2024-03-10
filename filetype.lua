@@ -8,7 +8,7 @@ vim.filetype.add({
         ["config.custom"] = "sshconfig",
         ["fish_history"] = "yaml",
         ["poetry.lock"] = "toml",
-        -- Set a specific filetype to enable ruff_lsp and taplo to attach as language servers.
+        -- Set a specific filetype to enable ruff and taplo to attach as language servers.
         ["pyproject.toml"] = "toml.pyproject",
     },
     extension = {

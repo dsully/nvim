@@ -129,7 +129,7 @@
       "python.analysis.diagnosticMode": "openFilesOnly",
       "python.analysis.ignore": ["*"]
     },
-    "ruff_lsp": {
+    "ruff": {
       "codeAction": {
         "fixViolation": {
           "enable": true

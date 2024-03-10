@@ -112,8 +112,7 @@ local format_args_from_treesitter = function(filename, language, query_string)
 
     for id, node in query:iter_captures(root, config_buffer, 0, -1) do
         if query.captures[id] == "length" then
-            table.insert(args, "--line-length")
-            table.insert(args, vim.treesitter.get_node_text(node, config_buffer))
+            table.insert(args, "line-length = " .. vim.treesitter.get_node_text(node, config_buffer))
         end
     end
 
@@ -135,7 +134,7 @@ M.format_args = function()
 end
 
 -- Config for ruff-lsp as a Lua table.
-local check_config = function()
+local lint_config = function()
     -- Extract config out of setup.cfg if it exists and use some defaults.
     local config = vim.tbl_deep_extend("force", {}, ruff_default_config)
 
@@ -170,19 +169,45 @@ local check_config = function()
 end
 
 -- Massage the ruff config into something the CLI can handle.
-M.check_args = function()
-    local config = check_config()
+M.lint_args = function()
+    local config = lint_config()
 
     local args = {
-        "--extend-select=" .. vim.fn.join(config["select"], ","),
-        "--ignore=" .. vim.fn.join(exclude_ignores(config["ignore"]), ","),
+        "extend-select = " .. vim.fn.join(config["select"], ","),
+        "ignore = " .. vim.fn.join(exclude_ignores(config["ignore"]), ","),
     }
 
     if config["lineLength"] then
-        table.insert(args, "--line-length=" .. config["lineLength"])
+        table.insert(args, "line-length = " .. config["lineLength"])
     end
 
     return args
+end
+
+M.write_config = function()
+    local path = vim.uv.cwd() .. "/ruff.toml"
+
+    local f_args = M.format_args()
+    local l_args = M.lint_args()
+
+    -- Only write the file if it doesn't exist or there are arguments to write.
+    if vim.uv.fs_stat(path) or (vim.tbl_isempty(f_args) and vim.tbl_isempty(l_args)) then
+        return
+    end
+
+    local fd = vim.uv.fs_open(path, "w+", tonumber("644", 8))
+
+    if fd then
+        for _, arg in ipairs(f_args) do
+            vim.uv.fs_write(fd, arg)
+        end
+
+        for _, arg in ipairs(l_args) do
+            vim.uv.fs_write(fd, arg)
+        end
+
+        vim.uv.fs_close(fd)
+    end
 end
 
 return M

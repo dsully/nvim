@@ -171,7 +171,6 @@ local M = {
             "ltex",
             "pylance",
             "pyright",
-            "ruff_lsp",
         },
     },
 

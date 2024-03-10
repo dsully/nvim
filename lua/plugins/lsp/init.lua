@@ -28,9 +28,21 @@ return {
                 filetypes = { "markdown" },
             })
 
+            -- Temporary until nvim-lspconfig and mason-lspconfig.nvim are updated.
+            require("lspconfig.server_configurations.ruff")
+            require("lspconfig").ruff.setup({
+                capabilities = capabilities,
+                commands = opts.servers.ruff.commands,
+                filetypes = opts.servers.ruff.filetypes,
+                on_new_config = opts.servers.ruff.on_new_config,
+                settings = opts.servers.ruff.settings,
+            })
+
             for name, handler in pairs(opts.servers) do
-                handlers[name] = function()
-                    require("lspconfig")[name].setup(vim.tbl_deep_extend("force", { capabilities = capabilities }, handler))
+                if name ~= "ruff" then
+                    handlers[name] = function()
+                        require("lspconfig")[name].setup(vim.tbl_deep_extend("force", { capabilities = capabilities }, handler))
+                    end
                 end
             end
 
@@ -275,7 +287,7 @@ return {
                             client.server_capabilities.documentRangeFormattingProvider = false
                         end,
                     },
-                    ruff_lsp = {
+                    ruff = {
                         commands = {
                             RuffAutoFix = {
                                 function()
@@ -292,26 +304,8 @@ return {
                             },
                         },
                         filetypes = { "python", "toml.pyproject" },
-                        ---@param client vim.lsp.Client
-                        on_attach = function(client)
-                            client.server_capabilities.hoverProvider = false
-                        end,
-                        ---@param c vim.lsp.ClientConfig
-                        on_new_config = function(c)
-                            local ruff = require("helpers.ruff")
-
-                            -- We need to check our probe directories because they may have changed.
-                            c.settings = vim.tbl_deep_extend("keep", c.settings, {
-                                format = {
-                                    args = ruff.format_args(),
-                                },
-                                lint = {
-                                    args = ruff.check_args(),
-                                },
-                            })
-                        end,
-                        root_dir = function(fname)
-                            return require("lspconfig.util").root_pattern("pyproject.toml", "setup.cfg", "ruff.toml")(fname)
+                        on_new_config = function()
+                            require("helpers.ruff").write_config()
                         end,
                         settings = {
                             codeAction = {
