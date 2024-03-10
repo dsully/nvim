@@ -13,7 +13,10 @@ return {
     },
     opts = function()
         local formatters_by_ft = {
+            bash = { "shellcheck", "shellharden", "shfmt" },
             just = { "just" },
+            sh = { "shellcheck", "shellharden", "shfmt" },
+            zsh = { "shellcheck", "shellharden", "shfmt" },
         }
 
         for _, ft in ipairs(require("config.defaults").formatters.filetypes) do
@@ -42,6 +45,9 @@ return {
             formatters = {
                 dprint = {
                     args = { "fmt", "--stdin", "$FILENAME", "--config", vim.env.XDG_CONFIG_HOME .. "/dprint.jsonc" },
+                },
+                shfmt = {
+                    prepend_args = { "-i", "2", "-ci", "-sr", "-s", "-bn" },
                 },
             },
             formatters_by_ft = formatters_by_ft,
