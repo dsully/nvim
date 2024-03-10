@@ -5,7 +5,6 @@
       "plugins": [
         "crates.nvim",
         "lazy.nvim",
-        "lua/",
         "mason.nvim",
         "noice.nvim",
         "nvim-cmp",
