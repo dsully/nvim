@@ -46,7 +46,7 @@ return {
 
             -- Map languages to my created file types.
             vim.treesitter.language.register("bash", "sh")
-            vim.treesitter.language.register("ruby", "Brewfile")
+            vim.treesitter.language.register("ruby", "brewfile")
 
             if type(opts.ensure_installed) == "table" then
                 ---@type table<string, boolean>

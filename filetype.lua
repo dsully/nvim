@@ -2,7 +2,7 @@ vim.filetype.add({
     filename = {
         [".envrc"] = "direnv",
         [".flake8"] = "ini",
-        ["Brewfile"] = "Brewfile",
+        ["Brewfile"] = "brewfile",
         ["Caddyfile"] = "caddyfile",
         ["MANIFEST.in"] = "pymanifest",
         ["config.custom"] = "sshconfig",
@@ -63,6 +63,7 @@ vim.filetype.add({
     },
     pattern = {
         ["*Caddyfile*"] = "caddyfile",
+        ["Brewfile.*"] = "brewfile",
         [".*/.github/workflows/.*%.yaml"] = "yaml.ghaction",
         [".*/.github/workflows/.*%.yml"] = "yaml.ghaction",
         [".*requirements%.in"] = "requirements",

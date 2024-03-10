@@ -40,5 +40,5 @@ e.on(e.BufWritePre, function()
     vim.api.nvim_buf_set_lines(0, 0, #lines, false, lines)
 end, {
     desc = "Sort Brewfiles properly by category on write.",
-    pattern = "Brewfile",
+    pattern = { "brewfile", "brewfile.*" },
 })
