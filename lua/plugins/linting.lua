@@ -20,7 +20,7 @@ return {
 
         e.on({ e.BufEnter, e.BufReadPost, e.BufWritePost, e.TextChanged, e.InsertLeave }, function(args)
             -- Ignore 3rd party code.
-            if args.file:match("/(node_modules|__pypackages__|site_packages)/") then
+            if args.file:match("/(node_modules|__pypackages__|site_packages|cargo/registry)/") then
                 return
             end
 
