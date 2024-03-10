@@ -48,7 +48,6 @@ local M = {
 
     formatters = {
         filetypes = {
-            "bash",
             "bzl",
             "caddyfile",
             "css",
@@ -64,13 +63,11 @@ local M = {
             "lua",
             "markdown",
             "rust",
-            "sh",
             "sql",
             "toml",
             "toml.pyproject",
             "typescript",
             "typescriptreact",
-            "zsh",
         },
     },
 
