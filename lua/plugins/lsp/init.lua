@@ -88,9 +88,9 @@ return {
                 local bufnr = vim.api.nvim_get_current_buf()
 
                 ---@type vim.lsp.Client[]
-                local clients = vim.iter.filter(function(client)
+                local clients = vim.iter(vim.lsp.get_clients({ bufnr = bufnr })):filter(function(client)
                     return not vim.tbl_contains(require("config.defaults").ignored.lsp, client.name)
-                end, vim.lsp.get_clients({ bufnr = bufnr }))
+                end)
 
                 for _, client in pairs(clients) do
                     vim.lsp.stop_client(client.id, true)
