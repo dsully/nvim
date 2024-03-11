@@ -512,23 +512,6 @@ return {
         config = function()
             local augend = require("dial.augend")
 
-            -- Replace string case conversions with https://github.com/johmsalas/text-case.nvim ?
-            local function to_capital(str)
-                return str:gsub("^%l", string.upper)
-            end
-
-            local function to_pascal(str)
-                return str:gsub("%W*(%w+)", to_capital)
-            end
-
-            local function to_snake(str)
-                return str:gsub("%f[^%l]%u", "_%1"):gsub("%f[^%a]%d", "_%1"):gsub("%f[^%d]%a", "_%1"):gsub("(%u)(%u%l)", "%1_%2"):lower()
-            end
-
-            local function to_camel(str)
-                return to_pascal(str):gsub("^%u", string.lower)
-            end
-
             require("dial.config").augends:register_group({
                 default = {
                     augend.integer.alias.decimal,
@@ -536,12 +519,6 @@ return {
                     augend.integer.alias.octal,
                     augend.integer.alias.binary,
                     augend.hexcolor.new({}),
-                    augend.constant.alias.alpha,
-                    augend.constant.alias.Alpha,
-                    augend.paren.alias.quote,
-                    augend.paren.alias.lua_str_literal,
-                    augend.paren.alias.rust_str_literal,
-                    augend.paren.alias.brackets,
                     augend.semver.alias.semver,
                     augend.date.alias["%-m/%-d"],
                     augend.date.alias["%H:%M"],
@@ -606,20 +583,9 @@ return {
                             return { text = text:upper(), cursor = #text }
                         end,
                     }),
-                    -- Cycle through camel, pascal & snake case.
-                    augend.user.new({
-                        find = require("dial.augend.common").find_pattern("[%a_]+"),
-                        add = function(text, _, _)
-                            if to_camel(text) == text then
-                                text = to_snake(text)
-                            elseif to_snake(text) == text then
-                                text = to_pascal(text)
-                            elseif to_pascal(text) == text then
-                                text = to_camel(text)
-                            end
-
-                            return { text = text, cursor = #text }
-                        end,
+                    augend.case.new({
+                        types = { "camelCase", "snake_case", "kebab-case", "PascalCase", "SCREAMING_SNAKE_CASE" },
+                        cyclic = true,
                     }),
                 },
             })
