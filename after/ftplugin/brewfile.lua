@@ -4,7 +4,11 @@ local e = require("helpers.event")
 vim.api.nvim_set_hl(0, "@function.call.ruby", { link = "Keyword" })
 vim.api.nvim_set_hl(0, "@symbol.ruby", { link = "Special" })
 
-e.on(e.BufWritePre, function()
+e.on(e.BufWritePre, function(args)
+    if args.file == "Brewfile.tmpl" then
+        return
+    end
+
     local entries = {}
     local lines = {}
     local categories = { "tap", "brew", "cask", "mas", "vscode" }
@@ -36,7 +40,7 @@ e.on(e.BufWritePre, function()
         end
     end
 
-    vim.api.nvim_buf_set_lines(0, 0, #lines, true, lines)
+    vim.api.nvim_buf_set_lines(0, 0, #lines + 1, false, lines)
 end, {
     desc = "Sort Brewfiles properly by category on write.",
     pattern = { "brewfile", "brewfile.*" },
