@@ -52,13 +52,13 @@ return {
                 ---@type table<string, boolean>
                 local added = {}
 
-                opts.ensure_installed = vim.iter.filter(function(lang)
+                opts.ensure_installed = vim.iter(opts.ensure_installed):filter(function(lang)
                     if added[lang] then
                         return false
                     end
                     added[lang] = true
                     return true
-                end, opts.ensure_installed) ---@diagnostic disable-line: param-type-mismatch
+                end)
             end
 
             require("nvim-treesitter.configs").setup(opts)
