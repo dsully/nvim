@@ -89,7 +89,6 @@ local M = {
 
     tools = {
         "actionlint",
-        "buildifier",
         "codelldb",
         "curlylint",
         "dprint",
