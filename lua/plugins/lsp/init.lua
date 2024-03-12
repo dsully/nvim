@@ -478,12 +478,12 @@ return {
             "MasonToolsUpdate",
         },
         opts = {
+            ---@type string[]
             ensure_installed = require("config.defaults").tools,
             ui = {
                 border = vim.g.border,
             },
         },
-        ---@param opts MasonSettings | {ensure_installed: string[]}
         config = function(_, opts)
             require("mason").setup(opts)
 
