@@ -23,34 +23,25 @@ return {
     },
     {
         "akinsho/bufferline.nvim",
-        config = function(_, opts)
-            require("bufferline").setup(opts)
-
-            -- Fix bufferline when restoring a session
-            e.on(e.BufAdd, function()
-                vim.schedule(function()
-                    pcall(nvim_bufferline) ---@diagnostic disable-line: undefined-global
-                end)
-            end)
-        end,
         event = "VeryLazy",
-        init = function()
+        keys = function()
             --
+            -- stylua: ignore
+            local maps = {
+                -- Go to the last buffer.
+                { "<leader>$", function() require("bufferline").go_to(-1, true) end, desc = "which_key_ignore", },
+            }
+
             for i = 1, 9 do
-                vim.keymap.set("n", "<leader>" .. i, function()
-                    require("bufferline").go_to(i, true)
-                end, { desc = "which_key_ignore" })
+                -- stylua: ignore
+                table.insert(maps, { "<leader>" .. i, function() require("bufferline").go_to(i, true) end, desc = "which_key_ignore" })
 
                 -- Allow Option-N in Wezterm.
-                vim.keymap.set("n", string.format("<M-%d>", i), function()
-                    require("bufferline").go_to(i, true)
-                end, { desc = "which_key_ignore" })
+                -- stylua: ignore
+                table.insert(maps, { string.format("<M-%d>", i), function() require("bufferline").go_to(i, true) end, desc = "which_key_ignore" })
             end
 
-            -- Go to the last buffer.
-            vim.keymap.set("n", "<leader>$", function()
-                require("bufferline").go_to(-1, true)
-            end, { desc = "which_key_ignore" })
+            return maps
         end,
         opts = {
             options = {
