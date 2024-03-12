@@ -181,31 +181,7 @@ return {
                 },
                 servers = {
                     bashls = {},
-                    bufls = {},
                     bzl = {},
-                    cmake = {},
-                    cssls = {},
-                    dockerls = {
-                        on_attach = function(client)
-                            -- Let dprint handle formatting.
-                            client.server_capabilities.documentFormattingProvider = false
-                            client.server_capabilities.documentRangeFormattingProvider = false
-                        end,
-                    },
-                    esbonio = {}, -- RestructuredText
-                    gradle_ls = {},
-                    graphql = {},
-                    html = {},
-                    jedi_language_server = {},
-                    kotlin_language_server = {},
-                    lemminx = {}, -- XML
-                    terraformls = {},
-                    typos_lsp = {
-                        cmd = { "typos-lsp", "--config", vim.env.HOME .. "/.typos.toml" },
-                        init_options = {
-                            diagnosticSeverity = "Warning",
-                        },
-                    },
                     clangd = {
                         capabilities = {
                             offsetEncoding = { "utf-16" },
@@ -232,6 +208,15 @@ return {
                                 or require("lspconfig.util").find_git_ancestor(fname)
                         end,
                     },
+                    cssls = {},
+                    dockerls = {
+                        on_attach = function(client)
+                            -- Let dprint handle formatting.
+                            client.server_capabilities.documentFormattingProvider = false
+                            client.server_capabilities.documentRangeFormattingProvider = false
+                        end,
+                    },
+
                     gopls = {
                         filetypes = { "go", "gomod", "gowork" }, -- Don't attach for gotmpl.
                         init_options = {
@@ -262,6 +247,9 @@ return {
                             end
                         end,
                     },
+                    gradle_ls = {},
+                    html = {},
+                    jedi_language_server = {},
                     jsonls = {
                         on_attach = function(client)
                             -- Let dprint handle formatting.
@@ -272,6 +260,7 @@ return {
                             c.settings = vim.tbl_deep_extend("force", c.settings, { json = { schemas = require("schemastore").json.schemas() } })
                         end,
                     },
+                    lemminx = {}, -- XML
                     lua_ls = {
                         before_init = function(params, config)
                             -- Add libuv to the workspace library for type hints.
@@ -424,6 +413,12 @@ return {
                                     path = vim.env.XDG_CONFIG_HOME .. "/taplo.toml",
                                 },
                             },
+                        },
+                    },
+                    typos_lsp = {
+                        cmd = { "typos-lsp", "--config", vim.env.HOME .. "/.typos.toml" },
+                        init_options = {
+                            diagnosticSeverity = "Warning",
                         },
                     },
                     yamlls = {
