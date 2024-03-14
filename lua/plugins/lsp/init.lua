@@ -209,14 +209,7 @@ return {
                         end,
                     },
                     cssls = {},
-                    dockerls = {
-                        on_attach = function(client)
-                            -- Let dprint handle formatting.
-                            client.server_capabilities.documentFormattingProvider = false
-                            client.server_capabilities.documentRangeFormattingProvider = false
-                        end,
-                    },
-
+                    dockerls = {},
                     gopls = {
                         filetypes = { "go", "gomod", "gowork" }, -- Don't attach for gotmpl.
                         init_options = {
@@ -251,11 +244,6 @@ return {
                     html = {},
                     jedi_language_server = {},
                     jsonls = {
-                        on_attach = function(client)
-                            -- Let dprint handle formatting.
-                            client.server_capabilities.documentFormattingProvider = false
-                            client.server_capabilities.documentRangeFormattingProvider = false
-                        end,
                         on_new_config = function(c)
                             c.settings = vim.tbl_deep_extend("force", c.settings, { json = { schemas = require("schemastore").json.schemas() } })
                         end,
@@ -269,11 +257,6 @@ return {
                             end
 
                             return require("neodev.lsp").before_init(params, config)
-                        end,
-                        on_attach = function(client)
-                            -- Let dprint handle formatting.
-                            client.server_capabilities.documentFormattingProvider = false
-                            client.server_capabilities.documentRangeFormattingProvider = false
                         end,
                     },
                     ruff = {
@@ -336,10 +319,6 @@ return {
                             client.server_capabilities.experimental.serverStatusNotification = true
                             client.server_capabilities.experimental.snippetTextEdit = true
 
-                            -- Let dprint handle formatting to not block rust-analyzer.
-                            client.server_capabilities.documentFormattingProvider = false
-                            client.server_capabilities.documentRangeFormattingProvider = false
-
                             vim.keymap.set({ "n", "x" }, "gx", function()
                                 client.request("experimental/externalDocs", vim.lsp.util.make_position_params(), function(_, url)
                                     if url then
@@ -388,10 +367,6 @@ return {
                         filetypes = { "toml", "toml.pyproject" },
                         ---@param client vim.lsp.Client
                         on_attach = function(client)
-                            -- Let dprint handle formatting.
-                            client.server_capabilities.documentFormattingProvider = false
-                            client.server_capabilities.documentRangeFormattingProvider = false
-
                             vim.keymap.set("n", "<leader>vs", function()
                                 local bufnr = vim.api.nvim_get_current_buf()
 
