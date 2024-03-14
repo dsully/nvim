@@ -47,19 +47,16 @@ local M = {
     },
 
     formatters = {
-        bash = { "shellcheck", "shellharden", "shfmt" },
         bzl = { "buildifier" },
         caddy = { "caddy" },
         fish = { "fish_indent" },
         go = { "goimports", "gofumpt" },
         just = { "just" },
         rust = { "rustfmt" },
-        sh = { "shellcheck", "shellharden", "shfmt" },
-        zsh = { "shellcheck", "shellharden", "shfmt" },
+        sh = { "shellharden", "shfmt" },
     },
 
     linters = {
-        bash = { "shellcheck" },
         fish = { "fish" },
         ghaction = { "actionlint" },
         gitcommit = { "write_good" },
@@ -69,7 +66,6 @@ local M = {
         markdown = { "markdownlint", "write_good" },
         protobuf = { "protolint" },
         rst = { "rstcheck", "write_good" },
-        sh = { "shellcheck" },
         text = { "write_good" },
         yaml = { "yamllint" },
     },
