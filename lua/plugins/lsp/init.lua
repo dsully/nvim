@@ -367,7 +367,7 @@ return {
                                 local handler = function(err)
                                     if err then
                                         local msg = string.format("Error reloading Rust workspace: %v", err)
-                                        vim.notify(msg, vim.lsp.log_levels.ERROR, {
+                                        vim.notify(msg, vim.log.levels.ERROR, {
                                             title = "Reloading Rust workspace",
                                             timeout = 3000,
                                         })
