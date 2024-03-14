@@ -41,16 +41,14 @@ local ruff_default_config = {
         "ISC001",
         "RET501",
         "TRY003",
-        "TRY200",
     },
 }
 
 local gradle_query = [[
-  (block
-    (unit) @formatter (#eq? @formatter "black")
-      (command
-        (unit) @key (#eq? @key "lineLength")
-        (number) @length
+  (closure
+      (assignment
+        (identifier) @key (#eq? @key "lineLength")
+        (number_literal) @length
       )
   )
 ]]
@@ -65,8 +63,10 @@ local toml_query = [[
   )
 ]]
 
-local function exclude_ignores(table)
-    return vim.iter(table):filter(function(str)
+---@param ignores table
+---@return table<string>
+local function exclude_ignores(ignores)
+    return vim.iter(ignores):filter(function(str)
         for _, prefix in ipairs(ruff_prefixes) do
             if string.sub(str, 1, #prefix) == prefix then
                 return false
@@ -82,6 +82,8 @@ local function exclude_ignores(table)
     end)
 end
 
+---@param filename string
+---@return string
 local find_file = function(filename)
     local opts_d = { stop = vim.uv.cwd(), type = "file" }
     local opts_u = vim.tbl_extend("force", opts_d, { upward = true })
@@ -89,6 +91,10 @@ local find_file = function(filename)
     return vim.fs.find(filename, opts_d)[1] or vim.fs.find(filename, opts_u)[1]
 end
 
+---@param filename string
+---@param language string
+---@param query_string string
+---@return table<string>|nil
 local format_args_from_treesitter = function(filename, language, query_string)
     local args = {}
     local config_file = find_file(filename)
@@ -112,7 +118,7 @@ local format_args_from_treesitter = function(filename, language, query_string)
 
     for id, node in query:iter_captures(root, config_buffer, 0, -1) do
         if query.captures[id] == "length" then
-            table.insert(args, "line-length = " .. vim.treesitter.get_node_text(node, config_buffer))
+            args["lineLength"] = tonumber(vim.treesitter.get_node_text(node, config_buffer))
         end
     end
 
@@ -126,6 +132,8 @@ end
 -- Extract arguments to pass to the ruff formatter.
 --
 -- Check build.gradle (work) and pyproject.toml.
+--
+---@return table<string>
 M.format_args = function()
     -- stylua: ignore
     return format_args_from_treesitter("pyproject.toml", "toml", toml_query) or
@@ -134,7 +142,8 @@ M.format_args = function()
 end
 
 -- Config for ruff-lsp as a Lua table.
-local lint_config = function()
+---@return table<string>
+M.lint_args = function()
     -- Extract config out of setup.cfg if it exists and use some defaults.
     local config = vim.tbl_deep_extend("force", {}, ruff_default_config)
 
@@ -158,7 +167,9 @@ local lint_config = function()
                     else
                         -- --extend-ignore has been deprecated in favor of --extend.
                         ---@type table<string>
-                        config["ignore"] = vim.tbl_deep_extend("force", config["ignore"], exclude_ignores(vim.split(match, "%s*,%s*")))
+                        for _, ignore in exclude_ignores(vim.split(match, "%s*,%s*")) do
+                            table.insert(config["ignore"], ignore)
+                        end
                     end
                 end
             end
@@ -168,43 +179,31 @@ local lint_config = function()
     return config
 end
 
--- Massage the ruff config into something the CLI can handle.
-M.lint_args = function()
-    local config = lint_config()
+local join_quoted = function(list)
+    local quoted_items = {}
 
-    local args = {
-        "extend-select = " .. vim.fn.join(config["select"], ","),
-        "ignore = " .. vim.fn.join(exclude_ignores(config["ignore"]), ","),
-    }
-
-    if config["lineLength"] then
-        table.insert(args, "line-length = " .. config["lineLength"])
+    for _, item in ipairs(list) do
+        table.insert(quoted_items, '"' .. item .. '"')
     end
 
-    return args
+    return table.concat(quoted_items, ", ")
 end
 
 M.write_config = function()
     local path = vim.uv.cwd() .. "/ruff.toml"
 
-    local f_args = M.format_args()
-    local l_args = M.lint_args()
-
-    -- Only write the file if it doesn't exist or there are arguments to write.
-    if vim.uv.fs_stat(path) or (vim.tbl_isempty(f_args) and vim.tbl_isempty(l_args)) then
-        return
-    end
+    local config = vim.tbl_deep_extend("force", ruff_default_config, M.lint_args(), M.format_args())
 
     local fd = vim.uv.fs_open(path, "w+", tonumber("644", 8))
 
     if fd then
-        for _, arg in ipairs(f_args) do
-            vim.uv.fs_write(fd, arg)
+        if config["lineLength"] then
+            vim.uv.fs_write(fd, string.format("line-length = %s\n", config["lineLength"]))
         end
 
-        for _, arg in ipairs(l_args) do
-            vim.uv.fs_write(fd, arg)
-        end
+        vim.uv.fs_write(fd, "[lint]\n")
+        vim.uv.fs_write(fd, "extend-select = [" .. join_quoted(config["select"]) .. "]\n")
+        vim.uv.fs_write(fd, "ignore = [" .. join_quoted(config["ignore"]) .. "]\n")
 
         vim.uv.fs_close(fd)
     end
