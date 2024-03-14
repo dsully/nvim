@@ -12,14 +12,25 @@ return {
         },
     },
     opts = function()
-        local formatters_by_ft = {
-            bash = { "shellcheck", "shellharden", "shfmt" },
-            just = { "just" },
-            sh = { "shellcheck", "shellharden", "shfmt" },
-            zsh = { "shellcheck", "shellharden", "shfmt" },
-        }
+        local formatters_by_ft = require("config.defaults").formatters
 
-        for _, ft in ipairs(require("config.defaults").formatters.filetypes) do
+        for _, ft in ipairs({
+            "css",
+            "dockerfile",
+            "html",
+            "javascript",
+            "javascriptreact",
+            "jinja",
+            "json",
+            "jsonc",
+            "lua",
+            "markdown",
+            "sql",
+            "toml",
+            "toml.pyproject",
+            "typescript",
+            "typescriptreact",
+        }) do
             formatters_by_ft[ft] = { "dprint" }
         end
 
@@ -42,9 +53,18 @@ return {
 
                 return { async = true, timeout_ms = 99999, lsp_fallback = true }
             end,
+            ---@type table<string, conform.FormatterConfigOverride|fun(bufnr: integer): nil|conform.FormatterConfigOverride>
             formatters = {
+                caddy = {
+                    command = "caddy",
+                    args = { "fmt", "-" },
+                    stdin = true,
+                },
                 dprint = {
                     args = { "fmt", "--stdin", "$FILENAME", "--config", vim.env.XDG_CONFIG_HOME .. "/dprint.jsonc" },
+                },
+                markdownlint = {
+                    prepend_args = { string.format("--config=%s/markdownlint/config.yaml", vim.env.XDG_CONFIG_HOME) },
                 },
                 shfmt = {
                     prepend_args = { "-i", "2", "-ci", "-sr", "-s", "-bn" },

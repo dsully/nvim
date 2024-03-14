@@ -3,6 +3,7 @@
     "library": {
       "enabled": true,
       "plugins": [
+        "conform.nvim",
         "lazy.nvim",
         "nvim-insx",
         "nvim-lspconfig",
