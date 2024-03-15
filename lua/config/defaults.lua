@@ -52,8 +52,8 @@ local M = {
         fish = { "fish_indent" },
         go = { "goimports", "gofumpt" },
         just = { "just" },
-        rust = { "rustfmt" },
         sh = { "shellharden", "shfmt" },
+        toml = { "taplo" },
     },
 
     linters = {
