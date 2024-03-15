@@ -13,7 +13,7 @@ end
 
 return {
     default_config = {
-        cmd = { "ruff", "server" },
+        cmd = { "ruff", "server", "--preview" },
         filetypes = { "python" },
         root_dir = root_dir,
         single_file_support = true,
