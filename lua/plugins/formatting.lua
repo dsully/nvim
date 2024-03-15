@@ -26,8 +26,6 @@ return {
             "lua",
             "markdown",
             "sql",
-            "toml",
-            "toml.pyproject",
             "typescript",
             "typescriptreact",
         }) do
@@ -68,6 +66,10 @@ return {
                 },
                 shfmt = {
                     prepend_args = { "-i", "2", "-ci", "-sr", "-s", "-bn" },
+                },
+                -- Remove when https://github.com/tamasfe/taplo/issues/560 is addressed.
+                taplo = {
+                    args = { "format", "--config=" .. vim.env.XDG_CONFIG_HOME .. "/taplo.toml", "-" },
                 },
             },
             formatters_by_ft = formatters_by_ft,
