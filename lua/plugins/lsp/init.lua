@@ -23,11 +23,6 @@ return {
                 })
             end
 
-            require("lspconfig").markdown_oxide.setup({
-                capabilities = capabilities,
-                filetypes = { "markdown" },
-            })
-
             -- Temporary until nvim-lspconfig and mason-lspconfig.nvim are updated.
             require("lspconfig.server_configurations.ruff")
             require("lspconfig").ruff.setup({
@@ -259,6 +254,7 @@ return {
                             return require("neodev.lsp").before_init(params, config)
                         end,
                     },
+                    markdown_oxide = {},
                     ruff = {
                         commands = {
                             RuffAutoFix = {
