@@ -2,9 +2,6 @@ return {
     -- Log file syntax highlighting.
     { "MTDL9/vim-log-highlighting", ft = "log" },
 
-    -- Justfile, as the treesitter parser is rough.
-    { "NoahTheDuke/vim-just", ft = "just" },
-
     -- Caddy
     { "isobit/vim-caddyfile", ft = "caddyfile" },
 
