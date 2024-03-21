@@ -21,6 +21,7 @@ return {
             "hrsh7th/cmp-cmdline",
             "hrsh7th/cmp-nvim-lsp",
             "onsails/lspkind-nvim",
+            "ryo33/nvim-cmp-rust",
             {
                 "garymjr/nvim-snippets",
                 opts = {
@@ -167,6 +168,10 @@ return {
                 },
                 sorting = {
                     comparators = {
+                        require("cmp-rust").deprioritize_postfix,
+                        require("cmp-rust").deprioritize_borrow,
+                        require("cmp-rust").deprioritize_deref,
+                        require("cmp-rust").deprioritize_common_traits,
                         cmp.config.compare.locality,
                         cmp.config.compare.score, -- based on :  score = score + ((#sources - (source_index - 1)) * sorting.priority_weight)
                         function(entry1, entry2) -- sort by length ignoring "=~"
