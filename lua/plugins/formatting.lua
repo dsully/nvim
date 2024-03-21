@@ -12,28 +12,16 @@ return {
         },
     },
     opts = function()
-        local formatters_by_ft = require("config.defaults").formatters
-
-        for _, ft in ipairs({
-            "css",
-            "dockerfile",
-            "html",
-            "javascript",
-            "javascriptreact",
-            "jinja",
-            "json",
-            "jsonc",
-            "lua",
-            "markdown",
-            "sql",
-            "typescript",
-            "typescriptreact",
-        }) do
-            formatters_by_ft[ft] = { "dprint" }
-        end
-
         return {
+            format = function()
+                return { async = true, timeout_ms = 3000, lsp_fallback = true }
+            end,
             format_on_save = function(bufnr)
+                -- Don't format-on-save for Rust, as rust-analyzer is busy checking.
+                if vim.bo[bufnr].filetype == "rust" then
+                    return
+                end
+
                 if vim.tbl_contains(require("config.defaults").ignored.file_types, vim.bo[bufnr].filetype) then
                     return
                 end
@@ -49,7 +37,7 @@ return {
                     return
                 end
 
-                return { async = true, timeout_ms = 99999, lsp_fallback = true }
+                return { async = true, timeout_ms = 3000, lsp_fallback = true }
             end,
             ---@type table<string, conform.FormatterConfigOverride|fun(bufnr: integer): nil|conform.FormatterConfigOverride>
             formatters = {
@@ -57,9 +45,6 @@ return {
                     command = "caddy",
                     args = { "fmt", "-" },
                     stdin = true,
-                },
-                dprint = {
-                    args = { "fmt", "--stdin", "$FILENAME", "--config", vim.env.XDG_CONFIG_HOME .. "/dprint.jsonc" },
                 },
                 markdownlint = {
                     prepend_args = { string.format("--config=%s/markdownlint/config.yaml", vim.env.XDG_CONFIG_HOME) },
@@ -72,7 +57,7 @@ return {
                     args = { "format", "--config=" .. vim.env.XDG_CONFIG_HOME .. "/taplo.toml", "-" },
                 },
             },
-            formatters_by_ft = formatters_by_ft,
+            formatters_by_ft = require("config.defaults").formatters,
         }
     end,
 }
