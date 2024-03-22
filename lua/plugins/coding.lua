@@ -161,11 +161,6 @@ return {
                     max_view_entries = 100,
                 },
                 preselect = cmp.PreselectMode.Item,
-                snippet = {
-                    expand = function(args)
-                        vim.snippet.expand(args.body)
-                    end,
-                },
                 sorting = {
                     comparators = {
                         require("cmp-rust").deprioritize_postfix,
