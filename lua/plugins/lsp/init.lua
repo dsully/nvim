@@ -451,6 +451,10 @@ return {
         opts = {
             ---@type string[]
             ensure_installed = require("config.defaults").tools,
+            registries = {
+                "github:nvim-java/mason-registry",
+                "github:mason-org/mason-registry",
+            },
             ui = {
                 border = vim.g.border,
             },
