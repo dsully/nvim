@@ -23,8 +23,7 @@ return {
                 })
             end
 
-            -- Temporary until nvim-lspconfig and mason-lspconfig.nvim are updated.
-            require("lspconfig.server_configurations.ruff")
+            -- Temporary until mason-lspconfig.nvim is updated.
             require("lspconfig").ruff.setup({
                 capabilities = capabilities,
                 commands = opts.servers.ruff.commands,
