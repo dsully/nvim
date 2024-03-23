@@ -31,19 +31,6 @@ return {
                 maintainers = {},
             }
 
-            ---@type ParserInfo
-            ---@diagnostic disable-next-line: inject-field
-            parser.gotmpl = {
-                install_info = {
-                    url = "https://github.com/ngalaiko/tree-sitter-go-template",
-                    files = { "src/parser.c" },
-                    revision = "45acf03891557b80a45ac1897e2cca2e8b9cf0ff",
-                },
-                filetype = "gotmpl",
-                maintainers = {},
-                used_by = { "gohtmltmpl", "gotexttmpl", "gotmpl" },
-            }
-
             -- Map languages to my created file types.
             vim.treesitter.language.register("bash", "sh")
             vim.treesitter.language.register("ruby", "brewfile")
