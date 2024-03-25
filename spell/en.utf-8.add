@@ -289,3 +289,7 @@ EXIF
 dprint
 Loopback
 Anycast
+unshallow
+shutil
+Deserialize
+cfengine
