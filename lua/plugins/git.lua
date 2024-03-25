@@ -53,7 +53,7 @@ return {
         cmd = "GitLink",
         -- stylua: ignore
         keys = {
-            { "<leader>gc", vim.cmd.GitLink, desc = "Copy Git URL", mode = { "v", "n" } },
+            { "<leader>gC", vim.cmd.GitLink, desc = "Copy Git URL", mode = { "v", "n" } },
             { "<leader>go", function() vim.cmd.GitLink({ bang = true }) end, desc = "Open Git URL", mode = { "v", "n" } },
         },
         opts = {
@@ -69,19 +69,53 @@ return {
         keys = { { "<leader>gh", vim.cmd.GhActions, desc = "Open Github Actions" } },
         opts = true,
     },
+    -- {
+    --     "aspeddro/gitui.nvim",
+    --     -- stylua: ignore
+    --     keys = { { "<space>g", function() require("gitui").open() end, desc = " Git UI" } },
+    --     opts = {
+    --         command = {
+    --             enable = false,
+    --         },
+    --         window = {
+    --             options = {
+    --                 border = vim.g.border,
+    --             },
+    --         },
+    --     },
+    -- },
     {
-        "aspeddro/gitui.nvim",
-        -- stylua: ignore
-        keys = { { "<space>g", function() require("gitui").open() end, desc = " Git UI" } },
-        opts = {
-            command = {
-                enable = false,
-            },
-            window = {
-                options = {
-                    border = vim.g.border,
-                },
+        "dlvhdr/gh-addressed.nvim",
+        cmd = "GHReviewComments",
+        dependencies = {
+            "nvim-lua/plenary.nvim",
+            "MunifTanjim/nui.nvim",
+            "folke/trouble.nvim",
+        },
+        keys = {
+            { "<leader>gc", vim.cmd.GHReviewComments, desc = "GitHub Review Comments" },
+        },
+    },
+    {
+        "SuperBo/fugit2.nvim",
+        cmd = { "Fugit2", "Fugit2Graph" },
+        dependencies = {
+            "MunifTanjim/nui.nvim",
+            "chrisgrieser/nvim-tinygit", -- optional: for Github PR view
+            "nvim-lua/plenary.nvim",
+            "nvim-tree/nvim-web-devicons",
+        },
+        keys = {
+            {
+                "<space>g",
+                function()
+                    -- Ensure that telescope-ui-select is loaded.
+                    require("telescope")
+                    require("fugit2").git_status()
+                end,
+                desc = " Git UI",
             },
         },
+        opts = {},
     },
 }
