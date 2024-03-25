@@ -174,7 +174,15 @@ return {
                     update_in_insert = false, -- https://www.reddit.com/r/neovim/comments/pfk209/nvimlsp_too_fast/
                 },
                 servers = {
-                    bashls = {},
+                    bashls = {
+                        settings = {
+                            bashls = {
+                                bashIde = {
+                                    includeAllWorkspaceSymbols = true,
+                                },
+                            },
+                        },
+                    },
                     bzl = {},
                     clangd = {
                         capabilities = {
@@ -201,6 +209,12 @@ return {
                             return require("lspconfig.util").root_pattern("Makefile", "configure.in", "meson.build", "build.ninja")(fname)
                                 or require("lspconfig.util").find_git_ancestor(fname)
                         end,
+                        settings = {
+                            clangd = {
+                                semanticHighlighting = true,
+                                single_file_support = false,
+                            },
+                        },
                     },
                     cssls = {},
                     dockerls = {},
@@ -233,6 +247,50 @@ return {
                                 end
                             end
                         end,
+                        settings = {
+                            gopls = {
+                                analyses = {
+                                    fieldalignment = true,
+                                    nilness = true,
+                                    shadow = true,
+                                    unusedparams = true,
+                                    unusedwrite = true,
+                                    useany = true,
+                                },
+                                codelenses = {
+                                    gc_details = false,
+                                    generate = true,
+                                    regenerate_cgo = true,
+                                    run_govulncheck = true,
+                                    test = true,
+                                    tidy = true,
+                                    upgrade_dependency = true,
+                                    vendor = true,
+                                },
+                                completeUnimported = true,
+                                directoryFilters = {
+                                    "-.git",
+                                    "-.vscode",
+                                    "-.idea",
+                                    "-.vscode-test",
+                                    "-node_modules",
+                                },
+                                experimentalPostfixCompletions = true,
+                                gofumpt = true,
+                                hints = {
+                                    assignVariableTypes = true,
+                                    compositeLiteralFields = true,
+                                    compositeLiteralTypes = true,
+                                    constantValues = true,
+                                    functionTypeParameters = true,
+                                    parameterNames = true,
+                                    rangeVariableTypes = true,
+                                },
+                                semanticTokens = true,
+                                staticcheck = true,
+                                usePlaceholders = true,
+                            },
+                        },
                     },
                     gradle_ls = {},
                     html = {},
@@ -356,6 +414,99 @@ return {
                                 pattern = "*/Cargo.toml",
                             })
                         end,
+                        settings = {
+                            ["rust-analyzer"] = {
+                                cargo = {
+                                    autoreload = true,
+                                    features = "all",
+                                },
+                                check = {
+                                    command = "clippy",
+                                    enable = true,
+                                    extraArgs = { "--no-deps" },
+                                },
+                                checkOnSave = {
+                                    command = "clippy",
+                                    enable = true,
+                                    extraArgs = { "--no-deps" },
+                                },
+                                completion = {
+                                    autoimport = true,
+                                    autoself = true,
+                                    fullFunctionSignatures = { enable = true },
+                                },
+                                diagnostics = {
+                                    disabled = { "inactive-code", "macro-error", "unresolved-macro-call" },
+                                    experimental = {
+                                        enable = true,
+                                    },
+                                },
+                                files = {
+                                    excludeDirs = {
+                                        ".direnv",
+                                        ".git",
+                                        ".vscode",
+                                        "assets",
+                                        "ci",
+                                        "data",
+                                        "docs",
+                                        "js",
+                                        "target",
+                                    },
+                                },
+                                hover = {
+                                    actions = {
+                                        references = { enable = true },
+                                    },
+                                },
+                                imports = {
+                                    granularity = {
+                                        group = "module",
+                                    },
+                                    prefix = "self",
+                                },
+                                inlayHints = {
+                                    chainingHints = { enable = true },
+                                    closureReturnTypeHints = { enable = "with_block" },
+                                    parameterHints = { enable = false },
+                                },
+                                interpret = {
+                                    tests = true,
+                                },
+                                lens = {
+                                    references = {
+                                        adt = { enable = true },
+                                        method = { enable = true },
+                                        enumVariant = { enable = true },
+                                        trait = { enable = true },
+                                    },
+                                },
+                                lru = {
+                                    capacity = 512,
+                                },
+                                references = {
+                                    excludeImports = true,
+                                },
+                                rust = {
+                                    analyzerTargetDir = true,
+                                },
+                                semanticHighlighting = {
+                                    operator = {
+                                        specialization = { enable = true },
+                                    },
+                                },
+                                typing = {
+                                    autoClosingAngleBrackets = { enable = true },
+                                },
+                                workspace = {
+                                    symbol = {
+                                        search = {
+                                            kind = "all_symbols",
+                                        },
+                                    },
+                                },
+                            },
+                        },
                         standalone = false,
                     },
                     taplo = {
@@ -425,7 +576,10 @@ return {
                         settings = {
                             yaml = {
                                 validate = true,
-                                format = { enable = true },
+                                format = {
+                                    enable = true,
+                                    singleQuote = false,
+                                },
                                 hover = true,
                             },
                         },
