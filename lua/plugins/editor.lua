@@ -55,6 +55,7 @@ return {
                     color_devicons = true,
                     file_ignore_patterns = {
                         "%.DS_Store",
+                        "%.gz",
                         "%.jpeg",
                         "%.jpg",
                         "%.lock",
@@ -184,9 +185,7 @@ return {
                 -- Use git_files if we're at the top of a git repo. Otherwise find_files.
                 "<leader>ff",
                 function()
-                    local builtin = vim.g.gitsigns_head and "git_files" or "find_files"
-
-                    require("telescope.builtin")[builtin](M.args())
+                    require("telescope.builtin")["find_files"](M.args())
                 end,
                 desc = "Find Files",
             },
