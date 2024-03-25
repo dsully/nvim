@@ -23,18 +23,18 @@ return {
                 end
 
                 if vim.tbl_contains(require("config.defaults").ignored.file_types, vim.bo[bufnr].filetype) then
-                    return
+                    return false
                 end
 
                 if vim.tbl_contains(require("config.defaults").ignored.buffer_types, vim.bo[bufnr].buftype) then
-                    return
+                    return false
                 end
 
                 -- Disable autoformat for files in a certain path
                 local bufname = vim.api.nvim_buf_get_name(bufnr)
 
-                if bufname:match("/(node_modules|__pypackages__|site_packages|cargo/registry)/") then
-                    return
+                if bufname:match("/(node_modules|__pypackages__|site_packages|cargo/registry|product-spec.json)/") then
+                    return false
                 end
 
                 return { async = true, timeout_ms = 3000, lsp_fallback = true }

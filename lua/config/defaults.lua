@@ -57,6 +57,7 @@ local M = {
         just = { "just" },
         lua = { "stylua" },
         markdown = { "markdownlint" },
+        rust = {},
         sh = { "shellharden", "shfmt" },
         toml = { "taplo" },
         typescript = { "biome" },
