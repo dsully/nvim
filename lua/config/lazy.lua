@@ -194,6 +194,7 @@ function M.setup()
             require = false,
         },
         ui = {
+            backdrop = 90,
             border = vim.g.border,
         },
     })
