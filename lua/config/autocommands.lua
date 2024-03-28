@@ -108,7 +108,7 @@ e.on(e.BufNewFile, function(args)
         -- If the file was opened with '/path/to/filename:' we won't have a position.
         if not vim.tbl_isempty(pos) then
             vim.api.nvim_win_set_cursor(0, {
-                math.min(pos[1] or 0, vim.api.nvim_buf_line_count(0)),
+                math.min(math.max(1, pos[1]), vim.api.nvim_buf_line_count(0)),
                 pos[2] and pos[2] - 1 or 0,
             })
         end
