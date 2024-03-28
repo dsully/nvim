@@ -145,6 +145,18 @@ return {
                 chat = { model = model },
                 inline = { model = model },
             },
+            display = {
+                chat = {
+                    type = "buffer",
+                    buf_options = {
+                        buflisted = true,
+                    },
+                    win_options = {
+                        wrap = true,
+                        linebreak = true,
+                    },
+                },
+            },
             keymaps = {
                 ["<C-y>"] = "keymaps.save",
             },
