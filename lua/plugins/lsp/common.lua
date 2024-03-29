@@ -77,6 +77,7 @@ M.setup = function()
     end
 
     -- De-duplicate diagnostics, in particular from rust-analyzer/rustc
+    ---@param result lsp.PublishDiagnosticsParams
     vim.lsp.handlers["textDocument/publishDiagnostics"] = vim.lsp.with(function(_, result, ...)
         --
         ---@type table<string, boolean>>

@@ -255,9 +255,18 @@ return {
     },
     {
         "folke/trouble.nvim",
-        cmd = { "Trouble", "TroubleClose", "TroubleRefresh", "TroubleToggle" },
+        branch = "dev",
+        cmd = { "Trouble" },
         dependencies = "nvim-tree/nvim-web-devicons",
-        keys = { { "<leader>xx", vim.cmd.TroubleToggle, desc = " Trouble" } },
+        keys = {
+            {
+                "<leader>xx",
+                function()
+                    require("trouble").toggle("diagnostics")
+                end,
+                desc = " Trouble",
+            },
+        },
         opts = {
             auto_preview = false,
             use_diagnostic_signs = true,
