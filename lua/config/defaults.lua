@@ -106,7 +106,6 @@ local M = {
     -- Various buffer and file types that should be ignored.
     ignored = {
         buffer_types = {
-            "Trouble",
             "gitcommit",
             "help",
             "nofile",
@@ -119,7 +118,6 @@ local M = {
             "DressingInput",
             "TelescopePrompt",
             "TelescopeResults",
-            "Trouble",
             "alpha",
             "chatgpt",
             "chatgpt-input",
