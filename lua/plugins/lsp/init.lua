@@ -175,6 +175,7 @@ return {
                 },
                 servers = {
                     bashls = {
+                        filetypes = { "bash", "direnv", "sh" },
                         settings = {
                             bashls = {
                                 bashIde = {
