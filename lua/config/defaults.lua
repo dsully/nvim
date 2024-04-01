@@ -47,8 +47,10 @@ local M = {
     },
 
     formatters = {
+        bash = { "shellharden", "shfmt" },
         bzl = { "buildifier" },
         caddy = { "caddy" },
+        direnv = { "shellharden", "shfmt" },
         fish = { "fish_indent" },
         go = { "goimports", "gofumpt" },
         javascript = { "biome" },
