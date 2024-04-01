@@ -98,7 +98,7 @@ return {
                     return not vim.tbl_contains(require("config.defaults").ignored.lsp, client.name)
                 end)
 
-                for _, client in pairs(clients) do
+                for _, client in ipairs(clients) do
                     vim.lsp.stop_client(client.id, true)
                 end
 
@@ -112,7 +112,7 @@ return {
                     )
                 ))
 
-                vim.cmd([[e]])
+                vim.cmd.edit()
             end, { desc = "Restart Language Server for Buffer" })
         end,
         keys = {
