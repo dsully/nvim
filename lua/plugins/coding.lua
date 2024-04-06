@@ -346,9 +346,6 @@ return {
                 require("mini.bufremove").wipeout(0, args.bang)
             end, { bang = true })
 
-            -- Commenting
-            require("mini.comment").setup()
-
             -- Show hex colors as colors.
             require("mini.hipatterns").setup({
                 highlighters = {
