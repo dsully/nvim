@@ -262,7 +262,7 @@ return {
             {
                 "<leader>xx",
                 function()
-                    require("trouble").toggle("diagnostics")
+                    require("trouble").toggle({ focus = true, mode = "diagnostics" })
                 end,
                 desc = " Trouble",
             },
