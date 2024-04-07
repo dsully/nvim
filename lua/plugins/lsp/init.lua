@@ -23,20 +23,9 @@ return {
                 })
             end
 
-            -- Temporary until mason-lspconfig.nvim is updated.
-            require("lspconfig").ruff.setup({
-                capabilities = capabilities,
-                commands = opts.servers.ruff.commands,
-                filetypes = opts.servers.ruff.filetypes,
-                on_new_config = opts.servers.ruff.on_new_config,
-                settings = opts.servers.ruff.settings,
-            })
-
             for name, handler in pairs(opts.servers) do
-                if name ~= "ruff" then
-                    handlers[name] = function()
-                        require("lspconfig")[name].setup(vim.tbl_deep_extend("force", { capabilities = capabilities }, handler))
-                    end
+                handlers[name] = function()
+                    require("lspconfig")[name].setup(vim.tbl_deep_extend("force", { capabilities = capabilities }, handler))
                 end
             end
 
