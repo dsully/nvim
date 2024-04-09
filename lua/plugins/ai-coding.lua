@@ -134,7 +134,7 @@ return {
     },
     {
         "olimorris/codecompanion.nvim",
-        cmd = { "CodeCompanion", "CodeCompanionChat", "CodeCompanionToggle", "CodeCompanionActions" },
+        cmd = { "CodeCompanion", "CodeCompanionChat", "CodeCompanionToggle", "CodeCompanionActions", "CodeCompanionAdd" },
         config = function(_, opts)
             -- Ensure that telescope.ui is loaded.
             require("telescope")
