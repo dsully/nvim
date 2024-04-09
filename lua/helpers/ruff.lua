@@ -142,12 +142,11 @@ M.format_args = function()
 end
 
 -- Config for ruff-lsp as a Lua table.
+---@param config_file string
 ---@return table<string>
-M.lint_args = function()
+M.lint_args = function(config_file)
     -- Extract config out of setup.cfg if it exists and use some defaults.
     local config = vim.tbl_deep_extend("force", {}, ruff_default_config)
-
-    local config_file = find_file("setup.cfg")
 
     if config_file ~= nil and vim.uv.fs_stat(config_file) ~= nil then
         local matches = {
@@ -190,9 +189,11 @@ local join_quoted = function(list)
 end
 
 M.write_config = function()
-    local path = vim.uv.cwd() .. "/ruff.toml"
+    local config_file = find_file("setup.cfg")
 
-    local config = vim.tbl_deep_extend("force", ruff_default_config, M.lint_args(), M.format_args())
+    local path = vim.fs.dirname(config_file) .. "/ruff.toml"
+
+    local config = vim.tbl_deep_extend("force", ruff_default_config, M.lint_args(config_file), M.format_args())
 
     local fd = vim.uv.fs_open(path, "w+", tonumber("644", 8))
 
