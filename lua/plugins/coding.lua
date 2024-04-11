@@ -242,7 +242,10 @@ return {
                     },
                 }),
                 view = {
-                    entries = "custom", -- "native | wildmenu"
+                    entries = {
+                        follow_cursor = true,
+                        name = "custom", -- "native | wildmenu"
+                    },
                 },
                 window = {
                     completion = {
@@ -766,9 +769,7 @@ return {
                     max_height = 25,
                     -- default_detail = 1,
                     bindings = {
-                        ["q"] = function()
-                            vim.cmd.OverseerClose()
-                        end,
+                        ["q"] = vim.cmd.OverseerClose,
                     },
                 },
             },
