@@ -7,6 +7,9 @@ local colors = require("config.defaults").colors
 
 for name, opts in pairs({
     Added = { fg = colors.green.base },
+    AlphaHeader = { fg = colors.blue.bright },
+    AlphaFooter = { fg = colors.blue.base },
+
     Bold = { bold = true },
     Boolean = { link = "Number" },
     Changed = { fg = colors.blue.base },
