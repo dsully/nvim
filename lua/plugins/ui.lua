@@ -58,9 +58,6 @@ return {
     },
     {
         "MunifTanjim/nougat.nvim",
-        cond = function()
-            return vim.fn.argc() ~= 0
-        end,
         config = function()
             local bar = require("nougat.bar")
             local core = require("nougat.core")
@@ -518,17 +515,6 @@ return {
                 { type = "padding", val = vim.fn.max({ 2, vim.fn.floor(vim.fn.winheight(0) * 0.2) }) },
                 dashboard.section.header,
                 { type = "padding", val = 2 },
-                {
-                    type = "text",
-                -- stylua: ignore
-                val = {
-                    "┌────────────   Today is " .. os.date("%a %d %b") .. " ────────────┐",
-                    "│                                                │",
-                    "└───══───══───══───  " .. os.date(" %H:%M") .. "  ───══───══───══────┘",
-                },
-                    opts = { position = "center" },
-                },
-                { type = "padding", val = 2 },
                 dashboard.section.buttons,
                 { type = "padding", val = 1 },
                 dashboard.section.footer,
@@ -568,14 +554,7 @@ return {
                 local stats = require("lazy").stats()
                 local ms = (math.floor(stats.startuptime * 100 + 0.5) / 100)
 
-                -- local version = vim.version()
-                -- local v = ""
-                --
-                -- if version ~= nil then
-                --     v = string.format("v%s.%s.%s ", version.major, version.minor, version.patch)
-                -- end
-
-                dashboard.section.footer.val = "⚡ Neovim loaded " .. stats.loaded .. "/" .. stats.count .. " plugins in " .. ms .. "ms"
+                dashboard.section.footer.val = "⚡ Loaded " .. stats.loaded .. "/" .. stats.count .. " plugins in " .. ms .. "ms"
 
                 vim.cmd.AlphaRedraw()
             end, {
