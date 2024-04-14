@@ -293,7 +293,7 @@ for name, opts in pairs({
     PmenuKind = { link = "Pmenu" },
     PmenuKindSel = { link = "PmenuSel" },
     PmenuSbar = { link = "Pmenu" },
-    PmenuSel = { bg = colors.gray.base },
+    PmenuSel = { bg = colors.gray.bright },
     PmenuThumb = { bg = colors.gray.base },
     PreCondit = { link = "PreProc" },
     PreProc = { fg = colors.blue.bright },
