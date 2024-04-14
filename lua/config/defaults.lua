@@ -227,7 +227,6 @@ M.colors = {
     green = { base = "#a3be8c", bright = "#b1d196", dim = "#8aa872" },
     yellow = { base = "#ebcb8b", bright = "#f0d399", dim = "#d9b263" },
     magenta = { base = "#b48ead", bright = "#c895bf", dim = "#9d7495" },
-    pink = { base = "#bf88bc", bright = "#d092ce", dim = "#a96ca5" },
 
     -- Nordic: blue, intense_blue, none
     blue = { base = "#81a1c1", bright = "#5e81ac", dim = "#668aab" },
@@ -241,25 +240,9 @@ M.colors = {
     -- Nordic: white, bright_white, dark_white
     white = { base = "#e5e9f0", bright = "#eceff4", dim = "#d8dee9" },
 
-    -- Noridc: gray, grayish, dark_black_alt
+    -- Nordic: gray, grayish, dark_black_alt
     gray = { base = "#4c566a", bright = "#667084", dim = "#2b303b" },
 }
-
-M.colors.comment = M.colors.gray.bright
-M.colors.bg0 = M.colors.black.base -- Dark bg (status line and float)
-M.colors.bg1 = M.colors.black.dim -- Default bg
-
-M.colors.bg2 = "#39404f" -- Lighter bg (color column folds)
-M.colors.bg3 = "#444c5e" -- Lighter bg (cursor line)
-M.colors.bg4 = M.colors.black.bright -- Conceal, border fg
-
-M.colors.fg0 = "#c7cdd9" -- Lighter fg
-M.colors.fg1 = M.colors.white.dim -- Default fg: white.base
-M.colors.fg2 = M.colors.white.base -- Darker fg (status line): cyan.bright
-M.colors.fg3 = M.colors.gray.base -- Darker fg (line numbers, fold columns)
-
-M.colors.sel0 = "#3e4a5b" -- Pop-up bg, visual selection bg
-M.colors.sel1 = "#4f6074" -- Pop-up selection bg, search bg
 
 -- Keymap helpers.
 M.cmd = function(cmd)

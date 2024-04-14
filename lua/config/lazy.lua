@@ -152,7 +152,6 @@ function M.setup()
             version = false, -- always use the latest git commit
         },
         install = {
-            colorscheme = { "nordfox" },
             missing = true,
         },
         performance = {

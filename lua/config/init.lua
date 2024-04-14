@@ -1,3 +1,5 @@
+vim.cmd.colorscheme("nordish")
+
 require("config.options")
 
 -- auto-commands can be loaded lazily when not opening a file

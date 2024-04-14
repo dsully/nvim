@@ -9,7 +9,7 @@ return {
             { "<leader>nd", function() require("notify").dismiss({ silent = true, pending = true }) end, desc = "Delete all Notifications" },
         },
         opts = {
-            background_colour = "#2e3440",
+            background_colour = require("config.defaults").colors.black.dim,
             focusable = false,
             fps = 60,
             max_height = function()
@@ -23,7 +23,7 @@ return {
     },
     {
         "akinsho/bufferline.nvim",
-        event = "VeryLazy",
+        event = "VimEnter",
         keys = function()
             --
             -- stylua: ignore
@@ -58,6 +58,9 @@ return {
     },
     {
         "MunifTanjim/nougat.nvim",
+        cond = function()
+            return vim.fn.argc() ~= 0
+        end,
         config = function()
             local bar = require("nougat.bar")
             local core = require("nougat.core")
@@ -120,7 +123,7 @@ return {
             local diagnostics = require("nougat.nut.buf.diagnostic_count").create({
                 prefix = " ",
                 suffix = " ",
-                hl = { bg = colors.bg0 },
+                hl = { bg = colors.black.base },
                 config = {
                     error = { prefix = icons.error, fg = colors.red.base },
                     warn = { prefix = icons.warn, fg = colors.yellow.base },
@@ -142,20 +145,20 @@ return {
                     local hl_name = "Statusline" .. icon_hl
 
                     vim.api.nvim_set_hl(0, hl_name, {
-                        bg = colors.bg0,
+                        bg = colors.black.base,
                         fg = ("#%06x"):format(vim.api.nvim_get_hl(0, { name = icon_hl }).fg),
                     })
 
                     return string.format(" %%#%s#%s %%##", hl_name, icon or " ")
                 end,
-                hl = { bg = colors.bg0 },
+                hl = { bg = colors.black.base },
             })
 
             local filetype_name = item({
                 content = function()
                     return vim.bo.filetype
                 end,
-                hl = { bg = colors.bg0, fg = colors.white.base },
+                hl = { bg = colors.black.base, fg = colors.white.base },
                 suffix = " ",
                 sep_right = sep.right_lower_triangle_solid(true),
             })
@@ -166,7 +169,7 @@ return {
                     filetype_name,
                 },
                 hidden = vim.bo.filetype == nil,
-                hl = { bg = colors.bg0, fg = colors.white.base },
+                hl = { bg = colors.black.base, fg = colors.white.base },
             })
 
             local git_status = require("nougat.nut.git.branch").create({
@@ -174,7 +177,7 @@ return {
                 hidden = function()
                     return not vim.g.gitsigns_head
                 end,
-                hl = { bg = colors.bg0, fg = colors.white.base },
+                hl = { bg = colors.black.base, fg = colors.white.base },
                 prefix = "  ",
                 sep_left = sep.left_lower_triangle_solid(true),
                 suffix = " ",
@@ -217,14 +220,14 @@ return {
                 hidden = function(_, ctx)
                     return not word_filetypes[vim.api.nvim_get_option_value("filetype", { buf = ctx.bufnr })]
                 end,
-                hl = { bg = colors.bg0, fg = colors.white.base },
+                hl = { bg = colors.black.base, fg = colors.white.base },
                 sep_left = sep.left_lower_triangle_solid(true),
                 prefix = " ",
                 suffix = " ",
             })
 
             local counts = item({
-                hl = { bg = colors.bg0, fg = colors.white.base },
+                hl = { bg = colors.black.base, fg = colors.white.base },
                 sep_left = sep.left_lower_triangle_solid(true),
                 content = table.concat({
                     core.group({
