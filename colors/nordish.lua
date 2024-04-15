@@ -457,7 +457,7 @@ for name, opts in pairs({
     ["@number"] = { link = "Number" },
     ["@number.float"] = { link = "Float" },
     ["@operator"] = { link = "Operator" },
-    ["@parameter"] = { fg = colors.cyan.base },
+    ["@parameter"] = { fg = colors.yellow.base },
     ["@property"] = { fg = colors.blue.base },
     ["@punctuation"] = { link = "Delimiter" },
     ["@punctuation.bracket"] = { fg = colors.blue.base },
