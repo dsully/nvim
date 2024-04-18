@@ -1,4 +1,4 @@
-local model = "gpt-4-turbo-preview"
+local model = "gpt-4-turbo"
 
 return {
     {
