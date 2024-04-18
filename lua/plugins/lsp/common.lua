@@ -165,10 +165,10 @@ M.on_attach = function(client, buffer)
 
     if client.supports_method(methods.textDocument_inlayHint) then
         bmap("<space>i", function()
-            vim.lsp.inlay_hint.enable(0, not vim.lsp.inlay_hint.is_enabled())
+            vim.lsp.inlay_hint.enable(not vim.lsp.inlay_hint.is_enabled())
         end, { desc = " Toggle Inlay Hints" })
 
-        vim.lsp.inlay_hint.enable(buffer, false)
+        vim.lsp.inlay_hint.enable(false)
     end
 
     if client.supports_method(methods.textDocument_hover) then

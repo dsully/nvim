@@ -110,7 +110,7 @@ return {
             {
                 "dt",
                 function()
-                    vim.diagnostic.enable(0, not vim.diagnostic.is_enabled())
+                    vim.diagnostic.enable(not vim.diagnostic.is_enabled())
                 end,
                 noremap = true,
                 desc = "Diagnostics Toggle",
