@@ -280,7 +280,12 @@ return {
                     },
                     gradle_ls = {},
                     html = {},
-                    jedi_language_server = {},
+                    jedi_language_server = {
+                        ---@param client vim.lsp.Client
+                        on_attach = function(client)
+                            client.server_capabilities.codeActionProvider = false
+                        end,
+                    },
                     jsonls = {
                         on_new_config = function(c)
                             c.settings = vim.tbl_deep_extend("force", c.settings, { json = { schemas = require("schemastore").json.schemas() } })
