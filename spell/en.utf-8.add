@@ -294,3 +294,6 @@ shutil
 Deserialize
 cfengine
 direnv
+Javadoc
+tgz
+JSON
