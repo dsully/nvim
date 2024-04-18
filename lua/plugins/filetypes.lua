@@ -21,9 +21,6 @@ return {
     -- JSON Sorting
     { "2nthony/sortjson.nvim", ft = "json", opts = true },
 
-    -- f-string manipulation.
-    { "chrisgrieser/nvim-puppeteer", ft = "python" },
-
     {
         "vuki656/package-info.nvim",
         config = function()
