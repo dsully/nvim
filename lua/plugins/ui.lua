@@ -581,21 +581,21 @@ return {
     {
         "kosayoda/nvim-lightbulb",
         event = "LspAttach",
-        opts = function()
-            return {
-                autocmd = {
-                    enabled = true,
-                },
-                ignore = {
-                    clients = require("config.defaults").ignored.lsp,
-                    ft = require("config.defaults").ignored.file_types,
-                },
-                sign = {
-                    enabled = true,
-                    text = "󰌶",
-                    hl = "LspDiagnosticsDefaultInformation",
-                },
-            }
-        end,
+        opts = {
+            action_kinds = { "quickfix", "refactor" },
+            autocmd = {
+                enabled = true,
+            },
+            ignore = {
+                actions_without_kind = true,
+                clients = require("config.defaults").ignored.lsp,
+                ft = require("config.defaults").ignored.file_types,
+            },
+            sign = {
+                enabled = true,
+                text = "󰌶",
+                hl = "LspDiagnosticsDefaultInformation",
+            },
+        },
     },
 }
