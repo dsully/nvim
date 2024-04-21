@@ -582,7 +582,7 @@ return {
         "kosayoda/nvim-lightbulb",
         event = "LspAttach",
         opts = {
-            action_kinds = { "quickfix", "refactor" },
+            action_kinds = { "quickfix" },
             autocmd = {
                 enabled = true,
             },
