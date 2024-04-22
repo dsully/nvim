@@ -176,24 +176,11 @@ M.on_attach = function(client, buffer)
 
     if client.supports_method(methods.textDocument_codeLens) then
         --
-        local desc = ("LSP Code Lens Refresh for: %s/%s"):format(client.name, buffer)
-        local group = M.groups["codelens"]
+        vim.lsp.codelens.refresh({ bufnr = buffer })
 
-        local refresh = function(args)
-            vim.lsp.codelens.refresh({ bufnr = args.buf })
-        end
-
-        e.on({ e.BufEnter }, refresh, {
+        e.on({ e.BufEnter, e.BufWritePost, e.FocusGained, e.InsertLeave }, vim.lsp.codelens.refresh, {
             buffer = buffer,
-            desc = desc,
-            group = group,
-            once = true,
-        })
-
-        e.on({ e.BufWritePost, e.FocusGained, e.InsertLeave }, refresh, {
-            buffer = buffer,
-            desc = desc,
-            group = group,
+            desc = ("LSP Code Lens Refresh for: %s/%s"):format(client.name, buffer),
         })
     end
 
