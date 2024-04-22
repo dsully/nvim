@@ -60,7 +60,7 @@ M.setup = function()
             return
         end
 
-        if vim.tbl_islist(result) then
+        if vim.islist(result) then
             local results = vim.lsp.util.locations_to_items(result, client.offset_encoding)
             local lnum, filename = results[1].lnum, results[1].filename
 
@@ -84,7 +84,7 @@ M.setup = function()
         local seen = {}
 
         ---@param diagnostic lsp.Diagnostic
-        result.diagnostics = vim.iter.filter(function(diagnostic)
+        result.diagnostics = vim.iter(result.diagnostics):filter(function(diagnostic)
             local key = string.format("%s:%s", diagnostic.code, diagnostic.range.start.line)
 
             if not seen[key] then
@@ -93,9 +93,11 @@ M.setup = function()
             end
 
             return false
-        end, result.diagnostics)
+        end)
 
-        vim.lsp.diagnostic.on_publish_diagnostics(_, result, ...)
+        if result.diagnostics.count ~= nil then
+            vim.lsp.diagnostic.on_publish_diagnostics(_, result, ...)
+        end
     end, {})
 
     return M.capabilities()
