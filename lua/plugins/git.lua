@@ -8,6 +8,7 @@ return {
                 preview_config = {
                     border = vim.g.border,
                 },
+                --- @param buffer integer
                 on_attach = function(buffer)
                     local gs = package.loaded.gitsigns
 

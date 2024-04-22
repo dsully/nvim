@@ -633,8 +633,7 @@ return {
                 enabled = true,
                 hover = true,
             },
-            ---@param client_id integer
-            on_attach = function(client_id)
+            on_attach = function()
                 require("cmp").setup.buffer({
                     sources = {
                         { name = "async_path" },
@@ -642,12 +641,6 @@ return {
                         { name = "nvim_lsp" },
                     },
                 })
-
-                local client = vim.lsp.get_client_by_id(client_id)
-
-                if client then
-                    require("plugins.lsp.common").on_attach(client, 0)
-                end
             end,
             popup = {
                 autofocus = true,
