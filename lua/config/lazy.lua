@@ -151,6 +151,9 @@ function M.setup()
             lazy = true,
             version = false, -- always use the latest git commit
         },
+        dev = {
+            path = "~/dev/home/neovim",
+        },
         install = {
             missing = true,
         },
