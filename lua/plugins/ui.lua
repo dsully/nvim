@@ -235,7 +235,7 @@ return {
                     core.group({
                         ":",
                         core.code("v"),
-                    }, { align = "left", min_width = 4 }),
+                    }, { align = "left", min_width = 5 }),
                     core.group({
                         core.code("P"),
                         " ",
@@ -309,6 +309,7 @@ return {
             lsp = {
                 documentation = { enabled = true },
                 hover = { enabled = true },
+                message = { enabled = true },
                 override = {
                     ["vim.lsp.util.convert_input_to_markdown_lines"] = true,
                     ["vim.lsp.util.stylize_markdown"] = true,
@@ -358,6 +359,9 @@ return {
 
                             -- Fix lsp signature bug
                             { event = "msg_show", find = "lsp_signature? handler RPC" },
+
+                            -- Noisy dmypy messages
+                            { event = "lsp", kind = "message" },
                         },
                     },
                     opts = { skip = true },
