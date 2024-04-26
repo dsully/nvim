@@ -598,6 +598,17 @@ return {
     },
     {
         "aznhe21/actions-preview.nvim",
+        keys = {
+            {
+                -- Override Neovim 0.10's default mapping.
+                "crr",
+                function()
+                    require("actions-preview").code_actions({ context = { only = { "quickfix" } } })
+                end,
+                mode = { "n", "x" },
+                desc = "󰅯 Actions",
+            },
+        },
         opts = {
             backend = { "nui" },
             diff = {
@@ -610,6 +621,17 @@ return {
         "smjonas/inc-rename.nvim",
         cmd = "IncRename",
         config = true,
+        keys = {
+            {
+                -- Override Neovim 0.10's default mapping.
+                "crn",
+                function()
+                    return ":" .. require("inc_rename").config.cmd_name .. " " .. vim.fn.expand("<cword>")
+                end,
+                desc = " Rename",
+                expr = true,
+            },
+        },
     },
     {
         "chrisgrieser/nvim-rulebook",
@@ -625,7 +647,7 @@ return {
     { "mrjones2014/lua-gf.nvim", ft = "lua" },
     {
         "Saecki/crates.nvim",
-        event = { "BufRead Cargo.toml" },
+        event = "LazyFile",
         opts = {
             lsp = {
                 actions = true,

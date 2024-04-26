@@ -119,8 +119,12 @@ return {
             end, { desc = "Restart Language Server for Buffer" })
         end,
         keys = {
-            { "<leader>xr", vim.diagnostic.reset, desc = " Reset" },
-            { "<leader>xs", vim.diagnostic.open_float, desc = "󰙨 Show" },
+            -- Telescope based finders via telescope-lsp.nvim
+            { "gD", vim.lsp.buf.declaration, desc = "󰁴 Go To Declaration" },
+            { "gd", vim.lsp.buf.definition, desc = "󰁴 Go To Definition(s)" },
+            { "gi", vim.lsp.buf.implementation, desc = "󰘲 Go To Implementations(s)" },
+            { "<leader>fS", vim.lsp.buf.document_symbol, desc = "󰆋 Symbols" },
+            { "<leader>fW", vim.lsp.buf.workspace_symbol, desc = "󰆋 Workspace Symbols" },
             {
                 "dt",
                 function()
@@ -134,6 +138,8 @@ return {
             { "<leader>ll", vim.cmd.LspLog, desc = " LSP Log" },
             { "<leader>lr", vim.cmd.LspRestartBuffer, desc = " LSP Restart" },
             { "<leader>ls", vim.cmd.LspStop, desc = " LSP Stop" },
+            { "<leader>xr", vim.diagnostic.reset, desc = " Reset" },
+            { "<leader>xs", vim.diagnostic.open_float, desc = "󰙨 Show" },
         },
         opts = function()
             local defaults = require("config.defaults")

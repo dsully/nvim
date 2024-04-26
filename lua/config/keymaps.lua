@@ -20,7 +20,7 @@ vim.keymap.set("n", "<leader>a", "<cmd>%y<cr>", { desc = "Yank All Lines" })
 vim.keymap.set({ "n", "x" }, "dw", '"_dw', { desc = "which_key_ignore", noremap = true })
 
 -- Create/edit file within the current directory
-vim.keymap.set("n", "<localleader><localleader>e", function()
+vim.keymap.set("n", "<localleader>e", function()
     return vim.ui.input({ prompt = "Save as: " }, function(name)
         if name then
             vim.cmd.edit(("%s/%s"):format(vim.fs.dirname(vim.api.nvim_buf_get_name(0)), name))
