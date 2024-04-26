@@ -80,24 +80,19 @@ M.setup = function()
     ---@param result lsp.PublishDiagnosticsParams
     vim.lsp.handlers["textDocument/publishDiagnostics"] = vim.lsp.with(function(_, result, ...)
         --
-        ---@type table<string, boolean>>
+        ---@type table<string, lsp.Diagnostic>>
         local seen = {}
 
         ---@param diagnostic lsp.Diagnostic
-        result.diagnostics = vim.iter(result.diagnostics):filter(function(diagnostic)
+        for _, diagnostic in ipairs(result.diagnostics) do
             local key = string.format("%s:%s", diagnostic.code, diagnostic.range.start.line)
 
-            if not seen[key] then
-                seen[key] = true
-                return true
-            end
-
-            return false
-        end)
-
-        if result.diagnostics.count ~= nil then
-            vim.lsp.diagnostic.on_publish_diagnostics(_, result, ...)
+            seen[key] = diagnostic
         end
+
+        result.diagnostics = vim.tbl_values(seen)
+
+        vim.lsp.diagnostic.on_publish_diagnostics(_, result, ...)
     end, {})
 
     return M.capabilities()
