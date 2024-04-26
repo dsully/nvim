@@ -252,7 +252,10 @@ e.on({ e.BufReadPost, e.FileReadPost }, function(args)
         buffer = args.buf,
     })
 
-    vim.diagnostic.disable()
+    vim.diagnostic.enable(false)
+
+    -- Disable indentline
+    vim.b.miniindentscope_disable = true
 
     vim.cmd.TSDisable("highlight")
     vim.cmd.TSDisable("incremental_selection")
