@@ -297,3 +297,5 @@ direnv
 Javadoc
 tgz
 JSON
+overridable
+execve

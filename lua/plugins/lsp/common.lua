@@ -31,6 +31,8 @@ M.setup = function()
         end
     end)
 
+    -- Handle dynamic registration.
+    --
     -- https://github.com/neovim/neovim/issues/24229
     local register_capability = vim.lsp.handlers["client/registerCapability"]
 
@@ -49,6 +51,7 @@ M.setup = function()
     -- Jump directly to the first available definition every time.
     -- Use Telescope if there is more than one result.
     vim.lsp.handlers["textDocument/definition"] = function(_, result, ctx)
+        --
         if not result or vim.tbl_isempty(result) then
             vim.api.nvim_echo({ { "LSP: Could not find definition" } }, false, {})
             return
@@ -98,11 +101,6 @@ M.setup = function()
     return M.capabilities()
 end
 
-M.groups = {
-    codelens = vim.api.nvim_create_augroup("LSP Code Lens", { clear = true }),
-    highlights = vim.api.nvim_create_augroup("LSP Highlight References", { clear = true }),
-}
-
 ---@param client vim.lsp.Client
 ---@param buffer integer
 M.on_attach = function(client, buffer)
@@ -117,21 +115,20 @@ M.on_attach = function(client, buffer)
     -- https://github.com/neovim/nvim-lspconfig/wiki/UI-Customization#highlight-symbol-under-cursor
 
     if client.supports_method(methods.textDocument_documentHighlight) then
-        local group = M.groups["highlights"]
-
-        e.on({ e.BufEnter, e.CursorHold, e.CursorHoldI }, function()
-            vim.lsp.buf.clear_references()
-            vim.lsp.buf.document_highlight()
+        e.on({ e.BufEnter, e.CursorHold, e.CursorHoldI }, function(args)
+            --
+            if #vim.lsp.get_clients({ bufnr = args.buf, method = methods.textDocument_documentHighlight }) > 0 then
+                vim.lsp.buf.clear_references()
+                vim.lsp.buf.document_highlight()
+            end
         end, {
             buffer = buffer,
             desc = ("LSP Document Highlight for: %s/%s"):format(client.name, buffer),
-            group = group,
         })
 
         e.on({ e.BufLeave, e.CursorMoved, e.CursorMovedI }, vim.lsp.buf.clear_references, {
             buffer = buffer,
             desc = ("LSP Clear References for: %s/%s"):format(client.name, buffer),
-            group = group,
         })
     end
 
@@ -171,12 +168,17 @@ M.on_attach = function(client, buffer)
 
     if client.supports_method(methods.textDocument_codeLens) then
         --
-        vim.lsp.codelens.refresh({ bufnr = buffer })
-
-        e.on({ e.BufEnter, e.BufWritePost, e.FocusGained, e.InsertLeave }, vim.lsp.codelens.refresh, {
+        e.on({ e.BufReadPost, e.InsertLeave }, function(args)
+            --
+            if #vim.lsp.get_clients({ bufnr = args.buf, method = methods.textDocument_codeLens }) > 0 then
+                vim.lsp.codelens.refresh({ bufnr = args.buf })
+            end
+        end, {
             buffer = buffer,
             desc = ("LSP Code Lens Refresh for: %s/%s"):format(client.name, buffer),
         })
+
+        vim.api.nvim_create_user_command("CodeLensRefresh", vim.lsp.codelens.refresh, { desc = "Refresh CodeLens" })
     end
 
     -- Telescope based finders.
