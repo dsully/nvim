@@ -59,20 +59,34 @@ return {
             vim.lsp.set_log_level(vim.log.levels.ERROR)
 
             vim.api.nvim_create_user_command("LspCapabilities", function()
+                --
                 ---@type vim.lsp.Client[]
                 local clients = vim.lsp.get_clients({ bufnr = vim.api.nvim_get_current_buf() })
+
                 local lines = {}
 
-                for i, client in pairs(clients) do
-                    table.insert(lines, client.name:upper() .. ": ")
-                    table.insert(lines, "")
-
-                    for s in vim.inspect(client.server_capabilities):gmatch("[^\r\n]+") do
-                        table.insert(lines, s)
-                    end
-
-                    if i < #clients then
+                for i, client in ipairs(clients) do
+                    if not vim.tbl_contains(require("config.defaults").ignored.lsp, client.name) then
+                        table.insert(lines, client.name .. " Capabilities: ")
                         table.insert(lines, "")
+
+                        for s in vim.inspect(client.server_capabilities):gmatch("[^\r\n]+") do
+                            table.insert(lines, s)
+                        end
+
+                        if client.config.settings then
+                            table.insert(lines, "")
+                            table.insert(lines, client.name .. " Config: ")
+                            table.insert(lines, "")
+
+                            for s in vim.inspect(client.config.settings):gmatch("[^\r\n]+") do
+                                table.insert(lines, s)
+                            end
+                        end
+
+                        if i < #clients then
+                            table.insert(lines, "")
+                        end
                     end
                 end
 
