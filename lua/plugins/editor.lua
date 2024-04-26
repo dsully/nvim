@@ -40,7 +40,6 @@ end
 return {
     {
         "nvim-telescope/telescope.nvim",
-        cmd = "Telescope",
         config = function()
             local actions = require("telescope.actions")
             local telescope = require("telescope")
@@ -166,6 +165,7 @@ return {
             telescope.load_extension("ui-select")
             telescope.load_extension("zf-native")
         end,
+        event = "LazyFile",
         init = function()
             for _, map in pairs({
                 { key = "B", cmd = "buffers", desc = "Buffers" },

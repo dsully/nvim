@@ -1,23 +1,35 @@
 local M = {}
 
----@param buffer integer
----@param mode string|table
+---Create a global key mapping. Defaults to normal mode.
 ---@param lhs string
 ---@param rhs function|string
----@param opts table|nil
-function M.bmap(buffer, mode, lhs, rhs, opts)
+---@param desc string?
+---@param mode string?|table?
+---@param opts table?
+function M.map(lhs, rhs, desc, mode, opts)
     --
     vim.keymap.set(
-        mode,
+        mode or "n",
         lhs,
         rhs,
         vim.tbl_deep_extend("force", {
-            buffer = buffer,
-            desc = "Undocumented",
+            desc = desc or "Undocumented",
             noremap = true,
             silent = true,
-        }, opts)
+        }, opts or {})
     )
+end
+
+---Create a buffer-local key mapping. Defaults to normal mode.
+---@param lhs string
+---@param rhs function|string
+---@param desc string?
+---@param buffer integer?
+---@param mode string?|table?
+---@param opts table?
+function M.bmap(lhs, rhs, desc, buffer, mode, opts)
+    --
+    M.map(lhs, rhs, desc, mode, vim.tbl_deep_extend("force", opts or {}, { buffer = buffer or true }))
 end
 
 return M

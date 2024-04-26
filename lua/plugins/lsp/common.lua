@@ -76,10 +76,6 @@ M.on_attach = function(client, buffer)
     local methods = vim.lsp.protocol.Methods
     local keys = require("helpers.keys")
 
-    local bmap = function(lhs, rhs, opts)
-        keys.bmap(buffer, "n", lhs, rhs, opts)
-    end
-
     --
     -- https://github.com/neovim/nvim-lspconfig/wiki/UI-Customization#highlight-symbol-under-cursor
 
@@ -101,38 +97,12 @@ M.on_attach = function(client, buffer)
         })
     end
 
-    if client.supports_method(methods.textDocument_signatureHelp) then
-        bmap("<leader>ch", vim.lsp.buf.signature_help, { desc = "󰞂 Signature Help" })
-    end
-
-    if client.supports_method(methods.textDocument_declaration) then
-        bmap("gD", vim.lsp.buf.declaration, { desc = "󰁴 Go To Declaration" })
-    end
-
     if client.supports_method(methods.textDocument_inlayHint) then
-        bmap("<space>i", function()
+        keys.bmap("<space>i", function()
             vim.lsp.inlay_hint.enable(not vim.lsp.inlay_hint.is_enabled())
-        end, { desc = " Toggle Inlay Hints" })
+        end, " Toggle Inlay Hints")
 
         vim.lsp.inlay_hint.enable(false)
-    end
-
-    if client.supports_method(methods.textDocument_hover) then
-        bmap("K", vim.lsp.buf.hover, { desc = "Documentation  " })
-    end
-
-    if client.supports_method(methods.textDocument_codeAction) then
-        vim.keymap.set({ "n", "x" }, "<leader>ca", function()
-            require("actions-preview").code_actions({ context = { only = { "quickfix" } } })
-        end, { buffer = buffer, desc = "󰅯 Actions" })
-    end
-
-    -- https://github.com/smjonas/inc-rename.nvim
-    if client.supports_method(methods.textDocument_rename) then
-        bmap("<leader>cr", function()
-            --
-            return ":" .. require("inc_rename").config.cmd_name .. " " .. vim.fn.expand("<cword>")
-        end, { desc = " Rename", expr = true })
     end
 
     if client.supports_method(methods.textDocument_codeLens) then
@@ -147,46 +117,8 @@ M.on_attach = function(client, buffer)
             desc = ("LSP Code Lens Refresh for: %s/%s"):format(client.name, buffer),
         })
 
-        vim.api.nvim_create_user_command("CodeLensRefresh", vim.lsp.codelens.refresh, { desc = "Refresh CodeLens" })
+        keys.bmap("clr", vim.lsp.codelens.refresh, "Refresh CodeLens")
     end
-
-    -- Telescope based finders.
-    if client.supports_method(methods.textDocument_definition) then
-        bmap("gd", vim.lsp.buf.definition, { desc = "󰁴 Go To Definition(s)" })
-    end
-
-    if client.supports_method(methods.textDocument_implementation) then
-        bmap("gi", function()
-            vim.cmd.Telescope("lsp_implementations")
-        end, { desc = "󰘲 Go To Implementations(s)" })
-    end
-
-    if client.supports_method(methods.textDocument_references) then
-        bmap("<leader>fR", function()
-            vim.cmd.Telescope("lsp_references")
-        end, { desc = "󰆋 References" })
-    end
-
-    if client.supports_method(methods.textDocument_documentSymbol) then
-        bmap("<leader>fS", function()
-            vim.cmd.Telescope("lsp_document_symbols")
-        end, { desc = "󰆋 Symbols" })
-    end
-
-    if client.supports_method(methods.workspace_symbol) then
-        bmap("<leader>fW", function()
-            vim.cmd.Telescope("lsp_dynamic_workspace_symbols")
-        end, { desc = "󰆋 Workspace Symbols" })
-    end
-
-    -- Diagnostics
-    bmap("<leader>xl", function()
-        vim.cmd.Telescope("loclist")
-    end, { desc = " Location List" })
-
-    bmap("<leader>xq", function()
-        vim.cmd.Telescope("quickfix")
-    end, { desc = "󰁨 Quickfix" })
 end
 
 -- Adapted from folke/lazyvim

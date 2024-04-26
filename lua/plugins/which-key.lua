@@ -7,7 +7,6 @@ return {
 
         for _, menu in pairs({
             { key = [[\\]], opts = { desc = "Local" } },
-            { key = "g", opts = { desc = "Go" } },
             { key = "q", opts = { desc = "Quit" } },
             { key = "s", opts = { desc = "Surround" } },
             { key = "z", opts = { desc = "Spelling & Folds" } },
@@ -31,15 +30,28 @@ return {
             { key = "<leader>t", opts = { desc = " Test" } },
             { key = "<leader>v", opts = { desc = " View" } },
             { key = "<leader>x", opts = { desc = " Diagnostics" } },
-            -- Ignore junk
-            { key = "<2-LeftMouse>", opts = { desc = "which_key_ignore" } },
-            { key = "<C-L>", opts = { desc = "which_key_ignore" } },
-            { key = "<SNR>", opts = { desc = "which_key_ignore" } },
-            -- vim-matchup
-            { key = "z%", opts = { desc = "which_key_ignore" } },
         }) do
             wk.register({ [menu.key] = { name = menu.opts.desc } }, { mode = menu.opts.mode or "n" })
         end
+
+        -- Give descriptions to 0.10+ default mappings.
+        wk.register({
+            -- Ignore junk
+            ["<2-LeftMouse>"] = { "which_key_ignore" },
+            ["<C-L>"] = { "which_key_ignore" },
+            ["<C-S>"] = { "Signature Help 󰞂 " },
+            ["<C-W>d"] = { "Open Float" },
+            ["<SNR>"] = { "which_key_ignore" },
+            --
+            -- vim-matchup
+            ["z%"] = { "which_key_ignore" },
+            --
+            K = { "Documentation  " },
+            g = {
+                name = "Go",
+                r = { "󰆋 References" },
+            },
+        })
     end,
     event = "LazyFile",
     init = function()
