@@ -106,6 +106,12 @@ return {
                         initial_mode = "normal",
                         prompt_prefix = "    ",
                     },
+                    -- https://github.com/gbrlsnchs/telescope-lsp-handlers.nvim
+                    lsp_handlers = {
+                        disable = {
+                            ["textDocument/codeAction"] = true,
+                        },
+                    },
                 },
                 pickers = {
                     buffers = {
@@ -155,6 +161,7 @@ return {
                 },
             })
 
+            telescope.load_extension("lsp_handlers")
             telescope.load_extension("smart_history")
             telescope.load_extension("ui-select")
             telescope.load_extension("zf-native")
@@ -175,6 +182,7 @@ return {
             end
         end,
         dependencies = {
+            { "gbrlsnchs/telescope-lsp-handlers.nvim" },
             { "natecraddock/telescope-zf-native.nvim" },
             { "nvim-telescope/telescope-smart-history.nvim", dependencies = { "sqlite.lua" } },
             { "nvim-telescope/telescope-symbols.nvim" },
