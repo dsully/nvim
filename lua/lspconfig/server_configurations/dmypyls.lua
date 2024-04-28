@@ -1,16 +1,13 @@
-local root_dir = function(fname)
-    local lsputil = require("lspconfig.util")
-
-    local markers = {
+local root_dir = function()
+    return vim.fs.root(0, {
         "Pipfile",
         "pyproject.toml",
         "pyrightconfig.json",
         "setup.py",
         "setup.cfg",
         "requirements.txt",
-    }
-
-    return lsputil.root_pattern(unpack(markers))(fname) or lsputil.find_git_ancestor(fname) or lsputil.path.dirname(fname)
+        ".git",
+    })
 end
 
 local find_command = function()
@@ -24,7 +21,7 @@ local find_command = function()
         end
     end
 
-    return { gcommand, "--chdir", root_dir(vim.uv.cwd()) }
+    return { gcommand, "--chdir", root_dir() }
 end
 
 return {
