@@ -171,11 +171,8 @@ M.find_root = function()
     local root = roots[1]
 
     if not root then
-        --@type string
-        path = path and vim.fs.dirname(path) or cwd
-
         ---@type string?
-        root = vim.fs.find(defaults.root_patterns, { path = path, upward = true })[1]
+        root = vim.fs.root(bufnr, defaults.root_patterns)
         root = root and vim.fs.dirname(root) or cwd
     end
 
