@@ -7,6 +7,7 @@ return {
 
         for _, menu in pairs({
             { key = [[\\]], opts = { desc = "Local" } },
+            { key = "g", opts = { desc = "Go" } },
             { key = "q", opts = { desc = "Quit" } },
             { key = "s", opts = { desc = "Surround" } },
             { key = "z", opts = { desc = "Spelling & Folds" } },
@@ -47,10 +48,6 @@ return {
             ["z%"] = { "which_key_ignore" },
             --
             K = { "Documentation  " },
-            g = {
-                name = "Go",
-                r = { "󰆋 References" },
-            },
         })
     end,
     event = "LazyFile",
