@@ -34,6 +34,21 @@ return {
                 ensure_installed = vim.tbl_keys(handlers),
                 handlers = handlers,
             })
+
+            -- https://gitlab.com/schrieveslaach/sonarlint.nvim
+            require("sonarlint").setup({
+                server = {
+                    cmd = {
+                        "sonarlint-language-server",
+                        "-stdio",
+                        "-analyzers",
+                        vim.fn.expand("$MASON/share/sonarlint-analyzers/sonarpython.jar"),
+                    },
+                },
+                filetypes = {
+                    "python",
+                },
+            })
         end,
         dependencies = {
             { "b0o/schemastore.nvim", version = false },
@@ -685,4 +700,5 @@ return {
     },
     { "p00f/clangd_extensions.nvim" },
     { "someone-stole-my-name/yaml-companion.nvim" },
+    { "https://gitlab.com/schrieveslaach/sonarlint.nvim" },
 }
