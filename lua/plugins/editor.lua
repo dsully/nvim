@@ -40,6 +40,7 @@ end
 return {
     {
         "nvim-telescope/telescope.nvim",
+        cmd = "Telescope",
         config = function()
             local actions = require("telescope.actions")
             local telescope = require("telescope")
@@ -105,12 +106,6 @@ return {
                         initial_mode = "normal",
                         prompt_prefix = "    ",
                     },
-                    -- https://github.com/gbrlsnchs/telescope-lsp-handlers.nvim
-                    lsp_handlers = {
-                        disable = {
-                            ["textDocument/codeAction"] = true,
-                        },
-                    },
                 },
                 pickers = {
                     buffers = {
@@ -145,11 +140,6 @@ return {
                         find_command = { "rg", "--color", "never", "--hidden", "--no-require-git", "--sort", "--trim" },
                         prompt_prefix = "   ",
                     },
-                    lsp_references = {
-                        fname_width = 40,
-                        include_declaration = false,
-                        trim_text = true,
-                    },
                     oldfiles = {
                         only_cwd = true,
                         prompt_prefix = " 󰋚  ",
@@ -160,12 +150,10 @@ return {
                 },
             })
 
-            telescope.load_extension("lsp_handlers")
             telescope.load_extension("smart_history")
             telescope.load_extension("ui-select")
             telescope.load_extension("zf-native")
         end,
-        event = "LazyFile",
         init = function()
             for _, map in pairs({
                 { key = "B", cmd = "buffers", desc = "Buffers" },
@@ -180,7 +168,6 @@ return {
             end
         end,
         dependencies = {
-            { "gbrlsnchs/telescope-lsp-handlers.nvim" },
             { "natecraddock/telescope-zf-native.nvim" },
             { "nvim-telescope/telescope-smart-history.nvim", dependencies = { "sqlite.lua" } },
             { "nvim-telescope/telescope-symbols.nvim" },
