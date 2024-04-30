@@ -176,9 +176,7 @@ return {
                 { key = "r", cmd = "resume", desc = "Resume Last Telescope Finder" },
                 { key = "w", cmd = "grep_string", desc = "Words" },
             }) do
-                vim.keymap.set("n", "<leader>f" .. map.key, function()
-                    require("telescope.builtin")[map.cmd](M.args())
-                end, { desc = map.desc })
+                vim.keymap.set("n", "<leader>f" .. map.key, tscope(map.cmd, M.args), { desc = map.desc })
             end
         end,
         dependencies = {
@@ -189,14 +187,8 @@ return {
             { "nvim-telescope/telescope-ui-select.nvim" },
         },
         keys = {
-            {
-                -- Use git_files if we're at the top of a git repo. Otherwise find_files.
-                "<leader>ff",
-                function()
-                    require("telescope.builtin")["find_files"](M.args())
-                end,
-                desc = "Find Files",
-            },
+            -- Use git_files if we're at the top of a git repo. Otherwise find_files.
+            { "<leader>ff", tscope("find_files", M.args), desc = "Find Files" },
             {
                 "<leader>fT",
                 function()
@@ -206,34 +198,20 @@ return {
                 end,
                 desc = "Telescope: Toggle root between Git and LSP/current directory.",
             },
-            -- stylua: ignore
-            { "z=", function() vim.cmd.Telescope("spell_suggest") end, desc = "Suggest Spelling" },
+            { "z=", tscope("spell_suggest"), desc = "Suggest Spelling" },
         },
     },
     {
         "nvim-telescope/telescope-file-browser.nvim",
-        -- stylua: ignore
-        keys = { { "<leader>fb", function() require("telescope").extensions.file_browser.file_browser(M.args()) end, desc = "File Browser" } },
+        keys = { { "<leader>fb", tscope("file_browser", M.args), desc = "File Browser" } },
     },
     {
         "tsakirist/telescope-lazy.nvim",
-        -- stylua: ignore
-        keys = { { "<leader>fl", function() require("telescope").extensions.lazy.lazy() end, desc = "Lazy Packages" } },
+        keys = { { "<leader>fl", tscope("lazy"), desc = "Lazy Packages" } },
     },
     {
         "2kabhishek/nerdy.nvim",
-        cmd = "Nerdy",
-        keys = {
-            {
-                "<leader>fl",
-                function()
-                    -- Ensure that telescope-ui-select is loaded.
-                    require("telescope")
-                    require("nerdy").list()
-                end,
-                { desc = "Nerd Icons" },
-            },
-        },
+        keys = { { "<leader>fl", tscope("nerdy"), { desc = "Nerd Icons" } } },
     },
     {
         "SmiteshP/nvim-navic",

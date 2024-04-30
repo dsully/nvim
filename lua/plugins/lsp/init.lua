@@ -134,20 +134,15 @@ return {
             end, { desc = "Restart Language Server for Buffer" })
         end,
         keys = {
-            -- Telescope based finders via telescope-lsp.nvim
+            -- stylua: ignore
+            { "dt", function() vim.diagnostic.enable(not vim.diagnostic.is_enabled()) end, desc = "Diagnostics Toggle" },
             { "gD", vim.lsp.buf.declaration, desc = "󰁴 Go To Declaration" },
             { "gd", vim.lsp.buf.definition, desc = "󰁴 Go To Definition(s)" },
             { "gi", vim.lsp.buf.implementation, desc = "󰘲 Go To Implementations(s)" },
-            { "<leader>fS", vim.lsp.buf.document_symbol, desc = "󰆋 Symbols" },
-            { "<leader>fW", vim.lsp.buf.workspace_symbol, desc = "󰆋 Workspace Symbols" },
-            {
-                "dt",
-                function()
-                    vim.diagnostic.enable(not vim.diagnostic.is_enabled())
-                end,
-                noremap = true,
-                desc = "Diagnostics Toggle",
-            },
+            -- stylua: ignore
+            { "gr", function() vim.lsp.buf.references({ includeDeclaration = false }) end, desc = "󰆋 References" },
+            { "<leader>fs", tscope("lsp_document_symbols"), desc = "󰆋 Symbols" },
+            { "<leader>fW", tscope("lsp_dynamic_workspace_symbols"), desc = "󰆋 Workspace Symbols" },
             { "<leader>lc", vim.cmd.LspCapabilities, desc = " LSP Capabilities" },
             { "<leader>li", vim.cmd.LspInfo, desc = " LSP Info" },
             { "<leader>ll", vim.cmd.LspLog, desc = " LSP Log" },

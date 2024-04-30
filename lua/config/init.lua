@@ -20,4 +20,6 @@ vim.api.nvim_create_autocmd("User", {
     once = true,
 })
 
+require("helpers.globals")
+
 require("config.lazy").setup()
