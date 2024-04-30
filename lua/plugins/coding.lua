@@ -587,6 +587,12 @@ return {
                         types = { "camelCase", "snake_case", "kebab-case", "PascalCase", "SCREAMING_SNAKE_CASE" },
                         cyclic = true,
                     }),
+                    -- Markdown headers & check boxes.
+                    augend.misc.alias.markdown_header,
+                    augend.constant.new({
+                        elements = { "- [ ]", "- [x]" },
+                        word = false,
+                    }),
                 },
             })
         end,
