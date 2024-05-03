@@ -134,7 +134,7 @@ return {
 
                         if cmp.visible() then
                             cmp.select_next_item({ behavior = cmp.SelectBehavior.Select })
-                        elseif vim.snippet.jumpable(1) then
+                        elseif vim.snippet.active({ direction = 1 }) then
                             vim.snippet.jump(1)
                         else
                             fallback()
@@ -143,7 +143,7 @@ return {
                     ["<S-Tab>"] = cmp.mapping(function(fallback)
                         if cmp.visible() then
                             cmp.select_prev_item()
-                        elseif vim.snippet.jumpable(1) then
+                        elseif vim.snippet.active({ direction = -1 }) then
                             vim.snippet.jump(1)
                         else
                             fallback()
@@ -472,7 +472,7 @@ return {
                 action = function(ctx)
                     local row, col = ctx.row(), ctx.col()
 
-                    if vim.snippet.jumpable(1) then
+                    if vim.snippet.active({ direction = 1 }) then
                         ctx.send(":lua vim.snippet.jump(1)")
                     else
                         if vim.iter({ [["]], "'", "]", "}", ")", "`", "$" }):find(ctx.after():sub(1, 1)) ~= nil then
