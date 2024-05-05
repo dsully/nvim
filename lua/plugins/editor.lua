@@ -155,7 +155,9 @@ return {
             telescope.load_extension("zf-native")
         end,
         init = function()
-            for _, map in pairs({
+            local map = require("helpers.keys").map
+
+            for _, t in pairs({
                 { key = "B", cmd = "buffers", desc = "Buffers" },
                 { key = "c", cmd = "git_commits", desc = "Git Commits" },
                 { key = "g", cmd = "live_grep", desc = "Live Grep" },
@@ -164,7 +166,7 @@ return {
                 { key = "r", cmd = "resume", desc = "Resume Last Telescope Finder" },
                 { key = "w", cmd = "grep_string", desc = "Words" },
             }) do
-                vim.keymap.set("n", "<leader>f" .. map.key, tscope(map.cmd, M.args), { desc = map.desc })
+                map("<leader>f" .. t.key, tscope(t.cmd, M.args), t.desc)
             end
         end,
         dependencies = {

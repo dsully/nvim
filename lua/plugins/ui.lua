@@ -45,13 +45,15 @@ return {
         end,
         opts = {
             options = {
-                always_show_bufferline = true,
                 close_command = function(n)
                     require("mini.bufremove").delete(n, false)
                 end,
-                numbers = "ordinal",
                 diagnostics = "nvim_lsp",
-                show_buffer_close_icons = false,
+                left_mouse_command = "buffer %d",
+                middle_mouse_command = nil,
+                numbers = "ordinal",
+                right_mouse_command = nil,
+                show_buffer_close_icons = true,
                 sort_by = "insert_at_end",
             },
         },
@@ -182,14 +184,12 @@ return {
 
             local hl_search = item({
                 content = function()
-                    ---@diagnostic disable-next-line: undefined-field
                     local text = require("noice").api.status.search.get()
                     local query = vim.F.if_nil(text:match("%/(.-)%s"), text:match("%?(.-)%s"))
 
                     return string.format("󰍉  %s [%s]", query, text:match("%d+%/%d+"))
                 end,
                 hidden = function()
-                    ---@diagnostic disable-next-line: undefined-field
                     return not package.loaded["noice"] or not require("noice").api.status.search.has()
                 end,
                 hl = { fg = colors.white.base },
@@ -497,6 +497,7 @@ return {
                 ["pyproject.toml"] = { icon = "", color = "#4B8DDE", name = "Pyproject" },
                 ["readme.md"] = { icon = "󰋼", color = "#69a3df", name = "Readme" },
                 ["requirements.txt"] = { icon = "", color = "#3572A5", name = "Requirements" },
+                ["robots.txt"] = { icon = "󰚩", name = "Robots" },
                 ["ruff.toml"] = { icon = "󱐋", color = "#fbc11a", name = "Ruff" },
                 ["setup.py"] = { icon = "", color = "#4B8DDE", name = "SetupPy" },
                 ["sonar-project.properties"] = { icon = "󰼮", color = "#CB2029", name = "Sonar" },
@@ -511,6 +512,7 @@ return {
                 lock = { icon = "", color = "#eb4034", name = "lock" },
                 log = { icon = "󱞎", color = "#afb42b", name = "Log" },
                 makefile = { icon = "", color = "#F54842", name = "Make" },
+                out = { icon = "", name = "Out" },
                 properties = { icon = "", color = "#3970B4", name = "Properties" },
                 py = { icon = "󰌠", color = "#ffd43b", name = "Python" },
                 sh = { icon = "", color = "#f56b67", name = "Shell" },
@@ -643,5 +645,47 @@ return {
                 hl = "LspDiagnosticsDefaultInformation",
             },
         },
+    },
+    {
+        "luukvbaal/statuscol.nvim",
+        branch = "0.10",
+        dependencies = {
+            "lewis6991/gitsigns.nvim",
+        },
+        event = "LazyFile",
+        opts = function()
+            local ignored = require("config.defaults").ignored
+
+            e.on(e.User, function()
+                for _, win in ipairs(vim.api.nvim_list_wins()) do
+                    if vim.bo[vim.api.nvim_win_get_buf(win)].buftype == "" then
+                        vim.wo[win].stc = "%!v:lua.StatusCol()"
+                    end
+                end
+            end, { pattern = "ResessionLoadPost" })
+
+            return {
+                bt_ignore = ignored.buffer_types,
+                ft_ignore = ignored.file_types,
+                relculright = true,
+                segments = {
+                    {
+                        click = "v:lua.ScSa",
+                        sign = {
+                            colwidth = 1,
+                            namespace = { "Gitsigns*" },
+                        },
+                    },
+                    {
+                        click = "v:lua.ScSa",
+                        sign = {
+                            colwidth = 1,
+                            maxwidth = 2,
+                            namespace = { "diagnostic", "mark_" },
+                        },
+                    },
+                },
+            }
+        end,
     },
 }

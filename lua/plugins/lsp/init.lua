@@ -560,7 +560,7 @@ return {
                     typos_lsp = {
                         cmd = { "typos-lsp", "--config", vim.env.HOME .. "/.typos.toml" },
                         init_options = {
-                            diagnosticSeverity = "Warning",
+                            diagnosticSeverity = "Hint",
                         },
                     },
                     yamlls = {
