@@ -47,7 +47,7 @@ return {
                 },
             })
         end,
-        event = "VeryLazy",
+        event = "LazyFile",
     },
     {
         "linrongbin16/gitlinker.nvim",

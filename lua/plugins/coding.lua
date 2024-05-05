@@ -626,7 +626,6 @@ return {
     {
         "smjonas/inc-rename.nvim",
         cmd = "IncRename",
-        config = true,
         keys = {
             {
                 -- Override Neovim 0.10's default mapping.
@@ -637,6 +636,11 @@ return {
                 desc = " Rename",
                 expr = true,
             },
+        },
+        opts = {
+            post_hook = function()
+                vim.fn.histdel("cmd", "^IncRename ")
+            end,
         },
     },
     {

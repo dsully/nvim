@@ -206,7 +206,6 @@ e.on(e.BufReadPost, function(args)
     end
 
     -- Skip restoring if we're in a session restore already.
-    ---@diagnostic disable-next-line: undefined-field
     if vim.b[buf].resession_restore_last_pos then
         return
     end

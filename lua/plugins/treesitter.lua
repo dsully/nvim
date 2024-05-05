@@ -59,7 +59,6 @@ return {
             { "<leader>i", vim.show_pos, desc = "Inspect Position" },
         },
         ---@type TSConfig
-        ---@diagnostic disable-next-line: missing-fields
         opts = {
             ensure_installed = {
                 "bash",

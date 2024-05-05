@@ -97,7 +97,6 @@ function M.lazy_notify()
             vim.notify = orig -- put back the original notify if needed
         end
         vim.schedule(function()
-            ---@diagnostic disable-next-line: no-unknown
             for _, notif in ipairs(notifs) do
                 vim.notify(vim.F.unpack_len(notif))
             end

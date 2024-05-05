@@ -2,7 +2,13 @@
   "neodev": {
     "library": {
       "enabled": true,
-      "plugins": ["conform.nvim", "lazy.nvim", "nvim-insx", "nvim-lspconfig", "nvim-treesitter"],
+      "plugins": [
+        "conform.nvim",
+        "lazy.nvim",
+        "nvim-insx",
+        "nvim-lspconfig",
+        "nvim-treesitter"
+      ],
       "runtime": true,
       "types": true
     }
@@ -30,12 +36,23 @@
           "workspaceWord": true
         },
         "diagnostics": {
-          "disable": ["missing-fields"],
-          "globals": ["bit", "describe", "it", "vim"],
-          "unusedLocalExclude": ["_*"]
+          "disable": [
+            "missing-fields"
+          ],
+          "globals": [
+            "bit",
+            "describe",
+            "it",
+            "vim"
+          ],
+          "unusedLocalExclude": [
+            "_*"
+          ]
         },
         "doc": {
-          "privateName": ["^_"]
+          "privateName": [
+            "^_"
+          ]
         },
         "format": {
           "enable": false
@@ -65,7 +82,9 @@
     "pyright": {
       "pyright.disableOrganizeImports": true,
       "python.analysis.diagnosticMode": "openFilesOnly",
-      "python.analysis.ignore": ["*"]
+      "python.analysis.ignore": [
+        "*"
+      ]
     }
   }
 }
