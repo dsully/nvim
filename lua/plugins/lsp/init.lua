@@ -438,22 +438,16 @@ return {
                         settings = {
                             ["rust-analyzer"] = {
                                 cargo = {
-                                    autoreload = true,
-                                    features = "all",
+                                    buildScripts = {
+                                        enable = true,
+                                    },
                                 },
                                 check = {
                                     command = "clippy",
                                     enable = true,
                                     extraArgs = { "--no-deps" },
                                 },
-                                checkOnSave = {
-                                    command = "clippy",
-                                    enable = true,
-                                    extraArgs = { "--no-deps" },
-                                },
                                 completion = {
-                                    autoimport = true,
-                                    autoself = true,
                                     fullFunctionSignatures = { enable = true },
                                 },
                                 diagnostics = {
@@ -461,11 +455,15 @@ return {
                                     experimental = {
                                         enable = true,
                                     },
+                                    styleLints = {
+                                        enable = true,
+                                    },
                                 },
                                 files = {
                                     excludeDirs = {
                                         ".direnv",
                                         ".git",
+                                        ".venv",
                                         ".vscode",
                                         "assets",
                                         "ci",
@@ -473,37 +471,35 @@ return {
                                         "docs",
                                         "js",
                                         "target",
+                                        "venv",
                                     },
-                                },
-                                hover = {
-                                    actions = {
-                                        references = { enable = true },
-                                    },
+                                    -- watcher = "server",
                                 },
                                 imports = {
                                     granularity = {
-                                        group = "module",
+                                        enforce = true,
+                                        group = "crate",
                                     },
                                     prefix = "self",
                                 },
                                 inlayHints = {
-                                    chainingHints = { enable = true },
                                     closureReturnTypeHints = { enable = "with_block" },
+                                    closureStyle = "rust_analyzer",
                                     parameterHints = { enable = false },
-                                },
-                                interpret = {
-                                    tests = true,
                                 },
                                 lens = {
                                     references = {
                                         adt = { enable = true },
                                         method = { enable = true },
-                                        enumVariant = { enable = true },
-                                        trait = { enable = true },
                                     },
                                 },
-                                lru = {
-                                    capacity = 512,
+                                procMacro = {
+                                    enable = true,
+                                    ignored = {
+                                        ["async-trait"] = { "async_trait" },
+                                        ["napi-derive"] = { "napi" },
+                                        ["async-recursion"] = { "async_recursion" },
+                                    },
                                 },
                                 references = {
                                     excludeImports = true,
@@ -514,16 +510,6 @@ return {
                                 semanticHighlighting = {
                                     operator = {
                                         specialization = { enable = true },
-                                    },
-                                },
-                                typing = {
-                                    autoClosingAngleBrackets = { enable = true },
-                                },
-                                workspace = {
-                                    symbol = {
-                                        search = {
-                                            kind = "all_symbols",
-                                        },
                                     },
                                 },
                             },
