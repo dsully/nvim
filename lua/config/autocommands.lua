@@ -197,26 +197,27 @@ end, {
 --     end,
 -- })
 
-e.on(e.BufReadPost, function(args)
-    local buf = args.buf
-
-    if vim.tbl_contains(require("config.defaults").ignored.file_types, vim.bo[buf].filetype) then
-        vim.notify("Skipping position restore for: " .. vim.bo[buf].filetype, vim.log.levels.WARN)
+e.on(e.BufWinEnter, function(args)
+    if vim.tbl_contains(require("config.defaults").ignored.file_types, vim.bo.filetype) then
         return
     end
 
-    -- Skip restoring if we're in a session restore already.
-    if vim.b[buf].resession_restore_last_pos then
-        return
-    end
+    local row, col = unpack(vim.api.nvim_buf_get_mark(args.buf, '"'))
+    local count = vim.api.nvim_buf_line_count(args.buf)
 
-    local row, col = unpack(vim.api.nvim_buf_get_mark(buf, '"'))
-
-    if row > 0 and row <= vim.api.nvim_buf_line_count(buf) then
+    if row > 0 and row <= count then
         vim.api.nvim_win_set_cursor(0, { row, col })
-    end
 
-    vim.cmd.normal({ "zz", bang = true })
+        -- If we're in the middle of the file, set the cursor position and center the screen
+        if count - row > ((vim.fn.line("w$") - vim.fn.line("w0")) / 2) - 1 then
+            vim.cmd.normal({ "zz", bang = true })
+
+        -- If we're at the end of the screen, set the cursor position and move the window up by one with C-e.
+        -- This is to show that we are at the end of the file. If we did "zz" half the screen would be blank.
+        elseif count ~= vim.fn.line("w$") then
+            vim.api.nvim_feedkeys(vim.api.nvim_replace_termcodes("<C-e>", true, false, true), "n", false)
+        end
+    end
 end, {
     desc = "Restore cursor to the last known position.",
 })
