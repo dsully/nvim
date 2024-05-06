@@ -430,21 +430,18 @@ return {
 
             local counts = item({
                 hl = { bg = colors.black.base, fg = colors.white.base },
+                prefix = " ",
                 sep_left = sep.left_lower_triangle_solid(true),
                 content = table.concat({
                     core.group({
                         core.code("l"),
                         "/",
                         core.code("L"),
-                    }, { align = "right", min_width = 8 }),
-                    core.group({
                         ":",
                         core.code("v"),
-                    }, { align = "left", min_width = 5 }),
-                    core.group({
-                        core.code("P"),
+                        core.code("P", { min_width = 4 }),
                         " ",
-                    }, { align = "right", min_width = 5 }),
+                    }, { align = "right" }),
                 }),
             })
 
