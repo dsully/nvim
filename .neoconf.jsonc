@@ -5,6 +5,7 @@
       "plugins": [
         "conform.nvim",
         "lazy.nvim",
+        "nvim-cokeline",
         "nvim-insx",
         "nvim-lspconfig",
         "nvim-treesitter"

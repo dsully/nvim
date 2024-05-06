@@ -381,28 +381,6 @@ return {
             require("mini.surround").setup()
         end,
         event = "LazyFile",
-        keys = {
-            {
-                "<leader>bd",
-                function()
-                    local bd = require("mini.bufremove").delete
-
-                    if vim.bo.modified then
-                        local choice = vim.fn.confirm(("Save changes to %q?"):format(vim.api.nvim_buf_get_name(0), "&Yes\n&No\n&Cancel"))
-
-                        if choice == 1 then -- Yes
-                            vim.cmd.write()
-                            bd(0)
-                        elseif choice == 2 then -- No
-                            bd(0, true)
-                        end
-                    else
-                        bd(0)
-                    end
-                end,
-                desc = " Delete Buffer",
-            },
-        },
     },
     {
         "hrsh7th/nvim-insx",
