@@ -124,10 +124,10 @@ return {
                 suffix = " ",
                 hl = { bg = colors.black.base },
                 config = {
-                    error = { prefix = icons.error, fg = colors.red.base },
-                    warn = { prefix = icons.warn, fg = colors.yellow.base },
-                    info = { prefix = icons.info, fg = colors.blue.bright },
-                    hint = { prefix = icons.hint, fg = colors.blue.bright },
+                    error = { prefix = icons.diagnostics.error, fg = colors.red.base },
+                    warn = { prefix = icons.diagnostics.warn, fg = colors.yellow.base },
+                    info = { prefix = icons.diagnostics.info, fg = colors.blue.bright },
+                    hint = { prefix = icons.diagnostics.hint, fg = colors.blue.bright },
                 },
                 sep_right = sep.right_lower_triangle_solid(true),
                 hidden = require("nougat.nut.buf.diagnostic_count").hidden.if_zero(),
@@ -642,7 +642,7 @@ return {
             sign = {
                 enabled = true,
                 text = "󰌶",
-                hl = "LspDiagnosticsDefaultInformation",
+                hl = "DiagnosticSignHint",
             },
         },
     },
