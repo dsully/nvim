@@ -161,7 +161,7 @@ return {
                 { key = "B", cmd = "buffers", desc = "Buffers" },
                 { key = "c", cmd = "git_commits", desc = "Git Commits" },
                 { key = "g", cmd = "live_grep", desc = "Live Grep" },
-                { key = "i", cmd = "symbols", desc = "Icons / Symbols" },
+                { key = "e", cmd = "symbols", desc = "Emojii" },
                 { key = "o", cmd = "oldfiles", desc = "Recently Opened" },
                 { key = "r", cmd = "resume", desc = "Resume Last Telescope Finder" },
                 { key = "w", cmd = "grep_string", desc = "Words" },
@@ -200,7 +200,7 @@ return {
     },
     {
         "2kabhishek/nerdy.nvim",
-        keys = { { "<leader>fl", tscope("nerdy"), { desc = "Nerd Icons" } } },
+        keys = { { "<leader>fi", tscope("nerdy"), { desc = "Nerd Icons" } } },
     },
     {
         "SmiteshP/nvim-navic",
