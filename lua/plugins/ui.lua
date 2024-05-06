@@ -649,20 +649,17 @@ return {
     {
         "luukvbaal/statuscol.nvim",
         branch = "0.10",
-        dependencies = {
-            "lewis6991/gitsigns.nvim",
-        },
-        event = "LazyFile",
+        event = "UIEnter",
         opts = function()
             local ignored = require("config.defaults").ignored
 
-            e.on(e.User, function()
+            e.on(e.SessionLoadPost, function()
                 for _, win in ipairs(vim.api.nvim_list_wins()) do
                     if vim.bo[vim.api.nvim_win_get_buf(win)].buftype == "" then
                         vim.wo[win].stc = "%!v:lua.StatusCol()"
                     end
                 end
-            end, { pattern = "ResessionLoadPost" })
+            end, { desc = "Load statuscol after a session restore." })
 
             return {
                 bt_ignore = ignored.buffer_types,
