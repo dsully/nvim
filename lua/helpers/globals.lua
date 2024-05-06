@@ -26,3 +26,9 @@ _G.tscope = function(command, args)
         vim.cmd.Telescope({ args = { command, unpack(args or {}) } })
     end
 end
+
+--- Create a namespace.
+--- @param name string The name of the namespace.
+_G.ns = function(name)
+    return vim.api.nvim_create_namespace("dsully/" .. name)
+end
