@@ -249,18 +249,14 @@ local M = {
     WinScrolled = "WinScrolled",
 }
 
----@class EventOpts
----@field group string|integer?
----@field pattern string|string[]?
----@field buffer integer?
----@field desc string?
----@field once boolean?
----@field nested boolean?
+---@alias EventOpts vim.api.keyset.create_autocmd
+---@alias EmitOpts vim.api.keyset.exec_autocmds
 
 ---@param event string | string[]
 ---@param callback fun(args: table)|EventOpts
----@class opts EventOpts?
-function M.on(event, callback, opts)
+---@param opts EventOpts?
+---@return integer
+M.on = function(event, callback, opts)
     opts = opts or {}
 
     if type(event) == "string" then
@@ -273,26 +269,28 @@ function M.on(event, callback, opts)
         opts.callback = callback
     end
 
-    vim.api.nvim_create_autocmd(event, opts)
+    return vim.api.nvim_create_autocmd(event, opts)
 end
-
----@class EmitOpts
----@field pattern string|string[]?
----@field data any?
----@field buffer integer?
----@field modeline boolean?
----@field group string|integer?
 
 ---@param event string
 ---@param opts EmitOpts?
-function M.emit(event, opts)
+---@return nil
+M.emit = function(event, opts)
     opts = opts or {}
 
     if M[event] then
         vim.api.nvim_exec_autocmds(event, opts)
     else
-        vim.notify("Unknown event: " .. event, vim.log.levels.vim.notify)
+        vim.notify("Unknown event: " .. event, vim.log.levels.ERROR)
     end
+end
+
+--- Create an autocommand group.
+--- @param name string The name of the group.
+--- @param clear boolean? Whether to clear the group.
+--- @return integer
+M.group = function(name, clear)
+    return vim.api.nvim_create_augroup(vim.env.USER .. "/" .. name, { clear = clear ~= nil and clear or true })
 end
 
 return M
