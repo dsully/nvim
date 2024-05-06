@@ -179,10 +179,10 @@ return {
                     underline = true,
                     signs = {
                         text = {
-                            [vim.diagnostic.severity.ERROR] = defaults.icons.error,
-                            [vim.diagnostic.severity.WARN] = defaults.icons.warn,
-                            [vim.diagnostic.severity.INFO] = defaults.icons.info,
-                            [vim.diagnostic.severity.HINT] = defaults.icons.hint,
+                            [vim.diagnostic.severity.ERROR] = defaults.icons.diagnostics.error,
+                            [vim.diagnostic.severity.WARN] = defaults.icons.diagnostics.warn,
+                            [vim.diagnostic.severity.INFO] = defaults.icons.diagnostics.info,
+                            [vim.diagnostic.severity.HINT] = defaults.icons.diagnostics.hint,
                         },
                     },
                     severity_sort = true,

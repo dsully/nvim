@@ -95,12 +95,95 @@ local M = {
         "yamllint",
     },
 
-    -- Diagnostic symbols in the gutter.
     icons = {
-        error = "󰅚 ",
-        warn = "󰀪 ",
-        info = " ",
-        hint = "󰌶 ",
+        actions = {
+            close = "󰅖",
+            close_box = "󰅗",
+            close_hexagon = "󰅜",
+            close_outline = "󰅚",
+            close_round = "󰅙",
+        },
+
+        diagnostics = {
+            error = "󰞏", --
+            warn = "", -- "",--
+            hint = "󱐌", --"󰮔", -- 󱐌
+            info = "",
+            -- error = "󰅚 ",
+            -- warn = "󰀪 ",
+            -- info = " ",
+            -- hint = "󰌶 ",
+        },
+
+        fold = {
+            open = "",
+            closed = "",
+        },
+
+        menu = {
+            actions = {
+                outline = {
+                    left = "󰨂",
+                    right = "󰨃",
+                    up = "󰚷",
+                    down = "󰚶",
+                    swap = "󰩥",
+                    filter = "󱃦",
+                },
+                filled = {
+                    up = "󰍠",
+                    down = "󰍝",
+                    left = "󰍞",
+                    right = "󰍟",
+                    swap = "󰩤",
+                    filter = "󱃥",
+                },
+            },
+            hamburger = "󰍜",
+            hamburger_open = "󰮫",
+        },
+
+        misc = {
+            circle = "",
+            circle_filled = "",
+            circle_slash = "",
+            datetime = "󱛡 ",
+            ellipse = "…",
+            ellipse_dbl = "",
+            hook = "󰛢",
+            hook_disabled = "󰛣",
+            kebab = "",
+            modified = "●",
+            newline = "",
+        },
+
+        separators = {
+            angle_quote = {
+                left = "«",
+                right = "»",
+            },
+            chevron = {
+                left = "",
+                right = "",
+                down = "",
+            },
+            circle = {
+                left = "",
+                right = "",
+            },
+            arrow = {
+                left = "",
+                right = "",
+            },
+            slant = {
+                left = "",
+                right = "",
+            },
+            bar = {
+                left = "⎸",
+                right = "⎹",
+            },
+        },
     },
 
     -- Various buffer and file types that should be ignored.
