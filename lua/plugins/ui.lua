@@ -22,42 +22,247 @@ return {
         },
     },
     {
-        "akinsho/bufferline.nvim",
-        event = "VimEnter",
-        keys = function()
-            --
-            -- stylua: ignore
-            local maps = {
-                -- Go to the last buffer.
-                { "<leader>$", function() require("bufferline").go_to(-1, true) end, desc = "which_key_ignore", },
-            }
+        "willothy/nvim-cokeline",
+        config = function()
+            local icons = require("config.defaults").icons
+
+            local mappings = require("cokeline.mappings")
+            local map = require("helpers.keys").map
 
             for i = 1, 9 do
                 -- stylua: ignore
-                table.insert(maps, { "<leader>" .. i, function() require("bufferline").go_to(i, true) end, desc = "which_key_ignore" })
+                map("<leader>" .. i, function() mappings.by_index('focus', i) end, "which_key_ignore")
 
                 -- Allow Option-N in Wezterm.
                 -- stylua: ignore
-                table.insert(maps, { string.format("<M-%d>", i), function() require("bufferline").go_to(i, true) end, desc = "which_key_ignore" })
+                map(string.format("<M-%d>", i), function() mappings.by_index("focus", i) end, "which_key_ignore")
             end
 
-            return maps
+            ---@type Component[]
+            local components = {
+                space = {
+                    text = " ",
+                    truncation = { priority = 1 },
+                },
+
+                two_spaces = {
+                    text = "  ",
+                    truncation = { priority = 1 },
+                },
+
+                separator = {
+                    ---@param buffer Buffer
+                    text = function(buffer)
+                        return buffer.index == 1 and "" or icons.separators.bar.left
+                    end,
+                    truncation = { priority = 1 },
+                },
+
+                devicon = {
+                    ---@param buffer Buffer
+                    text = function(buffer)
+                        return buffer.devicon.icon
+                    end,
+                    ---@param buffer Buffer
+                    fg = function(buffer)
+                        return buffer.devicon.color
+                    end,
+                    italic = function(_)
+                        return mappings.is_picking_focus() or mappings.is_picking_close()
+                    end,
+                    bold = function(_)
+                        return mappings.is_picking_focus() or mappings.is_picking_close()
+                    end,
+                    truncation = { priority = 1 },
+                },
+
+                idx = {
+                    ---@param buffer Buffer
+                    text = function(buffer)
+                        return buffer.index .. ": "
+                    end,
+                    truncation = { priority = 1 },
+                },
+
+                unique_prefix = {
+                    ---@param buffer Buffer
+                    text = function(buffer)
+                        return buffer.unique_prefix
+                    end,
+                    fg = "Comment",
+                    style = "italic",
+                    truncation = {
+                        priority = 3,
+                        direction = "left",
+                    },
+                },
+
+                filename = {
+                    ---@param buffer Buffer
+                    text = function(buffer)
+                        return buffer.filename
+                    end,
+                    ---@param buffer Buffer
+                    bold = function(buffer)
+                        return buffer.is_focused
+                    end,
+                    ---@param buffer Buffer
+                    underline = function(buffer)
+                        return buffer.is_hovered and not buffer.is_focused
+                    end,
+                    ---@param buffer Buffer
+                    fg = function(buffer)
+                        if buffer.diagnostics.errors ~= 0 then
+                            return "DiagnosticError"
+                        elseif buffer.diagnostics.warnings ~= 0 then
+                            return "DiagnosticWarn"
+                        elseif buffer.diagnostics.infos ~= 0 then
+                            return "DiagnosticInfo"
+                        end
+                    end,
+                    truncation = {
+                        priority = 2,
+                        direction = "left",
+                    },
+                },
+
+                diagnostics = {
+                    ---@param buffer Buffer
+                    text = function(buffer)
+                        return (buffer.diagnostics.errors ~= 0 and " " .. icons.diagnostics.error .. buffer.diagnostics.errors)
+                            or (buffer.diagnostics.warnings ~= 0 and " " .. icons.diagnostics.warn .. buffer.diagnostics.warnings)
+                            or ""
+                    end,
+                    ---@param buffer Buffer
+                    fg = function(buffer)
+                        if buffer.diagnostics.errors ~= 0 then
+                            return "DiagnosticError"
+                        elseif buffer.diagnostics.warnings ~= 0 then
+                            return "DiagnosticWarn"
+                        elseif buffer.diagnostics.infos ~= 0 then
+                            return "DiagnosticInfo"
+                        end
+                    end,
+                    truncation = { priority = 1 },
+                },
+
+                close_or_unsaved = {
+                    ---@param buffer Buffer
+                    text = function(buffer)
+                        require("telescope")
+
+                        if buffer.is_hovered then
+                            return buffer.is_modified and icons.misc.modified or icons.actions.close_round
+                        else
+                            return buffer.is_modified and icons.misc.modified or icons.actions.close
+                        end
+                    end,
+                    bold = true,
+                    delete_buffer_on_left_click = true,
+                    ---@param buffer Buffer
+                    fg = function(buffer)
+                        return buffer.is_modified and "DiagnosticOk" or nil
+                    end,
+                    truncation = { priority = 1 },
+                },
+            }
+
+            require("cokeline").setup({
+                buffers = {
+                    -- Keep only current project related buffers unless buffer is modified.
+                    filter_valid = function(buffer)
+                        return buffer.is_focused or buffer.is_modified or buffer.path:find(vim.uv.cwd(), 1, true) == 1
+                    end,
+                },
+                components = {
+                    components.space,
+                    components.separator,
+                    components.space,
+                    components.devicon,
+                    components.space,
+                    components.idx,
+                    components.unique_prefix,
+                    components.filename,
+                    -- components.diagnostics,
+                    components.space,
+                    components.close_or_unsaved,
+                    components.space,
+                    -- {
+                    --     text = function(buffer)
+                    --         return buffer.is_last and icons.separators.bar.right or ""
+                    --     end,
+                    --     fg = "#2b3243", -- TODO: use hlgroup
+                    --     bg = function(buffer)
+                    --         return buffer.is_focused and groups.bg_active or groups.bg
+                    --     end,
+                    -- },
+                },
+                default_hl = {
+                    ---@param buffer Buffer
+                    fg = function(buffer)
+                        return buffer.is_focused and "Normal" or "Comment"
+                    end,
+                    bg = "ColorColumn",
+                },
+            })
         end,
-        opts = {
-            options = {
-                close_command = function(n)
-                    require("mini.bufremove").delete(n, false)
+        dependencies = {
+            "nvim-lua/plenary.nvim",
+            "nvim-tree/nvim-web-devicons",
+            "stevearc/resession.nvim",
+        },
+        event = "LazyFile",
+        keys = {
+            {
+                "<leader>bd",
+                function()
+                    local current = require("cokeline.buffers").get_current()
+
+                    if current then
+                        require("cokeline.mappings").by_index("close", current.index)
+                    end
                 end,
-                diagnostics = "nvim_lsp",
-                left_mouse_command = "buffer %d",
-                middle_mouse_command = nil,
-                numbers = "ordinal",
-                right_mouse_command = nil,
-                show_buffer_close_icons = true,
-                sort_by = "insert_at_end",
+                desc = " Delete Buffer",
             },
         },
     },
+    -- {
+    --     "akinsho/bufferline.nvim",
+    --     event = "BufReadPost",
+    --     keys = function()
+    --         --
+    --         -- stylua: ignore
+    --         local maps = {
+    --             -- Go to the last buffer.
+    --             { "<leader>$", function() require("bufferline").go_to(-1, true) end, desc = "which_key_ignore", },
+    --         }
+    --
+    --         for i = 1, 9 do
+    --             -- stylua: ignore
+    --             table.insert(maps, { "<leader>" .. i, function() require("bufferline").go_to(i, true) end, desc = "which_key_ignore" })
+    --
+    --             -- Allow Option-N in Wezterm.
+    --             -- stylua: ignore
+    --             table.insert(maps, { string.format("<M-%d>", i), function() require("bufferline").go_to(i, true) end, desc = "which_key_ignore" })
+    --         end
+    --
+    --         return maps
+    --     end,
+    --     opts = {
+    --         options = {
+    --             close_command = function(n)
+    --                 require("mini.bufremove").delete(n, false)
+    --             end,
+    --             diagnostics = "nvim_lsp",
+    --             left_mouse_command = "buffer %d",
+    --             middle_mouse_command = nil,
+    --             numbers = "ordinal",
+    --             right_mouse_command = nil,
+    --             show_buffer_close_icons = true,
+    --             sort_by = "insert_at_end",
+    --         },
+    --     },
+    -- },
     {
         "MunifTanjim/nougat.nvim",
         config = function()
