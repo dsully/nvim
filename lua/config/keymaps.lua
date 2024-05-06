@@ -41,3 +41,11 @@ if vim.g.os == "Darwin" then
         vim.system({ "open", filename }):wait()
     end, { desc = "󰏋 Open in App" })
 end
+
+-- Common misspellings
+vim.cmd.cnoreabbrev("qw", "wq")
+vim.cmd.cnoreabbrev("Wq", "wq")
+vim.cmd.cnoreabbrev("WQ", "wq")
+vim.cmd.cnoreabbrev("Qa", "qa")
+vim.cmd.cnoreabbrev("Bd", "bd")
+vim.cmd.cnoreabbrev("bD", "bd")
