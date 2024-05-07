@@ -117,6 +117,7 @@ e.on(e.BufNewFile, function(args)
         vim.cmd.filetype("detect")
     end
 
+    ---@diagnostic disable-next-line: redundant-return-value
     return path
 end, {
     nested = true,
@@ -372,5 +373,5 @@ e.on(e.TextYankPost, function()
     copy(yank_data)
 end, {
     desc = "Copy and highlight yanked text to system clipboard",
-    group = vim.api.nvim_create_augroup("SmartYank", { clear = true }),
+    group = e.group("SmartYank", true),
 })

@@ -40,7 +40,6 @@ return {
             -- Ignore junk
             ["<2-LeftMouse>"] = { "which_key_ignore" },
             ["<C-L>"] = { "which_key_ignore" },
-            ["<C-S>"] = { "Signature Help 󰞂 " },
             ["<C-W>d"] = { "Open Float" },
             ["<SNR>"] = { "which_key_ignore" },
             --
