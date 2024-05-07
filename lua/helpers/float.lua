@@ -7,6 +7,7 @@ local M = {}
 ---@field width number?
 ---@field height number?
 ---@field relative string?
+---@field callback function(buf: integer)?
 
 ---@class WindowPosition
 ---@field row number
@@ -88,6 +89,10 @@ function M.open(options)
     popup:map("n", "<esc>", close, { silent = true })
 
     popup:mount()
+
+    if options.callback then
+        options.callback(popup.bufnr)
+    end
 end
 
 return M
