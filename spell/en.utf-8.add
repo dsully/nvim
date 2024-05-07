@@ -301,3 +301,5 @@ overridable
 execve
 noqa
 iterable
+lua
+msg
