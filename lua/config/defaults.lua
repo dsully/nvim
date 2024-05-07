@@ -314,7 +314,7 @@ M.colors = {
     blue = { base = "#81a1c1", bright = "#5e81ac", dim = "#668aab" },
 
     -- Nordic: black, bright_black, dark_black
-    black = { base = "#3b4252", bright = "#434c5e", dim = "#2e3440" },
+    black = { base = "#3b4252", bright = "#434c5e", dim = "#2e3440", dark = "#222730" },
 
     -- Nordic: cyan, bright_cyan, none
     cyan = { base = "#8fbcbb", bright = "#88c0d0", dim = "#69a7ba" },
@@ -640,9 +640,9 @@ M.highlights = {
     String = { fg = M.colors.green.base },
     Structure = { link = "Type" },
     Substitute = { bg = M.colors.red.base, fg = M.colors.black.dim },
-    TabLine = { bg = M.colors.black.dim, fg = M.colors.white.base },
-    TabLineFill = { bg = M.colors.black.base },
-    TabLineSel = { bg = M.colors.gray.base, fg = M.colors.black.dim },
+    TabLine = { bg = M.colors.black.dark, fg = M.colors.white.base },
+    TabLineFill = { bg = M.colors.black.dark },
+    TabLineSel = { bg = M.colors.gray.base, fg = M.colors.white.base },
     Tag = { link = "Special" },
     TermCursor = { reverse = true },
     TermCursorNC = {},
