@@ -66,7 +66,7 @@ M.on_attach = function(client, buffer)
 
     if client.supports_method(methods.textDocument_inlayHint) then
         keys.bmap("<space>i", function()
-            vim.lsp.inlay_hint.enable(not vim.lsp.inlay_hint.is_enabled())
+            vim.lsp.inlay_hint.enable(not vim.lsp.inlay_hint.is_enabled({ bufnr = buffer }))
         end, " Toggle Inlay Hints")
 
         vim.lsp.inlay_hint.enable(false)
