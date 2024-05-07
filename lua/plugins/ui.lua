@@ -122,26 +122,6 @@ return {
                     },
                 },
 
-                diagnostics = {
-                    ---@param buffer Buffer
-                    text = function(buffer)
-                        return (buffer.diagnostics.errors ~= 0 and " " .. icons.diagnostics.error .. buffer.diagnostics.errors)
-                            or (buffer.diagnostics.warnings ~= 0 and " " .. icons.diagnostics.warn .. buffer.diagnostics.warnings)
-                            or ""
-                    end,
-                    ---@param buffer Buffer
-                    fg = function(buffer)
-                        if buffer.diagnostics.errors ~= 0 then
-                            return "DiagnosticError"
-                        elseif buffer.diagnostics.warnings ~= 0 then
-                            return "DiagnosticWarn"
-                        elseif buffer.diagnostics.infos ~= 0 then
-                            return "DiagnosticInfo"
-                        end
-                    end,
-                    truncation = { priority = 1 },
-                },
-
                 close_or_unsaved = {
                     ---@param buffer Buffer
                     text = function(buffer)
