@@ -139,6 +139,7 @@ return {
             { "gD", vim.lsp.buf.declaration, desc = "󰁴 Go To Declaration" },
             { "gd", vim.lsp.buf.definition, desc = "󰁴 Go To Definition(s)" },
             { "gi", vim.lsp.buf.implementation, desc = "󰘲 Go To Implementations(s)" },
+            { "<C-S>", vim.lsp.buf.signature_help, desc = "Signature Help 󰞂 ", mode = "i" },
             -- stylua: ignore
             { "gr", function() vim.lsp.buf.references({ includeDeclaration = false }) end, desc = "󰆋 References" },
             { "<leader>fs", tscope("lsp_document_symbols"), desc = "󰆋 Symbols" },
