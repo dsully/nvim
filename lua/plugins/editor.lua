@@ -200,7 +200,7 @@ return {
     },
     {
         "2kabhishek/nerdy.nvim",
-        keys = { { "<leader>fi", tscope("nerdy"), { desc = "Nerd Icons" } } },
+        keys = { { "<leader>fi", tscope("nerdy"), desc = "Nerd Icons" } },
     },
     {
         "SmiteshP/nvim-navic",
