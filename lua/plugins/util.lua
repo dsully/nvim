@@ -1,8 +1,7 @@
 return {
-    {
-        "nvim-lua/plenary.nvim",
-        lazy = true,
-    },
+    { "justinsgithub/wezterm-types" },
+    { "nvim-lua/plenary.nvim" },
+    { "MunifTanjim/nui.nvim" },
     {
         "kkharji/sqlite.lua",
         build = function()
@@ -141,9 +140,6 @@ return {
         config = true,
         keys = { { "gx", vim.cmd.Browse, mode = { "n", "x" }, desc = "Open URL in Browser" } },
     },
-
-    -- Wezterm
-    { "justinsgithub/wezterm-types" },
 
     -- { "lewis6991/fileline.nvim", lazy = false },
 }

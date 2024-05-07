@@ -724,10 +724,6 @@ return {
         },
     },
     {
-        "MunifTanjim/nui.nvim",
-        lazy = true,
-    },
-    {
         "goolord/alpha-nvim",
         opts = function()
             local cmd = require("config.defaults").cmd
