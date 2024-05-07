@@ -32,6 +32,7 @@ M.setup = function()
     end)
 
     require("helpers.handlers").setup()
+    require("helpers.lightbulb").setup()
 
     return M.capabilities()
 end

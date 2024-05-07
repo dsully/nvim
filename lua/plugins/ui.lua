@@ -829,26 +829,6 @@ return {
         },
     },
     {
-        "kosayoda/nvim-lightbulb",
-        event = "LspAttach",
-        opts = {
-            action_kinds = { "quickfix" },
-            autocmd = {
-                enabled = true,
-            },
-            ignore = {
-                actions_without_kind = true,
-                clients = require("config.defaults").ignored.lsp,
-                ft = require("config.defaults").ignored.file_types,
-            },
-            sign = {
-                enabled = true,
-                text = "󰌶",
-                hl = "DiagnosticSignHint",
-            },
-        },
-    },
-    {
         "luukvbaal/statuscol.nvim",
         branch = "0.10",
         event = "UIEnter",

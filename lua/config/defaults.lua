@@ -153,6 +153,7 @@ local M = {
             hook = "󰛢",
             hook_disabled = "󰛣",
             kebab = "",
+            lightbulb = "󰌶",
             modified = "●",
             newline = "",
         },
