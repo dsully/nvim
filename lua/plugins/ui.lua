@@ -45,16 +45,12 @@ return {
                     truncation = { priority = 1 },
                 },
 
-                two_spaces = {
-                    text = "  ",
-                    truncation = { priority = 1 },
-                },
-
                 separator = {
                     ---@param buffer Buffer
                     text = function(buffer)
-                        return buffer.index == 1 and "" or icons.separators.bar.left
+                        return buffer.index == 1 and " " or " " .. icons.separators.bar.left
                     end,
+                    bg = "TabLineFill",
                     truncation = { priority = 1 },
                 },
 
@@ -175,7 +171,6 @@ return {
                     end,
                 },
                 components = {
-                    components.space,
                     components.separator,
                     components.space,
                     components.devicon,
@@ -183,26 +178,9 @@ return {
                     components.idx,
                     components.unique_prefix,
                     components.filename,
-                    -- components.diagnostics,
                     components.space,
                     components.close_or_unsaved,
                     components.space,
-                    -- {
-                    --     text = function(buffer)
-                    --         return buffer.is_last and icons.separators.bar.right or ""
-                    --     end,
-                    --     fg = "#2b3243", -- TODO: use hlgroup
-                    --     bg = function(buffer)
-                    --         return buffer.is_focused and groups.bg_active or groups.bg
-                    --     end,
-                    -- },
-                },
-                default_hl = {
-                    ---@param buffer Buffer
-                    fg = function(buffer)
-                        return buffer.is_focused and "Normal" or "Comment"
-                    end,
-                    bg = "ColorColumn",
                 },
             })
         end,
