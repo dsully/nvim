@@ -3,6 +3,7 @@ local M = {}
 local e = require("helpers.event")
 
 -- Hook up autocomplete for LSP to nvim-cmp, see: https://github.com/hrsh7th/cmp-nvim-lsp
+---@return lsp.ClientCapabilities
 M.capabilities = function()
     --
     -- Since cmp-nvim-lsp has an after/ file which load cmp, which I want deferred until InsertEnter,
@@ -18,9 +19,18 @@ M.capabilities = function()
         require("plenary.reload").reload_module(module)
     end
 
-    return vim.json.decode(vim.fn.readfile(path)[1])
+    ---@type lsp.ClientCapabilities
+    local capabilities = vim.json.decode(vim.fn.readfile(path)[1])
+
+    -- Disable dynamic registration of file watching on Linux.
+    if vim.g.os == "Linux" then
+        capabilities.workspace.didChangeWatchedFiles.dynamicRegistration = false
+    end
+
+    return capabilities
 end
 
+---@return lsp.ClientCapabilities
 M.setup = function()
     e.on(e.LspAttach, function(args)
         local buffer = args.buf ---@type number
