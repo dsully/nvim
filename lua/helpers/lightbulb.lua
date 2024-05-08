@@ -4,8 +4,7 @@ local e = require("helpers.event")
 
 local name = "lightbulb"
 local namespace = ns(name)
-local group = e.group(name)
-local code_action_method = vim.lsp.protocol.Methods.textDocument_codeAction
+local method = vim.lsp.protocol.Methods.textDocument_codeAction
 
 local timer = vim.uv.new_timer()
 assert(timer, "Timer was not initialized")
@@ -50,7 +49,7 @@ local function render(bufnr)
         },
     })
 
-    vim.lsp.buf_request(bufnr, code_action_method, params, function(_err, responses, _ctx, _config)
+    vim.lsp.buf_request(bufnr, method, params, function(_err, responses, _ctx, _config)
         if vim.api.nvim_get_current_buf() ~= bufnr then
             return
         end
@@ -95,42 +94,35 @@ local function update(bufnr)
 end
 
 M.setup = function()
-    e.on(e.LspAttach, function(args)
+    local group = e.group(("%s/events"):format(name), false)
+
+    e.on(e.LspAttach, function(event)
+        local client = vim.lsp.get_client_by_id(event.data.client_id)
+        local defaults = require("config.defaults")
+
+        if not client or not client.supports_method(method) then
+            return
+        end
+
         -- Skip ignored file types and buffer types.
-        if
-            vim.tbl_contains(require("config.defaults").ignored.file_types, vim.bo.filetype)
-            or vim.tbl_contains(require("config.defaults").ignored.buffer_types, vim.bo.buftype)
-        then
+        -- TODO: Move these into a function.
+        if defaults.ignored.file_types[vim.bo.filetype] or defaults.ignored.buffer_types[vim.bo.buftype] then
             return
         end
 
-        local client = vim.lsp.get_client_by_id(args.data.client_id)
-
-        if not client or not client.supports_method(code_action_method) then
+        if defaults.ignored.lsp[client.name] then
             return
         end
 
-        for _, ignored in ipairs(require("config.defaults").ignored.lsp) do
-            if client.name == ignored then
-                return
-            end
-        end
-
-        local buf = args.buf
-        local buf_group_name = name .. tostring(buf)
-
-        if pcall(vim.api.nvim_get_autocmds, { group = buf_group_name, buffer = buf }) then
-            return
-        end
-
-        local lb_buf_group = e.group(buf_group_name)
+        local buf = event.buf
+        local buf_group = e.group(("%s/buffer/%s"):format(name, buf), false)
 
         e.on(e.CursorMoved, function()
             update(buf)
         end, {
             buffer = buf,
             desc = "Update lightbulb when moving the cursor in normal/visual mode",
-            group = lb_buf_group,
+            group = buf_group,
         })
 
         e.on({ e.InsertEnter, e.BufLeave }, function()
@@ -138,17 +130,23 @@ M.setup = function()
         end, {
             buffer = buf,
             desc = "Update lightbulb when entering insert mode or leaving the buffer",
-            group = lb_buf_group,
+            group = buf_group,
+        })
+
+        -- Remove the group when the buffer is deleted.
+        e.on(e.BufDelete, function()
+            pcall(vim.api.nvim_del_augroup_by_id, buf_group)
+
+            if #vim.lsp.get_clients({ method = method }) == 0 then
+                pcall(vim.api.nvim_del_augroup_by_id, group)
+            end
+        end, {
+            buffer = buf,
+            desc = "LSP Light Bulb Buffer Clean Up",
+            group = buf_group,
         })
     end, {
-        desc = "Configure code action lightbulb",
-        group = group,
-    })
-
-    e.on(e.LspDetach, function(args)
-        pcall(vim.api.nvim_del_augroup_by_name, name .. tostring(args.buf))
-    end, {
-        desc = "Detach code action lightbulb",
+        desc = "LSP Light Bulb Hints",
         group = group,
     })
 end
