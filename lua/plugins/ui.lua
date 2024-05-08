@@ -144,12 +144,6 @@ return {
             }
 
             require("cokeline").setup({
-                buffers = {
-                    -- Keep only current project related buffers unless buffer is modified.
-                    filter_valid = function(buffer)
-                        return buffer.is_focused or buffer.is_modified or buffer.path:find(vim.uv.cwd(), 1, true) == 1
-                    end,
-                },
                 components = {
                     components.separator,
                     components.space,
