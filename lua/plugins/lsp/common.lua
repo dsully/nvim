@@ -50,30 +50,53 @@ end
 ---@param client vim.lsp.Client
 ---@param buffer integer
 M.on_attach = function(client, buffer)
-    local methods = vim.lsp.protocol.Methods
+    local defaults = require("config.defaults")
     local keys = require("helpers.keys")
+    local methods = vim.lsp.protocol.Methods
 
-    --
-    -- https://github.com/neovim/nvim-lspconfig/wiki/UI-Customization#highlight-symbol-under-cursor
+    -- TODO: Move these into a function.
+    if defaults.ignored.file_types[vim.bo.filetype] or defaults.ignored.buffer_types[vim.bo.buftype] then
+        return
+    end
+
+    if defaults.ignored.lsp[client.name] then
+        return
+    end
 
     if client.supports_method(methods.textDocument_documentHighlight) then
-        local group = e.group("document_highlight", false)
+        --
+        local group = e.group(("document_highlight"):format(client.name), false)
+        local method = vim.lsp.protocol.Methods.textDocument_documentHighlight
 
         e.on({ e.BufEnter, e.CursorHold, e.CursorHoldI }, function(args)
             --
-            if #vim.lsp.get_clients({ bufnr = args.buf, method = methods.textDocument_documentHighlight }) > 0 then
+            local buf_group = e.group(("document_highlight/%s"):format(args.buf), false)
+
+            if #vim.lsp.get_clients({ id = client.id, bufnr = args.buf, method = method }) > 0 then
                 vim.lsp.buf.clear_references()
                 vim.lsp.buf.document_highlight()
             end
-        end, {
-            buffer = buffer,
-            desc = ("LSP Document Highlight for: %s/%s"):format(client.name, buffer),
-            group = group,
-        })
 
-        e.on({ e.BufLeave, e.CursorMoved, e.CursorMovedI }, vim.lsp.buf.clear_references, {
-            buffer = buffer,
-            desc = ("LSP Clear References for: %s/%s"):format(client.name, buffer),
+            e.on({ e.BufLeave, e.CursorMoved, e.CursorMovedI }, vim.lsp.buf.clear_references, {
+                buffer = args.buf,
+                desc = "LSP Clear References",
+                group = buf_group,
+            })
+
+            -- Remove the group when there are no more buffers associated with the client.
+            e.on({ e.BufDelete }, function()
+                pcall(vim.api.nvim_del_augroup_by_id, buf_group)
+
+                if #vim.lsp.get_clients({ method = method }) == 0 then
+                    pcall(vim.api.nvim_del_augroup_by_id, group)
+                end
+            end, {
+                buffer = args.buf,
+                desc = "LSP Code Lens Clean Up",
+                group = buf_group,
+            })
+        end, {
+            desc = "LSP Document Highlighting",
             group = group,
         })
     end
