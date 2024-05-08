@@ -108,6 +108,12 @@ return {
                     end,
                     ---@param buffer Buffer
                     fg = function(buffer)
+                        --
+                        -- Don't show diagnostics for non-project buffers.
+                        if not buffer.path:find(tostring(vim.uv.cwd()), 1, true) then
+                            return
+                        end
+
                         if buffer.diagnostics.errors ~= 0 then
                             return "DiagnosticError"
                         elseif buffer.diagnostics.warnings ~= 0 then
