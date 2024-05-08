@@ -2,6 +2,9 @@ local M = {}
 
 local e = require("helpers.event")
 
+---@alias LspProgressEvent {data: LspProgressEventData}
+---@alias LspProgressEventData {client_id: integer, params: lsp.ProgressParams}
+
 -- Hook up autocomplete for LSP to nvim-cmp, see: https://github.com/hrsh7th/cmp-nvim-lsp
 ---@return lsp.ClientCapabilities
 M.capabilities = function()
@@ -39,7 +42,17 @@ M.setup = function()
         if client then
             M.on_attach(client, buffer)
         end
-    end)
+    end, {
+        desc = "LSP Common Attach",
+    })
+
+    ---@param event LspProgressEvent
+    e.on(e.LspProgress, function(event)
+        --
+        if event.data.client_id and event.data.params then
+            require("helpers.code_lens").on_progress(event.data)
+        end
+    end, { desc = "LSP Progress Handler" })
 
     require("helpers.handlers").setup()
     require("helpers.lightbulb").setup()
@@ -107,21 +120,6 @@ M.on_attach = function(client, buffer)
         end, " Toggle Inlay Hints")
 
         vim.lsp.inlay_hint.enable(false)
-    end
-
-    if client.supports_method(methods.textDocument_codeLens) then
-        --
-        e.on({ e.BufReadPost, e.InsertLeave }, function(args)
-            --
-            if #vim.lsp.get_clients({ bufnr = args.buf, method = methods.textDocument_codeLens }) > 0 then
-                vim.lsp.codelens.refresh({ bufnr = args.buf })
-            end
-        end, {
-            buffer = buffer,
-            desc = ("LSP Code Lens Refresh for: %s/%s"):format(client.name, buffer),
-        })
-
-        keys.bmap("clr", vim.lsp.codelens.refresh, "Refresh CodeLens")
     end
 end
 
