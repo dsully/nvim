@@ -57,6 +57,8 @@ M.on_attach = function(client, buffer)
     -- https://github.com/neovim/nvim-lspconfig/wiki/UI-Customization#highlight-symbol-under-cursor
 
     if client.supports_method(methods.textDocument_documentHighlight) then
+        local group = e.group("document_highlight", false)
+
         e.on({ e.BufEnter, e.CursorHold, e.CursorHoldI }, function(args)
             --
             if #vim.lsp.get_clients({ bufnr = args.buf, method = methods.textDocument_documentHighlight }) > 0 then
@@ -66,11 +68,13 @@ M.on_attach = function(client, buffer)
         end, {
             buffer = buffer,
             desc = ("LSP Document Highlight for: %s/%s"):format(client.name, buffer),
+            group = group,
         })
 
         e.on({ e.BufLeave, e.CursorMoved, e.CursorMovedI }, vim.lsp.buf.clear_references, {
             buffer = buffer,
             desc = ("LSP Clear References for: %s/%s"):format(client.name, buffer),
+            group = group,
         })
     end
 
