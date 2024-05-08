@@ -39,7 +39,7 @@ function M.lazy_file()
             skips[event.event] = skips[event.event] or Event.get_augroups(event.event)
         end
 
-        vim.api.nvim_exec_autocmds(e.User, { pattern = "LazyFile", modeline = false })
+        e.emit(e.User, { pattern = "LazyFile", modeline = false })
 
         for _, event in ipairs(events) do
             if vim.api.nvim_buf_is_valid(event.buf) then
@@ -58,7 +58,7 @@ function M.lazy_file()
             end
         end
 
-        vim.api.nvim_exec_autocmds(e.CursorMoved, { modeline = false })
+        e.emit(e.CursorMoved, { modeline = false })
 
         events = {}
     end
