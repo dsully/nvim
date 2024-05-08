@@ -806,6 +806,7 @@ return {
                         click = "v:lua.ScSa",
                         sign = {
                             colwidth = 1,
+                            minwidth = 1,
                             namespace = { "Gitsigns*" },
                         },
                     },
@@ -813,6 +814,7 @@ return {
                         click = "v:lua.ScSa",
                         sign = {
                             colwidth = 1,
+                            minwidth = 1,
                             maxwidth = 2,
                             namespace = { "diagnostic", "mark_" },
                         },
