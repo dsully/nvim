@@ -50,16 +50,6 @@ end, {
     desc = "Update format options and folding.",
 })
 
--- e.on(e.BufHidden, function(event)
---     if event.file == "" and vim.bo[event.buf].buftype == "" and not vim.bo[event.buf].modified then
---         vim.schedule(function()
---             pcall(vim.api.nvim_buf_delete, event.buf, {})
---         end)
---     end
--- end, {
---     desc = "Delete [No Name] buffers",
--- })
-
 e.on(e.BufReadCmd, function(args)
     vim.cmd.bdelete({ args.buf, bang = true })
     vim.cmd.edit(vim.uri_to_fname(args.file))
