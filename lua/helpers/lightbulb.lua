@@ -1,6 +1,7 @@
 local M = {}
 
 local e = require("helpers.event")
+local lsp = require("helpers.lsp")
 
 local name = "lightbulb"
 local namespace = ns(name)
@@ -97,20 +98,9 @@ M.setup = function()
     local group = e.group(("%s/events"):format(name), false)
 
     e.on(e.LspAttach, function(event)
-        local client = vim.lsp.get_client_by_id(event.data.client_id)
-        local defaults = require("config.defaults")
+        local client = lsp.client_by_id(event.data.client_id, method)
 
-        if not client or not client.supports_method(method) then
-            return
-        end
-
-        -- Skip ignored file types and buffer types.
-        -- TODO: Move these into a function.
-        if defaults.ignored.file_types[vim.bo.filetype] or defaults.ignored.buffer_types[vim.bo.buftype] then
-            return
-        end
-
-        if defaults.ignored.lsp[client.name] then
+        if not client then
             return
         end
 

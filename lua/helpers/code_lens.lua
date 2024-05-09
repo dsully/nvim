@@ -1,5 +1,6 @@
 local M = {}
 local e = require("helpers.event")
+local lsp = require("helpers.lsp")
 
 ---@alias LspProgressInfo {token: integer, buffer: integer}
 
@@ -10,16 +11,14 @@ local events = { e.BufEnter, e.BufReadPost, e.InsertLeave }
 local methods = vim.lsp.protocol.Methods
 
 local code_lens_refresh = function()
-    for _, c in ipairs(vim.lsp.get_clients({ method = methods.textDocument_codeLens })) do
-        for _, b in ipairs(vim.tbl_keys(c.attached_buffers)) do
-            vim.lsp.codelens.refresh({ bufnr = b })
-        end
-    end
+    lsp.apply_to_buffers(function(bufnr)
+        vim.lsp.codelens.refresh({ bufnr = bufnr })
+    end, nil, methods.textDocument_codeLens)
 end
 
 ---@param data LspProgressEventData
 M.on_progress = function(data)
-    local id = data.client_id .. "." .. data.params.token
+    local id = ("%s.%s"):format(data.client_id, data.params.token)
     local value = data.params.value
 
     if not clients[id] then

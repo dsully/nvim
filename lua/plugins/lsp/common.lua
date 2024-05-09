@@ -1,6 +1,7 @@
 local M = {}
 
 local e = require("helpers.event")
+local lsp = require("helpers.lsp")
 
 ---@alias LspProgressEvent {data: LspProgressEventData}
 ---@alias LspProgressEventData {client_id: integer, params: lsp.ProgressParams}
@@ -63,16 +64,10 @@ end
 ---@param client vim.lsp.Client
 ---@param buffer integer
 M.on_attach = function(client, buffer)
-    local defaults = require("config.defaults")
     local keys = require("helpers.keys")
     local methods = vim.lsp.protocol.Methods
 
-    -- TODO: Move these into a function.
-    if defaults.ignored.file_types[vim.bo.filetype] or defaults.ignored.buffer_types[vim.bo.buftype] then
-        return
-    end
-
-    if defaults.ignored.lsp[client.name] then
+    if lsp.should_ignore(client) then
         return
     end
 

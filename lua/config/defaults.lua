@@ -200,6 +200,7 @@ local M = {
         file_types = {
             "Codewindow",
             "DressingInput",
+            "DressingSelect",
             "TelescopePrompt",
             "TelescopeResults",
             "alpha",
