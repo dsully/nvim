@@ -73,12 +73,11 @@ M.on_attach = function(client, buffer)
 
     if client.supports_method(methods.textDocument_documentHighlight) then
         --
-        local group = e.group(("document_highlight"):format(client.name), false)
         local method = vim.lsp.protocol.Methods.textDocument_documentHighlight
 
         e.on({ e.BufEnter, e.CursorHold, e.CursorHoldI }, function(args)
             --
-            local buf_group = e.group(("document_highlight/%s"):format(args.buf), false)
+            local buf_group = e.group(("document_highlight/buffer/%s"):format(args.buf), false)
 
             if #vim.lsp.get_clients({ id = client.id, bufnr = args.buf, method = method }) > 0 then
                 vim.lsp.buf.clear_references()
@@ -93,11 +92,7 @@ M.on_attach = function(client, buffer)
 
             -- Remove the group when there are no more buffers associated with the client.
             e.on({ e.BufDelete }, function()
-                pcall(vim.api.nvim_del_augroup_by_id, buf_group)
-
-                if #vim.lsp.get_clients({ method = method }) == 0 then
-                    pcall(vim.api.nvim_del_augroup_by_id, group)
-                end
+                vim.api.nvim_del_augroup_by_id(buf_group)
             end, {
                 buffer = args.buf,
                 desc = "LSP Code Lens Clean Up",
@@ -105,7 +100,6 @@ M.on_attach = function(client, buffer)
             })
         end, {
             desc = "LSP Document Highlighting",
-            group = group,
         })
     end
 

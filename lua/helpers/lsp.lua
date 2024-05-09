@@ -27,14 +27,14 @@ M.should_ignore = function(client)
     --
     -- Skip ignored file types and buffer types.
     if defaults.ignored.file_types[vim.bo.filetype] or defaults.ignored.buffer_types[vim.bo.buftype] then
-        return false
+        return true
     end
 
     if client and defaults.ignored.lsp[client.name] then
-        return false
+        return true
     end
 
-    return true
+    return false
 end
 
 ---@param id integer?
