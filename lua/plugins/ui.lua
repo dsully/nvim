@@ -809,23 +809,8 @@ return {
                 ft_ignore = ignored.file_types,
                 relculright = true,
                 segments = {
-                    {
-                        click = "v:lua.ScSa",
-                        sign = {
-                            colwidth = 1,
-                            minwidth = 1,
-                            namespace = { "Gitsigns*" },
-                        },
-                    },
-                    {
-                        click = "v:lua.ScSa",
-                        sign = {
-                            colwidth = 1,
-                            minwidth = 1,
-                            maxwidth = 2,
-                            namespace = { "diagnostic", "mark_" },
-                        },
-                    },
+                    { click = "v:lua.ScSa", sign = { colwidth = 1, namespace = { "gitsigns" } } },
+                    { click = "v:lua.ScSa", sign = { colwidth = 1, minwidth = 2, namespace = { "diagnostic" } } },
                 },
             }
         end,
