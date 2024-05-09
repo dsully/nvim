@@ -3,6 +3,13 @@ local e = require("helpers.event")
 return {
     {
         "rcarriga/nvim-notify",
+        init = function()
+            e.on(e.FileType, function()
+                vim.opt_local.cursorline = false
+            end, {
+                pattern = "notify",
+            })
+        end,
         -- stylua: ignore
         keys = {
             { "<leader>fn", function() vim.cmd.Telescope("notify") end, desc = "Notifications" },
