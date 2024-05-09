@@ -151,7 +151,6 @@ return {
             })
 
             telescope.load_extension("smart_history")
-            telescope.load_extension("ui-select")
             telescope.load_extension("zf-native")
         end,
         init = function()
@@ -173,7 +172,6 @@ return {
             { "natecraddock/telescope-zf-native.nvim" },
             { "nvim-telescope/telescope-smart-history.nvim", dependencies = { "sqlite.lua" } },
             { "nvim-telescope/telescope-symbols.nvim" },
-            { "nvim-telescope/telescope-ui-select.nvim" },
         },
         keys = {
             -- Use git_files if we're at the top of a git repo. Otherwise find_files.

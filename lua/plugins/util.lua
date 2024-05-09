@@ -1,7 +1,13 @@
 return {
     { "justinsgithub/wezterm-types" },
     { "nvim-lua/plenary.nvim" },
-    { "MunifTanjim/nui.nvim" },
+    {
+        "MunifTanjim/nui.nvim",
+        event = "LazyFile",
+        config = function()
+            require("helpers.nui").setup()
+        end,
+    },
     {
         "kkharji/sqlite.lua",
         build = function()
