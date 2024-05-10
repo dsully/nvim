@@ -167,11 +167,18 @@ return {
             }) do
                 map("<leader>f" .. t.key, tscope(t.cmd, M.args), t.desc)
             end
+
+            ---@diagnostic disable-next-line: duplicate-set-field
+            vim.ui.select = function(...)
+                require("telescope").load_extension("ui-select")
+                return vim.ui.select(...)
+            end
         end,
         dependencies = {
             { "natecraddock/telescope-zf-native.nvim" },
             { "nvim-telescope/telescope-smart-history.nvim", dependencies = { "sqlite.lua" } },
             { "nvim-telescope/telescope-symbols.nvim" },
+            { "nvim-telescope/telescope-ui-select.nvim" },
         },
         keys = {
             -- Use git_files if we're at the top of a git repo. Otherwise find_files.

@@ -135,11 +135,6 @@ return {
     {
         "olimorris/codecompanion.nvim",
         cmd = { "CodeCompanion", "CodeCompanionChat", "CodeCompanionToggle", "CodeCompanionActions", "CodeCompanionAdd" },
-        config = function(_, opts)
-            -- Ensure that telescope.ui is loaded.
-            require("telescope")
-            require("codecompanion").setup(opts)
-        end,
         opts = {
             ai_settings = {
                 chat = { model = model },

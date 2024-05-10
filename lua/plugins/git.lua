@@ -110,8 +110,6 @@ return {
             {
                 "<space>g",
                 function()
-                    -- Ensure that telescope-ui-select is loaded.
-                    require("telescope")
                     require("fugit2").git_status()
                 end,
                 desc = " Git UI",
