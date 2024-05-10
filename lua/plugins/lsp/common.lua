@@ -23,15 +23,7 @@ M.capabilities = function()
         require("plenary.reload").reload_module(module)
     end
 
-    ---@type lsp.ClientCapabilities
-    local capabilities = vim.json.decode(vim.fn.readfile(path)[1])
-
-    -- Disable dynamic registration of file watching on Linux.
-    if vim.g.os == "Linux" then
-        capabilities.workspace.didChangeWatchedFiles.dynamicRegistration = false
-    end
-
-    return capabilities
+    return vim.json.decode(vim.fn.readfile(path)[1])
 end
 
 ---@return lsp.ClientCapabilities
