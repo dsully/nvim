@@ -154,6 +154,7 @@ function M.setup()
             path = "~/dev/home/neovim",
         },
         install = {
+            colorscheme = { "nordish" },
             missing = true,
         },
         performance = {
