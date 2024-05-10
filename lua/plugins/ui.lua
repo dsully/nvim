@@ -138,8 +138,6 @@ return {
                 close_or_unsaved = {
                     ---@param buffer Buffer
                     text = function(buffer)
-                        require("telescope")
-
                         if buffer.is_hovered then
                             return buffer.is_modified and icons.misc.modified or icons.actions.close_round
                         else

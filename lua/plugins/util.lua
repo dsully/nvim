@@ -4,8 +4,12 @@ return {
     {
         "MunifTanjim/nui.nvim",
         event = "LazyFile",
-        config = function()
-            require("helpers.nui").setup()
+        init = function()
+            ---@diagnostic disable-next-line: duplicate-set-field
+            vim.ui.input = function(...)
+                require("helpers.nui").setup()
+                return vim.ui.input(...)
+            end
         end,
     },
     {
