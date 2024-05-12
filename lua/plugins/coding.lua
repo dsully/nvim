@@ -637,6 +637,13 @@ return {
         "Saecki/crates.nvim",
         event = "LazyFile",
         opts = {
+            completion = {
+                crates = {
+                    enabled = true,
+                    max_results = 8,
+                    min_chars = 3,
+                },
+            },
             lsp = {
                 actions = true,
                 completion = true,
