@@ -109,26 +109,13 @@ return {
             end, { desc = "Show LSP Capabilities" })
 
             vim.api.nvim_create_user_command("LspRestartBuffer", function()
-                local bufnr = vim.api.nvim_get_current_buf()
-
-                ---@type vim.lsp.Client[]
-                local clients = vim.iter(vim.lsp.get_clients({ bufnr = bufnr })):filter(function(client)
-                    return not vim.tbl_contains(require("config.defaults").ignored.lsp, client.name)
-                end)
-
-                for _, client in ipairs(clients) do
+                --
+                require("helpers.lsp").apply_to_buffers(function(bufnr, client)
+                    --
                     vim.lsp.stop_client(client.id, true)
-                end
 
-                vim.notify(("Restarting LSPs for: %s -> %s"):format(
-                    vim.fs.basename(vim.api.nvim_buf_get_name(bufnr)),
-                    vim.fn.join(
-                        vim.tbl_map(function(client)
-                            return client.name
-                        end, clients),
-                        ", "
-                    )
-                ))
+                    vim.notify(("Restarting LSP %s for %s"):format(client.name, vim.fs.basename(vim.api.nvim_buf_get_name(bufnr))))
+                end, { bufnr = vim.api.nvim_get_current_buf() })
 
                 vim.cmd.edit()
             end, { desc = "Restart Language Server for Buffer" })
