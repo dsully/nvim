@@ -4,7 +4,7 @@ local M = {}
 ---@param lhs string
 ---@param rhs function|string
 ---@param desc string?
----@param mode string?|table?
+---@param mode string|table<string>|nil
 ---@param opts table?
 function M.map(lhs, rhs, desc, mode, opts)
     --
@@ -25,7 +25,7 @@ end
 ---@param rhs function|string
 ---@param desc string?
 ---@param buffer integer?
----@param mode string?|table?
+---@param mode string|table<string>|nil
 ---@param opts table?
 function M.bmap(lhs, rhs, desc, buffer, mode, opts)
     --
