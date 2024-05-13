@@ -135,6 +135,7 @@ return {
     {
         -- Better % matching.
         "andymass/vim-matchup",
+        event = "LazyFile",
         init = function()
             vim.o.matchpairs = "(:),{:},[:],<:>"
 
@@ -144,7 +145,6 @@ return {
             vim.g.matchup_matchparen_deferred = 1
             vim.g.matchup_matchparen_offscreen = { method = "status_manual" }
         end,
-        event = "LazyFile",
     },
 
     -- Build treesitter queries.

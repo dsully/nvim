@@ -371,6 +371,7 @@ return {
                         on_attach = function(client, bufnr)
                             local cmd = require("config.defaults").cmd
                             local e = require("helpers.event")
+                            local keys = require("helpers.keys")
 
                             vim.cmd.compiler("cargo")
 
@@ -394,19 +395,59 @@ return {
                             client.server_capabilities.experimental.serverStatusNotification = true
                             client.server_capabilities.experimental.snippetTextEdit = true
 
-                            vim.keymap.set({ "n", "x" }, "gx", function()
+                            -- Move the cursor to the matching brace for the one at the current position.
+                            --
+                            -- See: https://github.com/rust-lang/rust-analyzer/blob/master/docs/dev/lsp-extensions.md#matching-brace
+                            keys.bmap("%", function()
+                                local params = vim.lsp.util.make_position_params()
+
+                                client.request("experimental/matchingBrace", {
+                                    textDocument = params.textDocument,
+                                    positions = { params.position },
+                                }, function(_, positions, ctx)
+                                    --
+                                    ---@cast positions lsp.Position[]
+                                    if positions then
+                                        --
+                                        local position = positions[1]
+
+                                        local offset = vim.lsp.util._get_line_byte_from_position(ctx.bufnr, position, client.offset_encoding)
+                                        local winid = vim.fn.bufwinid(ctx.bufnr)
+
+                                        -- LSP's line is 0-indexed while Neovim's line is 1-indexed.
+                                        vim.api.nvim_win_set_cursor(winid, { position.line + 1, offset })
+                                    end
+                                end)
+                            end, "Move to matching brace", bufnr)
+
+                            keys.map("gx", function()
                                 client.request("experimental/externalDocs", vim.lsp.util.make_position_params(), function(_, url)
                                     if url then
                                         vim.system({ vim.g.opener, "--background", url }):wait()
                                     else
                                         vim.cmd.Browse()
                                     end
-                                end, vim.api.nvim_get_current_buf())
-                            end)
+                                end)
+                            end, "Open external documentation", { "n", "x" })
 
-                            vim.keymap.set("n", "<leader>ce", function()
-                                ---
-                                -- method, parameters, callback, bufnr
+                            keys.map("gP", function()
+                                client.request("experimental/parentModule", vim.lsp.util.make_position_params(), function(_, result)
+                                    if not result or vim.tbl_isempty(result) then
+                                        return
+                                    end
+
+                                    local location = result
+
+                                    if vim.islist(result) then
+                                        location = result[1]
+                                    end
+
+                                    vim.lsp.util.jump_to_location(location, client.offset_encoding, true)
+                                end)
+                            end, "Open parent module")
+
+                            keys.bmap("<leader>ce", function()
+                                --
                                 client.request("experimental/openCargoToml", {
                                     textDocument = vim.lsp.util.make_text_document_params(),
                                 }, function(_, result, ctx)
@@ -414,8 +455,8 @@ return {
                                     if result ~= nil then
                                         vim.lsp.util.jump_to_location(result, vim.lsp.get_client_by_id(ctx.client_id).offset_encoding)
                                     end
-                                end, vim.api.nvim_get_current_buf())
-                            end, { desc = "Open Cargo.toml" })
+                                end)
+                            end, "Open Cargo.toml")
 
                             e.on(e.BufWritePost, function()
                                 local handler = function(err)
@@ -427,6 +468,10 @@ return {
                                         })
                                     else
                                         vim.notify("Workspace has been reloaded")
+                                        vim.notify("Workspace has been reloaded", vim.log.levels.INFO, {
+                                            title = "Rust Workspace",
+                                            timeout = 500,
+                                        })
                                     end
                                 end
 
