@@ -158,6 +158,7 @@ return {
 
             for _, t in pairs({
                 { key = "B", cmd = "buffers", desc = "Buffers" },
+                { key = "d", cmd = "diagnostics", desc = "Diagnostics " },
                 { key = "c", cmd = "git_commits", desc = "Git Commits" },
                 { key = "g", cmd = "live_grep", desc = "Live Grep" },
                 { key = "e", cmd = "symbols", desc = "Emojii" },
