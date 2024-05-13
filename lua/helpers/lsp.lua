@@ -65,7 +65,7 @@ M.buffers_for_client = function(filter)
     for _, client in ipairs(vim.lsp.get_clients(filter)) do
         --
         if not M.should_ignore(client) then
-            mapping[client] = vim.tbl_extend("force", mapping[client], vim.lsp.get_buffers_by_client_id(client.id))
+            mapping[client] = vim.tbl_extend("force", mapping[client] or {}, vim.lsp.get_buffers_by_client_id(client.id))
         end
     end
 
