@@ -421,7 +421,11 @@ return {
                             end, "Move to matching brace", bufnr)
 
                             keys.map("gx", function()
-                                client.request("experimental/externalDocs", vim.lsp.util.make_position_params(), function(_, url)
+                                client.request("experimental/externalDocs", vim.lsp.util.make_position_params(), function(_, result)
+                                    --
+                                    ---@cast result ExternalDocsResponse
+                                    local url = result["local"] or result.web
+
                                     if url then
                                         vim.system({ vim.g.opener, "--background", url }):wait()
                                     else
@@ -436,6 +440,7 @@ return {
                                         return
                                     end
 
+                                    ---@cast result table (`Location`|`LocationLink`)
                                     local location = result
 
                                     if vim.islist(result) then
@@ -450,10 +455,10 @@ return {
                                 --
                                 client.request("experimental/openCargoToml", {
                                     textDocument = vim.lsp.util.make_text_document_params(),
-                                }, function(_, result, ctx)
+                                }, function(_, result)
                                     --
                                     if result ~= nil then
-                                        vim.lsp.util.jump_to_location(result, vim.lsp.get_client_by_id(ctx.client_id).offset_encoding)
+                                        vim.lsp.util.jump_to_location(result, client.offset_encoding, true)
                                     end
                                 end)
                             end, "Open Cargo.toml")
