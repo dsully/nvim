@@ -1,6 +1,10 @@
 local M = {}
 local defaults = require("config.defaults")
 
+---@class LspClientBuffers
+---@field client vim.lsp.Client
+---@field buffers integer[]
+
 ---Get a LSP client by ID, optionally filtering on method.
 ---@param id integer
 ---@param method string?
@@ -20,6 +24,20 @@ M.client_by_id = function(id, method)
     return client
 end
 
+---Get a LSP client by name.
+---@param name string
+---@return vim.lsp.Client?
+M.client_by_name = function(name)
+    --
+    local clients = vim.lsp.get_clients({ name = name })
+
+    if #clients == 0 then
+        return
+    end
+
+    return clients[1]
+end
+
 ---Return false if the buffer or client is ignored.
 ---@param client vim.lsp.Client?
 ---@return boolean
@@ -37,29 +55,31 @@ M.should_ignore = function(client)
     return false
 end
 
----@param id integer?
----@param method string?
----@return integer[]
-M.buffers_for_client = function(id, method)
+---@param filter? vim.lsp.get_clients.Filter
+---@return LspClientBuffers[]
+M.buffers_for_client = function(filter)
     --
-    ---@type integer[]
-    local buffers = {}
+    ---@type LspClientBuffers[]
+    local mapping = {}
 
-    for _, client in ipairs(vim.lsp.get_clients({ id = id, method = method })) do
+    for _, client in ipairs(vim.lsp.get_clients(filter)) do
         --
-        buffers = vim.tbl_extend("force", buffers, vim.lsp.get_buffers_by_client_id(client.id))
+        if not M.should_ignore(client) then
+            mapping[client] = vim.tbl_extend("force", mapping[client], vim.lsp.get_buffers_by_client_id(client.id))
+        end
     end
 
-    return buffers
+    return mapping
 end
 
----@param callback fun(buf: integer)
----@param id integer?
----@param method string?
-M.apply_to_buffers = function(callback, id, method)
+---@param callback fun(buf: integer, client: vim.lsp.Client?)
+---@param filter? vim.lsp.get_clients.Filter
+M.apply_to_buffers = function(callback, filter)
     --
-    for _, buffer in ipairs(M.buffers_for_client(id, method)) do
-        callback(buffer)
+    for _, m in ipairs(M.buffers_for_client(filter)) do
+        for _, buf in ipairs(m.buffers) do
+            callback(buf, m.client)
+        end
     end
 end
 

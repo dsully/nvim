@@ -13,7 +13,7 @@ local methods = vim.lsp.protocol.Methods
 local code_lens_refresh = function()
     lsp.apply_to_buffers(function(bufnr)
         vim.lsp.codelens.refresh({ bufnr = bufnr })
-    end, nil, methods.textDocument_codeLens)
+    end, { method = methods.textDocument_codeLens })
 end
 
 ---@param data LspProgressEventData
