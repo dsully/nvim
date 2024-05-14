@@ -616,9 +616,7 @@ return {
             },
         },
         opts = {
-            post_hook = function()
-                vim.fn.histdel("cmd", "^IncRename ")
-            end,
+            save_in_cmdline_history = false,
         },
     },
     {
