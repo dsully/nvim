@@ -2,46 +2,112 @@ local M = {}
 
 local ruff_prefixes = { "TAE", "PIE" }
 
-local ruff_default_config = {
-    enabled = true,
-    select = {
-        "A",
-        "B",
-        "E",
-        "F",
-        "W",
-        "C4",
-        "FA",
-        "PT",
-        "UP",
-        "ARG",
-        "DTZ",
-        "EXE",
-        "FLY",
-        "ICN",
-        "INP",
-        "ISC",
-        "PIE",
-        "PYI",
-        "RET",
-        "RSE",
-        "RUF",
-        "SIM",
-        "SLF",
-        "TRY",
-        "YTT",
-        "G003",
-        "G201",
-        "G202",
-        "ASYNC",
+---@class RuffConfig
+---
+---Absolute path to a global Ruff configuration file.
+---@field configuration string?
+---
+---The resolution strategy used to merge configuration set in the editor with configuration set in local `.toml` files.
+---@field configurationResolutionStrategy "default" | "prioritizeWorkspace"
+---
+--- Set paths for the linter and formatter to ignore. See https://docs.astral.sh/ruff/settings/#lint_exclude
+---@field exclude table<string>
+---
+---Whether to register Ruff as capable of handling `source.fixAll` actions.
+---@field fixAll boolean
+---
+---@field format RuffFormatConfig
+---
+--- Set the used by the formatter and linter. Must be greater than 0 and less than or equal to 320.
+---@field lineLength number
+---
+--- Configuration for the linter.
+---@field lint RuffLintConfig
+---
+---Whether to register Ruff as capable of handling `source.organizeImports` actions.
+---@field organizeImports boolean
+M.defaults = {
+    ---
+    ---@class RuffCodeActionConfig
+    ---@field disableRuleComment RuffCodeActionDisableRuleComment
+    ---@field fixViolation RuffCodeActionFixViolation
+    codeAction = {
+        --
+        ---@class RuffCodeActionDisableRuleComment
+        ---Whether to display Quick Fix actions to disable rules via `noqa` suppression comments.
+        ---@field enabled boolean
+        disableRuleComment = {
+            enabled = true,
+        },
+        --
+        ---@class RuffCodeActionFixViolation
+        ---Whether to display Quick Fix actions to auto-fix violations.
+        ---@field enabled boolean
+        fixViolation = {
+            enabled = true,
+        },
     },
-    ignore = {
-        "B904",
-        "E501",
-        "ISC001",
-        "RET501",
-        "TRY003",
+    configurationResolutionStrategy = "prioritizeWorkspace",
+    exclude = {},
+    fixAll = true,
+    --
+    ---@class RuffFormatConfig
+    ---@field preview boolean
+    format = {
+        preview = false,
     },
+    lineLength = 180,
+    --
+    ---@class RuffLintConfig
+    ---@field enabled boolean
+    --- "Set rule codes to enable. Use `ALL` to enable all rules. See https://docs.astral.sh/ruff/settings/#lint_select
+    ---@field select table<string>
+    --- Enable additional rule codes on top of existing configuration, instead of overriding it. Use `ALL` to enable all rules.
+    ---@field extendSelect table<string>
+    --- Set rule codes to disable. See https://docs.astral.sh/ruff/settings/#lint_ignore
+    ---@field ignore table<string>
+    lint = {
+        enabled = true,
+        select = {
+            "A",
+            "B",
+            "E",
+            "F",
+            "W",
+            "C4",
+            "FA",
+            "PT",
+            "UP",
+            "ARG",
+            "DTZ",
+            "EXE",
+            "FLY",
+            "ICN",
+            "INP",
+            "ISC",
+            "PIE",
+            "PYI",
+            "RET",
+            "RSE",
+            "RUF",
+            "SIM",
+            "SLF",
+            "TRY",
+            "YTT",
+            "G003",
+            "G201",
+            "G202",
+            "ASYNC",
+        },
+        ignore = {
+            "B904",
+            "E501",
+            "ISC001",
+            "RET501",
+            "TRY003",
+        },
+    },
+    organizeImports = true,
 }
 
 local gradle_query = [[
@@ -63,7 +129,7 @@ local toml_query = [[
   )
 ]]
 
----@param ignores table
+---@param ignores table<string>
 ---@return table<string>
 local function exclude_ignores(ignores)
     return vim.iter(ignores):filter(function(str)
@@ -94,9 +160,8 @@ end
 ---@param filename string
 ---@param language string
 ---@param query_string string
----@return table<string>|nil
-local format_args_from_treesitter = function(filename, language, query_string)
-    local args = {}
+---@return number?
+local line_length_from_treesitter = function(filename, language, query_string)
     local config_file = find_file(filename)
 
     if config_file == nil or vim.uv.fs_stat(config_file) == nil then
@@ -104,6 +169,7 @@ local format_args_from_treesitter = function(filename, language, query_string)
     end
 
     local lines = {}
+
     for line in io.lines(config_file) do
         lines[#lines + 1] = line
     end
@@ -116,37 +182,41 @@ local format_args_from_treesitter = function(filename, language, query_string)
 
     local query = vim.treesitter.query.parse(language, query_string)
 
+    ---@type number?
+    local length
+
     for id, node in query:iter_captures(root, config_buffer, 0, -1) do
         if query.captures[id] == "length" then
-            args["lineLength"] = tonumber(vim.treesitter.get_node_text(node, config_buffer))
+            length = tonumber(vim.treesitter.get_node_text(node, config_buffer))
+            break
         end
     end
 
     vim.api.nvim_buf_delete(config_buffer, {})
 
-    if #args > 0 then
-        return args
-    end
+    return length
 end
 
 -- Extract arguments to pass to the ruff formatter.
 --
 -- Check build.gradle (work) and pyproject.toml.
 --
----@return table<string>
-M.format_args = function()
+---@return number?
+M.line_length = function()
     -- stylua: ignore
-    return format_args_from_treesitter("pyproject.toml", "toml", toml_query) or
-           format_args_from_treesitter("build.gradle", "groovy", gradle_query) or
-           {}
+    return line_length_from_treesitter("pyproject.toml", "toml", toml_query) or
+           line_length_from_treesitter("build.gradle", "groovy", gradle_query)
 end
 
--- Config for ruff-lsp as a Lua table.
----@param config_file string
----@return table<string>
-M.lint_args = function(config_file)
-    -- Extract config out of setup.cfg if it exists and use some defaults.
-    local config = vim.tbl_deep_extend("force", {}, ruff_default_config)
+-- Extract config out of setup.cfg if it exists and use some defaults.
+---@return RuffConfig
+M.config = function()
+    --
+    ---@type number?
+    local length = nil
+    local config = M.defaults
+
+    local config_file = find_file("setup.cfg")
 
     if config_file ~= nil and vim.uv.fs_stat(config_file) ~= nil then
         local matches = {
@@ -155,19 +225,26 @@ M.lint_args = function(config_file)
             ["^extend%-ignore%s*="] = "extendIgnore",
         }
 
-        for line in io.lines(config_file) do
+        for l in io.lines(config_file) do
+            -- Doesn't appear to be a better way to do this.
+            ---@type string
+            local line = l
+
             for pattern, key in pairs(matches) do
                 if line:match(pattern) then
+                    --
+                    ---@type string
                     local match = line:match("%s*=%s*(.*)")
 
                     if key == "lineLength" then
-                        ---@type number
-                        config[key] = tonumber(match)
+                        length = tonumber(match)
                     else
-                        -- --extend-ignore has been deprecated in favor of --extend.
-                        ---@type table<string>
-                        for _, ignore in exclude_ignores(vim.split(match, "%s*,%s*")) do
-                            table.insert(config["ignore"], ignore)
+                        -- 'extend-ignore' has been deprecated in favor of 'extend'
+                        for _, i in exclude_ignores(vim.split(match, "%s*,%s*")) do
+                            ---@type string
+                            local ignore = i
+
+                            table.insert(config.lint.ignore, ignore)
                         end
                     end
                 end
@@ -175,39 +252,12 @@ M.lint_args = function(config_file)
         end
     end
 
+    -- Priority: pyproject.toml > build.gradle > setup.cfg > global defaults.
+    config.lineLength = M.line_length() or length or config.lineLength
+
+    config.configuration = vim.env.XDG_CONFIG_HOME .. "/ruff/ruff.toml"
+
     return config
-end
-
-local join_quoted = function(list)
-    local quoted_items = {}
-
-    for _, item in ipairs(list) do
-        table.insert(quoted_items, '"' .. item .. '"')
-    end
-
-    return table.concat(quoted_items, ", ")
-end
-
-M.write_config = function()
-    local config_file = find_file("setup.cfg")
-
-    local path = vim.fs.dirname(config_file) .. "/ruff.toml"
-
-    local config = vim.tbl_deep_extend("force", ruff_default_config, M.lint_args(config_file), M.format_args())
-
-    local fd = vim.uv.fs_open(path, "w+", tonumber("644", 8))
-
-    if fd then
-        if config["lineLength"] then
-            vim.uv.fs_write(fd, string.format("line-length = %s\n", config["lineLength"]))
-        end
-
-        vim.uv.fs_write(fd, "[lint]\n")
-        vim.uv.fs_write(fd, "extend-select = [" .. join_quoted(config["select"]) .. "]\n")
-        vim.uv.fs_write(fd, "ignore = [" .. join_quoted(config["ignore"]) .. "]\n")
-
-        vim.uv.fs_close(fd)
-    end
 end
 
 return M

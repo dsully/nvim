@@ -338,18 +338,8 @@ return {
                             },
                         },
                         filetypes = { "python", "toml.pyproject" },
-                        on_new_config = function()
-                            require("helpers.ruff").write_config()
-                        end,
-                        settings = {
-                            codeAction = {
-                                fixViolation = {
-                                    enable = true,
-                                },
-                                disableRuleComment = {
-                                    enable = false,
-                                },
-                            },
+                        init_options = {
+                            settings = require("helpers.ruff").config(),
                         },
                     },
                     rust_analyzer = {
