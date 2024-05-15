@@ -5,8 +5,8 @@ return {
     -- Caddy
     { "isobit/vim-caddyfile", ft = "caddyfile" },
 
-    -- Markdown helper.
-    { "oncomouse/markdown.nvim", ft = "markdown", opts = {} },
+    -- Markdown rendering.
+    { "MeanderingProgrammer/markdown.nvim", ft = "markdown" },
 
     -- Apple's PKL language.
     {
