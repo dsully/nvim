@@ -58,6 +58,7 @@ return {
         keys = {
             { "<leader>i", vim.show_pos, desc = "Inspect Position" },
         },
+        lazy = vim.fn.argc(-1) == 0, -- load treesitter early when opening a file from the cmdline
         ---@type TSConfig
         opts = {
             ensure_installed = {

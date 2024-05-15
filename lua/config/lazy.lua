@@ -1,78 +1,36 @@
 local e = require("helpers.event")
 
-local M = {
-    lazypath = vim.fn.stdpath("data") .. "/lazy/lazy.nvim",
-    lazy_file_events = { e.BufReadPost, e.BufNewFile, e.BufWritePre },
-}
+local M = {}
 
--- Properly load file based plugins without blocking the UI
 function M.lazy_file()
-    -- Add support for the LazyFile event
-    local Event = require("lazy.core.handler.event")
-
-    if vim.fn.argc(-1) > 0 then
-        -- We'll handle delayed execution of events ourselves
-        Event.mappings.LazyFile = { id = "LazyFile", event = e.User, pattern = "LazyFile" }
-        Event.mappings["User LazyFile"] = Event.mappings.LazyFile
-    else
-        -- Don't delay execution of LazyFile events, but let lazy know about the mapping
-        Event.mappings.LazyFile = { id = "LazyFile", event = M.lazy_file_events }
-        Event.mappings["User LazyFile"] = Event.mappings.LazyFile
-        return
-    end
-
-    local events = {} ---@type {event: string, buf: number, data?: any}[]
-
-    local done = false
-    local function load()
-        if #events == 0 or done then
+    -- This autocmd will only trigger when a file was loaded from the cmdline.
+    -- It will render the file as quickly as possible.
+    e.on(e.BufReadPost, function(event)
+        -- Skip if we already entered vim
+        if vim.v.vim_did_enter == 1 then
             return
         end
 
-        done = true
+        -- Try to guess the filetype (may change later on during Neovim startup)
+        local ft = vim.filetype.match({ buf = event.buf })
 
-        vim.api.nvim_del_augroup_by_name("lazy_file")
+        if ft then
+            -- Add treesitter highlights and fallback to syntax
+            local lang = vim.treesitter.language.get_lang(ft)
 
-        ---@type table<string,string[]>
-        local skips = {}
-        for _, event in ipairs(events) do
-            skips[event.event] = skips[event.event] or Event.get_augroups(event.event)
-        end
-
-        e.emit(e.User, { pattern = "LazyFile", modeline = false })
-
-        for _, event in ipairs(events) do
-            if vim.api.nvim_buf_is_valid(event.buf) then
-                Event.trigger({
-                    event = event.event,
-                    exclude = skips[event.event],
-                    data = event.data,
-                    buf = event.buf,
-                })
-                if vim.bo[event.buf].filetype then
-                    Event.trigger({
-                        event = e.FileType,
-                        buf = event.buf,
-                    })
-                end
+            if not (lang and pcall(vim.treesitter.start, event.buf, lang)) then
+                vim.bo[event.buf].syntax = ft
             end
         end
-
-        e.emit(e.CursorMoved, { modeline = false })
-
-        events = {}
-    end
-
-    -- Schedule wrap so that nested autocmds are executed and the UI can continue rendering without blocking
-    load = vim.schedule_wrap(load)
-
-    vim.api.nvim_create_autocmd(M.lazy_file_events, {
-        group = vim.api.nvim_create_augroup("lazy_file", { clear = true }),
-        callback = function(event)
-            table.insert(events, event)
-            load()
-        end,
+    end, {
+        once = true,
     })
+
+    -- Add support for the LazyFile event
+    local Event = require("lazy.core.handler.event")
+
+    Event.mappings.LazyFile = { id = "LazyFile", event = { e.BufReadPost, e.BufNewFile, e.BufWritePre } }
+    Event.mappings["User LazyFile"] = Event.mappings.LazyFile
 end
 
 function M.lazy_notify()
@@ -117,12 +75,14 @@ function M.lazy_notify()
 end
 
 function M.bootstrap()
-    if not vim.uv.fs_stat(M.lazypath) then
-        vim.system({ "git", "clone", "--filter=blob:none", "https://github.com/folke/lazy.nvim.git", M.lazypath }):wait()
-        vim.system({ "git", "-C", M.lazypath, "checkout", "tags/stable" }):wait()
+    local lazypath = vim.fn.stdpath("data") .. "/lazy/lazy.nvim"
+
+    if not vim.uv.fs_stat(lazypath) then
+        vim.system({ "git", "clone", "--filter=blob:none", "https://github.com/folke/lazy.nvim.git", lazypath }):wait()
+        vim.system({ "git", "-C", lazypath, "checkout", "tags/stable" }):wait()
     end
 
-    vim.opt.runtimepath:prepend(M.lazypath)
+    vim.opt.runtimepath:prepend(lazypath)
 end
 
 function M.setup()
