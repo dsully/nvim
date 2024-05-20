@@ -73,6 +73,7 @@ local M = {
             "just",
             "lua",
             "rust",
+            "toml",
         },
     },
 
