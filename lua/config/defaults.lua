@@ -384,7 +384,7 @@ M.highlights = {
     CmpItemKindVariable = { fg = M.colors.blue.base },
     CmpItemMenu = { fg = M.colors.magenta.base },
     ColorColumn = { bg = M.colors.black.dim },
-    Comment = { fg = M.colors.gray.bright, italic = true },
+    Comment = { fg = M.colors.gray.bright },
     Conceal = { fg = M.colors.black.bright },
     Conditional = { fg = M.colors.blue.bright, italic = true },
     Constant = { fg = M.colors.white.dim },
