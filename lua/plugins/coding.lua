@@ -98,7 +98,7 @@ return {
                 mapping = cmp.mapping({
                     ["<C-e>"] = cmp.mapping(function()
                         if vim.snippet.active() then
-                            vim.snippet.exit()
+                            vim.snippet.stop()
                         elseif cmp.visible() then
                             cmp.abort()
                         elseif copilot.is_visible() then
@@ -599,24 +599,6 @@ return {
                 algorithm = "patience",
                 ignore_whitespace = true,
             },
-        },
-    },
-    {
-        "smjonas/inc-rename.nvim",
-        cmd = "IncRename",
-        keys = {
-            {
-                -- Override Neovim 0.10's default mapping.
-                "crn",
-                function()
-                    return ":" .. require("inc_rename").config.cmd_name .. " " .. vim.fn.expand("<cword>")
-                end,
-                desc = " Rename",
-                expr = true,
-            },
-        },
-        opts = {
-            save_in_cmdline_history = false,
         },
     },
     {

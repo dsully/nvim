@@ -121,6 +121,7 @@ return {
             end, { desc = "Restart Language Server for Buffer" })
         end,
         keys = {
+            { "crn", require("helpers.handlers").rename, desc = "Rename" },
             -- stylua: ignore
             { "dt", function() vim.diagnostic.enable(not vim.diagnostic.is_enabled()) end, desc = "Diagnostics Toggle" },
             { "gD", vim.lsp.buf.declaration, desc = "󰁴 Go To Declaration" },
