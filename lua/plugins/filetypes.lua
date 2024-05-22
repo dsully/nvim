@@ -45,11 +45,12 @@ return {
             })
         end,
         dependencies = {
+            "mfussenegger/nvim-dap",
             "nvim-java/lua-async-await",
             "nvim-java/nvim-java-core",
-            "nvim-java/nvim-java-test",
             "nvim-java/nvim-java-dap",
-            "mfussenegger/nvim-dap",
+            "nvim-java/nvim-java-refactor",
+            "nvim-java/nvim-java-test",
         },
         ft = { "java" },
         opts = {
