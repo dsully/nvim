@@ -6,7 +6,7 @@ return {
     { "isobit/vim-caddyfile", ft = "caddyfile" },
 
     -- Markdown rendering.
-    { "MeanderingProgrammer/markdown.nvim", ft = "markdown" },
+    { "MeanderingProgrammer/markdown.nvim", ft = "markdown", opts = true },
 
     -- Apple's PKL language.
     {
