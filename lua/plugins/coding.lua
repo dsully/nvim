@@ -26,6 +26,7 @@ return {
                 "garymjr/nvim-snippets",
                 opts = {
                     friendly_snippets = true,
+                    global_snippets = { "all", "global" },
                 },
                 dependencies = {
                     "rafamadriz/friendly-snippets",
@@ -57,6 +58,11 @@ return {
             ---@param kind integer: Kind of completion entry
             local function modified_kind(kind)
                 return modified_priority[kind] or kind
+            end
+
+            -- Better visibility check than cmp.visible().
+            local function is_visible(cmp)
+                return cmp.core.view:visible() or vim.fn.pumvisible() == 1
             end
 
             -- Inside a snippet, use backspace to remove the placeholder.
@@ -99,7 +105,7 @@ return {
                     ["<C-e>"] = cmp.mapping(function()
                         if vim.snippet.active() then
                             vim.snippet.stop()
-                        elseif cmp.visible() then
+                        elseif is_visible(cmp) then
                             cmp.abort()
                         elseif copilot.is_visible() then
                             copilot.dismiss()
@@ -114,7 +120,14 @@ return {
                     ["<Down>"] = cmp.mapping.select_next_item({ behavior = cmp.SelectBehavior.Select }),
 
                     -- https://github.com/hrsh7th/nvim-cmp/wiki/Example-mappings#safely-select-entries-with-cr
-                    ["<CR>"] = cmp.mapping.confirm({ behavior = cmp.ConfirmBehavior.Insert, select = true }),
+                    ["<CR>"] = function(fallback)
+                        if is_visible(cmp) then
+                            if cmp.confirm({ behavior = cmp.ConfirmBehavior.Insert, select = true }) then
+                                return
+                            end
+                        end
+                        return fallback()
+                    end,
                     ["<C-CR>"] = cmp.mapping(function(fallback)
                         cmp.abort()
                         fallback()
@@ -132,7 +145,7 @@ return {
                             return
                         end
 
-                        if cmp.visible() then
+                        if is_visible(cmp) then
                             cmp.select_next_item({ behavior = cmp.SelectBehavior.Select })
                         elseif vim.snippet.active({ direction = 1 }) then
                             vim.snippet.jump(1)
@@ -141,7 +154,7 @@ return {
                         end
                     end),
                     ["<S-Tab>"] = cmp.mapping(function(fallback)
-                        if cmp.visible() then
+                        if is_visible(cmp) then
                             cmp.select_prev_item()
                         elseif vim.snippet.active({ direction = -1 }) then
                             vim.snippet.jump(1)
