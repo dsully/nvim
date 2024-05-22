@@ -102,6 +102,10 @@ if vim.env.SSH_CONNECTION then
             ["+"] = osc52.copy("+"),
             ["*"] = osc52.copy("*"),
         },
+        paste = {
+            ["+"] = osc52.paste("+"),
+            ["*"] = osc52.paste("*"),
+        },
     }
 elseif vim.g.os == "Darwin" then
     vim.g.clipboard = {
