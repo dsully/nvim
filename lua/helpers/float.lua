@@ -84,7 +84,7 @@ function M.open(options)
         popup:unmount()
     end
 
-    popup:on("BufLeave", close)
+    popup:on(require("helpers.event").BufLeave, close)
     popup:map("n", "q", close, { silent = true })
     popup:map("n", "<esc>", close, { silent = true })
 
