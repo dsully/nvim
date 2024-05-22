@@ -163,8 +163,8 @@ return {
                 { key = "g", cmd = "live_grep", desc = "Live Grep" },
                 { key = "e", cmd = "symbols", desc = "Emojii" },
                 { key = "o", cmd = "oldfiles", desc = "Recently Opened" },
-                { key = "r", cmd = "resume", desc = "Resume Last Telescope Finder" },
                 { key = "w", cmd = "grep_string", desc = "Words" },
+                { key = ";", cmd = "resume", desc = "Resume Telescope" },
             }) do
                 map("<leader>f" .. t.key, tscope(t.cmd, M.args), t.desc)
             end
@@ -185,13 +185,22 @@ return {
             -- Use git_files if we're at the top of a git repo. Otherwise find_files.
             { "<leader>ff", tscope("find_files", M.args), desc = "Find Files" },
             {
-                "<leader>fT",
+                "<leader>fR",
                 function()
                     vim.b._use_git_root = not vim.b._use_git_root
 
                     vim.notify(string.format("Telescope root is now: %s", M.cwd()))
                 end,
                 desc = "Telescope: Toggle root between Git and LSP/current directory.",
+            },
+            {
+                "<leader>f/",
+                tscope("live_grep", {
+                    path_display = { tail = true },
+                    prompt_title = "Search Buffer Content",
+                    search_dirs = { vim.fn.expand("%:p") },
+                }),
+                "Buffer Content",
             },
             { "z=", tscope("spell_suggest"), desc = "Suggest Spelling" },
         },
