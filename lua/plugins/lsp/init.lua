@@ -339,9 +339,7 @@ return {
                             },
                         },
                         filetypes = { "python", "toml.pyproject" },
-                        init_options = {
-                            settings = require("helpers.ruff").config(),
-                        },
+                        init_options = require("helpers.ruff").config(),
                     },
                     rust_analyzer = {
                         ---@param client vim.lsp.Client
