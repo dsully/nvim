@@ -36,19 +36,19 @@ return {
             })
 
             -- https://gitlab.com/schrieveslaach/sonarlint.nvim
-            require("sonarlint").setup({
-                server = {
-                    cmd = {
-                        "sonarlint-language-server",
-                        "-stdio",
-                        "-analyzers",
-                        vim.fn.expand("$MASON/share/sonarlint-analyzers/sonarpython.jar"),
-                    },
-                },
-                filetypes = {
-                    "python",
-                },
-            })
+            -- require("sonarlint").setup({
+            --     server = {
+            --         cmd = {
+            --             "sonarlint-language-server",
+            --             "-stdio",
+            --             "-analyzers",
+            --             vim.fn.expand("$MASON/share/sonarlint-analyzers/sonarpython.jar"),
+            --         },
+            --     },
+            --     filetypes = {
+            --         "python",
+            --     },
+            -- })
         end,
         dependencies = {
             { "b0o/schemastore.nvim", version = false },
@@ -178,6 +178,21 @@ return {
                     update_in_insert = false, -- https://www.reddit.com/r/neovim/comments/pfk209/nvimlsp_too_fast/
                 },
                 servers = {
+                    basedpyright = {
+                        settings = {
+                            basedpyright = {
+                                analysis = {
+                                    autoImportCompletions = false,
+                                    autoSearchPaths = true,
+                                    diagnosticMode = "openFilesOnly",
+                                    reportMissingTypeStubs = false,
+                                    reportUnreachable = true,
+                                    typeCheckingMode = "standard",
+                                    useLibraryCodeForTypes = true,
+                                },
+                            },
+                        },
+                    },
                     bashls = {
                         filetypes = { "bash", "direnv", "sh" },
                         settings = {
@@ -299,12 +314,12 @@ return {
                     },
                     gradle_ls = {},
                     html = {},
-                    jedi_language_server = {
-                        ---@param client vim.lsp.Client
-                        on_attach = function(client)
-                            client.server_capabilities.codeActionProvider = false
-                        end,
-                    },
+                    -- jedi_language_server = {
+                    --     ---@param client vim.lsp.Client
+                    --     on_attach = function(client)
+                    --         client.server_capabilities.codeActionProvider = false
+                    --     end,
+                    -- },
                     jsonls = {
                         on_new_config = function(c)
                             c.settings = vim.tbl_deep_extend("force", c.settings, { json = { schemas = require("schemastore").json.schemas() } })
@@ -340,6 +355,10 @@ return {
                         },
                         filetypes = { "python", "toml.pyproject" },
                         init_options = require("helpers.ruff").config(),
+                        ---@param client vim.lsp.Client
+                        on_attach = function(client)
+                            client.server_capabilities.hoverProvider = false
+                        end,
                     },
                     rust_analyzer = {
                         ---@param client vim.lsp.Client
