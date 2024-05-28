@@ -144,12 +144,5 @@ return {
         end,
         event = "LazyFile",
     },
-    {
-        "chrishrb/gx.nvim",
-        cmd = "Browse",
-        config = true,
-        keys = { { "gx", vim.cmd.Browse, mode = { "n", "x" }, desc = "Open URL in Browser" } },
-    },
-
     -- { "lewis6991/fileline.nvim", lazy = false },
 }

@@ -121,9 +121,3 @@ elseif vim.g.os == "Darwin" then
         cache_enabled = false,
     }
 end
-
-if vim.g.os == "Darwin" then
-    vim.g.opener = "open"
-else
-    vim.g.opener = "xdg-open"
-end
