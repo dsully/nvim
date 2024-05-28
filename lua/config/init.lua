@@ -9,13 +9,14 @@ if not lazy_autocmds then
     require("config.autocommands")
 end
 
-vim.api.nvim_create_autocmd("User", {
-    callback = function()
-        if lazy_autocmds then
-            require("config.autocommands")
-        end
-        require("config.keymaps")
-    end,
+local e = require("helpers.event")
+
+e.on(e.User, function()
+    if lazy_autocmds then
+        require("config.autocommands")
+    end
+    require("config.keymaps")
+end, {
     pattern = "VeryLazy",
     once = true,
 })
