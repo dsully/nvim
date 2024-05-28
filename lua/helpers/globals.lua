@@ -32,3 +32,15 @@ end
 _G.ns = function(name)
     return vim.api.nvim_create_namespace("dsully/" .. name)
 end
+
+-- Handling to open GitHub partial URLs: organization/repository
+local open = vim.ui.open
+
+vim.ui.open = function(uri) ---@diagnostic disable-line: duplicate-set-field
+    --
+    if not string.match(uri, "[a-z]*://[^ >,;]*") and string.match(uri, "[%w%p\\-]*/[%w%p\\-]*") then
+        uri = string.format("https://github.com/%s", uri)
+    end
+
+    open(uri)
+end

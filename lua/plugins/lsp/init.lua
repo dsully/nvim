@@ -354,6 +354,7 @@ return {
                             },
                         },
                         filetypes = { "python", "toml.pyproject" },
+                        -- Need to nest settings for next ruff release.
                         init_options = require("helpers.ruff").config(),
                         ---@param client vim.lsp.Client
                         on_attach = function(client)
@@ -422,9 +423,7 @@ return {
                                     local url = result["local"] or result.web
 
                                     if url then
-                                        vim.system({ vim.g.opener, "--background", url }):wait()
-                                    else
-                                        vim.cmd.Browse()
+                                        vim.ui.open(url)
                                     end
                                 end)
                             end, "Open external documentation", { "n", "x" })
