@@ -1,14 +1,32 @@
 --
 --- Global debug function
----@vararg any anything to debug
+---@param ... any
 _G.dbg = function(...)
-    local objects = {}
+    local info = debug.getinfo(2, "S")
+    local source = info.source:sub(2)
 
-    for _, v in pairs({ ... }) do
-        table.insert(objects, v ~= nil and vim.inspect(v) or "nil")
+    source = vim.loop.fs_realpath(source) or source
+    source = vim.fn.fnamemodify(source, ":~:.") .. ":" .. info.linedefined
+
+    local args = { ... }
+
+    if vim.islist(args) and vim.tbl_count(args) <= 1 then
+        args = args[1]
     end
 
-    vim.notify(table.concat(objects, "\n"))
+    local msg = vim.inspect(vim.deepcopy(args))
+
+    vim.notify(msg, vim.log.levels.INFO, {
+        title = "Debug: " .. source,
+
+        on_open = function(win)
+            vim.wo[win].conceallevel = 3
+            vim.wo[win].concealcursor = ""
+            vim.wo[win].spell = false
+            local buf = vim.api.nvim_win_get_buf(win)
+            vim.treesitter.start(buf, "lua")
+        end,
+    })
 end
 
 --
