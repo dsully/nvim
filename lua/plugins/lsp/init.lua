@@ -483,11 +483,13 @@ return {
                         settings = {
                             ["rust-analyzer"] = {
                                 cargo = {
+                                    allFeatures = true,
                                     buildScripts = {
                                         enable = true,
                                     },
                                 },
                                 check = {
+                                    allFeatures = true,
                                     command = "clippy",
                                     enable = true,
                                     extraArgs = { "--no-deps" },
