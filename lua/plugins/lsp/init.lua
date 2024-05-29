@@ -421,7 +421,7 @@ return {
                                 client.request("experimental/externalDocs", vim.lsp.util.make_position_params(), function(_, result)
                                     --
                                     ---@cast result ExternalDocsResponse
-                                    local url = result["local"] or result.web
+                                    local url = result["local"] or result.web or result
 
                                     if url then
                                         vim.ui.open(url)
