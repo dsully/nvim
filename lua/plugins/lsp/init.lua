@@ -354,8 +354,9 @@ return {
                             },
                         },
                         filetypes = { "python", "toml.pyproject" },
-                        -- Need to nest settings for next ruff release.
-                        init_options = require("helpers.ruff").config(),
+                        init_options = {
+                            settings = require("helpers.ruff").config(),
+                        },
                         ---@param client vim.lsp.Client
                         on_attach = function(client)
                             client.server_capabilities.hoverProvider = false
