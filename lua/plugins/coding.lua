@@ -16,10 +16,10 @@ return {
         "hrsh7th/nvim-cmp",
         cmd = "CmpStatus",
         dependencies = {
-            "FelipeLema/cmp-async-path",
             "hrsh7th/cmp-calc",
             "hrsh7th/cmp-cmdline",
             "hrsh7th/cmp-nvim-lsp",
+            "hrsh7th/cmp-path",
             "onsails/lspkind-nvim",
             "ryo33/nvim-cmp-rust",
             {
@@ -249,7 +249,7 @@ return {
                         priority = 3,
                     },
                     {
-                        name = "async_path",
+                        name = "path",
                         priority = 4,
                     },
                 }),
@@ -274,7 +274,7 @@ return {
                 sources = cmp.config.sources({
                     { name = "nvim_lsp" },
                     { name = "snippets" },
-                    { name = "async_path" },
+                    { name = "path" },
                     { name = "env" },
                     { name = "buffer" },
                 }),
@@ -284,7 +284,7 @@ return {
             cmp.setup.cmdline(":", {
                 mapping = cmp.mapping.preset.cmdline(),
                 sources = cmp.config.sources({
-                    { name = "async_path" },
+                    { name = "path" },
                     -- https://github.com/hrsh7th/nvim-cmp/issues/1511
                     { name = "cmdline", keyword_pattern = [=[[^[:blank:]\!]*]=], option = { ignore_cmds = {} } },
                 }),
@@ -635,6 +635,9 @@ return {
                     max_results = 8,
                     min_chars = 3,
                 },
+                cmp = {
+                    enabled = true,
+                },
             },
             lsp = {
                 actions = true,
@@ -645,7 +648,7 @@ return {
             on_attach = function()
                 require("cmp").setup.buffer({
                     sources = {
-                        { name = "async_path" },
+                        { name = "path" },
                         { name = "buffer" },
                         { name = "nvim_lsp" },
                     },
@@ -664,7 +667,7 @@ return {
                 sources = {
                     { name = "fish" },
                     { name = "snippets" },
-                    { name = "async_path" },
+                    { name = "path" },
                     { name = "env" },
                     { name = "calc" },
                     { name = "buffer" },
@@ -672,9 +675,9 @@ return {
             })
         end,
         dependencies = {
-            "FelipeLema/cmp-async-path",
             "bydlw98/cmp-env",
             "hrsh7th/cmp-buffer",
+            "hrsh7th/cmp-path",
         },
         ft = "fish",
     },
@@ -685,7 +688,7 @@ return {
                 sources = {
                     { name = "nvim_lsp" },
                     { name = "snippets" },
-                    { name = "async_path" },
+                    { name = "path" },
                     { name = "env" },
                     { name = "calc" },
                     { name = "buffer" },
@@ -693,9 +696,9 @@ return {
             })
         end,
         dependencies = {
-            "FelipeLema/cmp-async-path",
             "bydlw98/cmp-env",
             "hrsh7th/cmp-buffer",
+            "hrsh7th/cmp-path",
         },
         ft = { "bash", "sh", "zsh" },
     },
