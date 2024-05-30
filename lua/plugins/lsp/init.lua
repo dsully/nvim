@@ -121,7 +121,7 @@ return {
             end, { desc = "Restart Language Server for Buffer" })
         end,
         keys = {
-            { "crn", require("helpers.handlers").rename, desc = "Rename" },
+            { "grn", require("helpers.handlers").rename, desc = "Rename" },
             -- stylua: ignore
             { "dt", function() vim.diagnostic.enable(not vim.diagnostic.is_enabled()) end, desc = "Diagnostics Toggle" },
             { "gD", vim.lsp.buf.declaration, desc = "󰁴 Go To Declaration" },
@@ -129,7 +129,7 @@ return {
             { "gi", vim.lsp.buf.implementation, desc = "󰘲 Go To Implementations(s)" },
             { "<C-S>", vim.lsp.buf.signature_help, desc = "Signature Help 󰞂 ", mode = "i" },
             -- stylua: ignore
-            { "gr", function() vim.lsp.buf.references({ includeDeclaration = false }) end, desc = "󰆋 References" },
+            { "grr", function() vim.lsp.buf.references({ includeDeclaration = false }) end, desc = "󰆋 References" },
             { "<leader>fs", tscope("lsp_document_symbols"), desc = "Symbols 󰆋" },
             { "<leader>fW", tscope("lsp_dynamic_workspace_symbols"), desc = "Workspace Symbols 󰆋" },
             { "<leader>lc", vim.cmd.LspCapabilities, desc = " LSP Capabilities" },
