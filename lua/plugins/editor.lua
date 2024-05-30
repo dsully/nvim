@@ -246,7 +246,6 @@ return {
     },
     {
         "folke/trouble.nvim",
-        branch = "dev",
         cmd = { "Trouble" },
         dependencies = "nvim-tree/nvim-web-devicons",
         keys = {
