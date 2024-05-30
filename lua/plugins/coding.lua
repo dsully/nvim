@@ -596,8 +596,8 @@ return {
         "aznhe21/actions-preview.nvim",
         keys = {
             {
-                -- Override Neovim 0.10's default mapping.
-                "crr",
+                -- Override Neovim default mapping.
+                "gra",
                 function()
                     require("actions-preview").code_actions({ context = { only = { "quickfix" } } })
                 end,
