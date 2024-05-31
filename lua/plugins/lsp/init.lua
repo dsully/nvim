@@ -458,6 +458,18 @@ return {
                                 end)
                             end, "Open Cargo.toml")
 
+                            keys.bmap("<leader>cm", function()
+                                client.request("rust-analyzer/expandMacro", vim.lsp.util.make_position_params(), function(_, result)
+                                    ---@cast result ExpandedMacro
+                                    if result == nil then
+                                        vim.notify("No macro under cursor!", vim.log.levels.INFO)
+                                        return
+                                    end
+
+                                    require("helpers.rust").expand_macro(result)
+                                end)
+                            end, "Expand Macro")
+
                             e.on(e.BufWritePost, function()
                                 local handler = function(err)
                                     if err then
