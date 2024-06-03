@@ -14,7 +14,7 @@ vim.keymap.set({ "n", "x" }, "Y", "y$", { desc = "Yank to clipboard" })
 -- vim.keymap.set({ "n", "x" }, "gy", '"*y', { desc = "Yank to system clipboard" })
 vim.keymap.set({ "n", "x" }, "gp", '"*p', { desc = "Paste from system clipboard" })
 
-vim.keymap.set("n", "<leader>a", "<cmd>%y<cr>", { desc = "Yank All Lines" })
+vim.keymap.set("n", "<leader>Y", "<cmd>%y<cr>", { desc = "Yank All Lines" })
 
 -- Don't delete into the system clipboard.
 vim.keymap.set({ "n", "x" }, "dw", '"_dw', { desc = "which_key_ignore", noremap = true })
