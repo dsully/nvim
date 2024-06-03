@@ -172,6 +172,8 @@ M.rename = function()
     input:map("n", "<esc>", input.input_props.on_close, { noremap = true })
     input:map("n", "<C-c>", input.input_props.on_close, { noremap = true })
 
+    -- TODO: Map ^W
+
     -- Close when cursor leaves the buffer
     input:on(event.BufLeave, input.input_props.on_close, { once = true })
 end
