@@ -391,6 +391,8 @@ return {
             -- sff`  - Surround Find part of surrounding function call (`f`).
             -- sh}   - Surround Highlight [}]
             require("mini.surround").setup()
+
+            vim.keymap.set({ "n", "x" }, "s", "<Nop>")
         end,
         event = "LazyFile",
     },
@@ -602,7 +604,7 @@ return {
                     require("actions-preview").code_actions({ context = { only = { "quickfix" } } })
                 end,
                 mode = { "n", "x" },
-                desc = "󰅯 Actions",
+                desc = "Actions 󰅯",
             },
         },
         opts = {
