@@ -200,43 +200,6 @@ return {
             },
         },
     },
-    -- {
-    --     "akinsho/bufferline.nvim",
-    --     event = "BufReadPost",
-    --     keys = function()
-    --         --
-    --         -- stylua: ignore
-    --         local maps = {
-    --             -- Go to the last buffer.
-    --             { "<leader>$", function() require("bufferline").go_to(-1, true) end, desc = "which_key_ignore", },
-    --         }
-    --
-    --         for i = 1, 9 do
-    --             -- stylua: ignore
-    --             table.insert(maps, { "<leader>" .. i, function() require("bufferline").go_to(i, true) end, desc = "which_key_ignore" })
-    --
-    --             -- Allow Option-N in Wezterm.
-    --             -- stylua: ignore
-    --             table.insert(maps, { string.format("<M-%d>", i), function() require("bufferline").go_to(i, true) end, desc = "which_key_ignore" })
-    --         end
-    --
-    --         return maps
-    --     end,
-    --     opts = {
-    --         options = {
-    --             close_command = function(n)
-    --                 require("mini.bufremove").delete(n, false)
-    --             end,
-    --             diagnostics = "nvim_lsp",
-    --             left_mouse_command = "buffer %d",
-    --             middle_mouse_command = nil,
-    --             numbers = "ordinal",
-    --             right_mouse_command = nil,
-    --             show_buffer_close_icons = true,
-    --             sort_by = "insert_at_end",
-    --         },
-    --     },
-    -- },
     {
         "MunifTanjim/nougat.nvim",
         config = function()
