@@ -633,7 +633,7 @@ return {
                 ["pre-push"] = { icon = "", color = "#f56b67", name = "GitHook" },
                 ["pre-receive"] = { icon = "", color = "#f56b67", name = "GitHook" },
                 ["pyproject.toml"] = { icon = "", color = "#4B8DDE", name = "Pyproject" },
-                ["readme.md"] = { icon = "󰋼", color = "#69a3df", name = "Readme" },
+                ["readme.md"] = { icon = "󰍔", color = "#69a3df", name = "Readme" },
                 ["requirements.txt"] = { icon = "", color = "#3572A5", name = "Requirements" },
                 ["robots.txt"] = { icon = "󰚩", name = "Robots" },
                 ["ruff.toml"] = { icon = "󱐋", color = "#fbc11a", name = "Ruff" },
