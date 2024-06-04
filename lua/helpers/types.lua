@@ -1,4 +1,0 @@
--- Rust
----@class ExternalDocsResponse
----@field web string?
----@field local string?

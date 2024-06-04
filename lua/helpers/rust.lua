@@ -1,3 +1,11 @@
+---@class ExpandedMacro
+---@field name string
+---@field expansion string
+
+---@class ExternalDocsResponse
+---@field web string?
+---@field local string?
+
 local M = {
     title = "rust-analyzer",
 }
@@ -21,3 +29,5 @@ M.expand_macro = function(macro)
     -- Move cursor to the start of the macro expansion.
     vim.api.nvim_win_set_cursor(0, { 4, 0 })
 end
+
+return M
