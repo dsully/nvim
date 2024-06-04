@@ -172,7 +172,8 @@ M.rename = function()
     input:map("n", "<esc>", input.input_props.on_close, { noremap = true })
     input:map("n", "<C-c>", input.input_props.on_close, { noremap = true })
 
-    -- TODO: Map ^W
+    -- Ctrl-W to delete word.
+    input:map("i", "<C-w>", "<C-o>diw", { noremap = true, silent = true })
 
     -- Close when cursor leaves the buffer
     input:on(event.BufLeave, input.input_props.on_close, { once = true })
