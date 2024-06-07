@@ -19,7 +19,7 @@ return {
             if vim.g.os == "Darwin" then
                 require("lspconfig").sourcekit.setup({
                     capabilities = capabilities,
-                    filetypes = { "objective-c", "objective-cpp", "swift" }, -- Handle Swift. Let clangd handle C/C++
+                    filetypes = { "objc", "objcpp", "swift" }, -- Handle Swift. Let clangd handle C/C++
                 })
             end
 
