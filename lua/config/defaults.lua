@@ -46,6 +46,27 @@ local M = {
         },
     },
 
+    files = {
+        ignored_patterns = {
+            "%.DS_Store",
+            "%.gz",
+            "%.jpeg",
+            "%.jpg",
+            "%.lock",
+            "%.png",
+            "%.yarn/.*",
+            "^.direnv/.*",
+            "^.git/",
+            "^.venv/.*",
+            "^__pypackages__/.*",
+            "^lazy-lock.json",
+            "^site-packages/",
+            "^target/",
+            "^venv/.*",
+            "node%_modules/.*",
+        },
+    },
+
     -- Filetypes that should be formatted on save.
     formatting = {
         file_types = {

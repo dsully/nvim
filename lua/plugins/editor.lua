@@ -45,32 +45,33 @@ return {
             local actions = require("telescope.actions")
             local telescope = require("telescope")
 
+            local defaults = require("config.defaults")
+
             local function dropdown(opts)
                 return require("telescope.themes").get_dropdown(opts)
             end
 
             telescope.setup({
                 defaults = dropdown({
-                    borderchars = require("config.defaults").borderchars,
+                    borderchars = defaults.borderchars,
                     color_devicons = true,
-                    file_ignore_patterns = {
-                        "%.DS_Store",
-                        "%.gz",
-                        "%.jpeg",
-                        "%.jpg",
-                        "%.lock",
-                        "%.png",
-                        "%.yarn/.*",
-                        "^.direnv/.*",
-                        "^.git/",
-                        "^.venv/.*",
-                        "^__pypackages__/.*",
-                        "^lazy-lock.json",
-                        "^site-packages/",
-                        "^target/",
-                        "^venv/.*",
-                        "node%_modules/.*",
-                    },
+                    file_ignore_patterns = defaults.files.ignored_patterns,
+                    -- open files in the first window that is an actual file.
+                    -- use the current window if no other window is available.
+                    get_selection_window = function()
+                        local wins = vim.api.nvim_list_wins()
+
+                        table.insert(wins, 1, vim.api.nvim_get_current_win())
+
+                        for _, win in ipairs(wins) do
+                            local buf = vim.api.nvim_win_get_buf(win)
+
+                            if vim.bo[buf].buftype == "" then
+                                return win
+                            end
+                        end
+                        return 0
+                    end,
                     history = {
                         path = vim.fn.stdpath("data") .. "/databases/telescope_history.sqlite3",
                         limit = 100,
@@ -88,8 +89,10 @@ return {
                             end,
                             ["<C-k>"] = actions.cycle_history_next,
                             ["<C-j>"] = actions.cycle_history_prev,
-                            ["<C-w>"] = actions.send_selected_to_qflist,
                             ["<C-q>"] = actions.send_to_qflist,
+
+                            -- Delete word
+                            ["<C-w>"] = { "<C-o>diw", type = "command" },
                         },
                         n = {
                             ["<C-w>"] = actions.send_selected_to_qflist,
@@ -143,9 +146,6 @@ return {
                     oldfiles = {
                         only_cwd = true,
                         prompt_prefix = " 󰋚  ",
-                        file_ignore_patterns = {
-                            ".git/COMMIT_EDITMSG",
-                        },
                     },
                 },
             })
