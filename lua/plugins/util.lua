@@ -148,5 +148,25 @@ return {
         },
         priority = 1000,
     },
+    -- Pretty screen shots.
+    {
+        "mistricky/codesnap.nvim",
+        build = "make build_generator",
+        cmd = {
+            "CodeSnap",
+            "CodeSnapSave",
+        },
+        keys = {
+            { "<leader>s", "", desc = "󰹑 Screen Shots", mode = { "x" } },
+            { "<leader>ss", "<cmd>CodeSnap<cr>", mode = "x", desc = "Save selected code snapshot into clipboard" },
+            { "<leader>sS", "<cmd>CodeSnapSave<cr>", mode = "x", desc = "Save selected code snapshot in ~/Pictures" },
+        },
+        opts = {
+            bg_theme = "dusk",
+            has_breadcrumbs = true,
+            save_path = vim.g.home .. "/iCloud/Screenshots",
+            watermark = "",
+        },
+    },
     -- { "lewis6991/fileline.nvim", lazy = false },
 }
