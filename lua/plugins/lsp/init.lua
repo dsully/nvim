@@ -603,12 +603,6 @@ return {
                             },
                         },
                     },
-                    typos_lsp = {
-                        cmd = { "typos-lsp", "--config", vim.env.HOME .. "/.typos.toml" },
-                        init_options = {
-                            diagnosticSeverity = "Hint",
-                        },
-                    },
                     yamlls = {
                         commands = {
                             YAMLSchema = {
