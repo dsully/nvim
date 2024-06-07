@@ -12,39 +12,38 @@ end
 ---Add a word to the ~/.typos.toml file.
 ---@param word string
 M.add_word_to_typos = function(word)
-    local path = vim.env.HOME .. "/.typos.toml"
-    local config = fs.read(path)
+    local path = vim.g.home .. "/.typos.toml"
+    local config = toml.parse(fs.read(path))
 
     if not config then
         vim.notify("~/.typos.toml file not found!", vim.log.levels.ERROR)
         return
     end
 
-    local choices = {
-        "default.extend-words",
-        "type." .. vim.bo.filetype .. ".extend-words",
-    }
+    local chosen = vim.fn.confirm("Choose section: ", ("&Default\n&%s\n&Cancel"):format(uppercase_first(vim.bo.filetype)))
 
-    local selected = vim.fn.confirm("Select section: ", ("&Default\n&%s\n&Cancel"):format(uppercase_first(vim.bo.filetype)))
-    local chosen = choices[selected]
+    if chosen == nil then
+        return
+    end
+
+    local choice = chosen == 1 and "default.extend-words" or "type." .. vim.bo.filetype .. ".extend-words"
 
     -- Create the section if it doesn't exist
-    local sections = vim.split(chosen, "%.")
-    local current_table = toml.parse(config)
+    local sections = vim.split(choice, "%.")
 
     for i = 1, #sections do
         local section = sections[i]
 
-        if not current_table[section] then
-            current_table[section] = {}
+        if not config[section] then
+            config[section] = {}
         end
 
-        current_table = current_table[section]
+        config = config[section]
     end
 
-    current_table[word] = word
+    config[word] = word
 
-    fs.write(path, tostring(current_table))
+    fs.write(path, tostring(config))
 end
 
 return M
