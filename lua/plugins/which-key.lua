@@ -24,7 +24,6 @@ return {
             { key = "<leader>q", opts = { desc = "󰗼 Quit" } },
             { key = "<leader>r", opts = { desc = " Rules" } },
             { key = "<leader>s", opts = { desc = " Snippets" } },
-            { key = "<leader>t", opts = { desc = " Test" } },
             { key = "<leader>v", opts = { desc = " View" } },
             { key = "<leader>x", opts = { desc = " Diagnostics" } },
         }) do
