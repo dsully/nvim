@@ -1,4 +1,5 @@
 local e = require("helpers.event")
+local map = require("helpers.keys").map
 
 local M = {}
 
@@ -110,9 +111,9 @@ function M.setup()
             lazy = true,
             version = false, -- always use the latest git commit
         },
-        dev = {
-            path = "~/dev/home/neovim",
-        },
+        -- dev = {
+        --     path = "~/dev/home/neovim",
+        -- },
         install = {
             colorscheme = { "nordish" },
             missing = true,
@@ -166,10 +167,11 @@ function M.setup()
         vim.cmd.checkhealth()
     end, { desc = "Load all plugins and run :checkhealth" })
 
-    vim.keymap.set("n", "<leader>ph", vim.cmd.LazyHealth, { desc = " Plugin Health" })
-    vim.keymap.set("n", "<leader>pi", lazy.show, { desc = " Plugin Info" })
-    vim.keymap.set("n", "<leader>pp", lazy.profile, { desc = " Profile Plugins" })
-    vim.keymap.set("n", "<leader>ps", lazy.sync, { desc = " Sync Plugins" })
+    map("<leader>p", "", " Plugins")
+    map("<leader>ph", vim.cmd.LazyHealth, " Plugin Health")
+    map("<leader>pi", lazy.show, " Plugin Info")
+    map("<leader>pp", lazy.profile, " Profile Plugins")
+    map("<leader>ps", lazy.sync, " Sync Plugins")
 end
 
 return M

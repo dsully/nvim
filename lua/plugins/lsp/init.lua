@@ -130,6 +130,8 @@ return {
             { "<C-S>", vim.lsp.buf.signature_help, desc = "Signature Help 󰞂 ", mode = "i" },
             -- stylua: ignore
             { "grr", function() vim.lsp.buf.references({ includeDeclaration = false }) end, desc = "References 󰆋" },
+            --
+            { "<leader>l", "", desc = " LSP" },
             { "<leader>fs", tscope("lsp_document_symbols"), desc = "Symbols 󰆋" },
             { "<leader>fW", tscope("lsp_dynamic_workspace_symbols"), desc = "Workspace Symbols 󰆋" },
             { "<leader>lc", vim.cmd.LspCapabilities, desc = " LSP Capabilities" },
