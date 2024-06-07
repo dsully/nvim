@@ -16,7 +16,6 @@ return {
             { key = "<c-w>", opts = { desc = "Windows" } },
             { key = "]", opts = { desc = "Next 󰒭" } },
             { key = "[", opts = { desc = "Previous 󰒮" } },
-            { key = "<leader>b", opts = { desc = " Buffers" } },
             { key = "<leader>c", opts = { desc = " Code" }, mode = { "n", "t" } },
             { key = "<leader>d", opts = { desc = " Debug" } },
             { key = "<leader>f", opts = { desc = " Find" } },
