@@ -31,8 +31,6 @@ end, { silent = true, expr = false, desc = "Create relative to current buffer" }
 -- Close floating windows [Neovim 0.10 and above]
 vim.keymap.set("n", "<leader>fq", vim.cmd.fclose, { silent = true, desc = "Close all floating windows" })
 
-vim.keymap.set("n", "<leader>g/", [[/^\(|||||||\|=======\|>>>>>>>\|<<<<<<<\)<CR>]], { desc = "Search for conflict markers" })
-
 -- Open in the filetype default application (macOS)
 if vim.g.os == "Darwin" then
     vim.keymap.set("n", "<leader>o", function()

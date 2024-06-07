@@ -20,7 +20,6 @@ return {
             { key = "<leader>c", opts = { desc = " Code" }, mode = { "n", "t" } },
             { key = "<leader>d", opts = { desc = " Debug" } },
             { key = "<leader>f", opts = { desc = " Find" } },
-            { key = "<leader>g", opts = { desc = " Git" } },
             { key = "<leader>l", opts = { desc = " LSP" } },
             { key = "<leader>m", opts = { desc = " Map View" } },
             { key = "<leader>n", opts = { desc = " Notifications" } },
