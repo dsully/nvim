@@ -14,11 +14,9 @@ return {
             "TSUpdate",
             "TSUpdateSync",
         },
-        ---@param opts TSConfig
         config = function(_, opts)
             local parser = require("nvim-treesitter.parsers").get_parser_configs()
 
-            ---@type ParserInfo
             ---@diagnostic disable-next-line: inject-field
             parser.caddy = {
                 install_info = {
@@ -59,7 +57,6 @@ return {
             { "<leader>i", vim.show_pos, desc = "Inspect Position" },
         },
         lazy = vim.fn.argc(-1) == 0, -- load treesitter early when opening a file from the cmdline
-        ---@type TSConfig
         opts = {
             ensure_installed = {
                 "bash",
