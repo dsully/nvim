@@ -72,10 +72,6 @@ return {
                         end
                         return 0
                     end,
-                    history = {
-                        path = vim.fn.stdpath("data") .. "/databases/telescope_history.sqlite3",
-                        limit = 100,
-                    },
                     layout_config = {
                         width = 0.75,
                         prompt_position = "bottom",
@@ -177,7 +173,6 @@ return {
         end,
         dependencies = {
             { "natecraddock/telescope-zf-native.nvim" },
-            { "nvim-telescope/telescope-smart-history.nvim", dependencies = { "sqlite.lua" } },
             { "nvim-telescope/telescope-symbols.nvim" },
             { "nvim-telescope/telescope-ui-select.nvim" },
         },
