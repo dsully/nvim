@@ -303,7 +303,7 @@ e.on(e.BufWritePost, function(args)
     --- @type string
     local file = args.file
 
-    file = file:gsub(".-/chezmoi%-edit%d+", vim.env.HOME)
+    file = file:gsub(".-/chezmoi%-edit%d+", vim.g.home)
     file = file:gsub("dot_", ".")
     file = file:gsub("private_", "")
     file = file:gsub(".tmpl", "")

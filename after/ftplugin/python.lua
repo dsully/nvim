@@ -18,7 +18,7 @@ do
             local args
 
             if vim.uv.fs_access(pip, "RX") then
-                args = { "python", "-m", "pip", "install", vim.env.HOME .. "/src/dmypy-ls/dist/dmypy_ls-1.20-py3-none-any.whl" }
+                args = { "python", "-m", "pip", "install", vim.g.home .. "/src/dmypy-ls/dist/dmypy_ls-1.20-py3-none-any.whl" }
             else
                 args = { "uv", "pip", "install", "dmypy-ls" }
             end
