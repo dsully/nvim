@@ -187,6 +187,7 @@ return {
         },
         event = "LazyFile",
         keys = {
+            { "<leader>b", "", desc = " Buffers" },
             {
                 "<leader>bd",
                 function()
