@@ -25,7 +25,8 @@ return {
             end
 
             if not vim.g.large_file then
-                require("lint").try_lint()
+                lint.try_lint()
+                lint.try_lint("typos")
             end
         end, {
             group = vim.api.nvim_create_augroup("nvim-lint", { clear = true }),

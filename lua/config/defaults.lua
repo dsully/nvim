@@ -89,7 +89,6 @@ local M = {
         rst = { "rstcheck", "write_good" },
         text = { "write_good" },
         yaml = { "yamllint" },
-        ["*"] = { "typos" },
     },
 
     tools = {
