@@ -14,23 +14,23 @@ return {
     opts = function()
         local defaults = require("config.defaults")
 
+        ---@type conform.setupOpts
         return {
             format_on_save = function(bufnr)
                 --
                 if not vim.tbl_contains(defaults.formatting.on_save, vim.bo[bufnr].filetype) then
-                    return false
+                    return {}
                 end
 
                 -- Disable autoformat for files in a certain path
                 local bufname = vim.api.nvim_buf_get_name(bufnr)
 
                 if bufname:match("/(node_modules|__pypackages__|site_packages|cargo/registry|product-spec.json)/") then
-                    return false
+                    return {}
                 end
 
                 return { timeout_ms = 500, lsp_fallback = true }
             end,
-            ---@type table<string, conform.FormatterConfigOverride|fun(bufnr: integer): nil|conform.FormatterConfigOverride>
             formatters = {
                 caddy = {
                     command = "caddy",

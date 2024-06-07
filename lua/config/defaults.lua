@@ -1,3 +1,5 @@
+local copilot = " "
+
 local M = {
     ai_file_types = {
         "bash",
@@ -31,7 +33,7 @@ local M = {
             calc = "󰃬 [Calc]",
             cmdline = "󰘳 [Command]",
             crates = " [󱘗 Crates]",
-            copilot = " [Copilot]",
+            copilot = copilot .. "[Copilot]",
             env = " [ENV]",
             fish = "󰈺 [Fish]",
             luasnip = " [LuaSnip]",
@@ -40,7 +42,7 @@ local M = {
             path = " [Path]",
         },
         symbols = {
-            Copilot = "",
+            Copilot = copilot,
             Snippet = "",
             Version = "󱘗", -- crates.nvim lsp completion type.
         },
@@ -182,6 +184,7 @@ local M = {
             circle = "",
             circle_filled = "",
             circle_slash = "",
+            copilot = copilot,
             datetime = "󱛡 ",
             ellipse = "…",
             ellipse_dbl = "",
