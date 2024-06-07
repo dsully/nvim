@@ -340,16 +340,11 @@ return {
                     ruff = {
                         commands = {
                             RuffAutoFix = {
-                                function()
-                                    vim.lsp.buf.code_action({ context = { only = { "source.fixAll" } }, apply = true })
-                                end,
+                                require("plugins.lsp.common").action["source.fixAll"],
                                 description = "Ruff: Auto Fix",
                             },
-
                             RuffOrganizeImports = {
-                                function()
-                                    vim.lsp.buf.code_action({ context = { only = { "source.organizeImports" } }, apply = true })
-                                end,
+                                require("plugins.lsp.common").action["source.organizeImports"],
                                 description = "Ruff: Organize Imports",
                             },
                         },

@@ -26,6 +26,21 @@ M.capabilities = function()
     return vim.json.decode(vim.fn.readfile(path)[1])
 end
 
+-- Handle code actions.
+M.action = setmetatable({}, {
+    __index = function(_, action)
+        return function()
+            vim.lsp.buf.code_action({
+                apply = true,
+                context = {
+                    only = { action },
+                    diagnostics = {},
+                },
+            })
+        end
+    end,
+})
+
 ---@return lsp.ClientCapabilities
 M.setup = function()
     e.on(e.LspAttach, function(args)
