@@ -13,12 +13,6 @@ return {
         end,
     },
     {
-        "kkharji/sqlite.lua",
-        build = function()
-            vim.uv.fs_mkdir(vim.fn.stdpath("data") .. "/databases", 511)
-        end,
-    },
-    {
         "stevearc/resession.nvim",
         config = function(_, opts)
             local e = require("helpers.event")
