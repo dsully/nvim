@@ -51,3 +51,18 @@ vim.cmd.cnoreabbrev("WQ", "wq")
 vim.cmd.cnoreabbrev("Qa", "qa")
 vim.cmd.cnoreabbrev("Bd", "bd")
 vim.cmd.cnoreabbrev("bD", "bd")
+
+vim.keymap.set("n", "<leader>s", function()
+    if vim.o.spell then
+        vim.opt.spell = false
+    else
+        vim.opt.spelloptions = { "camel", "noplainbuffer" }
+        vim.opt.spell = true
+    end
+end, {
+    desc = "Toggle spell check",
+})
+
+vim.keymap.set("n", "zg", function()
+    require("helpers.spelling").add_word_to_typos(vim.fn.expand("<cword>"))
+end, { desc = "Add word to spell list" })

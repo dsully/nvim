@@ -144,5 +144,15 @@ return {
         end,
         event = "LazyFile",
     },
+    {
+        "vhyrro/luarocks.nvim",
+        event = "VeryLazy",
+        opts = {
+            rocks = {
+                "toml-edit",
+            },
+        },
+        priority = 1000,
+    },
     -- { "lewis6991/fileline.nvim", lazy = false },
 }
