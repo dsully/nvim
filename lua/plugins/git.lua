@@ -38,11 +38,12 @@ return {
                         gs.reset_hunk({ vim.fn.line("."), vim.fn.line("v") })
                     end, "Reset Stage Lines(s)")
                 end,
+                sign_priority = 100,
                 trouble = true,
                 worktrees = {
                     {
                         toplevel = vim.g.home,
-                        gitdir = string.format("%s/.config/repos/dotfiles", vim.g.home),
+                        gitdir = string.format("%s/repos/dotfiles", vim.env.XDG_CONFIG_HOME),
                     },
                 },
             })
