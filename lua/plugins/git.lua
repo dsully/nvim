@@ -1,62 +1,64 @@
 return {
     {
         "lewis6991/gitsigns.nvim",
-        config = function()
-            require("gitsigns").setup({
-                attach_to_untracked = true,
-                keymaps = nil,
-                preview_config = {
-                    border = vim.g.border,
-                },
-                --- @param buffer integer
-                on_attach = function(buffer)
-                    local gs = package.loaded.gitsigns
-
-                    local function map(mode, l, r, desc)
-                        vim.keymap.set(mode, l, r, { buffer = buffer, desc = desc })
-                    end
-
-                    map("n", "]c", gs.next_hunk, "Next Git Hunk")
-                    map("n", "[c", gs.prev_hunk, "Previous Git Hunk")
-
-                    map("n", "<leader>gb", function()
-                        gs.blame_line({ full = true, ignore_whitespace = true })
-                    end, "Git Blame")
-
-                    map("n", "<leader>gR", gs.reset_buffer, "Reset Git Buffer")
-                    map("n", "<leader>gp", gs.preview_hunk, "Preview Git Hunk")
-                    map("n", "<leader>gU", gs.undo_stage_hunk, "Undo Git Stage Hunk")
-
-                    map("n", "<leader>gd", gs.toggle_deleted, "Git Deleted Toggle")
-                    map("n", "<leader>gB", gs.toggle_current_line_blame, "Git Blame Toggle")
-
-                    map({ "n", "x" }, "<leader>gs", function()
-                        gs.stage_hunk({ vim.fn.line("."), vim.fn.line("v") })
-                    end, "Stage Lines(s)")
-
-                    map({ "n", "x" }, "<leader>gr", function()
-                        gs.reset_hunk({ vim.fn.line("."), vim.fn.line("v") })
-                    end, "Reset Stage Lines(s)")
-                end,
-                sign_priority = 100,
-                trouble = true,
-                worktrees = {
-                    {
-                        toplevel = vim.g.home,
-                        gitdir = string.format("%s/repos/dotfiles", vim.env.XDG_CONFIG_HOME),
-                    },
-                },
-            })
-        end,
         event = "LazyFile",
+        keys = {
+            { "<leader>g", "", desc = " Git", mode = { "n", "x" } },
+            { "<leader>g/", [[/^\(|||||||\|=======\|>>>>>>>\|<<<<<<<\)<CR>]], desc = "Search for conflict markers" },
+        },
+        opts = {
+            attach_to_untracked = true,
+            keymaps = nil,
+            preview_config = {
+                border = vim.g.border,
+            },
+            --- @param buffer integer
+            on_attach = function(buffer)
+                local gs = package.loaded.gitsigns
+
+                local function bmap(l, r, desc, mode)
+                    vim.keymap.set(mode or "n", l, r, { buffer = buffer, desc = desc })
+                end
+
+                bmap("]c", gs.next_hunk, "Next Git Hunk")
+                bmap("[c", gs.prev_hunk, "Previous Git Hunk")
+
+                bmap("<leader>gb", function()
+                    gs.blame_line({ full = true, ignore_whitespace = true })
+                end, "Git Blame")
+
+                bmap("<leader>gR", gs.reset_buffer, "Reset Git Buffer")
+                bmap("<leader>gp", gs.preview_hunk, "Preview Git Hunk")
+                bmap("<leader>gU", gs.undo_stage_hunk, "Undo Git Stage Hunk")
+
+                bmap("<leader>gd", gs.toggle_deleted, "Git Deleted Toggle")
+                bmap("<leader>gB", gs.toggle_current_line_blame, "Git Blame Toggle")
+
+                bmap("<leader>gs", function()
+                    gs.stage_hunk({ vim.fn.line("."), vim.fn.line("v") })
+                end, "Stage Lines(s)", { "n", "x" })
+
+                bmap("<leader>gr", function()
+                    gs.reset_hunk({ vim.fn.line("."), vim.fn.line("v") })
+                end, "Reset Stage Lines(s)", { "n", "x" })
+            end,
+            sign_priority = 100,
+            trouble = true,
+            worktrees = {
+                {
+                    toplevel = vim.g.home,
+                    gitdir = string.format("%s/repos/dotfiles", vim.env.XDG_CONFIG_HOME),
+                },
+            },
+        },
     },
     {
         "linrongbin16/gitlinker.nvim",
         cmd = "GitLink",
         -- stylua: ignore
         keys = {
-            { "<leader>gC", vim.cmd.GitLink, desc = "Copy Git URL", mode = { "v", "n" } },
-            { "<leader>go", function() vim.cmd.GitLink({ bang = true }) end, desc = "Open Git URL", mode = { "v", "n" } },
+            { "<leader>gC", vim.cmd.GitLink, desc = "Copy Git URL", mode = { "n", "x" } },
+            { "<leader>go", function() vim.cmd.GitLink({ bang = true }) end, desc = "Open Git URL", mode = { "x", "x" } },
         },
         opts = {
             message = false,
@@ -67,8 +69,9 @@ return {
         build = "make",
         cmd = "GHActions",
         dependencies = { "nvim-lua/plenary.nvim", "MunifTanjim/nui.nvim" },
-        -- stylua: ignore
-        keys = { { "<leader>gh", vim.cmd.GhActions, desc = "Open Github Actions" } },
+        keys = {
+            { "<leader>gh", vim.cmd.GhActions, desc = "Open Github Actions" },
+        },
         opts = true,
     },
     -- {
@@ -108,13 +111,8 @@ return {
             "nvim-tree/nvim-web-devicons",
         },
         keys = {
-            {
-                "<space>g",
-                function()
-                    require("fugit2").git_status()
-                end,
-                desc = " Git UI",
-            },
+            -- stylua: ignore
+            { "<space>g", function() require("fugit2").git_status() end, desc = " Git UI" },
         },
         opts = {},
     },
