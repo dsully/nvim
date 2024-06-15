@@ -360,6 +360,8 @@ return {
                         init_options = {
                             settings = require("helpers.ruff").config(),
                         },
+                        -- Use ruff from Homebrew
+                        mason = false,
                         ---@param client vim.lsp.Client
                         on_attach = function(client)
                             client.server_capabilities.hoverProvider = false
