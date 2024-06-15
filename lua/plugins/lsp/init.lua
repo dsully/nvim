@@ -16,16 +16,22 @@ return {
             local capabilities = require("plugins.lsp.common").setup()
             local handlers = {}
 
-            if vim.g.os == "Darwin" then
-                require("lspconfig").sourcekit.setup({
-                    capabilities = capabilities,
-                    filetypes = { "objc", "objcpp", "swift" }, -- Handle Swift. Let clangd handle C/C++
-                })
-            end
+            ---@type table<string, string>
+            local mason_servers = vim.tbl_keys(require("mason-lspconfig.mappings.server").lspconfig_to_package)
 
             for name, handler in pairs(opts.servers) do
-                handlers[name] = function()
-                    require("lspconfig")[name].setup(vim.tbl_deep_extend("force", { capabilities = capabilities }, handler))
+                if handler.enabled ~= false then
+                    --
+                    local setup = function()
+                        require("lspconfig")[name].setup(vim.tbl_deep_extend("force", { capabilities = capabilities }, handler))
+                    end
+
+                    -- Run manual setup if mason=false or if this is a server that cannot be installed with mason-lspconfig
+                    if handler.mason == false or not vim.tbl_contains(mason_servers, name) then
+                        setup()
+                    else
+                        handlers[name] = setup
+                    end
                 end
             end
 
@@ -34,21 +40,6 @@ return {
                 ensure_installed = vim.tbl_keys(handlers),
                 handlers = handlers,
             })
-
-            -- https://gitlab.com/schrieveslaach/sonarlint.nvim
-            -- require("sonarlint").setup({
-            --     server = {
-            --         cmd = {
-            --             "sonarlint-language-server",
-            --             "-stdio",
-            --             "-analyzers",
-            --             vim.fn.expand("$MASON/share/sonarlint-analyzers/sonarpython.jar"),
-            --         },
-            --     },
-            --     filetypes = {
-            --         "python",
-            --     },
-            -- })
         end,
         dependencies = {
             { "b0o/schemastore.nvim", version = false },
@@ -206,6 +197,21 @@ return {
                         },
                     },
                     bzl = {},
+                    -- ccls = {
+                    --     capabilities = capabilities,
+                    --     filetypes = { "c", "cpp", "cuda" },
+                    --     init_options = {
+                    --         clang = {
+                    --             excludeArgs = { "-frounding-math" },
+                    --         },
+                    --         compilationDatabaseDirectory = "build",
+                    --         index = {
+                    --             threads = 0,
+                    --         },
+                    --     },
+                    --     mason = false,
+                    --     offset_encoding = "utf-32",
+                    -- }
                     clangd = {
                         capabilities = {
                             offsetEncoding = { "utf-16" },
@@ -360,6 +366,8 @@ return {
                         end,
                     },
                     rust_analyzer = {
+                        -- Use rust-analyzer from rustup's toolchain installation
+                        mason = false,
                         ---@param client vim.lsp.Client
                         ---@param bufnr integer
                         on_attach = function(client, bufnr)
@@ -493,13 +501,11 @@ return {
                         settings = {
                             ["rust-analyzer"] = {
                                 cargo = {
-                                    allFeatures = true,
                                     buildScripts = {
                                         enable = true,
                                     },
                                 },
                                 check = {
-                                    allFeatures = true,
                                     command = "clippy",
                                     enable = true,
                                     extraArgs = { "--no-deps" },
@@ -572,6 +578,10 @@ return {
                             },
                         },
                         standalone = false,
+                    },
+                    sourcekit = {
+                        filetypes = { "objc", "objcpp", "swift" }, -- Handle Swift only.
+                        mason = false,
                     },
                     taplo = {
                         filetypes = { "toml", "toml.pyproject" },
@@ -732,5 +742,44 @@ return {
     },
     { "p00f/clangd_extensions.nvim" },
     { "someone-stole-my-name/yaml-companion.nvim" },
-    { "https://gitlab.com/schrieveslaach/sonarlint.nvim" },
+    {
+        "https://gitlab.com/schrieveslaach/sonarlint.nvim",
+        config = function()
+            -- https://gitlab.com/schrieveslaach/sonarlint.nvim/-/issues/18
+            vim.lsp.handlers["sonarlint/listFilesInFolder"] = function(_, params)
+                local result = {
+                    foundFiles = {},
+                }
+
+                for _, path in ipairs(vim.fs.find("*", { path = params.folderUri, type = "file" })) do
+                    table.insert(result.foundFiles, {
+                        fileName = vim.fs.basename(path),
+                        filePath = path,
+                    })
+                end
+
+                return result
+            end
+
+            require("sonarlint").setup({
+                server = {
+                    cmd = {
+                        "sonarlint-language-server",
+                        "-stdio",
+                        "-analyzers",
+                        vim.fn.expand("$MASON/share/sonarlint-analyzers/sonarpython.jar"),
+                    },
+                    settings = {
+                        sonarlint = {
+                            test = "test",
+                        },
+                    },
+                },
+                filetypes = {
+                    "python",
+                },
+            })
+        end,
+        event = "LazyFile",
+    },
 }
