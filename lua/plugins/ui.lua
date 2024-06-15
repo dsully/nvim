@@ -499,6 +499,9 @@ return {
                             -- Fix lsp signature bug
                             { event = "msg_show", find = "lsp_signature? handler RPC" },
 
+                            -- Ignore deprecated messages from plugins.
+                            { event = "msg_show", find = "vim.lsp.get_active_clients" },
+
                             -- Noisy dmypy messages
                             { event = "lsp", kind = "message" },
                         },
