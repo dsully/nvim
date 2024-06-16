@@ -651,7 +651,7 @@ M.highlights = {
     PmenuExtraSel = { link = "PmenuSel" },
     PmenuKind = { link = "Pmenu" },
     PmenuKindSel = { link = "PmenuSel" },
-    PmenuSbar = { link = "Pmenu" },
+    PmenuSbar = { link = "PmenuSel" },
     PmenuSel = { bg = M.colors.gray.bright },
     PmenuThumb = { bg = M.colors.gray.base },
     PreCondit = { link = "PreProc" },
