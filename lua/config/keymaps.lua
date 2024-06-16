@@ -16,6 +16,9 @@ vim.keymap.set({ "n", "x" }, "gp", '"*p', { desc = "Paste from system clipboard"
 
 vim.keymap.set("n", "<leader>Y", "<cmd>%y<cr>", { desc = "Yank All Lines" })
 
+-- Set Ctrl-W to delete a word in insert mode
+vim.keymap.set("i", "<C-w>", "<C-o>diw", { noremap = true, silent = true, desc = "Delete Word" })
+
 -- Don't delete into the system clipboard.
 vim.keymap.set({ "n", "x" }, "dw", '"_dw', { desc = "which_key_ignore", noremap = true })
 
@@ -64,3 +67,12 @@ end, {
 vim.keymap.set("n", "zg", function()
     require("helpers.spelling").add_word_to_typos(vim.fn.expand("<cword>"))
 end, { desc = "Add word to spell list" })
+
+-- Copy text to clipboard using codeblock format ```{ft}{content}```
+vim.api.nvim_create_user_command("CopyCodeBlock", function(opts)
+    local lines = vim.api.nvim_buf_get_lines(0, opts.line1 - 1, opts.line2, true)
+
+    vim.fn.setreg("+", string.format("```%s\n%s\n```", vim.bo.filetype, table.concat(lines, "\n")))
+
+    vim.notify("Text copied to clipboard")
+end, { range = true })
