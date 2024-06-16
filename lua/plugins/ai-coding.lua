@@ -136,33 +136,35 @@ return {
     {
         "olimorris/codecompanion.nvim",
         cmd = { "CodeCompanion", "CodeCompanionChat", "CodeCompanionToggle", "CodeCompanionActions", "CodeCompanionAdd" },
-        opts = {
-            ai_settings = {
-                chat = { model = model },
-                inline = { model = model },
-            },
-            display = {
-                chat = {
-                    type = "buffer",
-                    buf_options = {
-                        buflisted = true,
-                    },
-                    win_options = {
-                        wrap = true,
-                        linebreak = true,
-                    },
-                },
-            },
-            keymaps = {
-                ["<C-y>"] = "keymaps.save",
-            },
-            silence_notifications = true,
-        },
         keys = {
             --stylua: ignore
             { "<C-a>", vim.cmd.CodeCompanionActions, mode = { "n", "x" }, desc = "Code Companion Actions" },
             { "<localleader>a", vim.cmd.CodeCompanionToggle, mode = { "n", "x" }, desc = "Code Companion Chat" },
         },
+        opts = function()
+            return {
+                adapters = {
+                    openai = require("codecompanion.adapters").use("openai", {
+                        schema = {
+                            model = {
+                                default = model,
+                            },
+                        },
+                    }),
+                },
+                display = {
+                    chat = {
+                        window = {
+                            layout = "float",
+                        },
+                    },
+                },
+                keymaps = {
+                    ["<C-y>"] = "keymaps.save",
+                },
+                silence_notifications = true,
+            }
+        end,
     },
 
     {
