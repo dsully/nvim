@@ -34,7 +34,7 @@ vim.opt.smoothscroll = true
 vim.opt.spell = false
 vim.opt.spellcapcheck = "" -- don't check for capital letters at start of sentence.
 vim.opt.spellfile = vim.fn.stdpath("config") .. "/spell/en.utf-8.add"
-vim.opt.spelloptions:append({ "camel" })
+vim.opt.spelloptions:append({ "camel", "noplainbuffer" })
 vim.opt.spellsuggest = "best,9"
 vim.opt.splitkeep = "screen"
 vim.opt.shortmess:append({ W = true, I = true, c = true, q = true })

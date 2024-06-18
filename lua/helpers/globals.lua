@@ -5,28 +5,15 @@ _G.dbg = function(...)
     local info = debug.getinfo(2, "S")
     local source = info.source:sub(2)
 
-    source = vim.loop.fs_realpath(source) or source
-    source = vim.fn.fnamemodify(source, ":~:.") .. ":" .. info.linedefined
-
     local args = { ... }
 
     if vim.islist(args) and vim.tbl_count(args) <= 1 then
         args = args[1]
     end
 
-    local msg = vim.inspect(vim.deepcopy(args))
+    local msg = "Source: " .. source("\n\n") .. vim.split(vim.inspect(vim.deepcopy(args)), "\n")
 
-    vim.notify(msg, vim.log.levels.INFO, {
-        title = "Debug: " .. source,
-
-        on_open = function(win)
-            vim.wo[win].conceallevel = 3
-            vim.wo[win].concealcursor = ""
-            vim.wo[win].spell = false
-            local buf = vim.api.nvim_win_get_buf(win)
-            vim.treesitter.start(buf, "lua")
-        end,
-    })
+    require("helpers.float").open({ filetype = "lua", lines = msg, width = 0.8 })
 end
 
 --
