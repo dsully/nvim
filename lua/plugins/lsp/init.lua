@@ -589,6 +589,12 @@ return {
                         filetypes = { "toml", "toml.pyproject" },
                         ---@param client vim.lsp.Client
                         on_attach = function(client)
+                            --
+                            -- Disable until the issue below is addressed.
+                            client.server_capabilities.documentFormattingProvider = false
+                            client.server_capabilities.documentRangeFormattingProvider = false
+                            client.server_capabilities.documentOnTypeFormattingProvider = nil
+
                             vim.keymap.set("n", "<leader>vs", function()
                                 local bufnr = vim.api.nvim_get_current_buf()
 
