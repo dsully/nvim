@@ -6,7 +6,7 @@ return {
         {
             "<space>f",
             function()
-                require("conform").format({ async = true, lsp_format = "fallback", timeout_ms = 3000 })
+                require("conform").format({ async = true, lsp_format = "first", timeout_ms = 3000 })
             end,
             desc = "󰛗 Format Buffer",
         },
@@ -29,7 +29,7 @@ return {
                     return {}
                 end
 
-                return { timeout_ms = 500, lsp_format = "fallback" }
+                return { timeout_ms = 500, lsp_format = "first" }
             end,
             formatters = {
                 caddy = {
