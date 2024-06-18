@@ -156,6 +156,8 @@ return {
                     chat = {
                         window = {
                             layout = "float",
+                            height = 0.75,
+                            width = 0.75,
                         },
                     },
                 },
