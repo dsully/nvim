@@ -60,7 +60,7 @@ return {
             end
 
             -- Better visibility check than cmp.visible().
-            local function is_visible(cmp)
+            local function is_visible(_)
                 return cmp.core.view:visible() or vim.fn.pumvisible() == 1
             end
 
@@ -75,6 +75,7 @@ return {
                     ghost_text = false,
                 },
                 formatting = {
+                    expandable_indicator = true,
                     fields = { "kind", "abbr", "menu" },
                     format = function(entry, vim_item)
                         --
@@ -488,9 +489,9 @@ return {
             {
                 "<leader>cR",
                 function()
-                    require("refactoring").select_refactor({})
+                    require("refactoring").select_refactor({ show_success_message = false })
                 end,
-                desc = " Refactor",
+                desc = "Refactor ",
                 mode = { "n", "x" },
                 noremap = true,
                 silent = true,
