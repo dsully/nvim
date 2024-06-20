@@ -1,3 +1,5 @@
+local icons = require("config.defaults").icons
+
 return {
     "folke/which-key.nvim",
     config = function(_, opts)
@@ -16,14 +18,14 @@ return {
             { key = "<c-w>", opts = { desc = "Windows" } },
             { key = "]", opts = { desc = "Next 󰒭" } },
             { key = "[", opts = { desc = "Previous 󰒮" } },
+            { key = "<leader>c", opts = { desc = icons.misc.copilot .. "Copilot" }, mode = { "n", "t" } },
             { key = "<leader>c", opts = { desc = " Code" }, mode = { "n", "t" } },
-            { key = "<leader>d", opts = { desc = " Debug" } },
             { key = "<leader>f", opts = { desc = " Find" } },
             { key = "<leader>m", opts = { desc = " Map View" } },
             { key = "<leader>n", opts = { desc = " Notifications" } },
             { key = "<leader>q", opts = { desc = "󰗼 Quit" } },
             { key = "<leader>r", opts = { desc = " Rules" } },
-            { key = "<leader>s", opts = { desc = " Snippets" } },
+            { key = "<leader>s", opts = { desc = " Snippets" }, mode = { "n" } },
             { key = "<leader>v", opts = { desc = " View" } },
             { key = "<leader>x", opts = { desc = " Diagnostics" } },
         }) do
