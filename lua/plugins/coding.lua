@@ -743,18 +743,6 @@ return {
         ft = "requirements",
     },
     {
-        "andrewferrier/debugprint.nvim",
-        -- stylua: ignore
-        keys = {
-            { "g?", desc = " Debug" },
-            { "g?p", function() require("debugprint").print() end, desc = "Print (Below)" },
-            { "g?P", function() require("debugprint").print({ above = true }) end, desc = "Print (Above)" },
-            { "g?v", function() require("debugprint").print({ variable = true }) end, desc = "Print Variable (Below)" },
-            { "g?v", function() require("debugprint").print({ above = true, variable = true }) end, desc = "Print Variable (Above)" },
-            { "g?d", function() require("debugprint").deleteprints() end, desc = "Delete Prints" },
-        },
-    },
-    {
         "Zeioth/compiler.nvim",
         cmd = {
             "CompilerOpen",
@@ -783,5 +771,20 @@ return {
             },
         },
         opts = {},
+    },
+    {
+        "chrisgrieser/nvim-chainsaw",
+        opts = true,
+        -- stylua: ignore
+        keys = {
+            { "<leader>dl", desc = "Debug " .. defaults.icons.misc.bug },
+            { "<leader>dlm", function() require("chainsaw").messageLog() end, desc = "Message", },
+            { "<leader>dlv", function() require("chainsaw").variableLog() end, mode = { "n", "v" }, desc = "Variable", },
+            { "<leader>dlo", function() require("chainsaw").objectLog() end, desc = "Object", },
+            { "<leader>dlt", function() require("chainsaw").timeLog() end, desc = "Time", },
+            { "<leader>dld", function() require("chainsaw").debugLog() end, desc = "Debug" },
+            { "<leader>dlr", function() require("chainsaw").removeLogs() end, desc = "Remove", },
+            { "<leader>dlb", function() require("chainsaw").beepLog() end, desc = "Beep" },
+        },
     },
 }
