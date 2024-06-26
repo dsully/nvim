@@ -139,13 +139,8 @@ return {
         event = "LazyFile",
     },
     {
-        "vhyrro/luarocks.nvim",
-        event = "VeryLazy",
-        opts = {
-            rocks = {
-                "toml-edit",
-            },
-        },
+        "vhyrro/toml-edit.lua",
+        build = "rockspec",
         priority = 1000,
     },
     -- Pretty screen shots.
