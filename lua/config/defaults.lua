@@ -140,7 +140,6 @@ local M = {
             close_outline = "󰅚",
             close_round = "󰅙",
         },
-
         diagnostics = {
             error = "󰞏", --
             warn = "", -- "",--
@@ -151,12 +150,26 @@ local M = {
             -- info = " ",
             -- hint = "󰌶 ",
         },
-
         fold = {
             open = "",
             closed = "",
         },
-
+        git = {
+            add = "", -- '',
+            mod = "",
+            remove = "", -- '',
+            ignore = "",
+            rename = "",
+            untracked = "",
+            ignored = "",
+            unstaged = "󰄱",
+            staged = "",
+            conflict = "",
+            diff = "",
+            repo = "",
+            logo = "󰊢",
+            branch = "",
+        },
         menu = {
             actions = {
                 outline = {
@@ -181,19 +194,56 @@ local M = {
         },
 
         misc = {
+            arrow_right = "",
+            block = "▌",
+            bookmark = "",
+            bug = "", --  '󰠭'
+            calendar = "",
+            caret_right = "",
+            check = "󰄬",
+            chevron_right = "",
             circle = "",
             circle_filled = "",
             circle_slash = "",
+            clock = "",
+            code = "",
+            comment = "󰅺",
             copilot = copilot,
+            dashboard = "",
             datetime = "󱛡 ",
+            double_chevron_right = "»",
+            down = "⇣",
             ellipse = "…",
             ellipse_dbl = "",
+            ellipsis = "…",
+            fire = "",
+            gear = "",
+            history = "󰄉",
             hook = "󰛢",
             hook_disabled = "󰛣",
+            indent = "Ξ",
             kebab = "",
             lightbulb = "󰌶",
+            line = "", -- 'ℓ'
+            list = "",
+            lock = "",
             modified = "●",
             newline = "",
+            note = "󰎞",
+            package = "",
+            pencil = "", -- '󰏫',
+            plus = "",
+            project = "",
+            question = "",
+            robot = "󰚩",
+            search = "󰍉",
+            shaded_lock = "",
+            sign_in = "",
+            tab = "⇥",
+            table = "",
+            telescope = "",
+            tools = "",
+            up = "⇡",
         },
 
         separators = {
