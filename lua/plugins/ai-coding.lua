@@ -22,7 +22,7 @@ return {
                 { key = "s", cmd = "summarize", desc = "Summarize" },
                 { key = "f", cmd = "fix_bugs", desc = "Fix Bugs" },
                 { key = "x", cmd = "explain_code", desc = "Explain Code" },
-                { key = "l", cmd = "code_readability_analysis", desc = "Code Readability Analysis" },
+                { key = "a", cmd = "code_readability_analysis", desc = "Code Readability Analysis" },
             }) do
                 vim.keymap.set({ "n", "x" }, "<leader>c" .. map.key, function()
                     vim.cmd.ChatGPTRun(map.cmd)
@@ -140,6 +140,14 @@ return {
             --stylua: ignore
             { "<C-a>", vim.cmd.CodeCompanionActions, mode = { "n", "x" }, desc = "Code Companion Actions" },
             { "<localleader>a", vim.cmd.CodeCompanionToggle, mode = { "n", "x" }, desc = "Code Companion Chat" },
+            {
+                "<leader>cl",
+                function()
+                    vim.cmd.CodeCompanion("lsp")
+                end,
+                mode = { "n", "x" },
+                desc = "Use an LLM to fix your LSP diagnostics",
+            },
         },
         opts = function()
             return {
@@ -155,14 +163,11 @@ return {
                 display = {
                     chat = {
                         window = {
-                            layout = "float",
-                            height = 0.75,
-                            width = 0.75,
+                            layout = "horizontal",
+                            height = 0.40,
+                            -- width = -1.75,
                         },
                     },
-                },
-                keymaps = {
-                    ["<C-y>"] = "keymaps.save",
                 },
                 silence_notifications = true,
             }
