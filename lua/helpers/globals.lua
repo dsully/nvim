@@ -13,7 +13,7 @@ _G.dbg = function(...)
 
     local msg = "Source: " .. source("\n\n") .. vim.split(vim.inspect(vim.deepcopy(args)), "\n")
 
-    require("helpers.float").open({ filetype = "lua", lines = msg, width = 0.8 })
+    require("helpers.float").open({ filetype = "lua", lines = msg, window = { width = 0.8 } })
 end
 
 --

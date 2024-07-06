@@ -122,7 +122,6 @@ M.popup = function(event)
             local help_win = vim.api.nvim_get_current_win()
 
             require("helpers.float").open({
-                anchor = "E",
                 --
                 -- Render borders around code blocks and headers
                 callback = function(buf)
@@ -140,6 +139,9 @@ M.popup = function(event)
                 end,
                 filetype = filetype,
                 lines = vim.api.nvim_buf_get_lines(event.buf, 0, -1, false),
+                window = {
+                    anchor = "E",
+                },
             })
 
             -- Close the initial help split window.
