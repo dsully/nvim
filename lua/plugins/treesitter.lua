@@ -68,6 +68,7 @@ return {
                 "css",
                 "diff",
                 "dockerfile",
+                "editorconfig",
                 "fish",
                 "git_config",
                 "git_rebase",
