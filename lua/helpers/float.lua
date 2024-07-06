@@ -3,11 +3,14 @@ local M = {}
 ---@class FloatOptions
 ---@field lines string[]
 ---@field filetype string
+---@field window WindowOptions?
+---@field relative string?
+---@field callback ?function(buf: integer)
+
+---@class WindowOptions
 ---@field anchor string?
 ---@field width number?
 ---@field height number?
----@field relative string?
----@field callback function(buf: integer)?
 
 ---@class WindowPosition
 ---@field row number
@@ -17,9 +20,11 @@ local M = {}
 ---@field height number
 ---@field width number
 
----@param options FloatOptions
----@return WindowPosition, WindowSize
-local window = function(options)
+---@param options WindowOptions?
+---@return table<WindowPosition, WindowSize>
+M.window = function(options)
+    options = options or {}
+
     local editor_width = vim.o.columns
     local editor_height = vim.o.lines
 
@@ -50,12 +55,12 @@ local window = function(options)
         position.col = string.match(anchor, "W") and 0 or editor_width - size.width
     end
 
-    return position, size
+    return { position, size }
 end
 
 ---@param options FloatOptions
 function M.open(options)
-    local position, size = window(options)
+    local position, size = unpack(M.window(options.window))
 
     local popup = require("nui.popup")({
         border = {

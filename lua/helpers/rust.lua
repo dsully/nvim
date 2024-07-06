@@ -24,7 +24,7 @@ M.expand_macro = function(macro)
         :flatten()
         :totable()
 
-    require("helpers.float").open({ filetype = "rust", lines = lines, width = 0.8 })
+    require("helpers.float").open({ filetype = "rust", lines = lines, window = { width = 0.8 } })
 
     -- Move cursor to the start of the macro expansion.
     vim.api.nvim_win_set_cursor(0, { 4, 0 })
