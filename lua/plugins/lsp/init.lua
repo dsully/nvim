@@ -377,6 +377,9 @@ return {
                             local e = require("helpers.event")
                             local keys = require("helpers.keys")
 
+                            -- Capture for the closures.
+                            local offset_encoding = client.offset_encoding
+
                             vim.cmd.compiler("cargo")
 
                             vim.keymap.set("n", "<localleader>t", cmd("make test -q"), { desc = "Cargo test" })
@@ -415,7 +418,7 @@ return {
                                         --
                                         local position = positions[1]
 
-                                        local offset = vim.lsp.util._get_line_byte_from_position(ctx.bufnr, position, client.offset_encoding)
+                                        local offset = vim.lsp.util._get_line_byte_from_position(ctx.bufnr, position, offset_encoding)
                                         local winid = vim.fn.bufwinid(ctx.bufnr)
 
                                         -- LSP's line is 0-indexed while Neovim's line is 1-indexed.
@@ -425,15 +428,19 @@ return {
                             end, "Move to matching brace", bufnr)
 
                             keys.map("gx", function()
-                                client.request("experimental/externalDocs", vim.lsp.util.make_position_params(), function(_, result)
-                                    --
-                                    ---@cast result ExternalDocsResponse
-                                    local url = result["local"] or result.web or result
+                                local c = require("helpers.lsp").client_by_name("rust_analyzer")
 
-                                    if url then
-                                        vim.ui.open(url)
-                                    end
-                                end)
+                                if c then
+                                    c.request("experimental/externalDocs", vim.lsp.util.make_position_params(), function(_, result)
+                                        --
+                                        ---@cast result ExternalDocsResponse
+                                        local url = result
+
+                                        if url then
+                                            vim.ui.open(url)
+                                        end
+                                    end)
+                                end
                             end, "Open external documentation", { "n", "x" })
 
                             keys.map("gP", function()
@@ -449,7 +456,7 @@ return {
                                         location = result[1]
                                     end
 
-                                    vim.lsp.util.jump_to_location(location, client.offset_encoding, true)
+                                    vim.lsp.util.jump_to_location(location, offset_encoding, true)
                                 end)
                             end, "Open parent module")
 
@@ -460,7 +467,7 @@ return {
                                 }, function(_, result)
                                     --
                                     if result ~= nil then
-                                        vim.lsp.util.jump_to_location(result, client.offset_encoding, true)
+                                        vim.lsp.util.jump_to_location(result, offset_encoding, true)
                                     end
                                 end)
                             end, "Open Cargo.toml")
