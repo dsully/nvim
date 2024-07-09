@@ -31,7 +31,7 @@ vim.keymap.set("n", "<localleader>e", function()
     end)
 end, { silent = true, expr = false, desc = "Create relative to current buffer" })
 
--- Close floating windows [Neovim 0.10 and above]
+-- Close floating windows
 vim.keymap.set("n", "<leader>fq", vim.cmd.fclose, { silent = true, desc = "Close all floating windows" })
 
 -- Open in the filetype default application (macOS)
