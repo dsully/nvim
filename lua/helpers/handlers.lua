@@ -179,7 +179,8 @@ M.rename = function()
     input:on(event.BufLeave, input.input_props.on_close, { once = true })
 end
 
-M.setup = function()
+---@param group integer
+M.setup = function(group)
     local opts = {}
 
     for req, handler in pairs({
@@ -230,7 +231,7 @@ M.setup = function()
         local buffer = vim.api.nvim_get_current_buf()
 
         if client then
-            require("plugins.lsp.common").on_attach(client, buffer)
+            require("plugins.lsp.common").on_attach(client, buffer, group)
         end
 
         return register_capability(err, res, ctx)

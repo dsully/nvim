@@ -1,7 +1,6 @@
 local M = {}
 
 local e = require("helpers.event")
-local lsp = require("helpers.lsp")
 
 local name = "lightbulb"
 local namespace = ns(name)
@@ -94,49 +93,22 @@ local function update(bufnr)
     end)
 end
 
-M.setup = function()
-    local group = e.group(("%s/events"):format(name), false)
-
-    e.on(e.LspAttach, function(event)
-        local client = lsp.client_by_id(event.data.client_id, method)
-
-        if not client then
-            return
-        end
-
-        local buf = event.buf
-        local buf_group = e.group(("%s/buffer/%s"):format(name, buf), false)
-
-        e.on(e.CursorMoved, function()
-            update(buf)
-        end, {
-            buffer = buf,
-            desc = "Update lightbulb when moving the cursor in normal/visual mode",
-            group = buf_group,
-        })
-
-        e.on({ e.InsertEnter, e.BufLeave }, function()
-            update_extmark(buf, nil)
-        end, {
-            buffer = buf,
-            desc = "Update lightbulb when entering insert mode or leaving the buffer",
-            group = buf_group,
-        })
-
-        -- Remove the group when the buffer is deleted.
-        e.on(e.BufDelete, function()
-            pcall(vim.api.nvim_del_augroup_by_id, buf_group)
-
-            if #vim.lsp.get_clients({ method = method }) == 0 then
-                pcall(vim.api.nvim_del_augroup_by_id, group)
-            end
-        end, {
-            buffer = buf,
-            desc = "LSP Light Bulb Buffer Clean Up",
-            group = buf_group,
-        })
+---@param buffer integer
+---@param group integer
+M.setup = function(buffer, group)
+    e.on(e.CursorMoved, function()
+        update(buffer)
     end, {
-        desc = "LSP Light Bulb Hints",
+        buffer = buffer,
+        desc = "Update lightbulb when moving the cursor in normal/visual mode",
+        group = group,
+    })
+
+    e.on({ e.InsertEnter, e.BufLeave }, function()
+        update_extmark(buffer, nil)
+    end, {
+        buffer = buffer,
+        desc = "Update lightbulb when entering insert mode or leaving the buffer",
         group = group,
     })
 end

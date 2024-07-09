@@ -47,31 +47,49 @@ M.setup = function()
         local buffer = args.buf ---@type number
         local client = vim.lsp.get_client_by_id(args.data.client_id)
 
-        if client then
-            M.on_attach(client, buffer)
+        if not client then
+            return
         end
+
+        local group = e.group(("%s/buffer/%s"):format(client.name, buffer))
+
+        M.on_attach(client, buffer, group)
+
+        require("helpers.lightbulb").setup(buffer, group)
+        require("helpers.handlers").setup(group)
+
+        ---@param event LspProgressEvent
+        e.on(e.LspProgress, function(event)
+            --
+            if event.data.client_id and event.data.params then
+                require("helpers.code_lens").on_progress(event.data, group)
+            end
+        end, {
+            desc = "LSP Progress Handler",
+            group = group,
+        })
+
+        -- Clean buffer from client when buffer is deleted
+        e.on(e.BufDelete, function()
+            vim.lsp.inlay_hint.enable(false, { buffer = buffer })
+            vim.lsp.buf_detach_client(buffer, client.id)
+            vim.api.nvim_clear_autocmds({ group = group })
+        end, {
+            buffer = buffer,
+            desc = "LSP Buffer Clean Up",
+            group = group,
+        })
     end, {
         desc = "LSP Common Attach",
     })
-
-    ---@param event LspProgressEvent
-    e.on(e.LspProgress, function(event)
-        --
-        if event.data.client_id and event.data.params then
-            require("helpers.code_lens").on_progress(event.data)
-        end
-    end, { desc = "LSP Progress Handler" })
-
-    require("helpers.handlers").setup()
-    require("helpers.lightbulb").setup()
 
     return M.capabilities()
 end
 
 ---@param client vim.lsp.Client
 ---@param buffer integer
-M.on_attach = function(client, buffer)
-    local keys = require("helpers.keys")
+---@param group integer
+M.on_attach = function(client, buffer, group)
     local methods = vim.lsp.protocol.Methods
 
     if lsp.should_ignore(client) then
@@ -80,30 +98,15 @@ M.on_attach = function(client, buffer)
 
     if client.supports_method(methods.textDocument_documentHighlight) then
         --
-        local method = vim.lsp.protocol.Methods.textDocument_documentHighlight
-
-        e.on({ e.BufEnter, e.CursorHold, e.CursorHoldI }, function(args)
+        e.on({ e.BufEnter, e.CursorHold, e.CursorHoldI }, function()
             --
-            local buf_group = e.group(("document_highlight/buffer/%s"):format(args.buf), false)
-
-            if #vim.lsp.get_clients({ id = client.id, bufnr = args.buf, method = method }) > 0 then
-                vim.lsp.buf.clear_references()
-                vim.lsp.buf.document_highlight()
-            end
+            vim.lsp.buf.clear_references()
+            vim.lsp.buf.document_highlight()
 
             e.on({ e.BufLeave, e.CursorMoved, e.CursorMovedI }, vim.lsp.buf.clear_references, {
-                buffer = args.buf,
+                buffer = buffer,
                 desc = "LSP Clear References",
-                group = buf_group,
-            })
-
-            -- Remove the group when there are no more buffers associated with the client.
-            e.on({ e.BufDelete }, function()
-                vim.api.nvim_del_augroup_by_id(buf_group)
-            end, {
-                buffer = args.buf,
-                desc = "LSP Code Lens Clean Up",
-                group = buf_group,
+                group = group,
             })
         end, {
             desc = "LSP Document Highlighting",
@@ -111,7 +114,7 @@ M.on_attach = function(client, buffer)
     end
 
     if client.supports_method(methods.textDocument_inlayHint) then
-        keys.bmap("<space>i", function()
+        require("helpers.keys").bmap("<space>i", function()
             vim.lsp.inlay_hint.enable(not vim.lsp.inlay_hint.is_enabled({ bufnr = buffer }))
         end, " Toggle Inlay Hints")
 

@@ -287,7 +287,7 @@ end
 
 --- Create an autocommand group.
 --- @param name string The name of the group.
---- @param clear boolean? Whether to clear the group.
+--- @param clear boolean? Whether to clear the group. Defaults to true.
 --- @return integer
 M.group = function(name, clear)
     return vim.api.nvim_create_augroup(vim.env.USER .. "/" .. name, { clear = clear ~= nil and clear or true })
