@@ -1,5 +1,7 @@
 local M = {}
 
+local defaults = require("config.defaults")
+
 vim.b._use_git_root = false
 
 M.cwd = function()
@@ -45,15 +47,13 @@ return {
             local actions = require("telescope.actions")
             local telescope = require("telescope")
 
-            local defaults = require("config.defaults")
-
             local function dropdown(opts)
                 return require("telescope.themes").get_dropdown(opts)
             end
 
             telescope.setup({
                 defaults = dropdown({
-                    borderchars = defaults.borderchars,
+                    borderchars = defaults.ui.border.chars,
                     color_devicons = true,
                     file_ignore_patterns = defaults.files.ignored_patterns,
                     -- open files in the first window that is an actual file.
