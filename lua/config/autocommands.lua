@@ -206,47 +206,44 @@ end, {
 })
 
 e.on({ e.BufReadPost, e.FileReadPost }, function(args)
-    local stat = vim.uv.fs_stat(args.file)
+    vim.schedule(function()
+        vim.bo[args.buf].syntax = vim.filetype.match({ buf = args.buf }) or ""
 
-    if not stat or stat.size < vim.g.large_file_size then
-        return
-    end
+        vim.notify("File is too large, disabling treesitter, syntax & language servers.")
 
-    vim.g.large_file = true
+        for _, client in pairs(vim.lsp.get_clients({ bufnr = args.buf })) do
+            pcall(vim.lsp.buf_detach_client, args.buf, client.id)
+        end
 
-    vim.notify("File is too large, disabling treesitter, syntax & language servers.")
+        -- Create a autocommand just in case.
+        e.on(e.LspAttach, function(a)
+            vim.lsp.buf_detach_client(args.buf, a.data.client_id)
+        end, {
+            buffer = args.buf,
+        })
 
-    for _, client in pairs(vim.lsp.get_clients({ bufnr = args.buf })) do
-        pcall(vim.lsp.buf_detach_client, args.buf, client.id)
-    end
+        vim.diagnostic.enable(false)
 
-    -- Create a autocommand just in case.
-    e.on(e.LspAttach, function(a)
-        vim.lsp.buf_detach_client(args.buf, a.data.client_id)
-    end, {
-        buffer = args.buf,
-    })
+        -- Disable indentline
+        vim.b.miniindentscope_disable = true
 
-    vim.diagnostic.enable(false)
+        vim.cmd.TSDisable("highlight")
+        vim.cmd.TSDisable("incremental_selection")
+        vim.cmd.TSDisable("indent")
+        vim.cmd.syntax("off")
 
-    -- Disable indentline
-    vim.b.miniindentscope_disable = true
+        vim.bo.swapfile = false
+        vim.bo.undolevels = -1
 
-    vim.cmd.TSDisable("highlight")
-    vim.cmd.TSDisable("incremental_selection")
-    vim.cmd.TSDisable("indent")
-    vim.cmd.syntax("off")
+        vim.api.nvim_set_option_value("foldmethod", "manual", { scope = "local", win = 0 })
+        vim.api.nvim_set_option_value("list", false, { scope = "local", win = 0 })
+        vim.api.nvim_set_option_value("spell", false, { scope = "local", win = 0 })
 
-    vim.bo.swapfile = false
-    vim.bo.undolevels = -1
-
-    vim.api.nvim_set_option_value("foldmethod", "manual", { scope = "local", win = 0 })
-    vim.api.nvim_set_option_value("list", false, { scope = "local", win = 0 })
-    vim.api.nvim_set_option_value("spell", false, { scope = "local", win = 0 })
-
-    vim.opt.undoreload = 0
+        vim.opt.undoreload = 0
+    end)
 end, {
     desc = "Disable features for large files.",
+    pattern = "large_file",
 })
 
 e.on(e.FileType, function()
