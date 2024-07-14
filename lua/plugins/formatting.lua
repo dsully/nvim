@@ -8,7 +8,7 @@ return {
             function()
                 require("conform").format({ async = true, lsp_format = "fallback", timeout_ms = 3000 })
             end,
-            desc = "󰛗 Format Buffer",
+            desc = "Format Buffer",
         },
     },
     opts = function()

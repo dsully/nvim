@@ -187,7 +187,6 @@ return {
         },
         event = "LazyFile",
         keys = {
-            { "<leader>b", "", desc = " Buffers" },
             {
                 "<leader>bd",
                 function()
@@ -197,7 +196,7 @@ return {
                         require("cokeline.mappings").by_index("close", current.index)
                     end
                 end,
-                desc = " Delete Buffer",
+                desc = "Delete Buffer",
             },
         },
     },
@@ -758,7 +757,7 @@ return {
         "numToStr/FTerm.nvim",
         --stylua: ignore
         keys = {
-            { [[<C-\>]], function() require("FTerm").toggle() end, mode = { "n", "t" }, desc = "Terminal  " },
+            { [[<C-\>]], function() require("FTerm").toggle() end, mode = { "n", "t" }, desc = "Terminal" },
         },
         opts = {
             hl = "Terminal",

@@ -1,5 +1,4 @@
 local e = require("helpers.event")
-local map = require("helpers.keys").map
 
 local M = {}
 
@@ -170,11 +169,17 @@ function M.setup()
         vim.cmd.checkhealth()
     end, { desc = "Load all plugins and run :checkhealth" })
 
-    map("<leader>p", "", " Plugins")
-    map("<leader>ph", vim.cmd.LazyHealth, " Plugin Health")
-    map("<leader>pi", lazy.show, " Plugin Info")
-    map("<leader>pp", lazy.profile, " Profile Plugins")
-    map("<leader>ps", lazy.sync, " Sync Plugins")
+    e.on_load("which-key.nvim", function()
+        vim.schedule(function()
+            require("which-key").add({
+                { "<leader>p", group = "Plugins", icon = "" },
+                { "<leader>ph", vim.cmd.LazyHealth, desc = "Health", icon = "󰄬" },
+                { "<leader>pi", lazy.show, desc = "Info", icon = "" },
+                { "<leader>pp", lazy.profile, desc = "Profile", icon = "" },
+                { "<leader>ps", lazy.sync, desc = "Sync", icon = "󱋖" },
+            }, { notify = false })
+        end)
+    end)
 end
 
 return M

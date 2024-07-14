@@ -495,7 +495,7 @@ return {
                 function()
                     require("refactoring").select_refactor({ show_success_message = false })
                 end,
-                desc = "Refactor ",
+                desc = "Refactor",
                 mode = { "n", "x" },
                 noremap = true,
                 silent = true,
@@ -624,14 +624,11 @@ return {
         "chrisgrieser/nvim-rulebook",
         -- stylua: ignore
         keys = {
-            { "<leader>r", desc = " Rules" },
-            { "<leader>ri", function() require("rulebook").ignoreRule() end, desc = " Ignore" },
-            { "<leader>rl", function() require("rulebook").lookupRule() end, desc = " Look Up" },
-            { "<leader>ry", function() require("rulebook").yankDiagnosticCode() end, desc = " Yank Diagnostic" },
+            { "<leader>ri", function() require("rulebook").ignoreRule() end, desc = "Ignore" },
+            { "<leader>rl", function() require("rulebook").lookupRule() end, desc = "Look Up" },
+            { "<leader>ry", function() require("rulebook").yankDiagnosticCode() end, desc = "Yank Diagnostic" },
         },
     },
-    -- Load Lua plugin files without needing to have them in the LSP workspace.
-    { "mrjones2014/lua-gf.nvim", ft = "lua" },
     {
         "Saecki/crates.nvim",
         event = "LazyFile",
@@ -778,17 +775,27 @@ return {
     },
     {
         "chrisgrieser/nvim-chainsaw",
+        init = function()
+            require("helpers.event").on_load("which-key.nvim", function()
+                vim.schedule(function()
+                    -- stylua: ignore
+                    local cs = function(fn) return function() require("chainsaw")[fn]() end end
+
+                    require("which-key").add({
+                        { "<leader>dl", group = "Log" },
+                        { "<leader>dlc", cs("clearLogs"), desc = "Clear" },
+                        { "<leader>dla", cs("allLogs"), desc = "All" },
+                        { "<leader>dlm", cs("messageLog"), desc = "Message" },
+                        { "<leader>dlv", cs("variableLog"), mode = { "n", "v" }, desc = "Variable" },
+                        { "<leader>dlo", cs("objectLog"), desc = "Object" },
+                        { "<leader>dlt", cs("timeLog"), desc = "Time" },
+                        { "<leader>dld", cs("debugLog"), desc = "Debug" },
+                        { "<leader>dlr", cs("removeLogs"), desc = "Remove" },
+                        { "<leader>dlb", cs("beepLog"), desc = "Beep" },
+                    }, { notify = false })
+                end)
+            end)
+        end,
         opts = true,
-        -- stylua: ignore
-        keys = {
-            { "<leader>dl", desc = "Debug " .. defaults.icons.misc.bug },
-            { "<leader>dlm", function() require("chainsaw").messageLog() end, desc = "Message", },
-            { "<leader>dlv", function() require("chainsaw").variableLog() end, mode = { "n", "v" }, desc = "Variable", },
-            { "<leader>dlo", function() require("chainsaw").objectLog() end, desc = "Object", },
-            { "<leader>dlt", function() require("chainsaw").timeLog() end, desc = "Time", },
-            { "<leader>dld", function() require("chainsaw").debugLog() end, desc = "Debug" },
-            { "<leader>dlr", function() require("chainsaw").removeLogs() end, desc = "Remove", },
-            { "<leader>dlb", function() require("chainsaw").beepLog() end, desc = "Beep" },
-        },
     },
 }

@@ -19,7 +19,7 @@ return {
                 { key = "d", cmd = "docstring", desc = "Add Doc-Strings" },
                 { key = "T", cmd = "add_tests", desc = "Add Tests" },
                 { key = "o", cmd = "optimize_code", desc = "Optimize Code" },
-                { key = "s", cmd = "summarize", desc = "Summarize" },
+                { key = "S", cmd = "summarize", desc = "Summarize" },
                 { key = "f", cmd = "fix_bugs", desc = "Fix Bugs" },
                 { key = "x", cmd = "explain_code", desc = "Explain Code" },
                 { key = "a", cmd = "code_readability_analysis", desc = "Code Readability Analysis" },

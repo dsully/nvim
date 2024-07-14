@@ -26,7 +26,6 @@ return {
         },
         --stylua: ignore
         keys = {
-            { "<leader>t", "", desc = " Test" },
             { "<leader>tf", function() require("neotest").run.run(vim.fn.expand("%s")) end, desc = "Run all tests in this file." },
             { "<leader>ts", function() require("neotest").summary.toggle() end, desc = "Toggle the summary window." },
             { "<leader>tt", function() require("neotest").run.run() end, desc = "Run the nearest test." },
