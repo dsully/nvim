@@ -68,5 +68,10 @@ vim.filetype.add({
         [".*/.github/workflows/.*%.yml"] = "yaml.ghaction",
         [".*requirements%.in"] = "requirements",
         [".*requirements%.txt"] = "requirements",
+        [".*"] = {
+            function(path, buf)
+                return vim.bo[buf].filetype ~= "large_file" and path and vim.fn.getfsize(path) > vim.g.large_file_size and "large_file" or nil
+            end,
+        },
     },
 })
