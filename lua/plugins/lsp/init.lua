@@ -44,19 +44,21 @@ return {
         dependencies = {
             { "b0o/schemastore.nvim", version = false },
             {
-                "folke/neodev.nvim",
-                dependencies = {
-                    {
-                        "folke/neoconf.nvim",
-                        cmd = "Neoconf",
-                        opts = {
-                            local_settings = ".neoconf.jsonc",
-                            global_settings = "neoconf.jsonc",
-                        },
+                "folke/lazydev.nvim",
+                cmd = "LazyDev",
+                ft = "lua",
+                opts = {
+                    library = {
+                        "conform.nvim",
+                        "lazy.nvim",
+                        "luvit-meta/library",
+                        "nvim-cokeline",
+                        "nvim-insx",
+                        "wezterm-types",
                     },
                 },
-                opts = true,
             },
+            { "Bilal2453/luvit-meta" },
             { "williamboman/mason.nvim" },
             { "williamboman/mason-lspconfig.nvim" },
         },
@@ -334,16 +336,7 @@ return {
                         end,
                     },
                     lemminx = {}, -- XML
-                    lua_ls = {
-                        before_init = function(params, config)
-                            -- Add libuv to the workspace library for type hints.
-                            if config.settings.Lua then
-                                table.insert(config.settings.Lua.workspace.library, "${3rd}/luv/library")
-                            end
-
-                            return require("neodev.lsp").before_init(params, config)
-                        end,
-                    },
+                    lua_ls = {},
                     markdown_oxide = {},
                     ruff = {
                         commands = {

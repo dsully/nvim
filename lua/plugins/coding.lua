@@ -246,6 +246,10 @@ return {
                         priority = 7,
                     },
                     {
+                        name = "lazydev",
+                        group_index = 0, -- set group index to 0 to skip loading LuaLS completions
+                    },
+                    {
                         name = "calc",
                         priority = 3,
                     },

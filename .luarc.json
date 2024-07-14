@@ -1,4 +1,71 @@
 {
   "$schema": "https://raw.githubusercontent.com/sumneko/vscode-lua/master/setting/schema.json",
-  "runtime.version": "LuaJIT"
+  "completion": {
+    "autoRequire": false,
+    "callSnippet": "Replace",
+    "keywordSnippet": "Both",
+    "workspaceWord": true
+  },
+  "diagnostics": {
+    "disable": [
+      "missing-fields"
+    ],
+    "globals": [
+      "bit",
+      "describe",
+      "ipairs",
+      "it",
+      "math",
+      "pairs",
+      "require",
+      "vim"
+    ],
+    "libraryFiles": "Disable",
+    "unusedLocalExclude": [
+      "_*"
+    ]
+  },
+  "format": {
+    "enable": false
+  },
+  "hint": {
+    "arrayIndex": "Disable",
+    "enable": true,
+    "paramName": "Disable",
+    "paramType": true,
+    "semicolon": "Disable",
+    "setType": true
+  },
+  "runtime": {
+    "version": "LuaJIT"
+  },
+  "telemetry": {
+    "enable": false
+  },
+  "type": {
+    "castNumberToInteger": true
+  },
+  "diagnostics": {
+    "disable": [
+      "missing-fields"
+    ],
+    "globals": [
+      "bit",
+      "describe",
+      "math",
+      "it",
+      "require",
+      "vim"
+    ],
+    "libraryFiles": "Disable",
+    "unusedLocalExclude": [
+      "_*"
+    ]
+  },
+  "workspace": {
+    "ignoreDir": [
+      ".vscode",
+      "unused"
+    ]
+  }
 }
