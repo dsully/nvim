@@ -156,6 +156,9 @@ function M.setup()
             -- Track each new require in the Lazy profiling tab
             require = false,
         },
+        rocks = {
+            hererocks = true,
+        },
         ui = {
             backdrop = 90,
             border = vim.g.border,
