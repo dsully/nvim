@@ -92,11 +92,11 @@ end
 M.on_attach = function(client, buffer, group)
     local methods = vim.lsp.protocol.Methods
 
-    if lsp.should_ignore(client) then
+    if lsp.should_ignore(client) or client.name == "crates.nvim" then
         return
     end
 
-    if client.supports_method(methods.textDocument_documentHighlight) then
+    if client.supports_method(methods.textDocument_documentHighlight, { bufnr = buffer }) then
         --
         e.on({ e.BufEnter, e.CursorHold, e.CursorHoldI }, function()
             --
@@ -109,14 +109,16 @@ M.on_attach = function(client, buffer, group)
                 group = group,
             })
         end, {
+            buffer = buffer,
             desc = "LSP Document Highlighting",
+            group = group,
         })
     end
 
-    if client.supports_method(methods.textDocument_inlayHint) then
+    if client.supports_method(methods.textDocument_inlayHint, { bufnr = buffer }) then
         require("helpers.keys").bmap("<space>i", function()
             vim.lsp.inlay_hint.enable(not vim.lsp.inlay_hint.is_enabled({ bufnr = buffer }))
-        end, " Toggle Inlay Hints")
+        end, "Toggle Inlay Hints")
 
         vim.lsp.inlay_hint.enable(false)
     end
