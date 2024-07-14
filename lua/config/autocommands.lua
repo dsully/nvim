@@ -1,7 +1,9 @@
 local e = require("helpers.event")
 
 e.on({ e.FocusGained, e.TermClose, e.TermLeave }, function()
-    vim.cmd.checktime()
+    if vim.o.buftype ~= "nofile" then
+        vim.cmd.checktime()
+    end
 end, {
     desc = "Check if we need to reload the file when it changed.",
 })
