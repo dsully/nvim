@@ -1,3 +1,4 @@
+vim.o.autoread = true -- update file content if it has been modified on disk
 vim.opt.backup = false
 vim.opt.cmdheight = 0 -- Set to 0 if using Noice
 vim.opt.completeopt = { "menu", "menuone", "noselect" }
