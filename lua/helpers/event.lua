@@ -293,4 +293,24 @@ M.group = function(name, clear)
     return vim.api.nvim_create_augroup(vim.env.USER .. "/" .. name, { clear = clear ~= nil and clear or true })
 end
 
+M.is_loaded = function(name)
+    local config = require("lazy.core.config")
+    return config.plugins[name] and config.plugins[name]._.loaded
+end
+
+---@param name string
+---@param fn fun(name:string)
+M.on_load = function(name, fn)
+    if M.is_loaded(name) then
+        fn(name)
+    else
+        M.on(M.User, function(event)
+            if event.data == name then
+                fn(name)
+                -- return true
+            end
+        end, { pattern = "LazyLoad" })
+    end
+end
+
 return M
