@@ -19,8 +19,6 @@ local M = {
         "zsh",
     },
 
-    borderchars = { "─", "│", "─", "│", "┌", "┐", "┘", "└" },
-
     cmp = {
         backend = "nvim-cmp",
         kind = {
@@ -387,6 +385,13 @@ local M = {
             markdown = true,
             text = true,
             vimwiki = true,
+        },
+    },
+
+    ui = {
+        border = {
+            name = "single",
+            chars = { "─", "│", "─", "│", "┌", "┐", "┘", "└" },
         },
     },
 }
