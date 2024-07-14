@@ -112,29 +112,34 @@ return {
 
                 vim.cmd.edit()
             end, { desc = "Restart Language Server for Buffer" })
+
+            require("helpers.event").on_load("which-key.nvim", function()
+                vim.schedule(function()
+                    require("which-key").add({
+                        { "grn", require("helpers.handlers").rename, desc = "Rename", icon = "" },
+                        -- stylua: ignore
+                        { "dt", function() vim.diagnostic.enable(not vim.diagnostic.is_enabled()) end, desc = "Diagnostics Toggle" },
+                        { "gD", vim.lsp.buf.declaration, desc = "Go To Declaration", icon = "󰁔" },
+                        { "gd", vim.lsp.buf.definition, desc = "Go To Definition(s)", icon = "󰁔" },
+                        { "gi", vim.lsp.buf.implementation, desc = "Go To Implementations(s)", icon = "󰘲" },
+                        { "<C-S>", vim.lsp.buf.signature_help, desc = "Signature Help", mode = "i", icon = "󰠗" },
+                        -- stylua: ignore
+                        { "grr", function() vim.lsp.buf.references({ includeDeclaration = false }) end, desc = "References", icon = "󰆋" },
+                        --
+                        { "<leader>l", group = "LSP", icon = "" },
+                        { "<leader>fs", tscope("lsp_document_symbols"), desc = "Symbols", icon = "" },
+                        { "<leader>fW", tscope("lsp_dynamic_workspace_symbols"), desc = "Workspace Symbols", icon = "" },
+                        { "<leader>lc", vim.cmd.LspCapabilities, desc = "LSP Capabilities", icon = "" },
+                        { "<leader>li", vim.cmd.LspInfo, desc = "LSP Info", icon = "" },
+                        { "<leader>ll", vim.cmd.LspLog, desc = "LSP Log", icon = "" },
+                        { "<leader>lr", vim.cmd.LspRestartBuffer, desc = "LSP Restart", icon = "" },
+                        { "<leader>ls", vim.cmd.LspStop, desc = "LSP Stop", icon = "" },
+                        { "<leader>xr", vim.diagnostic.reset, desc = "Reset", icon = "" },
+                        { "<leader>xs", vim.diagnostic.open_float, desc = "Show", icon = "󰙨" },
+                    }, { notify = false })
+                end)
+            end)
         end,
-        keys = {
-            { "grn", require("helpers.handlers").rename, desc = "Rename " },
-            -- stylua: ignore
-            { "dt", function() vim.diagnostic.enable(not vim.diagnostic.is_enabled()) end, desc = "Diagnostics Toggle" },
-            { "gD", vim.lsp.buf.declaration, desc = "󰁴 Go To Declaration" },
-            { "gd", vim.lsp.buf.definition, desc = "󰁴 Go To Definition(s)" },
-            { "gi", vim.lsp.buf.implementation, desc = "󰘲 Go To Implementations(s)" },
-            { "<C-S>", vim.lsp.buf.signature_help, desc = "Signature Help 󰞂 ", mode = "i" },
-            -- stylua: ignore
-            { "grr", function() vim.lsp.buf.references({ includeDeclaration = false }) end, desc = "References 󰆋" },
-            --
-            { "<leader>l", "", desc = " LSP" },
-            { "<leader>fs", tscope("lsp_document_symbols"), desc = "Symbols 󰆋" },
-            { "<leader>fW", tscope("lsp_dynamic_workspace_symbols"), desc = "Workspace Symbols 󰆋" },
-            { "<leader>lc", vim.cmd.LspCapabilities, desc = " LSP Capabilities" },
-            { "<leader>li", vim.cmd.LspInfo, desc = " LSP Info" },
-            { "<leader>ll", vim.cmd.LspLog, desc = " LSP Log" },
-            { "<leader>lr", vim.cmd.LspRestartBuffer, desc = " LSP Restart" },
-            { "<leader>ls", vim.cmd.LspStop, desc = " LSP Stop" },
-            { "<leader>xr", vim.diagnostic.reset, desc = " Reset" },
-            { "<leader>xs", vim.diagnostic.open_float, desc = "󰙨 Show" },
-        },
         opts = function()
             local defaults = require("config.defaults")
 

@@ -153,7 +153,7 @@ return {
 
             for _, t in pairs({
                 { key = "B", cmd = "buffers", desc = "Buffers" },
-                { key = "d", cmd = "diagnostics", desc = "Diagnostics " },
+                { key = "d", cmd = "diagnostics", desc = "Diagnostics" },
                 { key = "c", cmd = "git_commits", desc = "Git Commits" },
                 { key = "g", cmd = "live_grep", desc = "Live Grep" },
                 { key = "e", cmd = "symbols", desc = "Emojii" },
@@ -252,7 +252,7 @@ return {
                 function()
                     require("trouble").toggle({ focus = true, mode = "diagnostics" })
                 end,
-                desc = " Trouble",
+                desc = "Trouble",
             },
         },
         opts = {

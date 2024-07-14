@@ -3,7 +3,6 @@ return {
         "lewis6991/gitsigns.nvim",
         event = "LazyFile",
         keys = {
-            { "<leader>g", "", desc = " Git", mode = { "n", "x" } },
             { "<leader>g/", [[/^\(|||||||\|=======\|>>>>>>>\|<<<<<<<\)<CR>]], desc = "Search for conflict markers" },
         },
         opts = {
@@ -31,7 +30,7 @@ return {
                 bmap("<leader>gp", gs.preview_hunk, "Preview Git Hunk")
                 bmap("<leader>gU", gs.undo_stage_hunk, "Undo Git Stage Hunk")
 
-                bmap("<leader>gd", gs.toggle_deleted, "Git Deleted Toggle")
+                bmap("<leader>gD", gs.toggle_deleted, "Git Deleted Toggle")
                 bmap("<leader>gB", gs.toggle_current_line_blame, "Git Blame Toggle")
 
                 bmap("<leader>gs", function()
@@ -43,6 +42,7 @@ return {
                 end, "Reset Stage Lines(s)", { "n", "x" })
             end,
             sign_priority = 100,
+            signs_staged_enable = false,
             trouble = true,
             worktrees = {
                 {
@@ -70,7 +70,7 @@ return {
         cmd = "GHActions",
         dependencies = { "nvim-lua/plenary.nvim", "MunifTanjim/nui.nvim" },
         keys = {
-            { "<leader>gh", vim.cmd.GhActions, desc = "Open Github Actions" },
+            { "<leader>gha", vim.cmd.GhActions, desc = "Open Github Actions" },
         },
         opts = true,
     },
@@ -98,7 +98,7 @@ return {
             "folke/trouble.nvim",
         },
         keys = {
-            { "<leader>gc", vim.cmd.GHReviewComments, desc = "GitHub Review Comments" },
+            { "<leader>ghc", vim.cmd.GHReviewComments, desc = "GitHub Review Comments" },
         },
     },
     {
@@ -112,7 +112,7 @@ return {
         },
         keys = {
             -- stylua: ignore
-            { "<space>g", function() require("fugit2").git_status() end, desc = " Git UI" },
+            { "<space>g", function() require("fugit2").git_status() end, desc = "Git UI" },
         },
         opts = {},
     },

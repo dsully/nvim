@@ -1,10 +1,5 @@
 local map = require("helpers.keys").map
 
--- Quitting / Sessions
-map("q!", function()
-    vim.cmd.quitall({ bang = true })
-end, "Quit without saving")
-
 vim.keymap.set({ "n", "x" }, "Y", "y$", { desc = "Yank to clipboard" })
 -- vim.keymap.set({ "n", "x" }, "gY", '"*y$', { desc = "Yank until end of line to system clipboard" })
 -- vim.keymap.set({ "n", "x" }, "gy", '"*y', { desc = "Yank to system clipboard" })
