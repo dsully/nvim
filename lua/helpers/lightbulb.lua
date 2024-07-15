@@ -4,7 +4,7 @@ local e = require("helpers.event")
 
 local name = "lightbulb"
 local namespace = ns(name)
-local method = vim.lsp.protocol.Methods.textDocument_codeAction
+local methods = vim.lsp.protocol.Methods
 
 local timer = vim.uv.new_timer()
 assert(timer, "Timer was not initialized")
@@ -49,11 +49,7 @@ local function render(bufnr)
         },
     })
 
-    vim.lsp.buf_request(bufnr, method, params, function(_err, responses, _ctx, _config)
-        if vim.api.nvim_get_current_buf() ~= bufnr then
-            return
-        end
-
+    vim.lsp.buf_request(bufnr, methods.textDocument_codeAction, params, function(_err, responses, _ctx, _config)
         -- Check for available code actions from all LSP server responses
         local has_actions = false
 
@@ -76,28 +72,33 @@ local function render(bufnr)
     end)
 end
 
+---@param client vim.lsp.Client
 ---@param bufnr number
-local function update(bufnr)
+local function update(client, bufnr)
     timer:stop()
 
-    update_extmark(updated_bufnr)
+    if client.supports_method(methods.textDocument_codeAction, { bufnr = bufnr }) then
+        update_extmark(updated_bufnr)
 
-    timer:start(100, 0, function()
-        timer:stop()
+        timer:start(100, 0, function()
+            timer:stop()
 
-        vim.schedule(function()
-            if vim.api.nvim_buf_is_valid(bufnr) and vim.api.nvim_get_current_buf() == bufnr then
-                render(bufnr)
-            end
+            vim.schedule(function()
+                if vim.api.nvim_get_current_buf() == bufnr then
+                    render(bufnr)
+                end
+            end)
         end)
-    end)
+    end
 end
 
+---@param client vim.lsp.Client
 ---@param buffer integer
 ---@param group integer
-M.setup = function(buffer, group)
+M.setup = function(client, buffer, group)
+    --
     e.on(e.CursorMoved, function()
-        update(buffer)
+        update(client, buffer)
     end, {
         buffer = buffer,
         desc = "Update lightbulb when moving the cursor in normal/visual mode",
