@@ -10,7 +10,6 @@ local is_string_like = function()
         or context.in_syntax_group("String")
 end
 
----@type LazySpec[]
 return {
     {
         "hrsh7th/nvim-cmp",
@@ -465,7 +464,6 @@ return {
             insx.add("<CR>", endwise(endwise.builtin))
 
             insx.add("<Tab>", {
-                ---@param ctx insx.Context
                 action = function(ctx)
                     local row, col = ctx.row(), ctx.col()
 
@@ -571,13 +569,13 @@ return {
                     augend.user.new({
                         find = require("dial.augend.common").find_pattern("%u+"),
                         add = function(text, _, _)
-                            return { text = text:lower(), cursor = #text }
+                            return { text = text:lower(), cursor = #text } ---@diagnostic disable-line: redundant-return-value
                         end,
                     }),
                     augend.user.new({
                         find = require("dial.augend.common").find_pattern("%l+"),
                         add = function(text, _, _)
-                            return { text = text:upper(), cursor = #text }
+                            return { text = text:upper(), cursor = #text } ---@diagnostic disable-line: redundant-return-value
                         end,
                     }),
                     augend.case.new({
@@ -796,6 +794,6 @@ return {
                 end)
             end)
         end,
-        opts = true,
+        opts = {},
     },
 }
