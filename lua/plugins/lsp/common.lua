@@ -55,7 +55,7 @@ M.setup = function()
 
         M.on_attach(client, buffer, group)
 
-        require("helpers.lightbulb").setup(buffer, group)
+        require("helpers.lightbulb").setup(client, buffer, group)
         require("helpers.handlers").setup(group)
 
         ---@param event LspProgressEvent
