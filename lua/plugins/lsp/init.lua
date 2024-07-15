@@ -49,11 +49,8 @@ return {
                 ft = "lua",
                 opts = {
                     library = {
-                        "conform.nvim",
-                        "lazy.nvim",
                         "luvit-meta/library",
                         "nvim-cokeline",
-                        "nvim-insx",
                         "wezterm-types",
                     },
                 },
@@ -354,7 +351,6 @@ return {
                                 description = "Ruff: Organize Imports",
                             },
                         },
-                        filetypes = { "python", "toml.pyproject" },
                         init_options = {
                             settings = require("helpers.ruff").config(),
                         },
@@ -482,7 +478,7 @@ return {
                                 end)
                             end, "Expand Macro")
 
-                            e.on(e.BufWritePost, function()
+                            e.on(e.BufWritePost, function(event)
                                 local handler = function(err)
                                     if err then
                                         local msg = string.format("Error reloading Rust workspace: %v", err)
@@ -499,7 +495,11 @@ return {
                                     end
                                 end
 
-                                client.request("rust-analyzer/reloadWorkspace", nil, handler, bufnr)
+                                local c = require("helpers.lsp").client_by_name("rust_analyzer")
+
+                                if c then
+                                    c.request("rust-analyzer/reloadWorkspace", nil, handler, event.buf)
+                                end
                             end, {
                                 desc = "Apply Cargo.toml changes after edit.",
                                 pattern = "*/Cargo.toml",

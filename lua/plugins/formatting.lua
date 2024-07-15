@@ -14,7 +14,6 @@ return {
     opts = function()
         local defaults = require("config.defaults")
 
-        ---@type conform.setupOpts
         return {
             format_on_save = function(bufnr)
                 --
