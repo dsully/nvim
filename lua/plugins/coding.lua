@@ -15,7 +15,6 @@ return {
         "hrsh7th/nvim-cmp",
         cmd = "CmpStatus",
         dependencies = {
-            "hrsh7th/cmp-calc",
             "hrsh7th/cmp-cmdline",
             "hrsh7th/cmp-nvim-lsp",
             "hrsh7th/cmp-path",
@@ -247,10 +246,6 @@ return {
                     {
                         name = "lazydev",
                         group_index = 0, -- set group index to 0 to skip loading LuaLS completions
-                    },
-                    {
-                        name = "calc",
-                        priority = 3,
                     },
                     {
                         name = "path",
@@ -671,7 +666,6 @@ return {
                     { name = "snippets" },
                     { name = "path" },
                     { name = "env" },
-                    { name = "calc" },
                     { name = "buffer" },
                 },
             })
@@ -692,7 +686,6 @@ return {
                     { name = "snippets" },
                     { name = "path" },
                     { name = "env" },
-                    { name = "calc" },
                     { name = "buffer" },
                 },
             })
