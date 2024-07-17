@@ -100,6 +100,10 @@ M.on_attach = function(client, buffer, group)
         --
         e.on({ e.BufEnter, e.CursorHold, e.CursorHoldI }, function()
             --
+            if not vim.api.nvim_buf_is_loaded(buffer) then
+                return
+            end
+
             vim.lsp.buf.clear_references()
             vim.lsp.buf.document_highlight()
 

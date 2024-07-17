@@ -69,7 +69,7 @@ local function render(bufnr)
         if has_actions then
             update_extmark(bufnr, (responses and #responses > 0 and line) or nil)
         end
-    end)
+    end, function() end)
 end
 
 ---@param client vim.lsp.Client
