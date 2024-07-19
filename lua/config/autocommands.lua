@@ -25,7 +25,7 @@ end, {
 e.on(e.BufWinEnter, function(event)
     --
     -- Don't try to close a help buffer if explicitly edited.
-    if #vim.api.nvim_list_bufs() == 1 then
+    if #vim.api.nvim_list_bufs() == 1 or #vim.v.argv == 3 then
         return
     end
 

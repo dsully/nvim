@@ -326,12 +326,14 @@ return {
 
             local hl_search = item({
                 content = function()
+                    ---@diagnostic disable-next-line: undefined-field
                     local text = require("noice").api.status.search.get()
                     local query = vim.F.if_nil(text:match("%/(.-)%s"), text:match("%?(.-)%s"))
 
                     return string.format("󰍉  %s [%s]", query, text:match("%d+%/%d+"))
                 end,
                 hidden = function()
+                    ---@diagnostic disable-next-line: undefined-field
                     return not package.loaded["noice"] or not require("noice").api.status.search.has()
                 end,
                 hl = { fg = colors.white.base },
