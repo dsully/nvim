@@ -3,17 +3,54 @@ local icons = require("config.defaults").icons
 return {
     "folke/which-key.nvim",
     event = "LazyFile",
-    keys = {
-        {
-            "<leader>?",
-            function()
-                require("which-key").show({ global = false })
-            end,
-            desc = "Buffer Local Keymaps (which-key)",
-        },
-    },
     opts = {
+        delay = 1000,
+        disable = {
+            bt = require("config.defaults").ignored.buffer_types,
+            ft = require("config.defaults").ignored.file_types,
+        },
+        icons = {
+            rules = {
+                { pattern = "copy", icon = "" },
+                { pattern = "emojii", icon = "󰞅" },
+                { pattern = "grep", icon = "󰈞" },
+                { pattern = "icon", icon = "" },
+                { pattern = "inspect", icon = "" },
+                { pattern = "pattern", icon = "󰛪" },
+                { pattern = "log", icon = "󰦪" },
+                { pattern = "open", icon = "󰏋" },
+                { pattern = "refactor", icon = icons.misc.gear },
+                { pattern = "word", icon = "" },
+                { pattern = "url", icon = "󰖟" },
+                { pattern = "yank", icon = "" },
+            },
+        },
+        plugins = {
+            marks = true,
+            registers = true,
+            spelling = {
+                enabled = false, -- enabling this will show WhichKey when pressing z= to select spelling suggestions
+            },
+            presets = {
+                operators = true, -- adds help for operators like d, y, ...
+                motions = true, -- adds help for motions
+                text_objects = true, -- help for text objects triggered after entering an operator
+                windows = true, -- default bindings on <c-w>
+                nav = true, -- misc bindings to work with windows
+                z = true, -- bindings for folds, spelling and others prefixed with z
+                g = true, -- bindings for prefixed with g
+            },
+        },
         preset = "classic",
+        replace = {
+            key = {
+                { "<space>", "Space" },
+                { "<cr>", "Return" },
+                { "<tab>", "Tab" },
+            },
+        },
+        show_help = false, -- show help message on the command line when the popup is visible
+        show_keys = false, -- show the currently pressed key and its label as a message in the command line
         spec = {
             { "<c-w>", group = "windows" },
             { "<leader>", group = "actions" },
@@ -73,49 +110,8 @@ return {
             { "v", hidden = true },
             { "~", hidden = true },
         },
-        plugins = {
-            marks = true,
-            registers = true,
-            spelling = {
-                enabled = false, -- enabling this will show WhichKey when pressing z= to select spelling suggestions
-            },
-            presets = {
-                operators = true, -- adds help for operators like d, y, ...
-                motions = true, -- adds help for motions
-                text_objects = true, -- help for text objects triggered after entering an operator
-                windows = true, -- default bindings on <c-w>
-                nav = true, -- misc bindings to work with windows
-                z = true, -- bindings for folds, spelling and others prefixed with z
-                g = true, -- bindings for prefixed with g
-            },
-        },
-        delay = 1000,
-        disable = {
-            bt = require("config.defaults").ignored.buffer_types,
-            ft = require("config.defaults").ignored.file_types,
-        },
-        icons = {
-            rules = {
-                { pattern = "copy", icon = "" },
-                { pattern = "emojii", icon = "󰞅" },
-                { pattern = "grep", icon = "󰈞" },
-                { pattern = "icon", icon = "" },
-                { pattern = "inspect", icon = "" },
-                { pattern = "pattern", icon = "󰛪" },
-                { pattern = "log", icon = "󰦪" },
-                { pattern = "open", icon = "󰏋" },
-                { pattern = "refactor", icon = icons.misc.gear },
-                { pattern = "word", icon = "" },
-                { pattern = "url", icon = "󰖟" },
-                { pattern = "yank", icon = "" },
-            },
-        },
-        replace = {
-            key = {
-                { "<space>", "Space" },
-                { "<cr>", "Return" },
-                { "<tab>", "Tab" },
-            },
+        triggers = {
+            { "<auto>", mode = { "n", "i", "x", "s", "o", "t", "c" } },
         },
         win = {
             border = vim.g.border,
