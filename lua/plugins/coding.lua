@@ -67,6 +67,10 @@ return {
 
             cmp.setup({
                 completion = {
+                    autocomplete = {
+                        cmp.TriggerEvent.TextChanged,
+                        cmp.TriggerEvent.InsertEnter,
+                    },
                     keyword_length = 2,
                 },
                 experimental = {
