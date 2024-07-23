@@ -222,7 +222,7 @@ return {
             lazy_update_context = true,
             lsp = {
                 auto_attach = true,
-                preference = { "pyright" },
+                preference = { "basedpyright" },
             },
         },
     },

@@ -94,7 +94,7 @@ M.rename = function()
             return "./" .. relative_path
         end
 
-        params.newName = new_name
+        params.newName = new_name ---@diagnostic disable-line: inject-field
 
         vim.lsp.buf_request(0, vim.lsp.protocol.Methods.textDocument_rename, params, function(err, result, ctx, _)
             --
