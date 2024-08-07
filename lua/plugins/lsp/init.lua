@@ -339,7 +339,7 @@ return {
                     },
                     lemminx = {}, -- XML
                     lua_ls = {},
-                    markdown_oxide = {},
+                    marksman = {},
                     ruff = {
                         commands = {
                             RuffAutoFix = {

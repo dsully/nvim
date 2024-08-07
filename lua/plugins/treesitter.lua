@@ -33,6 +33,9 @@ return {
             vim.treesitter.language.register("bash", "sh")
             vim.treesitter.language.register("ruby", "brewfile")
 
+            -- https://github.com/MeanderingProgrammer/render-markdown.nvim#vimwiki
+            vim.treesitter.language.register("markdown", "vimwiki")
+
             if type(opts.ensure_installed) == "table" then
                 ---@type table<string, boolean>
                 local added = {}
