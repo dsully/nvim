@@ -103,6 +103,7 @@ return {
     },
     {
         "SuperBo/fugit2.nvim",
+        build = "rockspec",
         cmd = { "Fugit2", "Fugit2Graph" },
         dependencies = {
             "MunifTanjim/nui.nvim",
@@ -114,6 +115,16 @@ return {
             -- stylua: ignore
             { "<space>g", function() require("fugit2").git_status() end, desc = "Git UI" },
         },
-        opts = {},
+        opts = function()
+            local lib = "/lib/libgit2.dylib"
+
+            if vim.g.os == "Linux" then
+                lib = "/lib/libgit2.so"
+            end
+
+            return {
+                libgit2_path = vim.env.HOMEBREW_PREFIX .. lib,
+            }
+        end,
     },
 }
