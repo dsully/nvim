@@ -54,4 +54,24 @@ return {
             jdk = { auto_install = false },
         },
     },
+    {
+        "MeanderingProgrammer/render-markdown.nvim",
+        keys = {
+            -- stylua: ignore
+            { "<leader>um", function() vim.cmd.RenderMarkdown("toggle") end, desc = "Render Markdown", },
+        },
+        ft = { "markdown", "vimwiki" },
+        opts = {
+            file_types = { "markdown", "vimwiki" },
+            code = {
+                sign = false,
+                width = "block",
+                right_pad = 1,
+            },
+            heading = {
+                sign = false,
+                icons = {},
+            },
+        },
+    },
 }
