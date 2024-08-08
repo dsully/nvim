@@ -114,6 +114,7 @@ local M = {
 
     tools = {
         "actionlint",
+        "ast-grep",
         "biome",
         "curlylint",
         "gitui",
@@ -480,9 +481,9 @@ M.highlights = {
     Constant = { fg = M.colors.white.dim },
     CurSearch = { link = "IncSearch" },
     Cursor = { bg = M.colors.white.dim, fg = M.colors.black.dim },
-    CursorColumn = { link = "CursorLine" },
+    CursorColumn = { bg = M.colors.gray.base },
     CursorIM = { link = "Cursor" },
-    CursorLine = { bg = M.colors.gray.base },
+    CursorLine = { bg = "None" },
     CursorLineFold = { link = "FoldColumn" },
     CursorLineNr = { bold = true, fg = M.colors.yellow.base },
     CursorLineSign = { link = "SignColumn" },
