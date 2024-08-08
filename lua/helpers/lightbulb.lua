@@ -43,7 +43,7 @@ local function render(bufnr)
 
     local params = vim.tbl_extend("force", vim.lsp.util.make_range_params(), {
         context = {
-            diagnostics = vim.lsp.diagnostic.get_line_diagnostics(bufnr, line),
+            diagnostics = vim.diagnostic.get(bufnr, { lnum = line }),
             only = { "quickfix" },
             triggerKind = vim.lsp.protocol.CodeActionTriggerKind.Automatic,
         },
