@@ -795,4 +795,25 @@ return {
         end,
         event = "LazyFile",
     },
+    {
+        "rachartier/tiny-inline-diagnostic.nvim",
+        event = "LspAttach",
+        init = function()
+            vim.diagnostic.config({ virtual_text = false })
+        end,
+        opts = {
+            hi = {
+                background = require("config.defaults").colors.black.dim,
+            },
+            options = {
+                multiple_diag_under_cursor = true,
+                show_source = true,
+                throttle = 0,
+            },
+            signs = {
+                left = " ",
+                right = "",
+            },
+        },
+    },
 }
