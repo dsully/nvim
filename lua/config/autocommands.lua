@@ -19,7 +19,17 @@ e.on({ e.BufEnter, e.FileType }, function(event)
     end, { noremap = true, silent = true, buffer = event.buf })
 end, {
     desc = "Map q to close the buffer.",
-    pattern = { "checkhealth", "codecompanion", "man", "nofile", "notify", "qf", "tsplayground" },
+    pattern = {
+        "checkhealth",
+        "codecompanion",
+        "grug-far",
+        "lspinfo",
+        "man",
+        "nofile",
+        "notify",
+        "qf",
+        "tsplayground",
+    },
 })
 
 e.on(e.BufWinEnter, function(event)

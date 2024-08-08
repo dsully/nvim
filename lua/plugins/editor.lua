@@ -278,4 +278,37 @@ return {
             preview_height = 24,
         },
     },
+    {
+        "MagicDuck/grug-far.nvim",
+        cmd = "GrugFar",
+        keys = {
+            {
+                "<leader>sr",
+                function()
+                    local grug = require("grug-far")
+                    local ext = vim.bo.buftype == "" and vim.fn.expand("%:e")
+                    grug.grug_far({
+                        transient = true,
+                        prefills = {
+                            filesFilter = ext and ext ~= "" and "*." .. ext or nil,
+                        },
+                    })
+                end,
+                mode = { "n", "v" },
+                desc = "Search and Replace",
+            },
+        },
+        opts = {
+            debounceMs = 500,
+            engine = "astgrep",
+            folding = {
+                enabled = false,
+            },
+            headerMaxWidth = 80,
+            maxWorkers = 10,
+            minSearchChars = 2,
+            startInInsertMode = false,
+            windowCreationCommand = "split",
+        },
+    },
 }
