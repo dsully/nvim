@@ -4,16 +4,14 @@ return {
         local e = require("helpers.event")
         local lint = require("lint")
 
-        lint.linters.markdownlint.args = {
-            function()
-                return string.format("--config=%s/markdownlint/config.yaml", vim.env.XDG_CONFIG_HOME)
-            end,
+        lint.linters["markdownlint-cli2"].args = {
+            "--config",
+            string.format("%s/markdownlint/config.yaml", vim.env.XDG_CONFIG_HOME),
         }
 
         lint.linters.yamllint.args = {
-            function()
-                return string.format("--config=%s/yamllint.yaml", vim.env.XDG_CONFIG_HOME)
-            end,
+            "--config",
+            string.format("%s/yamllint.yaml", vim.env.XDG_CONFIG_HOME),
         }
 
         lint.linters_by_ft = require("config.defaults").linters
