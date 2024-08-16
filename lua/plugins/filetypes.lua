@@ -5,6 +5,12 @@ return {
     -- Caddy
     { "isobit/vim-caddyfile", ft = "caddyfile" },
 
+    -- Better vim help.
+    {
+        "OXY2DEV/helpview.nvim",
+        lazy = false,
+    },
+
     -- Apple's PKL language.
     {
         "apple/pkl-neovim",
