@@ -98,7 +98,7 @@ M.on_attach = function(client, buffer, group)
 
     if client.supports_method(methods.textDocument_documentHighlight, { bufnr = buffer }) then
         --
-        e.on({ e.BufEnter, e.CursorHold, e.CursorHoldI }, function()
+        e.on({ e.CursorHold, e.CursorHoldI }, function()
             --
             if not vim.api.nvim_buf_is_loaded(buffer) then
                 return
