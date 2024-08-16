@@ -162,7 +162,7 @@ return {
                             return text, ""
                         end,
                     },
-                    underline = true,
+                    severity_sort = true,
                     signs = {
                         text = {
                             [vim.diagnostic.severity.ERROR] = defaults.icons.diagnostics.error,
@@ -171,7 +171,7 @@ return {
                             [vim.diagnostic.severity.HINT] = defaults.icons.diagnostics.hint,
                         },
                     },
-                    severity_sort = true,
+                    underline = true,
                     update_in_insert = false, -- https://www.reddit.com/r/neovim/comments/pfk209/nvimlsp_too_fast/
                 },
                 servers = {
