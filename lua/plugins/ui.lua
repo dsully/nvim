@@ -462,7 +462,7 @@ return {
                     enabled = true,
                 },
             },
-            messages = { enabled = true },
+            messages = { enabled = true, view = "mini", view_warn = "mini" },
             notify = { enabled = true },
             popupmenu = {
                 enabled = true,
