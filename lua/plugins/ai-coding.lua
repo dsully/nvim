@@ -1,5 +1,5 @@
 local e = require("helpers.event")
-local model = "gpt-4o"
+local model = "gpt-4o-2024-08-06"
 
 return {
     {
