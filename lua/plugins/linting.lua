@@ -16,6 +16,10 @@ return {
 
         lint.linters_by_ft = require("config.defaults").linters
 
+        if vim.g.os == "Linux" then
+            lint.linters_by_ft["systemd"] = { "systemd-analyze" }
+        end
+
         e.on({ e.BufEnter, e.BufReadPost, e.BufWritePost, e.TextChanged, e.InsertLeave }, function(args)
             -- Ignore 3rd party code.
             if args.file:match("/(node_modules|__pypackages__|site_packages|cargo/registry)/") then
