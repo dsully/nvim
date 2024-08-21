@@ -1,4 +1,5 @@
 local defaults = require("config.defaults")
+local e = require("helpers.event")
 
 -- Only show matches in strings and comments.
 local is_string_like = function()
@@ -31,7 +32,7 @@ return {
                 },
             },
         },
-        event = "LazyFile",
+        event = "InsertEnter",
         config = function()
             local cmp = require("cmp")
             local types = require("cmp.types.lsp")
@@ -319,8 +320,6 @@ return {
     {
         "echasnovski/mini.nvim",
         config = function()
-            local e = require("helpers.event")
-
             -- Better Around/Inside text-objects
             --
             -- Examples:
@@ -628,15 +627,21 @@ return {
     },
     {
         "Saecki/crates.nvim",
-        event = "LazyFile",
+        event = { "BufReadPost Cargo.toml" },
+        init = function()
+            e.on(e.BufReadPost, function()
+                require("cmp").setup.buffer({ sources = { { name = "crates" } } })
+            end, {
+                group = e.group("CmpSourceCargo", true),
+                pattern = "Cargo.toml",
+            })
+        end,
         opts = {
             completion = {
-                crates = {
-                    enabled = true,
-                    max_results = 8,
-                    min_chars = 3,
-                },
                 cmp = {
+                    enabled = true,
+                },
+                crates = {
                     enabled = true,
                 },
             },
@@ -646,15 +651,6 @@ return {
                 enabled = true,
                 hover = true,
             },
-            on_attach = function()
-                require("cmp").setup.buffer({
-                    sources = {
-                        { name = "path" },
-                        { name = "buffer" },
-                        { name = "nvim_lsp" },
-                    },
-                })
-            end,
             popup = {
                 autofocus = true,
                 border = vim.g.border,
