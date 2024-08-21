@@ -794,6 +794,7 @@ return {
             })
         end,
         event = "LazyFile",
+        ft = "python",
     },
     {
         "rachartier/tiny-inline-diagnostic.nvim",
