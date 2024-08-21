@@ -396,6 +396,12 @@ return {
                             client.server_capabilities.experimental.serverStatusNotification = true
                             client.server_capabilities.experimental.snippetTextEdit = true
 
+                            vim.lsp.commands["rust-analyzer.gotoLocation"] = function(command)
+                                vim.lsp.util.jump_to_location(command.arguments[1], offset_encoding, true)
+                            end
+
+                            vim.lsp.commands["rust-analyzer.showReferences"] = vim.lsp.buf.implementation
+
                             -- Move the cursor to the matching brace for the one at the current position.
                             --
                             -- See: https://github.com/rust-lang/rust-analyzer/blob/master/docs/dev/lsp-extensions.md#matching-brace
@@ -550,7 +556,8 @@ return {
                                         enforce = true,
                                         group = "crate",
                                     },
-                                    prefix = "self",
+                                    group = { enable = true },
+                                    prefix = "crate",
                                 },
                                 inlayHints = {
                                     closureReturnTypeHints = { enable = "with_block" },

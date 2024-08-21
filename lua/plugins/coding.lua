@@ -93,7 +93,33 @@ return {
                             end
                         end
 
-                        vim_item.menu = ""
+                        local lsp_menu = "[LSP]"
+
+                        -- Rust documentation
+                        local filetype = entry.context.filetype
+                        local detail = entry.completion_item.labelDetails and entry.completion_item.labelDetails.detail
+                        local description = entry.completion_item.labelDetails and entry.completion_item.labelDetails.description
+
+                        if detail then
+                            local pattern = ""
+
+                            if filetype == "rust" then
+                                pattern = " %((use .+)%)"
+
+                                entry.completion_item.detail = detail:gsub(pattern, "%1")
+                            end
+
+                            lsp_menu = detail:gsub(pattern, "%1"):sub(1, 40)
+                        elseif description then
+                            lsp_menu = description:sub(1, 40)
+                        end
+
+                        -- vim_item.menu = ""
+                        vim_item.menu = ({
+                            nvim_lsp = lsp_menu,
+                            buffer = "[Buffer]",
+                            path = "[Path]",
+                        })[entry.source.name]
 
                         if defaults.cmp.kind[entry.source.name] then
                             vim_item.kind = defaults.cmp.kind[entry.source.name]
