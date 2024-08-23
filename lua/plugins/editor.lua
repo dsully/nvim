@@ -245,7 +245,7 @@ return {
     {
         "folke/trouble.nvim",
         cmd = { "Trouble" },
-        dependencies = "nvim-tree/nvim-web-devicons",
+        dependencies = "echasnovski/mini.icons",
         keys = {
             {
                 "<leader>xx",
