@@ -84,7 +84,7 @@ return {
                         --
                         -- Give path completions a different set of icons.
                         if string.match(entry.source.name, "path") then
-                            local icon, hl_group = require("nvim-web-devicons").get_icon(entry:get_completion_item().label)
+                            local icon, hl_group = require("mini.icons").get("file", entry:get_completion_item().label)
 
                             if icon then
                                 vim_item.kind = string.format(" %s ", icon)

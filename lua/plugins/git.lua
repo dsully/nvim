@@ -107,9 +107,8 @@ return {
         cmd = { "Fugit2", "Fugit2Graph" },
         dependencies = {
             "MunifTanjim/nui.nvim",
-            "chrisgrieser/nvim-tinygit", -- optional: for Github PR view
+            "chrisgrieser/nvim-tinygit", -- For Github PR view
             "nvim-lua/plenary.nvim",
-            "nvim-tree/nvim-web-devicons",
         },
         keys = {
             -- stylua: ignore

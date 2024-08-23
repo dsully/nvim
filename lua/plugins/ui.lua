@@ -182,7 +182,7 @@ return {
         end,
         dependencies = {
             "nvim-lua/plenary.nvim",
-            "nvim-tree/nvim-web-devicons",
+            "echasnovski/mini.icons",
             "stevearc/resession.nvim",
         },
         event = "LazyFile",
@@ -211,7 +211,7 @@ return {
 
             local colors = require("config.defaults").colors
             local icons = require("config.defaults").icons
-            local devicons = require("nvim-web-devicons")
+            local devicons = require("mini.icons")
 
             local word_filetypes = {
                 markdown = true,
@@ -277,10 +277,10 @@ return {
 
             local filetype_icon = item({
                 content = function()
-                    local icon, icon_hl = devicons.get_icon(vim.api.nvim_buf_get_name(0))
+                    local icon, icon_hl = devicons.get("file", vim.api.nvim_buf_get_name(0))
 
                     if not icon then
-                        icon, icon_hl = devicons.get_icon_by_filetype(vim.bo.filetype, { default = true })
+                        icon, icon_hl = devicons.get("filetype", vim.bo.filetype)
                     end
 
                     local hl_name = "Statusline" .. icon_hl
@@ -605,62 +605,69 @@ return {
         },
     },
     {
-        "nvim-tree/nvim-web-devicons",
+        "echasnovski/mini.icons",
         init = function()
-            require("lazy.core.loader").disable_rtp_plugin("nvim-web-devicons")
+            package.preload["nvim-web-devicons"] = function()
+                require("mini.icons").mock_nvim_web_devicons()
+                return package.loaded["nvim-web-devicons"]
+            end
         end,
-        lazy = true,
         opts = {
-            color_icons = true,
-            default = true,
-            override = {
-                brewfile = {
-                    icon = "🍺",
-                    name = "brewfile",
-                },
-                default = { icon = "", color = "#6F839E", name = "Default" },
+            style = "glyph",
+            default = {
+                extension = { glyph = "" },
+                file = { glyph = "", color = "#6F839E" },
+                filetype = { glyph = "" },
             },
-            override_by_filename = {
-                [".pre-commit-config.yaml"] = { icon = "󰜘", color = "#eda73d", name = "PreCommit" },
-                [".pre-commit-hooks.yaml"] = { icon = "󰜘", color = "#eda73d", name = "PreCommitHook" },
-                [".python-version"] = { icon = "󰌠", color = "#ffe873", name = "PythonVersion" },
-                [".ruff.toml"] = { icon = "󱐋", color = "#fbc11a", name = "Ruff" },
-                [".shellcheckrc"] = { icon = "", color = "#7ACECE", name = "Shellcheck" },
-                [".yamllint"] = { icon = "", color = "#fbc02d", name = "YamlLint" },
-                ["cargo.toml"] = { icon = "󰏗", color = "#C27E42", name = "Cargo" },
-                ["changelog.md"] = { icon = "󰄴", color = "#99BE77", name = "Changelog" },
-                ["go.mod"] = { icon = "", color = "#00ADD8", name = "Gomod" },
-                ["go.sum"] = { icon = "", color = "#ec407a", name = "Gosum" },
-                ["hosts"] = { icon = "", color = "#bbbbbb", name = "Hosts" },
-                ["post-commit"] = { icon = "", color = "#f56b67", name = "GitHook" },
-                ["post-receive"] = { icon = "", color = "#f56b67", name = "GitHook" },
-                ["pre-commit"] = { icon = "", color = "#f56b67", name = "GitHook" },
-                ["pre-push"] = { icon = "", color = "#f56b67", name = "GitHook" },
-                ["pre-receive"] = { icon = "", color = "#f56b67", name = "GitHook" },
-                ["pyproject.toml"] = { icon = "", color = "#4B8DDE", name = "Pyproject" },
-                ["readme.md"] = { icon = "󰍔", color = "#69a3df", name = "Readme" },
-                ["requirements.txt"] = { icon = "", color = "#3572A5", name = "Requirements" },
-                ["robots.txt"] = { icon = "󰚩", name = "Robots" },
-                ["ruff.toml"] = { icon = "󱐋", color = "#fbc11a", name = "Ruff" },
-                ["setup.py"] = { icon = "", color = "#4B8DDE", name = "SetupPy" },
-                ["sonar-project.properties"] = { icon = "󰼮", color = "#CB2029", name = "Sonar" },
-                ["tox.ini"] = { icon = "", color = "#b5c761", name = "Tox" },
-                ["yamllint.yaml"] = { icon = "", color = "#fbc02d", name = "YamlLint" },
+            filetype = {
+                brewfile = { glyph = "🍺" },
             },
-            override_by_extension = {
-                cert = { icon = "󰄤", color = "#3BD9DD", name = "Cert" },
-                crt = { icon = "󰄤", name = "Cert" },
-                env = { icon = "󰙪", name = "Env" },
-                js = { icon = "", color = "#f1e05a", name = "Javascript" },
-                lock = { icon = "", color = "#eb4034", name = "lock" },
-                log = { icon = "󱞎", color = "#afb42b", name = "Log" },
-                makefile = { icon = "", color = "#F54842", name = "Make" },
-                out = { icon = "", name = "Out" },
-                properties = { icon = "", color = "#3970B4", name = "Properties" },
-                py = { icon = "󰌠", color = "#ffd43b", name = "Python" },
-                sh = { icon = "", color = "#f56b67", name = "Shell" },
-                tmpl = { icon = "󰈙", color = "#3970E4", name = "Template" },
-                ts = { icon = "󰛦", color = "#377CC8", name = "Typescript" },
+            file = {
+                ["init.lua"] = { glyph = "󰢱", hl = "MiniIconsAzure" },
+                ["package.json"] = { glyph = "", hl = "MiniIconsGreen" },
+                ["tsconfig.build.json"] = { glyph = "", hl = "MiniIconsAzure" },
+                ["tsconfig.json"] = { glyph = "", hl = "MiniIconsAzure" },
+                [".chezmoiignore"] = { glyph = "", hl = "MiniIconsGrey" },
+                [".chezmoiremove"] = { glyph = "", hl = "MiniIconsGrey" },
+                [".chezmoiroot"] = { glyph = "", hl = "MiniIconsGrey" },
+                [".chezmoiversion"] = { glyph = "", hl = "MiniIconsGrey" },
+
+                [".pre-commit-config.yaml"] = { glyph = "󰜘", color = "#eda73d" },
+                [".pre-commit-hooks.yaml"] = { glyph = "󰜘", color = "#eda73d" },
+                [".python-version"] = { glyph = "󰌠", color = "#ffe873" },
+                [".ruff.toml"] = { glyph = "󱐋", color = "#fbc11a" },
+                [".shellcheckrc"] = { glyph = "", color = "#7ACECE" },
+                [".yamllint"] = { glyph = "", color = "#fbc02d" },
+                ["cargo.toml"] = { glyph = "󰏗", color = "#C27E42" },
+                ["changelog.md"] = { glyph = "󰄴", color = "#99BE77" },
+                ["go.mod"] = { glyph = "", color = "#00ADD8" },
+                ["go.sum"] = { glyph = "", color = "#ec407a" },
+                ["hosts"] = { glyph = "", color = "#bbbbbb" },
+                ["post-commit"] = { glyph = "", color = "#f56b67" },
+                ["post-receive"] = { glyph = "", color = "#f56b67" },
+                ["pre-commit"] = { glyph = "", color = "#f56b67" },
+                ["pre-push"] = { glyph = "", color = "#f56b67" },
+                ["pre-receive"] = { glyph = "", color = "#f56b67" },
+                ["pyproject.toml"] = { glyph = "", color = "#4B8DDE" },
+                ["readme.md"] = { glyph = "󰍔", color = "#69a3df" },
+                ["requirements.txt"] = { glyph = "", color = "#3572A5" },
+                ["robots.txt"] = { glyph = "󰚩" },
+                ["ruff.toml"] = { glyph = "󱐋", color = "#fbc11a" },
+                ["setup.py"] = { glyph = "", color = "#4B8DDE" },
+                ["sonar-project.properties"] = { glyph = "󰼮", color = "#CB2029" },
+                ["tox.ini"] = { glyph = "", color = "#b5c761" },
+                ["yamllint.yaml"] = { glyph = "", color = "#fbc02d" },
+            },
+            extension = {
+                cert = { glyph = "󰄤", color = "#3BD9DD" },
+                crt = { glyph = "󰄤" },
+                env = { glyph = "󰙪" },
+                lock = { glyph = "", color = "#eb4034" },
+                log = { glyph = "󱞎", color = "#afb42b" },
+                makefile = { glyph = "", color = "#F54842" },
+                out = { glyph = "" },
+                properties = { glyph = "", color = "#3970B4" },
+                tmpl = { glyph = "󰈙", color = "#3970E4" },
             },
         },
     },
