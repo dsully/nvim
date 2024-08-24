@@ -774,27 +774,20 @@ return {
     },
     {
         "luukvbaal/statuscol.nvim",
-        branch = "0.10",
-        event = "UIEnter",
+        event = "BufReadPre",
         opts = function()
             local ignored = require("config.defaults").ignored
-
-            e.on(e.SessionLoadPost, function()
-                for _, win in ipairs(vim.api.nvim_list_wins()) do
-                    if vim.bo[vim.api.nvim_win_get_buf(win)].buftype == "" then
-                        vim.wo[win].stc = "%!v:lua.StatusCol()"
-                    end
-                end
-            end, { desc = "Load statuscol after a session restore." })
 
             return {
                 bt_ignore = ignored.buffer_types,
                 ft_ignore = ignored.file_types,
+                clickmod = "a",
                 relculright = true,
                 segments = {
                     { click = "v:lua.ScSa", sign = { colwidth = 1, namespace = { "gitsigns" } } },
-                    { click = "v:lua.ScSa", sign = { colwidth = 1, minwidth = 2, namespace = { "diagnostic" } } },
+                    { click = "v:lua.ScSa", sign = { name = { ".*" }, namespace = { ".*" }, text = { ".*" } } },
                 },
+                separator = " ", -- separator between line number and buffer text ("│" or extra " " padding)
             }
         end,
     },
