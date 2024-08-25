@@ -11,18 +11,18 @@ return {
             "ChatGPTRun",
         },
         init = function()
-            vim.keymap.set("n", "<leader>cc", vim.cmd.ChatGPT, { desc = "Ask a question..." })
+            vim.keymap.set("n", "<leader>cA", vim.cmd.ChatGPT, { desc = "Ask a question..." })
             vim.keymap.set({ "n", "x" }, "<leader>ci", vim.cmd.ChatGPTEditWithInstructions, { desc = "Edit with instructions" })
 
             for _, map in pairs({
-                { key = "g", cmd = "grammar_correction", desc = "Grammar Correction" },
-                { key = "d", cmd = "docstring", desc = "Add Doc-Strings" },
-                { key = "T", cmd = "add_tests", desc = "Add Tests" },
-                { key = "o", cmd = "optimize_code", desc = "Optimize Code" },
                 { key = "S", cmd = "summarize", desc = "Summarize" },
-                { key = "f", cmd = "fix_bugs", desc = "Fix Bugs" },
-                { key = "x", cmd = "explain_code", desc = "Explain Code" },
+                { key = "T", cmd = "add_tests", desc = "Add Tests" },
                 { key = "a", cmd = "code_readability_analysis", desc = "Code Readability Analysis" },
+                { key = "d", cmd = "docstring", desc = "Add Doc-Strings" },
+                { key = "f", cmd = "fix_bugs", desc = "Fix Bugs" },
+                { key = "g", cmd = "grammar_correction", desc = "Grammar Correction" },
+                { key = "o", cmd = "optimize_code", desc = "Optimize Code" },
+                { key = "x", cmd = "explain_code", desc = "Explain Code" },
             }) do
                 vim.keymap.set({ "n", "x" }, "<leader>c" .. map.key, function()
                     vim.cmd.ChatGPTRun(map.cmd)

@@ -631,7 +631,7 @@ return {
                     require("actions-preview").code_actions({ context = { only = { "quickfix" } } })
                 end,
                 mode = { "n", "x" },
-                desc = "Actions 󰅯",
+                desc = "󰅯 Actions",
             },
         },
         opts = {
