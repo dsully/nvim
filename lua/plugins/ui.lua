@@ -3,17 +3,9 @@ local e = require("helpers.event")
 return {
     {
         "rcarriga/nvim-notify",
-        init = function()
-            e.on(e.FileType, function()
-                vim.opt_local.cursorline = false
-            end, {
-                pattern = "notify",
-            })
-        end,
-        -- stylua: ignore
         keys = {
-            { "<leader>fn", function() vim.cmd.Telescope("notify") end, desc = "Notifications" },
-            { "<leader>nd", function() require("notify").dismiss({ silent = true, pending = true }) end, desc = "Delete all Notifications" },
+            -- stylua: ignore
+            { "<leader>nd", function() require("notify").dismiss({ silent = true, pending = true }) end, desc = "Delete Notifications" },
         },
         opts = {
             background_colour = require("config.defaults").colors.black.dim,
@@ -25,17 +17,10 @@ return {
             max_width = function()
                 return math.floor(vim.o.columns * 0.75)
             end,
-            -- max_width = 65,
-            minimum_width = 65,
             on_open = function(win)
-                vim.api.nvim_win_set_config(win, { focusable = false, zindex = 175 })
-
-                vim.treesitter.start(vim.api.nvim_win_get_buf(win), "markdown")
-
-                vim.wo[win].conceallevel = 3
-                vim.wo[win].spell = false
+                vim.api.nvim_win_set_config(win, { zindex = 100 })
             end,
-            render = "compact",
+            stages = "static",
             timeout = 3000,
         },
     },
