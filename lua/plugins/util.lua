@@ -1,17 +1,6 @@
 return {
-    { "justinsgithub/wezterm-types" },
     { "nvim-lua/plenary.nvim" },
-    {
-        "MunifTanjim/nui.nvim",
-        event = "LazyFile",
-        init = function()
-            ---@diagnostic disable-next-line: duplicate-set-field
-            vim.ui.input = function(...)
-                require("helpers.nui").setup()
-                return vim.ui.input(...)
-            end
-        end,
-    },
+    { "MunifTanjim/nui.nvim" },
     {
         "stevearc/resession.nvim",
         config = function(_, opts)
