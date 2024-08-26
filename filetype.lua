@@ -2,6 +2,7 @@ vim.filetype.add({
     filename = {
         [".envrc"] = "direnv",
         [".flake8"] = "ini",
+        [".rgignore"] = "gitignore",
         ["Brewfile"] = "brewfile",
         ["Caddyfile"] = "caddyfile",
         ["MANIFEST.in"] = "pymanifest",
@@ -62,16 +63,29 @@ vim.filetype.add({
         end,
     },
     pattern = {
+        ["*.dockerignore"] = "gitignore",
         ["*Caddyfile*"] = "caddyfile",
-        ["Brewfile.*"] = "brewfile",
         [".*/.github/workflows/.*%.yaml"] = "yaml.ghaction",
         [".*/.github/workflows/.*%.yml"] = "yaml.ghaction",
         [".*requirements%.in"] = "requirements",
         [".*requirements%.txt"] = "requirements",
-        [".*"] = {
-            function(path, buf)
-                return vim.bo[buf].filetype ~= "large_file" and path and vim.fn.getfsize(path) > vim.g.large_file_size and "large_file" or nil
-            end,
-        },
+        ["Brewfile.*"] = "brewfile",
+        ["Dockerfile.*"] = function(path)
+            if path:find(".dockerignore*$") then
+                return "gitignore"
+            end
+
+            return "dockerfile"
+        end,
+        [".*%.yml"] = function(path)
+            if path:find(".*compose.*$") then
+                return "yaml.docker-compose"
+            end
+
+            return "yaml"
+        end,
+        [".*"] = function(path)
+            return vim.bo.filetype ~= "large_file" and path and vim.fn.getfsize(path) > vim.g.large_file_size and "large_file" or nil
+        end,
     },
 })

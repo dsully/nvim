@@ -14,15 +14,11 @@ return {
     -- Apple's PKL language.
     {
         "apple/pkl-neovim",
-        build = ":TSInstall! pkl",
         event = "BufReadPre *.pkl",
     },
 
     -- Direnv highlighting & more.
     { "direnv/direnv.vim", ft = "direnv" },
-
-    -- JSON Sorting
-    { "2nthony/sortjson.nvim", ft = "json", opts = true },
 
     {
         "vuki656/package-info.nvim",
