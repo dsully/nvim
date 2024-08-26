@@ -100,4 +100,132 @@ return {
             },
         },
     },
+    {
+        "mrcjkb/rustaceanvim",
+        config = function()
+            vim.g.rustaceanvim = {
+                -- Plugin configuration
+                tools = {
+                    code_actions = {
+                        ui_select_fallback = true,
+                    },
+                    float_win_config = {
+                        border = require("config.defaults").ui.border.name,
+                    },
+                },
+                server = {
+                    ---@param _client vim.lsp.Client
+                    ---@param bufnr integer
+                    on_attach = function(_client, bufnr)
+                        local keys = require("helpers.keys")
+
+                        keys.bmap("<leader>cc", function()
+                            vim.cmd.RustLsp("flyCheck")
+                        end, "Check")
+
+                        keys.bmap("<leader>ce", function()
+                            vim.cmd.RustLsp("openCargo")
+                        end, "Open Cargo.toml")
+
+                        keys.bmap("gP", function()
+                            vim.cmd.RustLsp("parentModule")
+                        end, "Open parent module")
+
+                        keys.map("gx", function()
+                            vim.cmd.RustLsp("openDocs")
+                        end, "Open external documentation", { "n", "x" })
+
+                        vim.cmd.compiler("cargo")
+                    end,
+                    default_settings = {
+                        -- https://github.com/rust-lang/rust-analyzer/blob/master/docs/user/generated_config.adoc
+                        -- https://rust-analyzer.github.io/manual.html#configuration
+                        ["rust-analyzer"] = {
+                            cargo = {
+                                buildScripts = {
+                                    enable = true,
+                                },
+                            },
+                            check = {
+                                command = "clippy",
+                                extraArgs = {
+                                    "--",
+                                    "--no-deps", -- run Clippy only on the given crate
+                                    -- Deny, Warn, Allow, Forbid
+                                    "-Wclippy::correctness", -- code that is outright wrong or useless
+                                    "-Wclippy::complexity", -- code that does something simple but in a complex way
+                                    "-Wclippy::suspicious", -- code that is most likely wrong or useless
+                                    "-Wclippy::style", -- code that should be written in a more idiomatic way
+                                    "-Wclippy::perf", -- code that can be written to run faster
+                                    "-Wclippy::pedantic", -- lints which are rather strict or have occasional false positives
+                                },
+                            },
+                            completion = {
+                                fullFunctionSignatures = { enable = true },
+                            },
+                            diagnostics = {
+                                disabled = { "inactive-code", "macro-error", "unresolved-macro-call" },
+                                experimental = { enable = true },
+                                styleLints = { enable = true },
+                            },
+                            files = {
+                                excludeDirs = {
+                                    ".direnv",
+                                    ".git",
+                                    ".venv",
+                                    ".vscode",
+                                    "assets",
+                                    "ci",
+                                    "data",
+                                    "docs",
+                                    "js",
+                                    "target",
+                                    "venv",
+                                },
+                                -- watcher = "server",
+                            },
+                            inlayHints = {
+                                closureReturnTypeHints = { enable = "with_block" },
+                                closureStyle = "rust_analyzer",
+                                parameterHints = { enable = false },
+                            },
+                            lens = {
+                                references = {
+                                    adt = { enable = true },
+                                    method = { enable = true },
+                                },
+                            },
+                            procMacro = {
+                                -- Don't expand some problematic proc_macros
+                                ignored = {
+                                    ["async-trait"] = { "async_trait" },
+                                    ["napi-derive"] = { "napi" },
+                                    ["async-recursion"] = { "async_recursion" },
+                                    ["async-std"] = { "async_std" },
+                                },
+                            },
+                            rust = {
+                                analyzerTargetDir = true,
+                            },
+                            -- rustfmt = {
+                            --     extraArgs = { "+nightly" },
+                            -- },
+                            semanticHighlighting = {
+                                operator = {
+                                    specialization = { enable = true },
+                                },
+                            },
+                        },
+                    },
+                },
+            }
+        end,
+        dependencies = {
+            "mfussenegger/nvim-dap",
+            "nvim-neotest/nvim-nio",
+            "rcarriga/nvim-dap-ui", -- install debug adapter
+        },
+        lazy = false,
+        version = "^5", -- Recommended
+    },
 }
