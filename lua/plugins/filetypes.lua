@@ -117,19 +117,19 @@ return {
 
                         keys.bmap("<leader>cc", function()
                             vim.cmd.RustLsp("flyCheck")
-                        end, "Check")
+                        end, "Check", bufnr)
 
                         keys.bmap("<leader>ce", function()
                             vim.cmd.RustLsp("openCargo")
-                        end, "Open Cargo.toml")
+                        end, "Open Cargo.toml", bufnr)
 
                         keys.bmap("gP", function()
                             vim.cmd.RustLsp("parentModule")
-                        end, "Open parent module")
+                        end, "Open parent module", bufnr)
 
-                        keys.map("gx", function()
+                        keys.bmap("gx", function()
                             vim.cmd.RustLsp("openDocs")
-                        end, "Open external documentation", { "n", "x" })
+                        end, "Open external documentation", bufnr, { "n", "x" })
 
                         vim.cmd.compiler("cargo")
                     end,

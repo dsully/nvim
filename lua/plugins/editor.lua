@@ -1,215 +1,239 @@
-local M = {}
-
-local defaults = require("config.defaults")
-
-vim.b._use_git_root = false
-
-M.cwd = function()
-    if vim.b._use_git_root and not vim.b._telescope_cwd then
-        --
-        local path = vim.fs.dirname(vim.api.nvim_buf_get_name(0))
-        local stop = vim.uv.os_homedir()
-
-        if path and stop then
-            local paths = vim.fs.find(".git", {
-                limit = 1,
-                path = path,
-                stop = stop,
-                type = "directory",
-                upward = true,
-            })
-
-            if #paths > 0 then
-                vim.b._telescope_cwd = paths[1]
-            end
-        end
-    end
-
-    -- Fallback to LSP or marker files.
-    if not vim.b._telescope_cwd then
-        vim.b._telescope_cwd = require("plugins.lsp.common").find_root()
-    end
-
-    return vim.b._telescope_cwd
-end
-
-M.args = function()
-    local cwd = vim.b._telescope_cwd and vim.b._telescope_cwd or M.cwd()
-
-    return { cwd = cwd, results_title = "cwd: " .. cwd }
-end
+local pickers = require("helpers.picker")
+local pick = pickers.pick
 
 return {
     {
-        "nvim-telescope/telescope.nvim",
-        cmd = "Telescope",
-        config = function()
-            local actions = require("telescope.actions")
-            local telescope = require("telescope")
+        "ibhagwan/fzf-lua",
+        cmd = "FzfLua",
+        keys = {
+            { "<c-j>", "<c-j>", ft = "fzf", mode = "t", nowait = true },
+            { "<c-k>", "<c-k>", ft = "fzf", mode = "t", nowait = true },
 
-            local function dropdown(opts)
-                return require("telescope.themes").get_dropdown(opts)
-            end
+            { "<leader>f/", pick("lgrep_curbuf"), desc = "Current Buffer" },
+            { "<leader>f;", pick("resume"), desc = "Resume Picker" },
+            { "<leader>fC", pick("git_bcommits"), desc = "Buffer Commits" },
+            { "<leader>fD", pick("diagnostics_document"), desc = "Diagnostics: Document" },
+            { "<leader>fG", pick("git_files"), desc = "Git Files" },
+            { "<leader>fS", pick("lsp_dynamic_workspace_symbols"), desc = "Symbols: Workspace" },
+            { "<leader>fc", pick("git_commits"), desc = "Git Commits" },
+            { "<leader>fd", pick("diagnostics_workspace"), desc = "Diagnostics: Workspace" },
+            { "<leader>ff", pick("files"), desc = "Files" },
+            { "<leader>fg", pick("live_grep"), desc = "Live Grep" },
+            { "<leader>fk", pick("keymaps"), desc = "Key Maps" },
+            { "<leader>fo", pick("oldfiles"), desc = "Recently Opened" },
+            { "<leader>fq", pick("quickfix"), desc = "Quickfix List" },
+            { "<leader>fs", pick("lsp_document_symbols"), desc = "Symbols: Document" },
+            { "<leader>fw", pick("grep_cword"), desc = "Words" },
 
-            telescope.setup({
-                defaults = dropdown({
-                    borderchars = defaults.ui.border.chars,
-                    color_devicons = true,
-                    file_ignore_patterns = defaults.files.ignored_patterns,
-                    -- open files in the first window that is an actual file.
-                    -- use the current window if no other window is available.
-                    get_selection_window = function()
-                        local wins = vim.api.nvim_list_wins()
+            { "<leader>fn", pickers.notifications, desc = "Notifications" },
 
-                        table.insert(wins, 1, vim.api.nvim_get_current_win())
+            { "<leader>fP", pickers.parents, desc = "Parent dirs" },
+            { "<leader>cds", pickers.subdirectory, desc = "Subdirectories" },
+            { "<leader>fR", pickers.repositories, desc = "Repositories" },
 
-                        for _, win in ipairs(wins) do
-                            local buf = vim.api.nvim_win_get_buf(win)
+            { "<leader>f.", pickers.file(vim.env.XDG_CONFIG_HOME), desc = "dotfiles" },
+            { "<leader>fp", pickers.file(require("lazy.core.config").options.root), desc = "Plugins" },
 
-                            if vim.bo[buf].buftype == "" then
-                                return win
-                            end
-                        end
-                        return 0
-                    end,
-                    layout_config = {
-                        width = 0.75,
-                        prompt_position = "bottom",
-                    },
-                    mappings = {
-                        i = {
-                            ["<Esc>"] = actions.close,
-                            ["<Tab>"] = actions.move_selection_next,
-                            ["<C-c>"] = function()
-                                vim.cmd.stopinsert({ bang = true })
-                            end,
-                            ["<C-k>"] = actions.cycle_history_next,
-                            ["<C-j>"] = actions.cycle_history_prev,
-                            ["<C-q>"] = actions.send_to_qflist,
-
-                            -- Delete word
-                            ["<C-w>"] = { "<C-o>diw", type = "command" },
-                        },
-                        n = {
-                            ["<C-w>"] = actions.send_selected_to_qflist,
-                        },
-                    },
-                    path_display = { "truncate" },
-                    prompt_prefix = " ❯ ",
-                    scroll_strategy = "cycle",
-                }),
-                extensions = {
-                    file_browser = {
-                        hidden = true,
-                        hijack_netrw = true,
-                        initial_mode = "normal",
-                        prompt_prefix = "    ",
-                    },
-                },
-                pickers = {
-                    buffers = {
-                        ignore_current_buffer = true,
-                        mappings = {
-                            i = { ["<C-x>"] = "delete_buffer" },
-                            n = { ["<C-x>"] = "delete_buffer" },
-                        },
-                        previewer = false,
-                        prompt_prefix = " 󰀿  ",
-                        show_all_buffers = true,
-                        sort_lastused = true,
-                        sort_mru = true,
-                    },
-                    find_files = {
-                        find_command = { "fd", "--type", "f", "--color", "never", "--strip-cwd-prefix" },
-                        sorting_strategy = "ascending",
-                        hidden = true,
-                        prompt_prefix = "   ",
-                    },
-                    git_files = {
-                        additional_args = function()
-                            return { "--hidden" }
-                        end,
-                        glob_pattern = { "!.git" },
-                        hidden = true,
-                        prompt_prefix = "   ",
-                        show_untracked = true,
-                    },
-                    live_grep = {
-                        glob_pattern = { "!.git" },
-                        find_command = { "rg", "--color", "never", "--hidden", "--no-require-git", "--sort", "--trim" },
-                        prompt_prefix = "   ",
-                    },
-                    oldfiles = {
-                        only_cwd = true,
-                        prompt_prefix = " 󰋚  ",
-                    },
-                },
-            })
-
-            telescope.load_extension("zf-native")
-        end,
+            { "gi", pick("lsp_implementations"), desc = "Goto Implementation" },
+            { "gi", pick("lsp_implementations"), desc = "Goto Implementation" },
+            { "gd", pick("lsp_definitions"), desc = "Goto Definition" },
+            { "grr", pick("lsp_references"), desc = "References", nowait = true },
+            { "gy", pick("lsp_typedefs"), desc = "Goto T[y]pe Definition" },
+            { "z=", pick("spell_suggest"), desc = "Suggest Spelling" },
+        },
         init = function()
-            local map = require("helpers.keys").map
-
-            for _, t in pairs({
-                { key = "B", cmd = "buffers", desc = "Buffers" },
-                { key = "d", cmd = "diagnostics", desc = "Diagnostics" },
-                { key = "c", cmd = "git_commits", desc = "Git Commits" },
-                { key = "g", cmd = "live_grep", desc = "Live Grep" },
-                { key = "e", cmd = "symbols", desc = "Emojii" },
-                { key = "o", cmd = "oldfiles", desc = "Recently Opened" },
-                { key = "w", cmd = "grep_string", desc = "Words" },
-                { key = ";", cmd = "resume", desc = "Resume Telescope" },
-            }) do
-                map("<leader>f" .. t.key, tscope(t.cmd, M.args), t.desc)
-            end
-
+            --
+            -- Override the default select function to use fzf-lua.
+            --
             ---@diagnostic disable-next-line: duplicate-set-field
             vim.ui.select = function(...)
-                require("telescope").load_extension("ui-select")
+                require("lazy").load({ plugins = { "fzf-lua" } })
+
+                -- https://github.com/ibhagwan/fzf-lua/issues/717
+                require("fzf-lua").register_ui_select(function(fzf_opts, items)
+                    --
+                    return vim.tbl_deep_extend("force", fzf_opts, {
+                        prompt = " ",
+                        winopts = {
+                            title = " " .. vim.trim((fzf_opts.prompt or "Select"):gsub("%s*:%s*$", "")) .. " ",
+                            title_pos = "center",
+                        },
+                    }, fzf_opts.kind == "codeaction" and {
+                        winopts = {
+                            height = math.floor(math.min(vim.o.lines * 0.8 - 30, #items) + 0.5) + 30,
+                            layout = "vertical",
+                        },
+                    } or {
+                        winopts = {
+                            height = math.floor(math.min(vim.o.lines * 0.8, #items + 2) + 0.5),
+                            row = 0.40,
+                        },
+                    })
+                end)
+
                 return vim.ui.select(...)
             end
         end,
-        dependencies = {
-            { "natecraddock/telescope-zf-native.nvim" },
-            { "nvim-telescope/telescope-symbols.nvim" },
-            { "nvim-telescope/telescope-ui-select.nvim" },
-        },
-        keys = {
-            -- Use git_files if we're at the top of a git repo. Otherwise find_files.
-            { "<leader>ff", tscope("find_files", M.args), desc = "Find Files" },
-            {
-                "<leader>fR",
-                function()
-                    vim.b._use_git_root = not vim.b._use_git_root
+        opts = function()
+            -- Add the prompt back to the default-title profile
+            local function add_prompt(t)
+                t.prompt = t.prompt ~= nil and " " or t.prompt
 
-                    vim.notify(string.format("Telescope root is now: %s", M.cwd()))
-                end,
-                desc = "Telescope: Toggle root between Git and LSP/current directory.",
-            },
-            {
-                "<leader>f/",
-                tscope("live_grep", {
-                    path_display = { tail = true },
-                    prompt_title = "Search Buffer Content",
-                    search_dirs = { vim.fn.expand("%:p") },
-                }),
-                "Buffer Content",
-            },
-            { "z=", tscope("spell_suggest"), desc = "Suggest Spelling" },
+                for _, v in pairs(t) do
+                    if type(v) == "table" then
+                        add_prompt(v)
+                    end
+                end
+
+                return t
+            end
+
+            local defaults = require("config.defaults")
+
+            local config = require("fzf-lua.config")
+            local fzf = require("fzf-lua")
+
+            -- Quickfix
+            config.defaults.keymap.fzf["ctrl-q"] = "select-all+accept"
+            config.defaults.keymap.fzf["ctrl-u"] = "half-page-up"
+            config.defaults.keymap.fzf["ctrl-d"] = "half-page-down"
+            config.defaults.keymap.fzf["ctrl-x"] = "jump"
+            config.defaults.keymap.fzf["ctrl-f"] = "preview-page-down"
+            config.defaults.keymap.fzf["ctrl-b"] = "preview-page-up"
+            config.defaults.keymap.builtin["<c-f>"] = "preview-page-down"
+            config.defaults.keymap.builtin["<c-b>"] = "preview-page-up"
+
+            -- Toggle root dir / cwd
+            config.defaults.actions.files["ctrl-r"] = function(_, ctx)
+                local o = vim.deepcopy(ctx.__call_opts)
+                o.root = o.root == false
+                o.cwd = nil
+                o.buf = ctx.__CTX.bufnr
+
+                if not o.cwd and o.root ~= false then
+                    o.cwd = require("plugins.lsp.common").find_root(o.buf)
+                end
+
+                fzf.files(o)
+            end
+
+            config.defaults.actions.files["alt-c"] = config.defaults.actions.files["ctrl-r"]
+            config.set_action_helpstr(config.defaults.actions.files["ctrl-r"], "toggle-root-dir")
+
+            local opts = add_prompt(require("fzf-lua.profiles.default-title"))
+
+            return vim.tbl_deep_extend("force", opts, {
+                defaults = {
+                    cwd_header = true,
+                    file_icons = "mini",
+                    formatter = "path.dirname_first",
+                    headers = { "actions", "cwd" },
+                    no_header_i = true, -- hide interactive header
+                },
+                file_icon_padding = " ",
+                file_ignore_patterns = defaults.files.ignored_patterns,
+                files = {
+                    cwd_prompt = false,
+                },
+                fzf_colors = {
+                    bg = { "bg", "Normal" },
+                    gutter = { "bg", "Normal" },
+                    info = { "fg", "Conditional" },
+                    scrollbar = { "bg", "Normal" },
+                    separator = { "fg", "Comment" },
+                },
+                fzf_opts = {
+                    ["--history"] = vim.fn.stdpath("data") .. "/fzf-lua-history",
+                    ["--layout"] = "reverse-list",
+                    ["--info"] = "default",
+                    ["--no-scrollbar"] = true,
+                    -- Disable fuzzy matching. I know. :)
+                    ["--exact"] = "",
+                },
+                git = {
+                    files = {
+                        cmd = "git ls-files --others --cached --exclude-standard",
+                        path_shorten = false,
+                    },
+                },
+                helptags = { previewer = "help_native" },
+                keymap = {
+                    builtin = {
+                        ["<c-/>"] = "toggle-help",
+                        ["<c-e>"] = "toggle-preview",
+                        ["<c-f>"] = "preview-page-down",
+                        ["<c-b>"] = "preview-page-up",
+                    },
+                    fzf = {
+                        ["esc"] = "abort",
+                        ["ctrl-q"] = "select-all+accept",
+                        ["ctrl-e"] = "toggle-preview",
+                        ["ctrl-f"] = "preview-page-down",
+                        ["ctrl-b"] = "preview-page-up",
+                    },
+                },
+                live_grep = {
+                    RIPGREP_CONFIG_PATH = vim.env.RIPGREP_CONFIG_PATH,
+                    fzf_opts = { ["--keep-right"] = "" },
+                    resume = true,
+                },
+                lsp = {
+                    code_actions = {
+                        previewer = "codeaction_native",
+                        preview_pager = "delta --width=$COLUMNS --hunk-header-style='omit' --file-style='omit'",
+                    },
+                    cwd_only = false, -- LSP/diagnostics for cwd only?
+                    -- https://github.com/ibhagwan/fzf-lua/wiki#disable-or-hide-filename-fuzzy-search
+                    document_symbols = {
+                        fzf_cli_args = "--nth 2..",
+                    },
+                    ignore_current_line = true,
+                    includeDeclaration = false,
+                    jump_to_single_result = true,
+                },
+                oldfiles = {
+                    include_current_session = true,
+                },
+                previewers = {
+                    bat = {
+                        cmd = "bat",
+                        args = "--style=plain --color=always",
+                    },
+                    builtin = {
+                        -- https://github.com/ibhagwan/fzf-lua/discussions/1364
+                        toggle_behavior = "extend",
+                    },
+                },
+                -- https://github.com/ibhagwan/fzf-lua/issues/775
+                winopts = {
+                    border = defaults.ui.border.name,
+                    height = 0.8,
+                    width = 0.8,
+                    row = 0.2, -- window row position (0=top, 1=bottom)
+                    col = 0.5, -- window col position (0=left, 1=right)
+                    layout = "vertical",
+                    preview = {
+                        border = "border-sharp", -- equivalent to `fzf --preview=border-sharp`
+                        default = "bat",
+                        hidden = "nohidden",
+                        layout = "vertical",
+                        scrollbar = false,
+                        vertical = "up:50%",
+                    },
+                },
+            })
+        end,
+    },
+    {
+        "ziontee113/icon-picker.nvim",
+        cmd = { "IconPickerNormal", "IconPickerYank", "IconPickerInsert" },
+        keys = {
+            { "<leader>fe", "<cmd>IconPickerInsert emoji<cr>", desc = "Emoji" },
+            { "<leader>fi", "<cmd>IconPickerInsert nerd_font_v3<cr>", desc = "Nerd Font Icons" },
         },
-    },
-    {
-        "nvim-telescope/telescope-file-browser.nvim",
-        keys = { { "<leader>fb", tscope("file_browser", M.args), desc = "File Browser" } },
-    },
-    {
-        "tsakirist/telescope-lazy.nvim",
-        keys = { { "<leader>fl", tscope("lazy"), desc = "Lazy Packages" } },
-    },
-    {
-        "2kabhishek/nerdy.nvim",
-        keys = { { "<leader>fi", tscope("nerdy"), desc = "Nerd Icons" } },
+        opts = {
+            disable_legacy_commands = true,
+        },
     },
     {
         "SmiteshP/nvim-navic",
@@ -234,7 +258,7 @@ return {
         keys = {
             { "]t", function() require("todo-comments").jump_next() end, desc = "Next todo comment" },
             { "[t", function() require("todo-comments").jump_prev() end, desc = "Previous todo comment" },
-            { "<leader>ft", vim.cmd.TodoTelescope, desc = "TODOs" },
+            { "<leader>ft", function () require("todo-comments.fzf").todo({ keywords = { "TODO", "FIX", "FIXME", "XXX" } }) end, desc = "TODOs" },
         },
         opts = {
             highlight = {
@@ -258,24 +282,6 @@ return {
         opts = {
             auto_preview = false,
             use_diagnostic_signs = true,
-        },
-    },
-    {
-        "trmckay/based.nvim",
-        --stylua: ignore
-        keys = {
-            { "<C-b>", function() require("based").convert() end, mode = { "n", "x" }, desc = "Convert to/from hex & decimal." },
-        },
-    },
-    {
-        -- Pattern replacement UI.
-        "AckslD/muren.nvim",
-        cmd = "MurenToggle",
-        opts = {
-            patterns_width = 60,
-            patterns_height = 20,
-            options_width = 40,
-            preview_height = 24,
         },
     },
     {

@@ -2,65 +2,6 @@ local M = {}
 
 local methods = vim.lsp.protocol.Methods
 
----@param title string
----@param opts table
-local function location_handler(title, opts)
-    --
-    --- Jumps to a location. Used as a handler for multiple LSP methods.
-    ---@param result table result of LSP method; a location or a list of locations.
-    ---@param ctx lsp.HandlerContext table containing the context of the request, including the method
-    return function(_, result, ctx)
-        --
-        local client = vim.lsp.get_client_by_id(ctx.client_id)
-        local results = {}
-
-        if vim.islist(result) then
-            results = result
-        else
-            results = { result }
-        end
-
-        if not result or not results or vim.tbl_isempty(results) or not client then
-            vim.api.nvim_echo({ { "LSP: No locations found." } }, false, {})
-            return
-        end
-
-        if vim.islist(results) then
-            local conf = require("telescope.config").values
-
-            local items = vim.lsp.util.locations_to_items(results, client.offset_encoding)
-            local lnum, filename = items[1].lnum, items[1].filename
-            local picked = false
-
-            for _, val in pairs(items) do
-                if val.lnum ~= lnum or val.filename ~= filename then
-                    picked = true
-                end
-            end
-
-            if picked then
-                require("telescope.pickers")
-                    .new(opts, {
-                        prompt_title = title,
-                        finder = require("telescope.finders").new_table({
-                            results = items,
-                            entry_maker = opts.entry_maker or require("telescope.make_entry").gen_from_quickfix(),
-                        }),
-                        previewer = conf.qflist_previewer(opts),
-                        sorter = conf.generic_sorter(opts),
-                        push_cursor_on_edit = true,
-                        push_tagstack_on_edit = true,
-                    })
-                    :find()
-            else
-                vim.lsp.util.jump_to_location(results[1], client.offset_encoding, false)
-            end
-        else
-            vim.lsp.util.jump_to_location(results[1], client.offset_encoding, true)
-        end
-    end
-end
-
 -- Adapted from https://gist.github.com/MunifTanjim/8d9498c096719bdf4234321230fe3dc7
 M.rename = function()
     local Input = require("nui.input")
@@ -96,7 +37,7 @@ M.rename = function()
 
         params.newName = new_name ---@diagnostic disable-line: inject-field
 
-        vim.lsp.buf_request(0, vim.lsp.protocol.Methods.textDocument_rename, params, function(err, result, ctx, _)
+        vim.lsp.buf_request(0, methods.textDocument_rename, params, function(err, result, ctx, _)
             --
             if err or not result then
                 vim.notify(("Error running LSP query '%s': %s"):format(ctx.method, err), vim.log.levels.ERROR)
@@ -179,26 +120,35 @@ M.rename = function()
     input:on(event.BufLeave, input.input_props.on_close, { once = true })
 end
 
+---@param old_fname string
+---@param new_fname string
+M.on_rename = function(old_fname, new_fname)
+    local buf = vim.fn.bufnr(old_fname)
+    local will_rename = false
+    for _, c in pairs(vim.lsp.get_clients({ bufnr = buf })) do
+        if c.supports_method("workspace/willRenameFiles") then
+            ---@diagnostic disable-next-line: invisible
+            local res = c.request_sync("workspace/willRenameFiles", {
+                files = {
+                    {
+                        oldUri = vim.uri_from_fname(old_fname),
+                        newUri = vim.uri_from_fname(new_fname),
+                    },
+                },
+            }, 1000, 0)
+            if res and res.result then
+                vim.lsp.util.apply_workspace_edit(res.result, c.offset_encoding)
+                will_rename = true
+            end
+        end
+    end
+    if not will_rename then
+        vim.notify("File Rename not supported", vim.log.levels.WARN, { title = "LSP" })
+    end
+end
+
 ---@param group integer
 M.setup = function(group)
-    local opts = {}
-
-    for req, handler in pairs({
-        [methods.textDocument_declaration] = location_handler("LSP Declarations", opts),
-        [methods.textDocument_definition] = location_handler("LSP: Definitions", {
-            fname_width = 40,
-            include_current_line = false,
-            trim_text = true,
-        }),
-        [methods.textDocument_implementation] = location_handler("LSP: Implementations", opts),
-        [methods.textDocument_typeDefinition] = location_handler("LSP Type Definitions", opts),
-        [methods.textDocument_references] = location_handler("LSP: References", {
-            include_current_line = false,
-        }),
-    }) do
-        vim.lsp.handlers[req] = handler
-    end
-
     -- De-duplicate diagnostics, in particular from rust-analyzer/rustc
     ---@param result lsp.PublishDiagnosticsParams
     vim.lsp.handlers[methods.textDocument_publishDiagnostics] = vim.lsp.with(function(_, result, ...)

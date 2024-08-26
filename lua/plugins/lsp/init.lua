@@ -115,16 +115,11 @@ return {
                         { "grn", require("helpers.handlers").rename, desc = "Rename", icon = "" },
                         -- stylua: ignore
                         { "dt", function() vim.diagnostic.enable(not vim.diagnostic.is_enabled()) end, desc = "Diagnostics Toggle" },
-                        { "gD", vim.lsp.buf.declaration, desc = "Go To Declaration", icon = "󰁔" },
-                        { "gd", vim.lsp.buf.definition, desc = "Go To Definition(s)", icon = "󰁔" },
-                        { "gi", vim.lsp.buf.implementation, desc = "Go To Implementations(s)", icon = "󰘲" },
                         { "<C-S>", vim.lsp.buf.signature_help, desc = "Signature Help", mode = "i", icon = "󰠗" },
                         -- stylua: ignore
-                        { "grr", function() vim.lsp.buf.references({ includeDeclaration = false }) end, desc = "References", icon = "󰆋" },
+                        { "gra", vim.lsp.buf.code_action, desc = "Actions", icon = "󰅯" },
                         --
                         { "<leader>l", group = "LSP", icon = "" },
-                        { "<leader>fs", tscope("lsp_document_symbols"), desc = "Symbols", icon = "" },
-                        { "<leader>fW", tscope("lsp_dynamic_workspace_symbols"), desc = "Workspace Symbols", icon = "" },
                         { "<leader>lc", vim.cmd.LspCapabilities, desc = "LSP Capabilities", icon = "" },
                         { "<leader>li", vim.cmd.LspInfo, desc = "LSP Info", icon = "" },
                         { "<leader>ll", vim.cmd.LspLog, desc = "LSP Log", icon = "" },

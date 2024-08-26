@@ -135,10 +135,10 @@ end
 -- * LSP root_dir
 -- * root pattern of filename of the current buffer
 -- * root pattern of cwd
-M.find_root = function()
+M.find_root = function(bufnr)
     local defaults = require("config.defaults")
 
-    local bufnr = vim.api.nvim_get_current_buf()
+    bufnr = bufnr or vim.api.nvim_get_current_buf()
 
     ---@type string?
     local path = vim.api.nvim_buf_get_name(bufnr)
