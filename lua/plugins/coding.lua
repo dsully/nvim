@@ -601,27 +601,6 @@ return {
         },
     },
     {
-        "aznhe21/actions-preview.nvim",
-        keys = {
-            {
-                -- Override Neovim default mapping.
-                "gra",
-                function()
-                    require("actions-preview").code_actions({ context = { only = { "quickfix" } } })
-                end,
-                mode = { "n", "x" },
-                desc = "󰅯 Actions",
-            },
-        },
-        opts = {
-            backend = { "nui" },
-            diff = {
-                algorithm = "patience",
-                ignore_whitespace = true,
-            },
-        },
-    },
-    {
         "chrisgrieser/nvim-rulebook",
         -- stylua: ignore
         keys = {

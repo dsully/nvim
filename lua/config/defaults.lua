@@ -522,6 +522,18 @@ M.highlights = {
     FoldColumn = { fg = M.colors.gray.base },
     Folded = { bg = M.colors.black.dim, fg = M.colors.gray.base },
     Function = { fg = M.colors.white.bright, italic = true },
+
+    FzfLuaPathColNr = { fg = M.colors.gray.base },
+    FzfLuaPathLineNr = { fg = M.colors.gray.base },
+    FzfLuaBorder = { link = "FloatBorder" },
+    FzfLuaBackdrop = { fg = "NONE", bg = M.colors.black.dim },
+    FzfLuaBufName = { fg = M.colors.cyan.bright, bg = M.colors.black.dim },
+    FzfLuaBufNr = { fg = M.colors.cyan.base, bg = M.colors.black.dim },
+    FzfLuaFzfGutter = { fg = M.colors.black.base, bg = M.colors.black.dim },
+    FzfLuaHeaderBind = { fg = M.colors.green.base, bg = M.colors.black.dim },
+    FzfLuaHeaderText = { fg = M.colors.cyan.bright, bg = M.colors.black.dim },
+    FzfLuaTabMarker = { fg = M.colors.yellow.base, bg = M.colors.black.dim },
+
     Identifier = { fg = M.colors.white.base },
     Ignore = { link = "Normal" },
     IncSearch = { bg = M.colors.blue.bright, fg = M.colors.black.dim },
