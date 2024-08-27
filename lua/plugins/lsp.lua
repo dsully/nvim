@@ -63,8 +63,6 @@ return {
                 })
             end)
 
-            -- lsp.words.setup(opts.document_highlight)
-
             local handlers = {}
 
             ---@type table<string, string>
@@ -306,6 +304,7 @@ return {
                                 },
                             },
                         },
+                        mason = false,
                     },
                     gopls = {
                         filetypes = { "go", "gomod", "gowork" }, -- Don't attach for gotmpl.
