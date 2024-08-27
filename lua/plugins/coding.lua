@@ -272,6 +272,7 @@ return {
 
                             return true
                         end,
+                        keyword_length = 2,
                         priority = 7,
                     },
                     {
