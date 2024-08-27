@@ -154,6 +154,10 @@ return {
                                     "-Wclippy::style", -- code that should be written in a more idiomatic way
                                     "-Wclippy::perf", -- code that can be written to run faster
                                     "-Wclippy::pedantic", -- lints which are rather strict or have occasional false positives
+                                    -- Allow overly pedantic lints
+                                    "-Aclippy::doc_markdown",
+                                    "-Aclippy::missing_errors_doc",
+                                    "-Aclippy::missing_panics_doc",
                                 },
                             },
                             completion = {
