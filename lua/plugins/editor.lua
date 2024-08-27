@@ -111,7 +111,7 @@ return {
                 o.buf = ctx.__CTX.bufnr
 
                 if not o.cwd and o.root ~= false then
-                    o.cwd = require("plugins.lsp.common").find_root(o.buf)
+                    o.cwd = require("helpers.lsp").find_root(o.buf)
                 end
 
                 fzf.files(o)

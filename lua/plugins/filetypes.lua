@@ -40,7 +40,7 @@ return {
         config = function(_, opts)
             require("java").setup(opts)
             require("lspconfig").jdtls.setup({
-                capabilities = require("plugins.lsp.common").setup(),
+                capabilities = require("helpers.lsp").capabilities(),
             })
         end,
         dependencies = {

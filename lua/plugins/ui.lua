@@ -178,7 +178,7 @@ return {
                     local current = require("cokeline.buffers").get_current()
 
                     if current then
-                        require("cokeline.mappings").by_index("close", current.index)
+                        current:delete()
                     end
                 end,
                 desc = "Delete Buffer",
@@ -419,7 +419,7 @@ return {
             -- { "<S-Enter>", function() require("noice").redirect(vim.fn.getcmdline()) end, mode = "c", desc = "Redirect Cmdline" },
             { "<leader>vd", vim.cmd.NoiceDismiss, desc = "Dismiss Messages" },
             { "<leader>vm", vim.cmd.Noice, desc = "View Messages" },
-            { "<leader>fN", function() vim.cmd.Noice("telescope") end, desc = "Noice" },
+            { "<leader>fN", function() require("noice").cmd("pick") end, desc = "Noice" },
         },
         opts = {
             cmdline = {
@@ -770,9 +770,30 @@ return {
                 relculright = true,
                 segments = {
                     { click = "v:lua.ScSa", sign = { colwidth = 1, namespace = { "gitsigns" } } },
-                    { click = "v:lua.ScSa", sign = { name = { ".*" }, namespace = { ".*" }, text = { ".*" } } },
+                    { click = "v:lua.ScSa", sign = { colwidth = 1, maxwidth = 2, namespace = { "diagnostic/signs" } } },
+                    { click = "v:lua.ScSa", sign = { colwidth = 1, maxwidth = 2, name = { ".*" }, namespace = { ".*" }, text = { ".*" } } },
                 },
                 separator = " ", -- separator between line number and buffer text ("│" or extra " " padding)
+            }
+        end,
+    },
+    {
+        "kosayoda/nvim-lightbulb",
+        event = "LspAttach",
+        opts = function()
+            local defaults = require("config.defaults")
+
+            return {
+                autocmd = {
+                    enabled = true,
+                },
+                ignore = {
+                    clients = defaults.ignored.lsp,
+                    ft = defaults.ignored.file_types,
+                },
+                sign = {
+                    text = defaults.icons.misc.lightbulb,
+                },
             }
         end,
     },

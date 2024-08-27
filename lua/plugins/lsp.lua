@@ -13,7 +13,58 @@ return {
 
             vim.diagnostic.config(vim.deepcopy(opts.diagnostics))
 
-            local capabilities = require("plugins.lsp.common").setup()
+            local e = require("helpers.event")
+            local lsp = require("helpers.lsp")
+            local capabilities = lsp.capabilities()
+            local methods = vim.lsp.protocol.Methods
+
+            lsp.setup()
+            lsp.on_dynamic_capability(function() end)
+
+            lsp.on_supports_method(methods.textDocument_inlayHint, function(_, buffer)
+                --
+                require("helpers.keys").bmap("<space>i", function()
+                    vim.lsp.inlay_hint.enable(not vim.lsp.inlay_hint.is_enabled({ bufnr = buffer }))
+                end, "Toggle Inlay Hints")
+
+                vim.lsp.inlay_hint.enable(false)
+            end)
+
+            -- Disable codeLens for now.
+            -- lsp.on_supports_method(methods.textDocument_codeLens, function(_, buffer)
+            --     vim.lsp.codelens.refresh()
+            --
+            --     e.on({ e.BufEnter, e.CursorHold, e.InsertLeave }, vim.lsp.codelens.refresh, {
+            --         buffer = buffer,
+            --     })
+            -- end)
+
+            lsp.on_supports_method(methods.textDocument_documentHighlight, function(client, buffer)
+                local group = e.group(("%s/buffer/%s"):format(client.name, buffer))
+
+                e.on({ e.CursorHold, e.CursorHoldI, e.InsertLeave }, function()
+                    if vim.api.nvim_buf_is_valid(buffer) then
+                        vim.lsp.buf.document_highlight()
+                    end
+                end, {
+                    group = group,
+                    buffer = buffer,
+                    desc = "LSP: Highlight symbol",
+                })
+
+                e.on({ e.BufLeave, e.CursorMoved, e.InsertEnter }, function()
+                    if vim.api.nvim_buf_is_valid(buffer) then
+                        vim.lsp.buf.clear_references()
+                    end
+                end, {
+                    group = group,
+                    buffer = buffer,
+                    desc = "LSP: Clear highlighted symbol",
+                })
+            end)
+
+            -- lsp.words.setup(opts.document_highlight)
+
             local handlers = {}
 
             ---@type table<string, string>
@@ -112,7 +163,7 @@ return {
             require("helpers.event").on_load("which-key.nvim", function()
                 vim.schedule(function()
                     require("which-key").add({
-                        { "grn", require("helpers.handlers").rename, desc = "Rename", icon = "" },
+                        { "grn", require("helpers.lsp").rename, desc = "Rename", icon = "" },
                         -- stylua: ignore
                         { "dt", function() vim.diagnostic.enable(not vim.diagnostic.is_enabled()) end, desc = "Diagnostics Toggle" },
                         { "<C-S>", vim.lsp.buf.signature_help, desc = "Signature Help", mode = "i", icon = "󰠗" },
@@ -337,11 +388,11 @@ return {
                     ruff = {
                         commands = {
                             RuffAutoFix = {
-                                require("plugins.lsp.common").action["source.fixAll"],
+                                require("helpers.lsp").action["source.fixAll"],
                                 description = "Ruff: Auto Fix",
                             },
                             RuffOrganizeImports = {
-                                require("plugins.lsp.common").action["source.organizeImports"],
+                                require("helpers.lsp").action["source.organizeImports"],
                                 description = "Ruff: Organize Imports",
                             },
                         },
@@ -497,7 +548,7 @@ return {
         dependencies = { "nvim-lua/plenary.nvim", "nvim-lspconfig" },
         opts = function()
             return {
-                capabilities = require("plugins.lsp.common").capabilities(),
+                capabilities = require("helpers.lsp").capabilities(),
                 settings = {
                     code_lens = "on",
                     expose_as_code_actions = { "all" },
@@ -523,6 +574,7 @@ return {
         end,
     },
     { "p00f/clangd_extensions.nvim" },
+    -- TODO: Replace with https://github.com/cenk1cenk2/yaml-companion.nvim
     { "someone-stole-my-name/yaml-companion.nvim" },
     {
         "https://gitlab.com/schrieveslaach/sonarlint.nvim",

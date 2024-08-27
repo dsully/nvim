@@ -247,6 +247,12 @@ local M = {
     WinNew = "WinNew",
     --- after scrolling a window
     WinScrolled = "WinScrolled",
+
+    -- For dynamic registration: User pattern
+    LspDynamicCapability = "LspDynamicCapability",
+
+    -- Switch on LSP method support: User pattern.
+    LspSupportsMethod = "LspSupportsMethod",
 }
 
 ---@alias EventOpts vim.api.keyset.create_autocmd
