@@ -252,17 +252,19 @@ return {
     },
     {
         "folke/todo-comments.nvim",
-        cmd = { "TodoTrouble", "TodoTelescope" },
         event = "LazyFile",
         -- stylua: ignore
         keys = {
             { "]t", function() require("todo-comments").jump_next() end, desc = "Next todo comment" },
             { "[t", function() require("todo-comments").jump_prev() end, desc = "Previous todo comment" },
-            { "<leader>ft", function () require("todo-comments.fzf").todo({ keywords = { "TODO", "FIX", "FIXME", "XXX" } }) end, desc = "TODOs" },
+            { "<leader>ft", function () require("todo-comments.fzf").todo() end, desc = "TODOs" },
         },
         opts = {
             highlight = {
-                pattern = [[(KEYWORDS)\s*(\([^\)]*\))?:]],
+                -- https://github.com/folke/todo-comments.nvim/pull/199
+                keyword = "bg",
+                pattern = [[.{-}<(\s?(KEYWORDS):)]],
+                -- pattern = [[(KEYWORDS)\s*(\([^\)]*\))?:]],
             },
         },
     },
