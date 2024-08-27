@@ -626,7 +626,6 @@ return {
                 },
             })
         end,
-        event = "LazyFile",
         ft = "python",
     },
     {
