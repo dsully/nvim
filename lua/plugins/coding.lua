@@ -121,7 +121,7 @@ return {
                             path = "[Path]",
                         })[entry.source.name]
 
-                        if defaults.cmp.kind[entry.source.name] then
+                        if vim.tbl_contains(defaults.cmp.kind, entry.source.name) then
                             vim_item.kind = defaults.cmp.kind[entry.source.name]
                         else
                             vim_item = lspkind(entry, vim_item)

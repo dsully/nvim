@@ -43,7 +43,7 @@ do
 
                     vim.schedule(function()
                         require("lspconfig")["dmypyls"].setup({
-                            capabilities = require("plugins.lsp.common").capabilities(),
+                            capabilities = require("helpers.lsp").capabilities(),
                         })
 
                         vim.cmd.doautocmd("FileType")
