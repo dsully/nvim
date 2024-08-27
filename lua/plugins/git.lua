@@ -7,10 +7,6 @@ return {
         },
         opts = {
             attach_to_untracked = true,
-            keymaps = nil,
-            preview_config = {
-                border = vim.g.border,
-            },
             --- @param buffer integer
             on_attach = function(buffer)
                 local gs = package.loaded.gitsigns
@@ -19,8 +15,28 @@ return {
                     vim.keymap.set(mode or "n", l, r, { buffer = buffer, desc = desc })
                 end
 
-                bmap("]c", gs.next_hunk, "Next Git Hunk")
-                bmap("[c", gs.prev_hunk, "Previous Git Hunk")
+                -- stylua: ignore start
+                bmap("]h", function()
+                    if vim.wo.diff then
+                        vim.cmd.normal({ "]c", bang = true })
+                    else
+                        gs.nav_hunk("next")
+                    end
+                end, "Next Hunk")
+
+                bmap("[h", function()
+                    if vim.wo.diff then
+                        vim.cmd.normal({ "[c", bang = true })
+                    else
+                        gs.nav_hunk("prev")
+                    end
+                end, "Prev Hunk")
+
+                bmap("]H", function() gs.nav_hunk("last") end, "Last Hunk")
+                bmap("[H", function() gs.nav_hunk("first") end, "First Hunk")
+
+                -- { 'n', ']g', function () actions.nav_hunk('next', { navigation_message = false }) end },
+                -- { 'n', '[g', function () actions.nav_hunk('prev', { navigation_message = false }) end },
 
                 bmap("<leader>gb", function()
                     gs.blame_line({ full = true, ignore_whitespace = true })
@@ -41,8 +57,21 @@ return {
                     gs.reset_hunk({ vim.fn.line("."), vim.fn.line("v") })
                 end, "Reset Stage Lines(s)", { "n", "x" })
             end,
-            sign_priority = 100,
-            signs_staged_enable = false,
+            signs = {
+                add = { text = "▎" },
+                change = { text = "▎" },
+                delete = { text = "" },
+                topdelete = { text = "" },
+                changedelete = { text = "▎" },
+                untracked = { text = "▎" },
+            },
+            signs_staged = {
+                add = { text = "▎" },
+                change = { text = "▎" },
+                delete = { text = "" },
+                topdelete = { text = "" },
+                changedelete = { text = "▎" },
+            },
             trouble = true,
             worktrees = {
                 {
@@ -65,40 +94,18 @@ return {
         },
     },
     {
-        "topaxi/gh-actions.nvim",
-        build = "make",
-        cmd = "GHActions",
-        dependencies = { "nvim-lua/plenary.nvim", "MunifTanjim/nui.nvim" },
-        keys = {
-            { "<leader>gha", vim.cmd.GhActions, desc = "Open Github Actions" },
-        },
-        opts = true,
-    },
-    -- {
-    --     "aspeddro/gitui.nvim",
-    --     -- stylua: ignore
-    --     keys = { { "<space>g", function() require("gitui").open() end, desc = " Git UI" } },
-    --     opts = {
-    --         command = {
-    --             enable = false,
-    --         },
-    --         window = {
-    --             options = {
-    --                 border = vim.g.border,
-    --             },
-    --         },
-    --     },
-    -- },
-    {
-        "dlvhdr/gh-addressed.nvim",
-        cmd = "GHReviewComments",
-        dependencies = {
-            "nvim-lua/plenary.nvim",
-            "MunifTanjim/nui.nvim",
-            "folke/trouble.nvim",
-        },
-        keys = {
-            { "<leader>ghc", vim.cmd.GHReviewComments, desc = "GitHub Review Comments" },
+        "aspeddro/gitui.nvim",
+        -- stylua: ignore
+        keys = { { "<space>G", function() require("gitui").open() end, desc = "Git UI" } },
+        opts = {
+            command = {
+                enable = false,
+            },
+            window = {
+                options = {
+                    border = vim.g.border,
+                },
+            },
         },
     },
     {
@@ -112,7 +119,7 @@ return {
         },
         keys = {
             -- stylua: ignore
-            { "<space>g", function() require("fugit2").git_status() end, desc = "Git UI" },
+            { "<space>g", function() require("fugit2").git_status() end, desc = "Git UI (FuGit)" },
         },
         opts = function()
             local lib = "/lib/libgit2.dylib"
