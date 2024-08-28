@@ -332,8 +332,8 @@ return {
         "chrisgrieser/nvim-scissors",
         cmd = { "ScissorsAddNewSnippet", "ScissorsEditSnippet" },
         keys = {
-            { "<leader>sa", vim.cmd.ScissorsAddNewSnippet, desc = "Add new snippet" },
-            { "<leader>se", vim.cmd.ScissorsEditSnippet, desc = "Add edit snippet" },
+            { "<leader>Sa", vim.cmd.ScissorsAddNewSnippet, desc = "Add new snippet" },
+            { "<leader>Se", vim.cmd.ScissorsEditSnippet, desc = "Add edit snippet" },
         },
         opts = {
             editSnippetPopup = {

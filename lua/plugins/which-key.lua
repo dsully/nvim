@@ -64,7 +64,7 @@ return {
             { "<leader>n", group = "Notifications", icon = icons.diagnostics.info },
             { "<leader>q", group = "Quit", icon = icons.misc.exit },
             { "<leader>r", group = "Rules", icon = "" },
-            { "<leader>s", group = "Snippets", icon = "" },
+            { "<leader>S", group = "Snippets", icon = "" },
             { "<leader>t", group = "Test", icon = "󰱑" },
             { "<leader>v", group = "View", icon = icons.misc.telescope },
             { "<leader>x", group = "Diagnostics", icon = "" },
