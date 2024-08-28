@@ -1,13 +1,13 @@
-local icons = require("config.defaults").icons
+local icons = defaults.icons
 
 return {
     "folke/which-key.nvim",
-    event = "LazyFile",
+    event = ev.LazyFile,
     opts = {
         delay = 1000,
         disable = {
-            bt = require("config.defaults").ignored.buffer_types,
-            ft = require("config.defaults").ignored.file_types,
+            bt = defaults.ignored.buffer_types,
+            ft = defaults.ignored.file_types,
         },
         icons = {
             rules = {
@@ -114,7 +114,7 @@ return {
             { "<auto>", mode = { "n", "i", "x", "s", "o", "t", "c" } },
         },
         win = {
-            border = vim.g.border,
+            border = defaults.ui.border.name,
             -- Don't allow the popup to overlap with the cursor
             no_overlap = true,
         },
