@@ -248,6 +248,9 @@ local M = {
     --- after scrolling a window
     WinScrolled = "WinScrolled",
 
+    --- lazy.nvim triggered event
+    VeryLazy = "VeryLazy",
+
     --- Startup event after a file is loaded
     LazyFile = "LazyFile",
 
