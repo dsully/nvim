@@ -9,11 +9,10 @@ return {
         },
         ---@param opts PluginLspOpts
         config = function(_, opts)
-            require("lspconfig.ui.windows").default_options.border = vim.g.border
+            require("lspconfig.ui.windows").default_options.border = defaults.ui.border.name
 
             vim.diagnostic.config(vim.deepcopy(opts.diagnostics))
 
-            local e = require("helpers.event")
             local lsp = require("helpers.lsp")
             local capabilities = lsp.capabilities()
             local methods = vim.lsp.protocol.Methods
@@ -34,15 +33,15 @@ return {
             -- lsp.on_supports_method(methods.textDocument_codeLens, function(_, buffer)
             --     vim.lsp.codelens.refresh()
             --
-            --     e.on({ e.BufEnter, e.CursorHold, e.InsertLeave }, vim.lsp.codelens.refresh, {
+            --     ev.on({ ev.BufEnter, ev.CursorHold, ev.InsertLeave }, vim.lsp.codelens.refresh, {
             --         buffer = buffer,
             --     })
             -- end)
 
             lsp.on_supports_method(methods.textDocument_documentHighlight, function(client, buffer)
-                local group = e.group(("%s/buffer/%s"):format(client.name, buffer))
+                local group = ev.group(("%s/buffer/%s"):format(client.name, buffer))
 
-                e.on({ e.CursorHold, e.CursorHoldI, e.InsertLeave }, function()
+                ev.on({ ev.CursorHold, ev.CursorHoldI, ev.InsertLeave }, function()
                     if vim.api.nvim_buf_is_valid(buffer) then
                         vim.lsp.buf.document_highlight()
                     end
@@ -52,7 +51,7 @@ return {
                     desc = "LSP: Highlight symbol",
                 })
 
-                e.on({ e.BufLeave, e.CursorMoved, e.InsertEnter }, function()
+                ev.on({ ev.BufLeave, ev.CursorMoved, ev.InsertEnter }, function()
                     if vim.api.nvim_buf_is_valid(buffer) then
                         vim.lsp.buf.clear_references()
                     end
@@ -107,7 +106,7 @@ return {
             { "williamboman/mason.nvim" },
             { "williamboman/mason-lspconfig.nvim" },
         },
-        event = "LazyFile",
+        event = ev.LazyFile,
         init = function()
             vim.lsp.set_log_level(vim.log.levels.ERROR)
 
@@ -119,7 +118,7 @@ return {
                 local lines = {}
 
                 for i, client in ipairs(clients) do
-                    if not vim.tbl_contains(require("config.defaults").ignored.lsp, client.name) then
+                    if not vim.tbl_contains(defaults.ignored.lsp, client.name) then
                         table.insert(lines, client.name .. " Capabilities: ")
                         table.insert(lines, "")
 
@@ -181,14 +180,12 @@ return {
             end)
         end,
         opts = function()
-            local defaults = require("config.defaults")
-
             ---@class PluginLspOpts
             local opts = {
                 ---@type vim.diagnostic.Opts
                 diagnostics = {
                     float = {
-                        border = vim.g.border,
+                        border = defaults.ui.border.name,
                         focusable = true,
                         header = { "" },
                         severity_sort = true,
@@ -513,17 +510,6 @@ return {
             "MasonToolsInstall",
             "MasonToolsUpdate",
         },
-        opts = {
-            ---@type string[]
-            ensure_installed = require("config.defaults").tools,
-            registries = {
-                "github:nvim-java/mason-registry",
-                "github:mason-org/mason-registry",
-            },
-            ui = {
-                border = vim.g.border,
-            },
-        },
         config = function(_, opts)
             require("mason").setup(opts)
 
@@ -548,6 +534,17 @@ return {
                 end)
             end)
         end,
+        opts = {
+            ---@type string[]
+            ensure_installed = defaults.tools,
+            registries = {
+                "github:nvim-java/mason-registry",
+                "github:mason-org/mason-registry",
+            },
+            ui = {
+                border = defaults.ui.border.name,
+            },
+        },
     },
     { "microsoft/python-type-stubs" },
     {
@@ -629,13 +626,13 @@ return {
     },
     {
         "rachartier/tiny-inline-diagnostic.nvim",
-        event = "LspAttach",
+        event = ev.LspAttach,
         init = function()
             vim.diagnostic.config({ virtual_text = false })
         end,
         opts = {
             hi = {
-                background = require("config.defaults").colors.black.dim,
+                background = defaults.colors.black.dim,
             },
             options = {
                 multiple_diag_under_cursor = true,

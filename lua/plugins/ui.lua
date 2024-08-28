@@ -1,5 +1,3 @@
-local e = require("helpers.event")
-
 return {
     {
         "rcarriga/nvim-notify",
@@ -8,7 +6,7 @@ return {
             { "<leader>nd", function() require("notify").dismiss({ silent = true, pending = true }) end, desc = "Delete Notifications" },
         },
         opts = {
-            background_colour = require("config.defaults").colors.black.dim,
+            background_colour = defaults.colors.black.dim,
             focusable = false,
             fps = 60,
             max_height = function()
@@ -27,7 +25,7 @@ return {
     {
         "willothy/nvim-cokeline",
         config = function()
-            local icons = require("config.defaults").icons
+            local icons = defaults.icons
 
             local mappings = require("cokeline.mappings")
             local map = require("helpers.keys").map
@@ -170,7 +168,7 @@ return {
             "echasnovski/mini.icons",
             "stevearc/resession.nvim",
         },
-        event = "LazyFile",
+        event = ev.LazyFile,
         keys = {
             {
                 "<leader>bd",
@@ -194,8 +192,8 @@ return {
             local sep = require("nougat.separator")
             local statusline = bar("statusline")
 
-            local colors = require("config.defaults").colors
-            local icons = require("config.defaults").icons
+            local colors = defaults.colors
+            local icons = defaults.icons
             local devicons = require("mini.icons")
 
             local word_filetypes = {
@@ -222,7 +220,7 @@ return {
                 sep_right = sep.right_lower_triangle_solid(true),
                 config = {
                     highlight = highlight,
-                    text = require("config.defaults").statusline.modes,
+                    text = defaults.statusline.modes,
                 },
             })
 
@@ -407,13 +405,13 @@ return {
                 return ctx.is_focused and statusline or stl_inactive
             end)
         end,
-        event = "UIEnter",
+        event = ev.UIEnter,
     },
     {
         "folke/noice.nvim",
         cmd = { "Noice", "NoiceDismiss" },
         dependencies = { "MunifTanjim/nui.nvim" },
-        event = "VeryLazy",
+        event = ev.VeryLazy,
         -- stylua: ignore
         keys = {
             -- { "<S-Enter>", function() require("noice").redirect(vim.fn.getcmdline()) end, mode = "c", desc = "Redirect Cmdline" },
@@ -535,7 +533,7 @@ return {
                                 event = "lsp",
                                 kind = "progress",
                                 cond = function(message)
-                                    return vim.tbl_contains(require("config.defaults").ignored.progress, vim.tbl_get(message.opts, "progress", "client"))
+                                    return vim.tbl_contains(defaults.ignored.progress, vim.tbl_get(message.opts, "progress", "client"))
                                 end,
                             },
                             { event = "lsp", kind = "progress", find = "cargo clippy" },
@@ -570,7 +568,7 @@ return {
                         height = 10,
                     },
                     border = {
-                        style = vim.g.border,
+                        style = defaults.ui.border.name,
                         padding = { 0, 1 },
                     },
                 },
@@ -659,7 +657,7 @@ return {
     {
         "goolord/alpha-nvim",
         opts = function()
-            local cmd = require("config.defaults").cmd
+            local cmd = defaults.cmd
             local dashboard = require("alpha.themes.dashboard")
 
             dashboard.section.header.val = {
@@ -705,13 +703,13 @@ return {
             -- Close Lazy and re-open when the dashboard is ready
             if vim.o.filetype == "lazy" then
                 vim.cmd.close()
-                e.on(e.User, require("lazy").show, {
+                ev.on(ev.User, require("lazy").show, {
                     desc = "Close Lazy UI on dashboard load.",
                     pattern = "AlphaReady",
                 })
             end
 
-            e.on(e.FileType, function()
+            ev.on(ev.FileType, function()
                 vim.opt_local.laststatus = 0
             end, {
                 desc = "Hide tab line and status lines on startup screen.",
@@ -719,7 +717,7 @@ return {
                 pattern = "alpha",
             })
 
-            e.on(e.BufUnload, function()
+            ev.on(ev.BufUnload, function()
                 vim.opt_local.laststatus = 3
             end, {
                 buffer = 0,
@@ -729,7 +727,7 @@ return {
 
             require("alpha").setup(dashboard.opts)
 
-            e.on(e.User, function()
+            ev.on(ev.User, function()
                 local stats = require("lazy").stats()
                 local ms = (math.floor(stats.startuptime * 100 + 0.5) / 100)
 
@@ -744,7 +742,7 @@ return {
         cond = function()
             return vim.fn.argc() == 0
         end,
-        event = "VimEnter",
+        event = ev.VimEnter,
         priority = 5, -- Load after session manager.
     },
     {
@@ -759,42 +757,34 @@ return {
     },
     {
         "luukvbaal/statuscol.nvim",
-        event = "BufReadPre",
-        opts = function()
-            local ignored = require("config.defaults").ignored
-
-            return {
-                bt_ignore = ignored.buffer_types,
-                ft_ignore = ignored.file_types,
-                clickmod = "a",
-                relculright = true,
-                segments = {
-                    { click = "v:lua.ScSa", sign = { colwidth = 1, namespace = { "gitsigns" } } },
-                    { click = "v:lua.ScSa", sign = { colwidth = 1, maxwidth = 2, namespace = { "diagnostic/signs" } } },
-                    { click = "v:lua.ScSa", sign = { colwidth = 1, maxwidth = 2, name = { ".*" }, namespace = { ".*" }, text = { ".*" } } },
-                },
-                separator = " ", -- separator between line number and buffer text ("│" or extra " " padding)
-            }
-        end,
+        event = ev.LazyFile,
+        opts = {
+            bt_ignore = defaults.ignored.buffer_types,
+            ft_ignore = defaults.ignored.file_types,
+            clickmod = "a",
+            relculright = true,
+            segments = {
+                { click = "v:lua.ScSa", sign = { colwidth = 1, namespace = { "gitsigns" } } },
+                -- { click = "v:lua.ScSa", sign = { colwidth = 1, maxwidth = 2, namespace = { "diagnostic/signs" } } },
+                { click = "v:lua.ScSa", sign = { colwidth = 1, maxwidth = 2, name = { ".*" }, namespace = { ".*" }, text = { ".*" } } },
+            },
+            separator = " ", -- separator between line number and buffer text ("│" or extra " " padding)
+        },
     },
     {
         "kosayoda/nvim-lightbulb",
-        event = "LspAttach",
-        opts = function()
-            local defaults = require("config.defaults")
-
-            return {
-                autocmd = {
-                    enabled = true,
-                },
-                ignore = {
-                    clients = defaults.ignored.lsp,
-                    ft = defaults.ignored.file_types,
-                },
-                sign = {
-                    text = defaults.icons.misc.lightbulb,
-                },
-            }
-        end,
+        event = ev.LspAttach,
+        opts = {
+            autocmd = {
+                enabled = true,
+            },
+            ignore = {
+                clients = defaults.ignored.lsp,
+                ft = defaults.ignored.file_types,
+            },
+            sign = {
+                text = defaults.icons.misc.lightbulb,
+            },
+        },
     },
 }

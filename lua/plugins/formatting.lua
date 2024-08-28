@@ -1,7 +1,7 @@
 return {
     "stevearc/conform.nvim",
     cmd = "ConformInfo",
-    event = { "BufWritePre", "LspAttach" },
+    event = { ev.BufWritePre, ev.LspAttach },
     keys = {
         {
             "<space>f",
@@ -12,8 +12,6 @@ return {
         },
     },
     opts = function()
-        local defaults = require("config.defaults")
-
         return {
             format_on_save = function(bufnr)
                 --

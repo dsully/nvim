@@ -89,9 +89,6 @@ vim.g.neovide_cursor_animation_length = 0
 vim.g.home = vim.uv.os_homedir()
 vim.g.os = vim.uv.os_uname().sysname
 
--- Preferences
-vim.g.border = "single"
-
 -- Flag for disabling language servers for large files.
 vim.g.large_file = false
 vim.g.large_file_size = 1024 * 512

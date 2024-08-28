@@ -1,5 +1,3 @@
-local e = require("helpers.event")
-
 return {
     {
         "nvim-treesitter/nvim-treesitter",
@@ -51,7 +49,7 @@ return {
 
             require("nvim-treesitter.configs").setup(opts)
         end,
-        event = { "UIEnter" },
+        event = ev.UIEnter,
         init = function(plugin)
             require("lazy.core.loader").add_to_rtp(plugin)
             require("nvim-treesitter.query_predicates")
@@ -130,14 +128,14 @@ return {
             query_linter = {
                 enable = true,
                 use_virtual_text = true,
-                lint_events = { e.BufWrite, e.CursorHold },
+                lint_events = { ev.BufWrite, ev.CursorHold },
             },
         },
     },
     {
         -- Better % matching.
         "andymass/vim-matchup",
-        event = "LazyFile",
+        event = ev.LazyFile,
         init = function()
             vim.o.matchpairs = "(:),{:},[:],<:>"
 

@@ -1,3 +1,5 @@
+require("helpers.globals")
+
 vim.cmd.colorscheme("nordish")
 
 require("config.options")
@@ -20,7 +22,5 @@ end, {
     pattern = "VeryLazy",
     once = true,
 })
-
-require("helpers.globals")
 
 require("config.lazy").setup()

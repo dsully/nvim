@@ -1,4 +1,3 @@
-local e = require("helpers.event")
 local model = "gpt-4o-2024-08-06"
 
 return {
@@ -42,7 +41,7 @@ return {
                     cycle_windows = "<Tab>",
                 },
                 question_sign = "",
-                sessions_window = { border = { style = vim.g.border } },
+                sessions_window = { border = { style = defaults.ui.border.name } },
             },
             edit_with_instructions = {
                 diff = true,
@@ -67,17 +66,17 @@ return {
             popup_input = {
                 submit = "<C-Enter>",
             },
-            popup_window = { border = { style = vim.g.border } },
-            settings_window = { border = { style = vim.g.border } },
-            system_input = { border = { style = vim.g.border } },
-            system_window = { border = { style = vim.g.border } },
+            popup_window = { border = { style = defaults.ui.border.name } },
+            settings_window = { border = { style = defaults.ui.border.name } },
+            system_input = { border = { style = defaults.ui.border.name } },
+            system_window = { border = { style = defaults.ui.border.name } },
             welcome_message = "",
         },
     },
     {
         "zbirenbaum/copilot.lua",
         config = function(_, opts)
-            for _, ft in ipairs(require("config.defaults").ai_file_types) do
+            for _, ft in ipairs(defaults.ai_file_types) do
                 opts.filetypes[ft] = true
             end
 
@@ -97,7 +96,7 @@ return {
                 end)
             end
         end,
-        event = "LazyFile",
+        event = ev.LazyFile,
         opts = {
             filetypes = {
                 ["*"] = false, -- Disable for all other filetypes and ignore default `filetypes`
@@ -210,7 +209,7 @@ return {
             },
         },
         config = function(_, opts)
-            e.on(e.BufEnter, function()
+            ev.on(ev.BufEnter, function()
                 vim.opt_local.relativenumber = false
                 vim.opt_local.number = false
             end, {

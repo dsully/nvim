@@ -248,6 +248,9 @@ local M = {
     --- after scrolling a window
     WinScrolled = "WinScrolled",
 
+    --- Startup event after a file is loaded
+    LazyFile = "LazyFile",
+
     -- For dynamic registration: User pattern
     LspDynamicCapability = "LspDynamicCapability",
 

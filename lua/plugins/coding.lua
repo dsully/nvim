@@ -1,6 +1,3 @@
-local defaults = require("config.defaults")
-local e = require("helpers.event")
-
 -- Only show matches in strings and comments.
 local is_string_like = function()
     local context = require("cmp.config.context")
@@ -32,7 +29,7 @@ return {
                 },
             },
         },
-        event = "InsertEnter",
+        event = ev.InsertEnter,
         config = function()
             local cmp = require("cmp")
             local types = require("cmp.types.lsp")
@@ -296,7 +293,7 @@ return {
                         side_padding = 0,
                     },
                     documentation = cmp.config.window.bordered({
-                        border = vim.g.border,
+                        border = defaults.ui.border.name,
                     }),
                 },
             })
@@ -338,7 +335,7 @@ return {
         },
         opts = {
             editSnippetPopup = {
-                border = vim.g.border,
+                border = defaults.ui.border.name,
             },
             jsonFormatter = "jq",
             snippetDir = vim.fn.stdpath("config") .. "/snippets",
@@ -398,10 +395,10 @@ return {
             })
 
             -- Fancy indent lines.
-            e.on(e.FileType, function()
+            ev.on(ev.FileType, function()
                 vim.b.miniindentscope_disable = true
             end, {
-                pattern = require("config.defaults").ignored.file_types,
+                pattern = defaults.ignored.file_types,
             })
 
             require("mini.indentscope").setup({
@@ -423,7 +420,7 @@ return {
 
             vim.keymap.set({ "n", "x" }, "s", "<Nop>")
         end,
-        event = "LazyFile",
+        event = ev.LazyFile,
     },
     {
         "hrsh7th/nvim-insx",
@@ -504,7 +501,7 @@ return {
                 end,
             })
         end,
-        event = "InsertEnter",
+        event = ev.InsertEnter,
     },
     {
         "monaqa/dial.nvim",
@@ -614,10 +611,10 @@ return {
         "Saecki/crates.nvim",
         event = { "BufReadPost Cargo.toml" },
         init = function()
-            e.on(e.BufReadPost, function()
+            ev.on(ev.BufReadPost, function()
                 require("cmp").setup.buffer({ sources = { { name = "crates" } } })
             end, {
-                group = e.group("CmpSourceCargo", true),
+                group = ev.group("CmpSourceCargo", true),
                 pattern = "Cargo.toml",
             })
         end,
@@ -638,7 +635,7 @@ return {
             },
             popup = {
                 autofocus = true,
-                border = vim.g.border,
+                border = defaults.ui.border.name,
             },
         },
     },

@@ -3,6 +3,6 @@ vim.o.background = "dark"
 
 vim.cmd.highlight("clear")
 
-for name, opts in pairs(require("config.defaults").highlights) do
+for name, opts in pairs(defaults.highlights) do
     vim.api.nvim_set_hl(0, name, opts)
 end

@@ -1,11 +1,9 @@
-local e = require("helpers.event")
-
 local M = {}
 
 function M.lazy_file()
     -- This autocmd will only trigger when a file was loaded from the cmdline.
     -- It will render the file as quickly as possible.
-    e.on(e.BufReadPost, function(event)
+    ev.on(ev.BufReadPost, function(event)
         -- Skip if we already entered vim
         if vim.v.vim_did_enter == 1 then
             return
@@ -29,7 +27,7 @@ function M.lazy_file()
     -- Add support for the LazyFile event
     local Event = require("lazy.core.handler.event")
 
-    Event.mappings.LazyFile = { id = "LazyFile", event = { e.BufReadPost, e.BufNewFile, e.BufWritePre } }
+    Event.mappings.LazyFile = { id = ev.LazyFile, event = { ev.BufReadPost, ev.BufNewFile, ev.BufWritePre } }
     Event.mappings["User LazyFile"] = Event.mappings.LazyFile
 end
 
@@ -160,7 +158,7 @@ function M.setup()
         },
         ui = {
             backdrop = 90,
-            border = vim.g.border,
+            border = defaults.ui.border.name,
         },
     })
 
@@ -169,7 +167,7 @@ function M.setup()
         vim.cmd.checkhealth()
     end, { desc = "Load all plugins and run :checkhealth" })
 
-    e.on_load("which-key.nvim", function()
+    ev.on_load("which-key.nvim", function()
         vim.schedule(function()
             require("which-key").add({
                 { "<leader>p", group = "Plugins", icon = "" },

@@ -61,7 +61,7 @@ return {
         opts = {
             buf_filter = function(bufnr)
                 local buftype = vim.bo[bufnr].buftype
-                local ignored = require("config.defaults").ignored
+                local ignored = defaults.ignored
 
                 if buftype ~= "" and buftype ~= "acwrite" then
                     return false
