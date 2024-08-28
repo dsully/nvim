@@ -344,85 +344,83 @@ return {
         },
     },
     {
-        "echasnovski/mini.nvim",
-        config = function()
-            -- Better Around/Inside text-objects
-            --
-            -- Examples:
-            --  - va)  - Visually select [A]round [)]parenthesis
-            --  - yinq - Yank Inside [N]ext [']quote
-            --  - ci'  - Change Inside [']quote
-            --
-            -- https://www.reddit.com/r/neovim/comments/10qmicv/help_understanding_miniai_custom_textobjects/
-            require("mini.ai").setup({
-                n_lines = 500,
-                custom_textobjects = {
-                    o = require("mini.ai").gen_spec.treesitter({
-                        a = { "@block.outer", "@conditional.outer", "@loop.outer" },
-                        i = { "@block.inner", "@conditional.inner", "@loop.inner" },
-                    }, {}),
-
-                    -- 'vaF' to select around function definition.
-                    -- 'diF' to delete inside function definition.
-                    f = require("mini.ai").gen_spec.treesitter({ a = "@function.outer", i = "@function.inner" }, {}),
-                    c = require("mini.ai").gen_spec.treesitter({ a = "@class.outer", i = "@class.inner" }, {}),
-                },
-            })
-
-            -- Use [ and ] to move between various things.
-            require("mini.bracketed").setup({
-                jump = { suffix = "" },
-                oldfile = { suffix = "" },
-                treesitter = { suffix = "" },
-                undo = { suffix = "" },
-                yank = { suffix = "" },
-            })
-
-            -- Cleanly remove buffers
-            require("mini.bufremove").setup({ silent = true })
-
-            vim.api.nvim_create_user_command("BDelete", function(args)
-                require("mini.bufremove").delete(0, args.bang)
-            end, { bang = true })
-
-            vim.api.nvim_create_user_command("BWipeout", function(args)
-                require("mini.bufremove").wipeout(0, args.bang)
-            end, { bang = true })
-
-            -- Show hex colors as colors.
-            require("mini.hipatterns").setup({
+        -- Use [ and ] to move between various things.
+        "echasnovski/mini.bracketed",
+        event = ev.LazyFile,
+        opts = {
+            file = { suffix = "" },
+            indent = { suffix = "" },
+            jump = { suffix = "" },
+            oldfile = { suffix = "" },
+            treesitter = { suffix = "" },
+            undo = { suffix = "" },
+            yank = { suffix = "" },
+        },
+    },
+    {
+        "echasnovski/mini.bufremove",
+        event = ev.LazyFile,
+        opts = {
+            silent = true,
+        },
+    },
+    {
+        "echasnovski/mini.hipatterns",
+        event = ev.LazyFile,
+        opts = function()
+            return {
                 highlighters = {
                     hex_color = require("mini.hipatterns").gen_highlighter.hex_color(),
                 },
-            })
-
-            -- Fancy indent lines.
+            }
+        end,
+    },
+    {
+        "echasnovski/mini.indentscope",
+        event = ev.LazyFile,
+        init = function()
             ev.on(ev.FileType, function()
                 vim.b.miniindentscope_disable = true
             end, {
                 pattern = defaults.ignored.file_types,
             })
-
-            require("mini.indentscope").setup({
+        end,
+        opts = function()
+            return {
                 draw = {
                     animation = require("mini.indentscope").gen_animation.none(),
                 },
                 symbol = "│",
                 options = { try_as_border = true },
-            })
-
-            -- Add/delete/replace surroundings (brackets, quotes, etc.)
-            --
-            -- saiw) - Surround Add Inner Word [)]Parenthesis
-            -- sd'   - Surround Delete [']quotes
-            -- sr)'  - Surround Replace [)] [']
-            -- sff`  - Surround Find part of surrounding function call (`f`).
-            -- sh}   - Surround Highlight [}]
-            require("mini.surround").setup()
-
-            vim.keymap.set({ "n", "x" }, "s", "<Nop>")
+            }
         end,
-        event = ev.LazyFile,
+    },
+    {
+        -- Add/delete/replace surroundings (brackets, quotes, etc.)
+        --
+        -- saiw) - Surround Add Inner Word [)]Parenthesis
+        -- sd'   - Surround Delete [']quotes
+        -- sr)'  - Surround Replace [)] [']
+        -- sff`  - Surround Find part of surrounding function call (`f`).
+        -- sh}   - Surround Highlight [}]
+        --
+        -- vim.keymap.set({ "n", "x" }, "s", "<Nop>")
+        "echasnovski/mini.surround",
+        optional = true,
+        opts = {
+            mappings = {
+                add = "gza", -- Add surrounding in Normal and Visual modes
+                delete = "gzd", -- Delete surrounding
+                find = "gzf", -- Find surrounding (to the right)
+                find_left = "gzF", -- Find surrounding (to the left)
+                highlight = "gzh", -- Highlight surrounding
+                replace = "gzr", -- Replace surrounding
+                update_n_lines = "gzn", -- Update `n_lines`
+            },
+        },
+        keys = {
+            { "gz", "", desc = "+surround" },
+        },
     },
     {
         "hrsh7th/nvim-insx",

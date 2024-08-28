@@ -2,9 +2,6 @@ return {
     {
         "lewis6991/gitsigns.nvim",
         event = ev.LazyFile,
-        keys = {
-            { "<leader>g/", [[/^\(|||||||\|=======\|>>>>>>>\|<<<<<<<\)<CR>]], desc = "Search for conflict markers" },
-        },
         opts = {
             attach_to_untracked = true,
             --- @param buffer integer
