@@ -41,6 +41,13 @@ return {
                     args = { "fmt", "-" },
                     stdin = true,
                 },
+                -- Use dprint if there is a dprint.json file in the project root.
+                dprint = {
+                    condition = function(ctx)
+                        return vim.fs.find({ "dprint.json" }, { path = ctx.filename, upward = true })[1]
+                    end,
+                },
+                injected = { options = { ignore_errors = true } },
                 ["markdown-toc"] = {
                     condition = function(_, ctx)
                         for _, line in ipairs(vim.api.nvim_buf_get_lines(ctx.buf, 0, -1, false)) do
@@ -55,6 +62,7 @@ return {
                         local diag = vim.tbl_filter(function(d)
                             return d.source == "markdownlint"
                         end, vim.diagnostic.get(ctx.buf))
+
                         return #diag > 0
                     end,
                     prepend_args = { string.format("--config=%s/markdownlint/config.yaml", vim.env.XDG_CONFIG_HOME) },
