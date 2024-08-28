@@ -69,6 +69,7 @@ return {
             { "<leader>v", group = "View", icon = icons.misc.telescope },
             { "<leader>x", group = "Diagnostics", icon = "" },
             { "<space>", group = "actions" },
+            { "<space>t", group = "Toggle" },
             { "K", desc = "Documentation", icon = "" },
             { "[", group = "previous", icon = "󰒮" },
             { "]", group = "next", icon = "󰒭" },

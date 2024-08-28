@@ -62,7 +62,7 @@ return {
         ft = { "markdown", "vimwiki" },
         keys = {
             {
-                "<leader>x",
+                "<space>tc",
                 function()
                     local char = "x"
                     local current_line = vim.api.nvim_get_current_line()
@@ -76,11 +76,9 @@ return {
                         vim.api.nvim_set_current_line(new_line)
                     end
                 end,
-                desc = "Toggle checkbox",
+                desc = "Checkbox",
                 { noremap = true, silent = true },
             },
-            -- stylua: ignore
-            { "<leader>um", function() vim.cmd.RenderMarkdown("toggle") end, desc = "Render Markdown", },
         },
         opts = {
             enabled = false, -- Off by default.
@@ -115,7 +113,7 @@ return {
                     on_attach = function(_client, bufnr)
                         local keys = require("helpers.keys")
 
-                        keys.bmap("<leader>cc", function()
+                        keys.bmap("<leader>cC", function()
                             vim.cmd.RustLsp("flyCheck")
                         end, "Check", bufnr)
 
