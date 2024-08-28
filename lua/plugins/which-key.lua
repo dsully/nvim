@@ -2,7 +2,7 @@ local icons = defaults.icons
 
 return {
     "folke/which-key.nvim",
-    event = ev.LazyFile,
+    event = ev.VeryLazy,
     opts = {
         delay = 1000,
         disable = {
