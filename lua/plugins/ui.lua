@@ -405,7 +405,7 @@ return {
                 return ctx.is_focused and statusline or stl_inactive
             end)
         end,
-        event = ev.UIEnter,
+        event = ev.VeryLazy,
     },
     {
         "folke/noice.nvim",
