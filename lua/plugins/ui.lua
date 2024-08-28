@@ -414,9 +414,6 @@ return {
         event = ev.VeryLazy,
         -- stylua: ignore
         keys = {
-            -- { "<S-Enter>", function() require("noice").redirect(vim.fn.getcmdline()) end, mode = "c", desc = "Redirect Cmdline" },
-            { "<leader>vd", vim.cmd.NoiceDismiss, desc = "Dismiss Messages" },
-            { "<leader>vm", vim.cmd.Noice, desc = "View Messages" },
             { "<leader>fN", function() require("noice").cmd("pick") end, desc = "Noice" },
         },
         opts = {
@@ -465,29 +462,16 @@ return {
                             { event = "msg_show", find = "%d+ more line" },
                             { event = "msg_show", find = "%d+ line less" },
                             { event = "msg_show", find = "%d+ fewer lines" },
-                            -- { event = "msg_show", find = "%d+ lines yanked" },
 
                             { find = "^%d+ change[s]?; before #%d+" },
                             { find = "^%d+ change[s]?; after #%d+" },
                             { find = "^%-%-No lines in buffer%-%-$" },
 
-                            -- { event = "msg_show", find = "bufnr=%d client_id=%d doesn't exists" },
-                            -- { event = "msg_show", find = "^Hunk %d+ of %d" },
-
                             -- When I'm offline, and Copilot wants to connect.
                             { event = "msg_show", find = "getaddrinfo" },
 
-                            -- Fix jedi bug https://github.com/pappasam/jedi-language-server/issues/296
-                            { event = "msg_show", find = "^}$" },
-
-                            -- Fix lsp signature bug
-                            { event = "msg_show", find = "lsp_signature? handler RPC" },
-
                             -- Ignore deprecated messages from plugins.
                             { event = "msg_show", find = "vim.lsp.get_active_clients" },
-
-                            -- Noisy dmypy messages
-                            { event = "lsp", kind = "message" },
                         },
                     },
                     opts = { skip = true },
