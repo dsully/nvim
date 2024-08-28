@@ -272,17 +272,19 @@ return {
         cmd = { "Trouble" },
         dependencies = "echasnovski/mini.icons",
         keys = {
-            {
-                "<leader>xx",
-                function()
-                    require("trouble").toggle({ focus = true, mode = "diagnostics" })
-                end,
-                desc = "Trouble",
-            },
+            -- stylua: ignore
+            { "<leader>xx", function() require("trouble").toggle({ mode = "diagnostics" }) end, desc = "Trouble" },
         },
         opts = {
             auto_preview = false,
-            use_diagnostic_signs = true,
+            focus = true,
+            modes = {
+                lsp_references = {
+                    params = {
+                        include_declaration = false,
+                    },
+                },
+            },
         },
     },
     {
