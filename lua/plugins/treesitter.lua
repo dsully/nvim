@@ -159,8 +159,9 @@ return {
         event = ev.VeryLazy,
         opts = function()
             local ai = require("mini.ai")
+            local mini = require("helpers.mini")
 
-            return {
+            local opts = {
                 n_lines = 500,
                 custom_textobjects = {
                     o = ai.gen_spec.treesitter({ -- code block
@@ -180,13 +181,21 @@ return {
                         "^().*()$",
                     },
 
-                    -- i = LazyVim.mini.ai_indent, -- indent
-                    -- g = LazyVim.mini.ai_buffer, -- buffer
+                    i = mini.ai_indent, -- indent
+                    g = mini.ai_buffer, -- buffer
 
                     u = ai.gen_spec.function_call(), -- u for "Usage"
                     U = ai.gen_spec.function_call({ name_pattern = "[%w_]" }), -- without dot in function name
                 },
             }
+
+            ev.on_load("which-key.nvim", function()
+                vim.schedule(function()
+                    mini.ai_whichkey(opts)
+                end)
+            end)
+
+            return opts
         end,
     },
     {
