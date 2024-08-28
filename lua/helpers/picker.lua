@@ -153,4 +153,20 @@ M.file = function(cwd)
     end
 end
 
+-- Grep the current buffer for the cword.
+-- Match on partial words.
+M.grep_curbuf_cword = function(opts)
+    local config = require("fzf-lua.config")
+
+    opts = opts or {}
+    opts.filename = require("fzf-lua.path").relative_to(vim.api.nvim_buf_get_name(0), tostring(vim.uv.cwd()))
+    opts.no_esc = true
+    opts.exec_empty_query = false
+    opts.fzf_opts = config.globals.blines.fzf_opts
+
+    opts.search = require("fzf-lua.utils").rg_escape(vim.fn.expand("<cword>"))
+
+    require("fzf-lua").grep(config.normalize_opts(opts, "grep", "bgrep"))
+end
+
 return M

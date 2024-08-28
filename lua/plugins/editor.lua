@@ -24,6 +24,7 @@ return {
             { "<leader>fq", pick("quickfix"), desc = "Quickfix List" },
             { "<leader>fs", pick("lsp_document_symbols"), desc = "Symbols: Document" },
             { "<leader>fw", pick("grep_cword"), desc = "Words" },
+            { "<leader>f/", pickers.grep_curbuf_cword, desc = "Current Buffer <cword>" },
 
             { "<leader>fn", pickers.notifications, desc = "Notifications" },
 
