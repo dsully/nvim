@@ -117,14 +117,14 @@ return {
             "CodeSnapSave",
         },
         keys = {
-            { "<leader>s", "", desc = "󰹑 Screen Shots", mode = { "x" } },
-            { "<leader>ss", "<cmd>CodeSnap<cr>", mode = "x", desc = "Save selected code snapshot into clipboard" },
-            { "<leader>sS", "<cmd>CodeSnapSave<cr>", mode = "x", desc = "Save selected code snapshot in ~/Pictures" },
+            { "<leader>cS", "", desc = "󰹑 Screen Shots", mode = { "x" } },
+            { "<leader>cSs", "<cmd>CodeSnap<cr>", mode = "x", desc = "Save selected code snapshot into clipboard" },
+            { "<leader>cSS", "<cmd>CodeSnapSave<cr>", mode = "x", desc = "Save selected code snapshot in ~/Pictures" },
         },
         opts = {
             bg_theme = "dusk",
             has_breadcrumbs = true,
-            save_path = vim.g.home .. "/iCloud/Screenshots",
+            save_path = vim.env.XDG_PICTURES_DIR,
             watermark = "",
         },
     },
