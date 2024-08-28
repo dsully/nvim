@@ -4,7 +4,6 @@ return {
     {
         "stevearc/resession.nvim",
         config = function(_, opts)
-            local e = require("helpers.event")
             local resession = require("resession")
             local lazy_open = false
 
@@ -17,8 +16,8 @@ return {
                     lazy_open = false
                 end
 
-                vim.cmd.doautoall(e.BufReadPost)
-                vim.cmd.doautoall(e.SessionLoadPost)
+                vim.cmd.doautoall(ev.BufReadPost)
+                vim.cmd.doautoall(ev.SessionLoadPost)
             end)
 
             resession.add_hook("pre_load", function()
@@ -39,8 +38,6 @@ return {
             end)
         end,
         init = function()
-            local e = require("helpers.event")
-
             local function session_name()
                 local cwd = tostring(vim.uv.cwd())
                 local obj = vim.system({ "git", "branch", "--show-current" }, { text = true }):wait()
@@ -52,7 +49,7 @@ return {
                 require("resession").load(session_name(), { silence_errors = false })
             end, { desc = "Session Load" })
 
-            e.on(e.VimLeavePre, function()
+            ev.on(ev.VimLeavePre, function()
                 require("resession").save(session_name(), { notify = false })
             end, {
                 desc = "Save session on exit.",

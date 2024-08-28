@@ -4,11 +4,9 @@ local M = {
     mapping = { ["json"] = "json", ["binary"] = "binary1", ["xml"] = "xml1" },
 }
 
-local e = require("helpers.event")
-
 if vim.g.os == "Darwin" then
-    e.on(e.BufReadCmd, function(args)
-        vim.cmd.doautocmd("BufReadPre")
+    ev.on(ev.BufReadCmd, function(args)
+        vim.cmd.doautocmd(ev.BufReadPre)
         --
         M.read_command(args)
 
@@ -17,31 +15,31 @@ if vim.g.os == "Darwin" then
         vim.cmd("silent 1delete")
         vim.o.undolevels = levels
 
-        vim.cmd.doautocmd("BufReadPost")
+        vim.cmd.doautocmd(ev.BufReadPost)
     end, {
         pattern = "*.plist",
     })
 
-    e.on(e.FileReadCmd, function(args)
-        vim.cmd.doautocmd("FileReadPre")
+    ev.on(ev.FileReadCmd, function(args)
+        vim.cmd.doautocmd(ev.FileReadPre)
         --
         M.read_command(args)
-        vim.cmd.doautocmd("FileReadPost " .. args.file)
+        vim.cmd.doautocmd(ev.FileReadPost .. " " .. args.file)
     end, {
         pattern = "*.plist",
         nested = true,
     })
 
-    e.on(e.BufWriteCmd, function(args)
-        vim.cmd.doautocmd("BufWritePre")
+    ev.on(ev.BufWriteCmd, function(args)
+        vim.cmd.doautocmd(ev.BufWritePre)
         M.write_command(args)
     end, {
         pattern = "*.plist",
         nested = true,
     })
 
-    e.on(e.FileWriteCmd, function(args)
-        vim.cmd.doautocmd("FileWritePre")
+    ev.on(ev.FileWriteCmd, function(args)
+        vim.cmd.doautocmd(ev.FileWritePre)
         M.write_command(args)
     end, {
         pattern = "*.plist",
@@ -54,7 +52,7 @@ M.read_command = function(args)
     local bufnr = args.buf
 
     if not vim.uv.fs_stat(args.file) then
-        vim.cmd.doautocmd("BufNewFile " .. args.file)
+        vim.cmd.doautocmd(ev.BufNewFile .. " " .. args.file)
         return
     end
 

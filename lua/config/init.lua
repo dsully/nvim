@@ -11,9 +11,7 @@ if not lazy_autocmds then
     require("config.autocommands")
 end
 
-local e = require("helpers.event")
-
-e.on(e.User, function()
+ev.on(ev.User, function()
     if lazy_autocmds then
         require("config.autocommands")
     end

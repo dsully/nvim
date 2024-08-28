@@ -157,7 +157,7 @@ return {
                 vim.cmd.edit()
             end, { desc = "Restart Language Server for Buffer" })
 
-            require("helpers.event").on_load("which-key.nvim", function()
+            ev.on_load("which-key.nvim", function()
                 vim.schedule(function()
                     require("which-key").add({
                         { "grn", require("helpers.lsp").rename, desc = "Rename", icon = "" },
