@@ -14,7 +14,7 @@ return {
             { "<leader>fC", pick("git_bcommits"), desc = "Buffer Commits" },
             { "<leader>fD", pick("diagnostics_document"), desc = "Diagnostics: Document" },
             { "<leader>fG", pick("git_files"), desc = "Git Files" },
-            { "<leader>fS", pick("lsp_dynamic_workspace_symbols"), desc = "Symbols: Workspace" },
+            -- { "<leader>fS", pick("lsp_dynamic_workspace_symbols"), desc = "Symbols: Workspace" },
             { "<leader>fc", pick("git_commits"), desc = "Git Commits" },
             { "<leader>fd", pick("diagnostics_workspace"), desc = "Diagnostics: Workspace" },
             { "<leader>ff", pick("files"), desc = "Files" },
@@ -29,8 +29,8 @@ return {
             { "<leader>fn", pickers.notifications, desc = "Notifications" },
 
             { "<leader>fP", pickers.parents, desc = "Parent dirs" },
-            { "<leader>cds", pickers.subdirectory, desc = "Subdirectories" },
             { "<leader>fR", pickers.repositories, desc = "Repositories" },
+            { "<leader>fS", pickers.subdirectory, desc = "Subdirectories" },
 
             { "<leader>f.", pickers.file(vim.env.XDG_CONFIG_HOME), desc = "dotfiles" },
             { "<leader>fp", pickers.file(require("lazy.core.config").options.root), desc = "Plugins" },
@@ -290,7 +290,7 @@ return {
         cmd = "GrugFar",
         keys = {
             {
-                "<leader>sr",
+                "<leader>cr",
                 function()
                     local grug = require("grug-far")
                     local ext = vim.bo.buftype == "" and vim.fn.expand("%:e")
