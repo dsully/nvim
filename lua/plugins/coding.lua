@@ -725,7 +725,7 @@ return {
     {
         "chrisgrieser/nvim-chainsaw",
         init = function()
-            require("helpers.event").on_load("which-key.nvim", function()
+            ev.on_load("which-key.nvim", function()
                 vim.schedule(function()
                     -- stylua: ignore
                     local cs = function(fn) return function() require("chainsaw")[fn]() end end

@@ -111,7 +111,8 @@ return {
             { "~", hidden = true },
         },
         triggers = {
-            { "<auto>", mode = { "n", "i", "x", "s", "o", "t", "c" } },
+            { "<auto>", mode = "nixsotc" },
+            { "s", mode = { "n", "v" } },
         },
         win = {
             border = defaults.ui.border.name,
