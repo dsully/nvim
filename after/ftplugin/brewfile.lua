@@ -1,10 +1,8 @@
-local e = require("helpers.event")
-
 -- Override some default Ruby colors for Homebrew Bundle files.
 vim.api.nvim_set_hl(0, "@function.call.ruby", { link = "Keyword" })
 vim.api.nvim_set_hl(0, "@symbol.ruby", { link = "Special" })
 
-e.on(e.BufWritePre, function(args)
+ev.on(ev.BufWritePre, function(args)
     if args.file == "Brewfile.tmpl" then
         return
     end
