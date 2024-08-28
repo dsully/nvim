@@ -83,16 +83,18 @@ return {
 
             require("copilot").setup(opts)
 
-            local ok, cmp = pcall(require, "cmp")
+            -- Disable for now.
+            -- local ok, cmp = pcall(require, "cmp")
+            local ok = false
 
             if ok then
                 -- Remove Copilot ghost text when the cmp menu is opened.
-                cmp.event:on("menu_opened", function()
+                require("cmp").event:on("menu_opened", function()
                     require("copilot.suggestion").dismiss()
                     vim.api.nvim_buf_set_var(0, "copilot_suggestion_hidden", true)
                 end)
 
-                cmp.event:on("menu_closed", function()
+                require("cmp").event:on("menu_closed", function()
                     vim.api.nvim_buf_set_var(0, "copilot_suggestion_hidden", false)
                 end)
             end
