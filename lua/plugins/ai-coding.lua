@@ -148,31 +148,17 @@ return {
                 desc = "Use an LLM to fix your LSP diagnostics",
             },
         },
-        opts = function()
-            return {
-                adapters = {
-                    openai = require("codecompanion.adapters").use("openai", {
-                        schema = {
-                            model = {
-                                default = model,
-                            },
-                        },
-                    }),
-                },
-                display = {
-                    chat = {
-                        window = {
-                            layout = "horizontal",
-                            height = 0.40,
-                            -- width = -1.75,
-                        },
+        opts = {
+            display = {
+                chat = {
+                    window = {
+                        layout = "horizontal",
+                        height = 0.40,
                     },
                 },
-                silence_notifications = true,
-            }
-        end,
+            },
+        },
     },
-
     {
         "CopilotC-Nvim/CopilotChat.nvim",
         branch = "canary",
