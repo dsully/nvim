@@ -126,16 +126,6 @@ return {
         },
     },
     {
-        "piersolenski/wtf.nvim",
-        opts = {
-            openai_model_id = model,
-        },
-        keys = {
-            -- stylua: ignore
-            { "<leader>cD", mode = { "n", "x" }, function() require("wtf").ai() end, desc = "Debug diagnostic with AI", },
-        },
-    },
-    {
         "olimorris/codecompanion.nvim",
         cmd = { "CodeCompanion", "CodeCompanionChat", "CodeCompanionToggle", "CodeCompanionActions" },
         keys = {
@@ -161,52 +151,5 @@ return {
                 },
             },
         },
-    },
-    {
-        "CopilotC-Nvim/CopilotChat.nvim",
-        branch = "canary",
-        cmd = "CopilotChat",
-        opts = {
-            answer_header = "  Copilot ",
-            auto_insert_mode = true,
-            model = model,
-            question_header = "  " .. vim.env.USER .. " ",
-            selection = function(source)
-                local select = require("CopilotChat.select")
-                return select.visual(source) or select.buffer(source)
-            end,
-            show_help = true,
-            window = {
-                width = 0.4,
-            },
-        },
-        keys = {
-            -- stylua: ignore
-            { "<leader>aa", function() return require("CopilotChat").toggle() end, desc = "Toggle (CopilotChat)", mode = { "n", "v" }, },
-            -- stylua: ignore
-            { "<leader>ax", function() return require("CopilotChat").reset() end, desc = "Clear (CopilotChat)", mode = { "n", "v" }, },
-            {
-                "<leader>aq",
-                function()
-                    local input = vim.fn.input("Quick Chat: ")
-                    if input ~= "" then
-                        require("CopilotChat").ask(input)
-                    end
-                end,
-                desc = "Quick Chat (CopilotChat)",
-                mode = { "n", "v" },
-            },
-        },
-        config = function(_, opts)
-            ev.on(ev.BufEnter, function()
-                vim.opt_local.relativenumber = false
-                vim.opt_local.number = false
-            end, {
-                pattern = "copilot-chat",
-            })
-
-            require("CopilotChat.integrations.cmp").setup()
-            require("CopilotChat").setup(opts)
-        end,
     },
 }
