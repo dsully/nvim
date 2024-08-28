@@ -7,24 +7,19 @@ end, {
 })
 
 ev.on({ ev.BufEnter, ev.FileType }, function(event)
-    vim.opt_local.spell = false
-
-    pcall(vim.api.nvim_buf_set_name, event.buf, event.match)
-
-    vim.keymap.set("n", "q", function()
-        vim.cmd.BWipeout()
+    --
+    keys.bmap("q", function()
+        vim.api.nvim_buf_delete(event.buf, { force = true })
         vim.cmd.close({ mods = { emsg_silent = true, silent = true } })
-    end, { noremap = true, silent = true, buffer = event.buf })
+    end, "Close Buffer", event.buf)
 end, {
     desc = "Map q to close the buffer.",
     pattern = {
         "checkhealth",
-        "codecompanion",
         "grug-far",
         "lspinfo",
         "man",
         "nofile",
-        "notify",
         "qf",
         "tsplayground",
     },
