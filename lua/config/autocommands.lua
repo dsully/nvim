@@ -21,6 +21,7 @@ end, {
         "man",
         "nofile",
         "qf",
+        "scratch",
         "tsplayground",
     },
 })

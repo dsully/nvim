@@ -1,9 +1,11 @@
-local map = require("helpers.keys").map
+local map = keys.map
+local mode = { "n", "x" }
+local toggle = keys.toggle
 
-vim.keymap.set({ "n", "x" }, "Y", "y$", { desc = "Yank to clipboard" })
--- vim.keymap.set({ "n", "x" }, "gY", '"*y$', { desc = "Yank until end of line to system clipboard" })
--- vim.keymap.set({ "n", "x" }, "gy", '"*y', { desc = "Yank to system clipboard" })
-vim.keymap.set({ "n", "x" }, "gp", '"*p', { desc = "Paste from system clipboard" })
+map("Y", "y$", "Yank to clipboard", mode)
+map("gY", '"*y$', "Yank until end of line to system clipboard", mode)
+map("gy", '"*y', "Yank to system clipboard", mode)
+map("gp", '"*p', "Paste from system clipboard", mode)
 
 map("gco", "o<esc>Vcx<esc><cmd>normal gcc<cr>fxa<bs>", "Add Comment Below")
 map("gcO", "O<esc>Vcx<esc><cmd>normal gcc<cr>fxa<bs>", "Add Comment Above")
@@ -11,7 +13,7 @@ map("gcO", "O<esc>Vcx<esc><cmd>normal gcc<cr>fxa<bs>", "Add Comment Above")
 map("<leader>Y", "<cmd>%y<cr>", "Yank All Lines")
 
 -- Set Ctrl-W to delete a word in insert mode
-map("<C-w>", "<C-o>diw", "Delete Word", { mode = "i" })
+map("<C-w>", "<C-o>diw", "Delete Word", "i")
 
 -- Create/edit file within the current directory
 map("<localleader>e", function()
@@ -45,11 +47,11 @@ vim.cmd.cnoreabbrev("Bd", "bd")
 vim.cmd.cnoreabbrev("bD", "bd")
 
 -- Toggle options
-keys.toggle.map("<space>td", keys.toggle.diagnostics)
-keys.toggle.map("<space>tn", keys.toggle("number", { name = "Line Numbers" }))
-keys.toggle.map("<space>ts", keys.toggle("spell", { name = "Spelling" }))
-keys.toggle.map("<space>tt", keys.toggle.treesitter)
-keys.toggle.map("<space>tw", keys.toggle("wrap", { name = "Wrap" }))
+toggle.map("<space>td", toggle.diagnostics)
+toggle.map("<space>tn", toggle("number", { name = "Line Numbers" }))
+toggle.map("<space>ts", toggle("spell", { name = "Spelling" }))
+toggle.map("<space>tt", toggle.treesitter)
+toggle.map("<space>tw", toggle("wrap", { name = "Wrap" }))
 
 map("zg", function()
     require("helpers.spelling").add_word_to_typos(vim.fn.expand("<cword>"))
@@ -60,8 +62,22 @@ vim.api.nvim_create_user_command("CopyCodeBlock", function(opts)
     local lines = vim.api.nvim_buf_get_lines(0, opts.line1 - 1, opts.line2, true)
 
     vim.fn.setreg("+", string.format("```%s\n%s\n```", vim.bo.filetype, table.concat(lines, "\n")))
-
-    vim.notify("Text copied to clipboard")
 end, { range = true })
 
-map("<leader>cb", vim.cmd.CopyCodeBlock, "Copy code block", { mode = { "n", "x" } })
+map("<leader>cc", vim.cmd.CopyCodeBlock, "Copy Code Block", { "n", "x" })
+
+vim.api.nvim_create_user_command("Scratch", function()
+    vim.cmd("bel 10new")
+
+    local buf = vim.api.nvim_get_current_buf()
+
+    for name, value in pairs({
+        bufhidden = "wipe",
+        buftype = "nofile",
+        filetype = "scratch",
+        modifiable = true,
+        swapfile = false,
+    }) do
+        vim.api.nvim_set_option_value(name, value, { buf = buf })
+    end
+end, { desc = "Open a scratch buffer", nargs = 0 })

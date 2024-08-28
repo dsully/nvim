@@ -1,3 +1,4 @@
+local mode = { "n", "x" }
 local model = "gpt-4o-2024-08-06"
 
 return {
@@ -10,22 +11,22 @@ return {
             "ChatGPTRun",
         },
         init = function()
-            vim.keymap.set("n", "<leader>cA", vim.cmd.ChatGPT, { desc = "Ask a question..." })
-            vim.keymap.set({ "n", "x" }, "<leader>ci", vim.cmd.ChatGPTEditWithInstructions, { desc = "Edit with instructions" })
+            keys.map("<leader>aq", vim.cmd.ChatGPT, "Ask a question...")
+            keys.map("<leader>ai", vim.cmd.ChatGPTEditWithInstructions, "Edit with instructions", mode)
 
             for _, map in pairs({
-                { key = "S", cmd = "summarize", desc = "Summarize" },
+                { key = "A", cmd = "code_readability_analysis", desc = "Analyze Readability" },
+                { key = "D", cmd = "docstring", desc = "Add Docstrings" },
                 { key = "T", cmd = "add_tests", desc = "Add Tests" },
-                { key = "a", cmd = "code_readability_analysis", desc = "Code Readability Analysis" },
-                { key = "d", cmd = "docstring", desc = "Add Doc-Strings" },
                 { key = "f", cmd = "fix_bugs", desc = "Fix Bugs" },
                 { key = "g", cmd = "grammar_correction", desc = "Grammar Correction" },
                 { key = "o", cmd = "optimize_code", desc = "Optimize Code" },
+                { key = "s", cmd = "summarize", desc = "Summarize Code" },
                 { key = "x", cmd = "explain_code", desc = "Explain Code" },
             }) do
-                vim.keymap.set({ "n", "x" }, "<leader>c" .. map.key, function()
+                keys.map("<leader>a" .. map.key, function()
                     vim.cmd.ChatGPTRun(map.cmd)
-                end, { desc = map.desc })
+                end, map.desc, mode)
             end
         end,
         opts = {
@@ -134,18 +135,18 @@ return {
     },
     {
         "olimorris/codecompanion.nvim",
-        cmd = { "CodeCompanion", "CodeCompanionChat", "CodeCompanionToggle", "CodeCompanionActions", "CodeCompanionAdd" },
+        cmd = { "CodeCompanion", "CodeCompanionChat", "CodeCompanionToggle", "CodeCompanionActions" },
         keys = {
             --stylua: ignore
-            { "<C-a>", vim.cmd.CodeCompanionActions, mode = { "n", "x" }, desc = "Code Companion Actions" },
-            { "<localleader>a", vim.cmd.CodeCompanionToggle, mode = { "n", "x" }, desc = "Code Companion Chat" },
+            { "<leader>aa", vim.cmd.CodeCompanionActions, mode = mode, desc = "Code Companion Actions" },
+            { "<leader>aC", vim.cmd.CodeCompanionToggle, mode = mode, desc = "Code Companion Chat" },
             {
-                "<leader>cl",
+                "<leader>ad",
                 function()
                     vim.cmd.CodeCompanion("lsp")
                 end,
-                mode = { "n", "x" },
-                desc = "Use an LLM to fix your LSP diagnostics",
+                mode = mode,
+                desc = "Debug Diagnostics",
             },
         },
         opts = {

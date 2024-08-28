@@ -35,11 +35,11 @@ return {
             { "<leader>f.", pickers.file(vim.env.XDG_CONFIG_HOME), desc = "dotfiles" },
             { "<leader>fp", pickers.file(require("lazy.core.config").options.root), desc = "Plugins" },
 
-            { "gi", pick("lsp_implementations"), desc = "Goto Implementation" },
-            { "gi", pick("lsp_implementations"), desc = "Goto Implementation" },
+            { "gD", pick("lsp_typedefs"), desc = "Goto Type Definition" },
             { "gd", pick("lsp_definitions"), desc = "Goto Definition" },
+            { "gi", pick("lsp_implementations"), desc = "Goto Implementation" },
+            { "gi", pick("lsp_implementations"), desc = "Goto Implementation" },
             { "grr", pick("lsp_references"), desc = "References", nowait = true },
-            { "gy", pick("lsp_typedefs"), desc = "Goto T[y]pe Definition" },
             { "z=", pick("spell_suggest"), desc = "Suggest Spelling" },
         },
         init = function()
