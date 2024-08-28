@@ -146,6 +146,11 @@ function M.setup()
                 },
             },
         },
+        pkg = {
+            sources = {
+                "rockspec",
+            },
+        },
         profiling = {
             -- Enables extra stats on the debug tab related to the loader cache.
             -- Additionally gathers stats about all package.loaders
