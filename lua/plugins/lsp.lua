@@ -20,12 +20,7 @@ return {
             lsp.setup()
             lsp.on_dynamic_capability(function() end)
 
-            lsp.on_supports_method(methods.textDocument_inlayHint, function(_, buffer)
-                --
-                require("helpers.keys").bmap("<space>i", function()
-                    vim.lsp.inlay_hint.enable(not vim.lsp.inlay_hint.is_enabled({ bufnr = buffer }))
-                end, "Toggle Inlay Hints")
-
+            lsp.on_supports_method(methods.textDocument_inlayHint, function()
                 vim.lsp.inlay_hint.enable(false)
             end)
 
@@ -161,12 +156,8 @@ return {
                 vim.schedule(function()
                     require("which-key").add({
                         { "grn", require("helpers.lsp").rename, desc = "Rename", icon = "" },
-                        -- stylua: ignore
-                        { "dt", function() vim.diagnostic.enable(not vim.diagnostic.is_enabled()) end, desc = "Diagnostics Toggle" },
                         { "<C-S>", vim.lsp.buf.signature_help, desc = "Signature Help", mode = "i", icon = "󰠗" },
-                        -- stylua: ignore
                         { "gra", vim.lsp.buf.code_action, desc = "Actions", icon = "󰅯" },
-                        --
                         { "<leader>l", group = "LSP", icon = "" },
                         { "<leader>lc", vim.cmd.LspCapabilities, desc = "LSP Capabilities", icon = "" },
                         { "<leader>li", vim.cmd.LspInfo, desc = "LSP Info", icon = "" },

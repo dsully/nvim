@@ -44,14 +44,12 @@ vim.cmd.cnoreabbrev("Qa", "qa")
 vim.cmd.cnoreabbrev("Bd", "bd")
 vim.cmd.cnoreabbrev("bD", "bd")
 
-map("<space>s", function()
-    if vim.o.spell then
-        vim.opt.spell = false
-    else
-        vim.opt.spelloptions = { "camel", "noplainbuffer" }
-        vim.opt.spell = true
-    end
-end, "Toggle spell check")
+-- Toggle options
+keys.toggle.map("<space>td", keys.toggle.diagnostics)
+keys.toggle.map("<space>tn", keys.toggle("number", { name = "Line Numbers" }))
+keys.toggle.map("<space>ts", keys.toggle("spell", { name = "Spelling" }))
+keys.toggle.map("<space>tt", keys.toggle.treesitter)
+keys.toggle.map("<space>tw", keys.toggle("wrap", { name = "Wrap" }))
 
 map("zg", function()
     require("helpers.spelling").add_word_to_typos(vim.fn.expand("<cword>"))
