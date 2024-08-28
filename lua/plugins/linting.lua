@@ -1,7 +1,6 @@
 return {
     "mfussenegger/nvim-lint",
     config = function()
-        local e = require("helpers.event")
         local lint = require("lint")
 
         lint.linters["markdownlint-cli2"].args = {
@@ -14,13 +13,13 @@ return {
             string.format("%s/yamllint.yaml", vim.env.XDG_CONFIG_HOME),
         }
 
-        lint.linters_by_ft = require("config.defaults").linters
+        lint.linters_by_ft = defaults.linters
 
         if vim.g.os == "Linux" then
             lint.linters_by_ft["systemd"] = { "systemd-analyze" }
         end
 
-        e.on({ e.BufEnter, e.BufReadPost, e.BufWritePost, e.TextChanged, e.InsertLeave }, function(args)
+        ev.on({ ev.BufEnter, ev.BufReadPost, ev.BufWritePost, ev.TextChanged, ev.InsertLeave }, function(args)
             -- Ignore 3rd party code.
             if args.file:match("/(node_modules|__pypackages__|site_packages|cargo/registry)/") then
                 return
@@ -34,5 +33,5 @@ return {
             group = vim.api.nvim_create_augroup("nvim-lint", { clear = true }),
         })
     end,
-    event = "LazyFile",
+    event = ev.LazyFile,
 }

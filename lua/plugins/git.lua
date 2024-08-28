@@ -1,7 +1,7 @@
 return {
     {
         "lewis6991/gitsigns.nvim",
-        event = "LazyFile",
+        event = ev.LazyFile,
         keys = {
             { "<leader>g/", [[/^\(|||||||\|=======\|>>>>>>>\|<<<<<<<\)<CR>]], desc = "Search for conflict markers" },
         },
@@ -103,7 +103,7 @@ return {
             },
             window = {
                 options = {
-                    border = vim.g.border,
+                    border = defaults.ui.border.name,
                 },
             },
         },

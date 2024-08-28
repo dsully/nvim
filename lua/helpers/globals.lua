@@ -1,4 +1,7 @@
---
+-- Make my life easier..
+_G.defaults = require("config.defaults")
+_G.ev = require("helpers.event")
+
 --- Global debug function
 ---@param ... any
 _G.dbg = function(...)

@@ -1,6 +1,4 @@
-local e = require("helpers.event")
-
-e.on({ e.FocusGained, e.TermClose, e.TermLeave }, function()
+ev.on({ ev.FocusGained, ev.TermClose, ev.TermLeave }, function()
     if vim.o.buftype ~= "nofile" then
         vim.cmd.checktime()
     end
@@ -8,7 +6,7 @@ end, {
     desc = "Check if we need to reload the file when it changed.",
 })
 
-e.on({ e.BufEnter, e.FileType }, function(event)
+ev.on({ ev.BufEnter, ev.FileType }, function(event)
     vim.opt_local.spell = false
 
     pcall(vim.api.nvim_buf_set_name, event.buf, event.match)
@@ -32,7 +30,7 @@ end, {
     },
 })
 
-e.on(e.BufWinEnter, function(event)
+ev.on(ev.BufWinEnter, function(event)
     --
     -- Don't try to close a help buffer if explicitly edited.
     if #vim.api.nvim_list_bufs() == 1 or #vim.v.argv == 3 then
@@ -42,10 +40,10 @@ e.on(e.BufWinEnter, function(event)
     require("helpers.help").popup(event)
 end, {
     desc = "Open Help in a floating window.",
-    group = e.group("filetype.help"),
+    group = ev.group("filetype.help"),
 })
 
-e.on(e.FileType, function()
+ev.on(ev.FileType, function()
     vim.keymap.set("n", "J", function()
         --
         return vim.endswith(vim.api.nvim_get_current_line(), [[\]]) and "$xJ" or "J"
@@ -55,14 +53,14 @@ end, {
     pattern = { "bash", "fish", "make", "sh", "zsh" },
 })
 
-e.on(e.FileType, function()
+ev.on(ev.FileType, function()
     vim.opt_local.formatoptions:remove({ "a", "o", "t" })
     vim.api.nvim_set_option_value("foldenable", false, { scope = "local", win = 0 })
 end, {
     desc = "Update format options and folding.",
 })
 
-e.on(e.BufReadCmd, function(args)
+ev.on(ev.BufReadCmd, function(args)
     vim.cmd.bdelete({ args.buf, bang = true })
     vim.cmd.edit(vim.uri_to_fname(args.file))
 end, {
@@ -75,7 +73,7 @@ end, {
 --
 -- If the multi-file bug is addressed.
 --
-e.on(e.BufNewFile, function(args)
+ev.on(ev.BufNewFile, function(args)
     -- Trailing colon, i.e. ':lnum[:colnum[:]]'
     local pattern = "^([^:]+):(%d*:?%d*):?$"
 
@@ -184,8 +182,8 @@ end, {
 --     end,
 -- })
 
-e.on(e.BufWinEnter, function(args)
-    if vim.tbl_contains(require("config.defaults").ignored.file_types, vim.bo.filetype) then
+ev.on(ev.BufWinEnter, function(args)
+    if vim.tbl_contains(defaults.ignored.file_types, vim.bo.filetype) then
         return
     end
 
@@ -209,7 +207,7 @@ end, {
     desc = "Restore cursor to the last known position.",
 })
 
-e.on({ e.BufReadPost, e.FileReadPost }, function()
+ev.on({ ev.BufReadPost, ev.FileReadPost }, function()
     if vim.api.nvim_buf_get_lines(0, 0, 1, true)[1]:sub(-1) == "\r" then
         vim.cmd(":edit ++ff=dos")
     end
@@ -217,7 +215,7 @@ end, {
     desc = "Hide Windows line endings.",
 })
 
-e.on({ e.BufReadPost, e.FileReadPost }, function(args)
+ev.on({ ev.BufReadPost, ev.FileReadPost }, function(args)
     vim.schedule(function()
         vim.bo[args.buf].syntax = vim.filetype.match({ buf = args.buf }) or ""
 
@@ -228,7 +226,7 @@ e.on({ e.BufReadPost, e.FileReadPost }, function(args)
         end
 
         -- Create a autocommand just in case.
-        e.on(e.LspAttach, function(a)
+        ev.on(ev.LspAttach, function(a)
             vim.lsp.buf_detach_client(args.buf, a.data.client_id)
         end, {
             buffer = args.buf,
@@ -258,16 +256,16 @@ end, {
     pattern = "large_file",
 })
 
-e.on(e.FileType, function()
+ev.on(ev.FileType, function()
     --
-    e.on(e.BufWritePre, function()
+    ev.on(ev.BufWritePre, function()
         local shebang = vim.api.nvim_buf_get_lines(0, 0, 1, true)[1]
 
         if not shebang or not shebang:match("^#!.+") then
             return
         end
 
-        e.on(e.BufWritePost, function(args)
+        ev.on(ev.BufWritePost, function(args)
             local filename = vim.api.nvim_buf_get_name(args.buf)
 
             local fileinfo = vim.uv.fs_stat(filename)
@@ -284,14 +282,14 @@ end, {
     pattern = { "bash", "python", "sh", "zsh" },
 })
 
-e.on(e.BufWritePre, function()
+ev.on(ev.BufWritePre, function()
     vim.opt_local.undofile = false
 end, {
     desc = "Disable the undo file for temporary files.",
     pattern = { "COMMIT_EDITMSG", "MERGE_MSG", "gitcommit", "*.tmp", "*.log" },
 })
 
-e.on(e.BufWritePre, function(args)
+ev.on(ev.BufWritePre, function(args)
     local path = vim.fs.dirname(args.file)
 
     if path and not vim.uv.fs_stat(path) then
@@ -301,14 +299,14 @@ end, {
     desc = "Create parent directories before write.",
 })
 
-e.on(e.BufWriteCmd, function()
+ev.on(ev.BufWriteCmd, function()
     vim.opt_local.modified = false
 end, {
     desc = "Don't let me write out a file named ';'",
     pattern = ";",
 })
 
-e.on(e.BufWritePost, function(args)
+ev.on(ev.BufWritePost, function(args)
     --- @type string
     local file = args.file
 
@@ -325,7 +323,7 @@ end, {
     pattern = "*/chezmoi-edit*",
 })
 
-e.on(e.TextYankPost, function()
+ev.on(ev.TextYankPost, function()
     vim.highlight.on_yank({ higroup = "Visual", timeout = 500 })
 
     -- Copy data to system clipboard only when we are pressing 'y'. 'd', 'x' will be filtered out.
@@ -356,5 +354,5 @@ e.on(e.TextYankPost, function()
     copy(yank_data)
 end, {
     desc = "Copy and highlight yanked text to system clipboard",
-    group = e.group("SmartYank", true),
+    group = ev.group("SmartYank", true),
 })

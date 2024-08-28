@@ -2,7 +2,7 @@ local M = {}
 
 ---Read the content of a file.
 ---@param path string
----@return string
+---@return string?
 M.read = function(path)
     local fd = vim.uv.fs_open(path, "r", 438)
     local content

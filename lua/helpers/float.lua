@@ -64,7 +64,7 @@ function M.open(options)
 
     local popup = require("nui.popup")({
         border = {
-            style = vim.g.border,
+            style = defaults.ui.border.name,
         },
         buf_options = {
             filetype = options.filetype,

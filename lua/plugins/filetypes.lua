@@ -106,7 +106,7 @@ return {
                         ui_select_fallback = true,
                     },
                     float_win_config = {
-                        border = require("config.defaults").ui.border.name,
+                        border = defaults.ui.border.name,
                     },
                 },
                 server = {

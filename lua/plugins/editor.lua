@@ -88,8 +88,6 @@ return {
                 return t
             end
 
-            local defaults = require("config.defaults")
-
             local config = require("fzf-lua.config")
             local fzf = require("fzf-lua")
 
@@ -237,7 +235,7 @@ return {
     },
     {
         "SmiteshP/nvim-navic",
-        event = "LazyFile",
+        event = ev.LazyFile,
         init = function()
             vim.g.navic_silence = true
         end,
@@ -252,7 +250,7 @@ return {
     },
     {
         "folke/todo-comments.nvim",
-        event = "LazyFile",
+        event = ev.LazyFile,
         -- stylua: ignore
         keys = {
             { "]t", function() require("todo-comments").jump_next() end, desc = "Next todo comment" },

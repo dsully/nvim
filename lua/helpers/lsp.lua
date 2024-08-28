@@ -1,8 +1,5 @@
 local M = {}
 
-local defaults = require("config.defaults")
-local e = require("helpers.event")
-
 local methods = vim.lsp.protocol.Methods
 
 ---@class LspClientBuffers
@@ -91,8 +88,8 @@ M.setup = function()
         if client then
             for buffer in pairs(client.attached_buffers) do
                 --
-                e.emit(e.User, {
-                    pattern = e.LspDynamicCapability,
+                ev.emit(ev.User, {
+                    pattern = ev.LspDynamicCapability,
                     data = { client_id = client.id, buffer = buffer },
                 })
             end
@@ -132,8 +129,8 @@ function M.validate_client(client, buffer)
             if client.supports_method and client.supports_method(method, { bufnr = buffer }) then
                 clients[client][buffer] = true
 
-                e.emit(e.User, {
-                    pattern = e.LspSupportsMethod,
+                ev.emit(ev.User, {
+                    pattern = ev.LspSupportsMethod,
                     data = { client_id = client.id, buffer = buffer, method = method },
                 })
             end
@@ -144,7 +141,7 @@ end
 ---@param on_attach fun(client:vim.lsp.Client, buffer)
 function M.on_attach(on_attach)
     --
-    e.on(e.LspAttach, function(args)
+    ev.on(ev.LspAttach, function(args)
         local buffer = args.buf ---@type number
         local client = vim.lsp.get_client_by_id(args.data.client_id)
 
@@ -157,7 +154,7 @@ end
 ---@param fn fun(client:vim.lsp.Client, buffer):boolean?
 function M.on_dynamic_capability(fn)
     --
-    return e.on(e.User, function(args)
+    return ev.on(ev.User, function(args)
         local client = vim.lsp.get_client_by_id(args.data.client_id)
         local buffer = args.data.buffer ---@type number
 
@@ -165,7 +162,7 @@ function M.on_dynamic_capability(fn)
             return fn(client, buffer)
         end
     end, {
-        pattern = e.LspDynamicCapability,
+        pattern = ev.LspDynamicCapability,
     })
 end
 
@@ -174,7 +171,7 @@ end
 function M.on_supports_method(method, fn)
     M.supports_method[method] = M.supports_method[method] or setmetatable({}, { __mode = "k" })
 
-    return e.on(e.User, function(args)
+    return ev.on(ev.User, function(args)
         local client = vim.lsp.get_client_by_id(args.data.client_id)
         local buffer = args.data.buffer ---@type number
 
@@ -182,7 +179,7 @@ function M.on_supports_method(method, fn)
             return fn(client, buffer)
         end
     end, {
-        pattern = e.LspSupportsMethod,
+        pattern = ev.LspSupportsMethod,
     })
 end
 
@@ -255,7 +252,7 @@ M.rename = function()
 
     local popup_options = {
         border = {
-            style = vim.g.border,
+            style = defaults.ui.border.name,
             text = {
                 top = "[Rename]",
                 top_align = "left",
