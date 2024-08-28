@@ -823,4 +823,9 @@ return {
         end,
         opts = {},
     },
+    {
+        "folke/ts-comments.nvim",
+        event = ev.VeryLazy,
+        opts = {},
+    },
 }
