@@ -773,6 +773,16 @@ return {
     },
     {
         "kosayoda/nvim-lightbulb",
+        config = function(_, opts)
+            require("nvim-lightbulb").setup(opts)
+
+            ev.on({ ev.CursorHold, ev.CursorHoldI }, function()
+                vim.cmd("silent! lua require('nvim-lightbulb').update_lightbulb()")
+            end, {
+                desc = "Update Lightbulb",
+                group = ev.group("LightBulb"),
+            })
+        end,
         event = ev.LspAttach,
         opts = {
             autocmd = {
