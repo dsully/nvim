@@ -439,6 +439,14 @@ return {
                                     enabled = true,
                                     path = vim.env.XDG_CONFIG_HOME .. "/taplo.toml",
                                 },
+                                schema = {
+                                    enabled = true,
+                                    catalogs = { "https://www.schemastore.org/api/json/catalog.json" },
+                                    cache = {
+                                        diskExpiration = 600,
+                                        memoryExpiration = 60,
+                                    },
+                                },
                             },
                         },
                     },
