@@ -492,11 +492,13 @@ return {
                             },
                         },
                     },
+                    zls = {},
                 },
             }
 
             return opts
         end,
+        priority = 900,
     },
     {
         "williamboman/mason.nvim",
