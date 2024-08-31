@@ -121,6 +121,7 @@ return {
                 "vimdoc",
                 "yaml",
                 "xml",
+                "zig",
             },
             highlight = { enable = true },
             indent = { enable = true },
