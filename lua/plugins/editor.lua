@@ -3,6 +3,78 @@ local pick = pickers.pick
 
 return {
     {
+        -- For whatever reason I can't get the native fzf vim.ui.select() replacement to work with codecompanion.
+        -- The window is created and then immediately closed.
+        "stevearc/dressing.nvim",
+        init = function()
+            ---@diagnostic disable-next-line: duplicate-set-field
+            vim.ui.select = function(...)
+                require("lazy").load({ plugins = { "dressing.nvim" } })
+                return vim.ui.select(...)
+            end
+        end,
+        opts = {
+            -- Noice handles input.
+            input = {
+                enabled = false,
+            },
+            select = {
+                enabled = true,
+                trim_prompt = true,
+                get_config = function(opts, items)
+                    --
+                    local winopts = {
+                        title = " " .. vim.trim((opts.prompt or "Select"):gsub("%s*:%s*$", "")) .. " ",
+
+                        -- height is number of items, with a max of 80% screen height
+                        height = math.floor(math.min(vim.o.lines * 0.8, #items + 2) + 0.5) + 1,
+                        width = 0.7,
+                    }
+
+                    if opts.kind == "codeaction" then
+                        winopts = vim.tbl_deep_extend("force", winopts, {
+                            -- height is number of items minus 18 lines for the preview, with a max of 80% screen height
+                            height = math.floor(math.min(vim.o.lines * 0.8 - 18, #items + 2) + 0.5) + 18,
+                            preview = {
+                                layout = "vertical",
+                                vertical = "down:15,border-top",
+                            },
+                        })
+                    end
+
+                    if opts.kind ~= "codeaction" or opts.kind ~= "codecompanion.nvim" then
+                        -- Auto-width
+                        local min_w, max_w = 0.05, 0.80
+                        local longest = 0
+
+                        for _, e in ipairs(items) do
+                            -- Format the item or convert it to a string
+                            local format_entry = opts.format_item and opts.format_item(e) or tostring(e)
+                            local length = #format_entry
+
+                            if length > longest then
+                                longest = length
+                            end
+                        end
+
+                        -- Needs minimum 7 in my case due to the extra stuff fzf adds on the left side (markers, numbers, extra padding, etc).
+                        local w = math.min(math.max((longest + 9) / vim.o.columns, min_w), max_w)
+
+                        winopts = vim.tbl_deep_extend("force", winopts, { winopts = { width = w } })
+                    end
+
+                    return {
+                        backend = "fzf_lua",
+                        fzf_lua = vim.tbl_deep_extend("force", opts, {
+                            prompt = " ",
+                            winopts = winopts,
+                        }),
+                    }
+                end,
+            },
+        },
+    },
+    {
         "ibhagwan/fzf-lua",
         cmd = "FzfLua",
         keys = {
@@ -42,53 +114,7 @@ return {
             { "grr", pick("lsp_references"), desc = "References", nowait = true },
             { "z=", pick("spell_suggest"), desc = "Suggest Spelling" },
         },
-        init = function()
-            --
-            -- Override the default select function to use fzf-lua.
-            --
-            ---@diagnostic disable-next-line: duplicate-set-field
-            vim.ui.select = function(...)
-                require("lazy").load({ plugins = { "fzf-lua" } })
-
-                -- https://github.com/ibhagwan/fzf-lua/issues/717
-                require("fzf-lua").register_ui_select(function(fzf_opts, items)
-                    --
-                    return vim.tbl_deep_extend("force", fzf_opts, {
-                        prompt = " ",
-                        winopts = {
-                            title = " " .. vim.trim((fzf_opts.prompt or "Select"):gsub("%s*:%s*$", "")) .. " ",
-                            title_pos = "center",
-                        },
-                    }, fzf_opts.kind == "codeaction" and {
-                        winopts = {
-                            height = math.floor(math.min(vim.o.lines * 0.8 - 30, #items) + 0.5) + 30,
-                            layout = "vertical",
-                        },
-                    } or {
-                        winopts = {
-                            height = math.floor(math.min(vim.o.lines * 0.8, #items + 2) + 0.5),
-                            row = 0.40,
-                        },
-                    })
-                end)
-
-                return vim.ui.select(...)
-            end
-        end,
-        opts = function()
-            -- Add the prompt back to the default-title profile
-            local function add_prompt(t)
-                t.prompt = t.prompt ~= nil and " " or t.prompt
-
-                for _, v in pairs(t) do
-                    if type(v) == "table" then
-                        add_prompt(v)
-                    end
-                end
-
-                return t
-            end
-
+        config = function(_, opts)
             local config = require("fzf-lua.config")
             local fzf = require("fzf-lua")
 
@@ -103,125 +129,140 @@ return {
             config.defaults.keymap.builtin["<c-b>"] = "preview-page-up"
 
             -- Toggle root dir / cwd
-            config.defaults.actions.files["ctrl-r"] = function(_, ctx)
-                local o = vim.deepcopy(ctx.__call_opts)
-                o.root = o.root == false
-                o.cwd = nil
-                o.buf = ctx.__CTX.bufnr
+            config.defaults.actions.files["ctrl-r"] = {
+                fn = function(_, ctx)
+                    local cwd = vim.uv.cwd()
+                    local root = require("helpers.lsp").find_root(ctx.bufnr)
 
-                if not o.cwd and o.root ~= false then
-                    o.cwd = require("helpers.lsp").find_root(o.buf)
+                    fzf.resume({
+                        cwd = ctx.cwd ~= root and root or cwd,
+                    })
+                end,
+            }
+
+            -- Add the prompt back to the default-title profile
+            local function add_prompt(t)
+                t.prompt = t.prompt ~= nil and " " or t.prompt
+
+                for _, v in pairs(t) do
+                    if type(v) == "table" then
+                        add_prompt(v)
+                    end
                 end
 
-                fzf.files(o)
+                return t
             end
 
-            config.defaults.actions.files["alt-c"] = config.defaults.actions.files["ctrl-r"]
-            config.set_action_helpstr(config.defaults.actions.files["ctrl-r"], "toggle-root-dir")
-
-            local opts = add_prompt(require("fzf-lua.profiles.default-title"))
-
-            return vim.tbl_deep_extend("force", opts, {
-                defaults = {
-                    cwd_header = true,
-                    file_icons = "mini",
-                    formatter = "path.dirname_first",
-                    headers = { "actions", "cwd" },
-                    no_header_i = true, -- hide interactive header
-                },
-                file_icon_padding = " ",
-                file_ignore_patterns = defaults.files.ignored_patterns,
-                files = {
-                    cwd_prompt = false,
-                },
-                fzf_colors = {
-                    bg = { "bg", "Normal" },
-                    gutter = { "bg", "Normal" },
-                    info = { "fg", "Conditional" },
-                    scrollbar = { "bg", "Normal" },
-                    separator = { "fg", "Comment" },
-                },
-                fzf_opts = {
-                    ["--history"] = vim.fn.stdpath("data") .. "/fzf-lua-history",
-                    ["--layout"] = "reverse-list",
-                    ["--info"] = "default",
-                    ["--no-scrollbar"] = true,
-                    -- Disable fuzzy matching. I know. :)
-                    ["--exact"] = "",
-                },
-                git = {
-                    files = {
-                        cmd = "git ls-files --others --cached --exclude-standard",
-                        path_shorten = false,
-                    },
-                },
-                helptags = { previewer = "help_native" },
-                keymap = {
-                    builtin = {
-                        ["<c-/>"] = "toggle-help",
-                        ["<c-e>"] = "toggle-preview",
-                        ["<c-f>"] = "preview-page-down",
-                        ["<c-b>"] = "preview-page-up",
-                    },
-                    fzf = {
-                        ["esc"] = "abort",
-                        ["ctrl-q"] = "select-all+accept",
-                        ["ctrl-e"] = "toggle-preview",
-                        ["ctrl-f"] = "preview-page-down",
-                        ["ctrl-b"] = "preview-page-up",
-                    },
-                },
-                live_grep = {
-                    RIPGREP_CONFIG_PATH = vim.env.RIPGREP_CONFIG_PATH,
-                    fzf_opts = { ["--keep-right"] = "" },
-                    resume = true,
-                },
-                lsp = {
-                    code_actions = {
-                        previewer = "codeaction_native",
-                        preview_pager = "delta --width=$COLUMNS --hunk-header-style='omit' --file-style='omit'",
-                    },
-                    cwd_only = false, -- LSP/diagnostics for cwd only?
-                    -- https://github.com/ibhagwan/fzf-lua/wiki#disable-or-hide-filename-fuzzy-search
-                    document_symbols = {
-                        fzf_cli_args = "--nth 2..",
-                    },
-                    ignore_current_line = true,
-                    includeDeclaration = false,
-                    jump_to_single_result = true,
-                },
-                oldfiles = {
-                    include_current_session = true,
-                },
-                previewers = {
-                    bat = {
-                        cmd = "bat",
-                        args = "--style=plain --color=always",
-                    },
-                    builtin = {
-                        -- https://github.com/ibhagwan/fzf-lua/discussions/1364
-                        toggle_behavior = "extend",
-                    },
-                },
-                -- https://github.com/ibhagwan/fzf-lua/issues/775
-                winopts = {
-                    border = defaults.ui.border.name,
-                    height = 0.8,
-                    width = 0.8,
-                    row = 0.2, -- window row position (0=top, 1=bottom)
-                    col = 0.5, -- window col position (0=left, 1=right)
-                    layout = "vertical",
-                    preview = {
-                        border = "border-sharp", -- equivalent to `fzf --preview=border-sharp`
-                        default = "bat",
-                        hidden = "nohidden",
-                        layout = "vertical",
-                        scrollbar = false,
-                        vertical = "up:50%",
-                    },
-                },
-            })
+            fzf.setup(vim.tbl_deep_extend("force", add_prompt(require("fzf-lua.profiles.default-title")), opts))
         end,
+        opts = {
+            defaults = {
+                cwd_header = true,
+                file_icons = "mini",
+                formatter = "path.dirname_first",
+                headers = { "actions", "cwd" },
+                no_header_i = true, -- hide interactive header
+            },
+            file_icon_padding = " ",
+            file_ignore_patterns = defaults.files.ignored_patterns,
+            files = {
+                cwd_prompt = false,
+                resume = true,
+            },
+            fzf_colors = {
+                bg = { "bg", "Normal" },
+                gutter = { "bg", "Normal" },
+                info = { "fg", "Conditional" },
+                scrollbar = { "bg", "Normal" },
+                separator = { "fg", "Comment" },
+            },
+            fzf_opts = {
+                ["--history"] = vim.fn.stdpath("data") .. "/fzf-lua-history",
+                ["--layout"] = "reverse-list",
+                ["--info"] = "default",
+                ["--no-scrollbar"] = true,
+                -- Disable fuzzy matching. I know. :)
+                -- ["--exact"] = "",
+            },
+            git = {
+                files = {
+                    cmd = "git ls-files --others --cached --exclude-standard",
+                    path_shorten = false,
+                },
+            },
+            helptags = { previewer = "help_native" },
+            keymap = {
+                builtin = {
+                    ["<c-/>"] = "toggle-help",
+                    ["<c-e>"] = "toggle-preview",
+                    ["<c-f>"] = "preview-page-down",
+                    ["<c-b>"] = "preview-page-up",
+                },
+                fzf = {
+                    ["esc"] = "abort",
+                    ["ctrl-q"] = "select-all+accept",
+                    ["ctrl-e"] = "toggle-preview",
+                    ["ctrl-f"] = "preview-page-down",
+                    ["ctrl-b"] = "preview-page-up",
+                },
+            },
+            live_grep = {
+                RIPGREP_CONFIG_PATH = vim.env.RIPGREP_CONFIG_PATH,
+                fzf_opts = { ["--keep-right"] = "" },
+                resume = true,
+            },
+            lsp = {
+                code_actions = {
+                    previewer = "codeaction_native",
+                    preview_pager = "delta --width=$COLUMNS --hunk-header-style='omit' --file-style='omit'",
+                },
+                cwd_only = false, -- LSP/diagnostics for cwd only?
+                -- https://github.com/ibhagwan/fzf-lua/wiki#disable-or-hide-filename-fuzzy-search
+                document_symbols = {
+                    fzf_cli_args = "--nth 2..",
+                },
+                ignore_current_line = true,
+                includeDeclaration = false,
+                jump_to_single_result = true,
+            },
+            oldfiles = {
+                include_current_session = true,
+            },
+            previewers = {
+                bat = {
+                    cmd = "bat",
+                    args = "--style=plain --color=always",
+                },
+                builtin = {
+                    -- https://github.com/ibhagwan/fzf-lua/discussions/1364
+                    toggle_behavior = "extend",
+                },
+                extensions = {
+                    ["png"] = "viu",
+                    ["jpg"] = "viu",
+                    ["jpeg"] = "viu",
+                    ["gif"] = "viu",
+                    ["webp"] = "viu",
+                },
+            },
+            -- https://github.com/ibhagwan/fzf-lua/issues/775
+            winopts = {
+                border = defaults.ui.border.name,
+                height = 0.8,
+                width = 0.8,
+                row = 0.2, -- window row position (0=top, 1=bottom)
+                col = 0.5, -- window col position (0=left, 1=right)
+                layout = "vertical",
+                preview = {
+                    border = "border-sharp", -- equivalent to `fzf --preview=border-sharp`
+                    default = "bat",
+                    hidden = "nohidden",
+                    layout = "vertical",
+                    scrollbar = false,
+                    vertical = "up:50%",
+                },
+            },
+        },
     },
     {
         "ziontee113/icon-picker.nvim",
@@ -296,7 +337,7 @@ return {
                 function()
                     local grug = require("grug-far")
                     local ext = vim.bo.buftype == "" and vim.fn.expand("%:e")
-                    grug.grug_far({
+                    grug.open({
                         transient = true,
                         prefills = {
                             filesFilter = ext and ext ~= "" and "*." .. ext or nil,

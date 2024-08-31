@@ -12,9 +12,12 @@
     ],
     "globals": [
       "bit",
+      "defaults",
       "describe",
+      "ev",
       "ipairs",
       "it",
+      "keys",
       "math",
       "pairs",
       "require",
@@ -65,7 +68,6 @@
   "workspace": {
     "ignoreDir": [
       ".vscode",
-      "unused"
     ]
   }
 }

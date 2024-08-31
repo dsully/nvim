@@ -108,6 +108,7 @@ M.notifications = function()
     local fzf = require("fzf-lua")
     local notify = require("notify")
 
+    ---@param notification notify.Record
     local notifications = vim.tbl_map(function(notification)
         local icon_color = notification.level == "ERROR" and "red" or notification.level == "WARN" and "yellow" or "green"
 
@@ -129,13 +130,14 @@ M.notifications = function()
     end)
 
     fzf.fzf_exec(notifications, {
+        fzf_opts = {
+            ["--delimiter"] = ":",
+            ["--with-nth"] = "2..",
+        },
         actions = {
-            ["default"] = function(selected)
-                vim.fn.setreg("+", table.concat(selected, "\n"))
-                vim.notify("Copied content to clipboard!", vim.log.levels.INFO, { title = "Fzf" })
-            end,
             ["alt-q"] = fzf.actions.buf_sel_to_qf,
         },
+        previewer = "builtin",
         winopts = {
             title = " Notifications ",
             title_pos = "center",
