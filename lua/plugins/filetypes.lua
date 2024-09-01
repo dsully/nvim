@@ -57,9 +57,8 @@ return {
         },
     },
     {
-        "MeanderingProgrammer/render-markdown.nvim",
-        cmd = "RenderMarkdown",
-        ft = { "markdown", "vimwiki" },
+        "OXY2DEV/markview.nvim",
+        lazy = false,
         keys = {
             {
                 "<space>tc",
@@ -80,19 +79,32 @@ return {
                 { noremap = true, silent = true },
             },
         },
-        opts = {
-            enabled = false, -- Off by default.
-            file_types = { "markdown", "vimwiki" },
-            code = {
-                sign = false,
-                width = "block",
-                right_pad = 1,
-            },
-            heading = {
-                sign = false,
-                icons = {},
-            },
-        },
+        opts = function()
+            local presets = require("markview.presets")
+
+            return {
+                callbacks = {
+                    on_enable = function(_, win)
+                        vim.wo[win].conceallevel = 2
+                        vim.wo[win].concealcursor = "nc"
+                    end,
+                },
+                code_blocks = {
+                    enable = true,
+                    style = "minimal",
+                },
+                headings = presets.headings.glow_labels,
+                highlight_groups = presets.highlight_groups,
+                hybrid_modes = { "n" },
+                list_items = {
+                    enable = true,
+                    shift_width = 2,
+                    indent_size = 2,
+                },
+                modes = { "n", "no", "c" },
+                tables = presets.tables.border_single,
+            }
+        end,
     },
     {
         "mrcjkb/rustaceanvim",
