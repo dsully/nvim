@@ -10,12 +10,14 @@ end
 
 return {
     {
-        "hrsh7th/nvim-cmp",
+        "yioneko/nvim-cmp",
+        branch = "perf",
         cmd = "CmpStatus",
         dependencies = {
             "hrsh7th/cmp-cmdline",
             "hrsh7th/cmp-nvim-lsp",
             "hrsh7th/cmp-path",
+            "bydlw98/cmp-env",
             "onsails/lspkind-nvim",
             "ryo33/nvim-cmp-rust",
             {
@@ -46,7 +48,9 @@ return {
             ---@type table<integer, integer>
             local modified_priority = {
                 [types.CompletionItemKind.Snippet] = 0, -- top
-                [types.CompletionItemKind.Keyword] = 0, -- top
+                [types.CompletionItemKind.EnumMember] = 1,
+                [types.CompletionItemKind.Variable] = 2,
+                [types.CompletionItemKind.Keyword] = 3,
                 [types.CompletionItemKind.Text] = 100, -- bottom
             }
 
@@ -63,6 +67,18 @@ return {
             -- Inside a snippet, use backspace to remove the placeholder.
             vim.keymap.set("s", "<BS>", "<C-O>s")
 
+            -- Remove Copilot ghost text when the cmp menu is opened.
+            require("cmp").event:on("menu_opened", function()
+                if package.loaded["copilot"] then
+                    require("copilot.suggestion").dismiss()
+                    vim.api.nvim_buf_set_var(0, "copilot_suggestion_hidden", true)
+                end
+            end)
+
+            require("cmp").event:on("menu_closed", function()
+                vim.api.nvim_buf_set_var(0, "copilot_suggestion_hidden", false)
+            end)
+
             cmp.setup({
                 completion = {
                     autocomplete = {
@@ -77,6 +93,9 @@ return {
                 formatting = {
                     expandable_indicator = true,
                     fields = { "kind", "abbr", "menu" },
+                    ---@param entry cmp.Entry
+                    ---@param vim_item vim.CompletedItem
+                    ---@return vim.CompletedItem
                     format = function(entry, vim_item)
                         --
                         -- Give path completions a different set of icons.
@@ -114,7 +133,6 @@ return {
                         -- vim_item.menu = ""
                         vim_item.menu = ({
                             nvim_lsp = lsp_menu,
-                            buffer = "[Buffer]",
                             path = "[Path]",
                         })[entry.source.name]
 
@@ -208,7 +226,8 @@ return {
                         require("cmp-rust").deprioritize_borrow,
                         require("cmp-rust").deprioritize_deref,
                         require("cmp-rust").deprioritize_common_traits,
-                        cmp.config.compare.locality,
+                        cmp.config.compare.offset,
+                        cmp.config.compare.exact,
                         cmp.config.compare.score, -- based on :  score = score + ((#sources - (source_index - 1)) * sorting.priority_weight)
                         function(entry1, entry2) -- sort by length ignoring "=~"
                             local len1 = string.len(string.gsub(entry1.completion_item.label, "[=~()_]", ""))
@@ -242,8 +261,6 @@ return {
                         entry_filter = function(entry, ctx)
                             local kind = entry:get_kind()
                             local line = ctx.cursor_line
-                            local col = ctx.cursor.col
-                            local char_before_cursor = string.sub(line, col - 1, col - 1)
 
                             -- Don't complete LSP symbols in comments or strings.
                             if is_string_like() then
@@ -255,14 +272,6 @@ return {
                                 types.CompletionItemKind.Text,
                             }, kind) then
                                 return false
-                            end
-
-                            if char_before_cursor == "." then
-                                return vim.tbl_contains({
-                                    types.CompletionItemKind.Method,
-                                    types.CompletionItemKind.Field,
-                                    types.CompletionItemKind.Property,
-                                }, kind)
                             end
 
                             if string.match(line, "^%s+%w+$") then
@@ -306,7 +315,6 @@ return {
                     { name = "snippets" },
                     { name = "path" },
                     { name = "env" },
-                    { name = "buffer" },
                 }),
             })
 
@@ -499,87 +507,6 @@ return {
         },
     },
     {
-        "hrsh7th/nvim-insx",
-        config = function()
-            local insx = require("insx")
-
-            local endwise = require("insx.recipe.endwise")
-            local pair = require("insx.recipe.auto_pair")
-            local fast_break = require("insx.recipe.fast_break")
-
-            -- Python triple quotes.
-            insx.add([["]], {
-                enabled = function(ctx)
-                    return ctx.match([["\%#"]]) and ctx.filetype == "python"
-                end,
-                action = function(ctx)
-                    if ctx.match([["""\%#"""]]) then
-                        return
-                    end
-                    ctx.send([[""<Left>]])
-                    ctx.send([[""<Left>]])
-                end,
-                priority = 1,
-            })
-
-            insx.add(
-                "<CR>",
-                insx.with(fast_break({ open_pat = [["""\w*]], close_pat = [["""]], indent = 0 }), {
-                    insx.with.filetype({ "python" }),
-                    insx.with.priority(1),
-                })
-            )
-
-            -- Rust lifetime and <> behavior.
-            insx.add(
-                "<",
-                insx.with(pair({ open = "<", close = ">" }), {
-                    insx.with.filetype({ "rust" }),
-                    insx.with.in_string(false),
-                    insx.with.in_comment(false),
-                    insx.with.match([[[\a:].\%#]]),
-                    insx.with.undopoint(false),
-                    insx.with.priority(1),
-                })
-            )
-
-            -- Add additional end-wise matches.
-            endwise.builtin["fish"] = {
-                endwise.simple([[\<begin\>.*]], "end"),
-                endwise.simple([[\<for\>.*]], "end"),
-                endwise.simple([[\<function\>.*]], "end"),
-                endwise.simple([[\<if\>.*]], "end"),
-                endwise.simple([[\<switch\>.*]], "end"),
-                endwise.simple([[\<while\>.*]], "end"),
-            }
-
-            endwise.builtin["sh"] = {
-                endwise.simple([[\<case\>.*\<in\>]], "esac"),
-                endwise.simple([[\<if\>.*\<then\>]], "fi"),
-                endwise.simple([[\<while\>.*\<do\>]], "done"),
-            }
-
-            insx.add("<CR>", endwise(endwise.builtin))
-
-            insx.add("<Tab>", {
-                action = function(ctx)
-                    local row, col = ctx.row(), ctx.col()
-
-                    if vim.snippet.active({ direction = 1 }) then
-                        ctx.send(":lua vim.snippet.jump(1)")
-                    else
-                        if vim.iter({ [["]], "'", "]", "}", ")", "`", "$" }):find(ctx.after():sub(1, 1)) ~= nil then
-                            ctx.move(row, col + 1)
-                        else
-                            ctx.send("<Tab>")
-                        end
-                    end
-                end,
-            })
-        end,
-        event = ev.InsertEnter,
-    },
-    {
         "monaqa/dial.nvim",
         config = function()
             local augend = require("dial.augend")
@@ -714,59 +641,6 @@ return {
                 border = defaults.ui.border.name,
             },
         },
-    },
-    {
-        "mtoohey31/cmp-fish",
-        config = function()
-            require("cmp").setup.buffer({
-                sources = {
-                    { name = "fish" },
-                    { name = "snippets" },
-                    { name = "path" },
-                    { name = "env" },
-                    { name = "buffer" },
-                },
-            })
-        end,
-        dependencies = {
-            "bydlw98/cmp-env",
-            "hrsh7th/cmp-buffer",
-            "hrsh7th/cmp-path",
-        },
-        ft = "fish",
-    },
-    {
-        "hrsh7th/cmp-buffer",
-        config = function()
-            require("cmp").setup.buffer({
-                sources = {
-                    { name = "nvim_lsp" },
-                    { name = "snippets" },
-                    { name = "path" },
-                    { name = "env" },
-                    { name = "buffer" },
-                },
-            })
-        end,
-        dependencies = {
-            "bydlw98/cmp-env",
-            "hrsh7th/cmp-buffer",
-            "hrsh7th/cmp-path",
-        },
-        ft = { "bash", "sh", "zsh" },
-    },
-    {
-        "vrslev/cmp-pypi",
-        config = function()
-            require("cmp").setup.buffer({
-                sources = {
-                    { name = "pypi" },
-                    { name = "buffer" },
-                },
-            })
-        end,
-        dependencies = "hrsh7th/cmp-buffer",
-        event = { "BufRead pyproject.toml" },
     },
     {
         "Zeioth/compiler.nvim",
