@@ -3,78 +3,6 @@ local model = "gpt-4o-2024-08-06"
 
 return {
     {
-        "jackmort/chatgpt.nvim",
-        cmd = {
-            "ChatGPT",
-            "ChatGPTActAs",
-            "ChatGPTEditWithInstructions",
-            "ChatGPTRun",
-        },
-        init = function()
-            keys.map("<leader>aq", vim.cmd.ChatGPT, "Ask a question...")
-            keys.map("<leader>ai", vim.cmd.ChatGPTEditWithInstructions, "Edit with instructions", mode)
-
-            for _, map in pairs({
-                { key = "A", cmd = "code_readability_analysis", desc = "Analyze Readability" },
-                { key = "D", cmd = "docstring", desc = "Add Docstrings" },
-                { key = "T", cmd = "add_tests", desc = "Add Tests" },
-                { key = "f", cmd = "fix_bugs", desc = "Fix Bugs" },
-                { key = "g", cmd = "grammar_correction", desc = "Grammar Correction" },
-                { key = "o", cmd = "optimize_code", desc = "Optimize Code" },
-                { key = "s", cmd = "summarize", desc = "Summarize Code" },
-                { key = "x", cmd = "explain_code", desc = "Explain Code" },
-            }) do
-                keys.map("<leader>a" .. map.key, function()
-                    vim.cmd.ChatGPTRun(map.cmd)
-                end, map.desc, mode)
-            end
-        end,
-        opts = {
-            chat = {
-                answer_sign = "",
-                keymaps = {
-                    close = { "<C-c>", "<Esc>" },
-                    yank_last = "<C-y>",
-                    scroll_up = "<C-k>",
-                    scroll_down = "<C-j>",
-                    toggle_settings = "<C-o>",
-                    new_session = "<C-n>",
-                    cycle_windows = "<Tab>",
-                },
-                question_sign = "",
-                sessions_window = { border = { style = defaults.ui.border.name } },
-            },
-            edit_with_instructions = {
-                diff = true,
-                keymaps = {
-                    accept = "<C-y>",
-                    close = "<C-c>",
-                    cycle_windows = "<Tab>",
-                    new_session = "<C-n>",
-                    toggle_diff = "<C-d>",
-                    toggle_settings = "<C-o>",
-                    use_output_as_input = "<C-i>",
-                },
-            },
-            openai_params = {
-                model = model,
-                max_tokens = 600,
-            },
-            openai_edit_params = {
-                model = model,
-                max_tokens = 600,
-            },
-            popup_input = {
-                submit = "<C-Enter>",
-            },
-            popup_window = { border = { style = defaults.ui.border.name } },
-            settings_window = { border = { style = defaults.ui.border.name } },
-            system_input = { border = { style = defaults.ui.border.name } },
-            system_window = { border = { style = defaults.ui.border.name } },
-            welcome_message = "",
-        },
-    },
-    {
         "zbirenbaum/copilot.lua",
         config = function(_, opts)
             for _, ft in ipairs(defaults.ai_file_types) do
@@ -128,28 +56,69 @@ return {
     {
         "olimorris/codecompanion.nvim",
         cmd = { "CodeCompanion", "CodeCompanionChat", "CodeCompanionToggle", "CodeCompanionActions" },
+        --stylua: ignore start
         keys = {
-            --stylua: ignore
             { "<leader>aa", vim.cmd.CodeCompanionActions, mode = mode, desc = "Code Companion Actions" },
-            { "<leader>aC", vim.cmd.CodeCompanionToggle, mode = mode, desc = "Code Companion Chat" },
-            {
-                "<leader>ad",
-                function()
-                    vim.cmd.CodeCompanion("lsp")
-                end,
-                mode = mode,
-                desc = "Debug Diagnostics",
-            },
+            { "<leader>ac", vim.cmd.CodeCompanionToggle, mode = mode, desc = "Code Companion Chat" },
+            { "<leader>ad", function() vim.cmd.CodeCompanion("/lsp") end, mode = mode, desc = "Debug Diagnostics" },
+            { "<leader>af", function() vim.cmd.CodeCompanion("/fix") end, mode = mode, desc = "Fix Code" },
+            { "<leader>ao", function() vim.cmd.CodeCompanion("/optimize") end, mode = mode, desc = "Optimize" },
         },
-        opts = {
-            display = {
-                chat = {
-                    window = {
-                        layout = "horizontal",
-                        height = 0.40,
+        --stylua: ignore end
+        opts = function()
+            local prompts = require("codecompanion.config").default_prompts
+
+            prompts["Custom Prompt"] = nil
+            prompts["Explain"] = nil
+            prompts["Buffer selection"] = nil
+            prompts["Generate a Commit Message"] = nil
+
+            return {
+                default_prompts = {
+                    ["Optimize"] = {
+                        strategy = "chat",
+                        description = "Optimize the selected code",
+                        opts = {
+                            mapping = "<localleader>ao",
+                            modes = { "v" },
+                            slash_cmd = "optimize",
+                            auto_submit = true,
+                            stop_context_insertion = true,
+                            user_prompt = false,
+                        },
+                        prompts = {
+                            {
+                                role = "system",
+                                content = function(context)
+                                    return "I want you to act as a senior "
+                                        .. context.filetype
+                                        .. " developer. I will ask you specific questions and I want you to return concise explanations and codeblock examples."
+                                end,
+                                opts = {
+                                    visible = false,
+                                },
+                            },
+                            {
+                                role = "user",
+                                contains_code = true,
+                                content = function(context)
+                                    local text = require("codecompanion.helpers.actions").get_code(context.start_line, context.end_line)
+
+                                    return "Optimize the following code:\n\n```" .. context.filetype .. "\n" .. text .. "\n```\n\n"
+                                end,
+                            },
+                        },
                     },
                 },
-            },
-        },
+                display = {
+                    chat = {
+                        window = {
+                            layout = "horizontal",
+                            height = 0.40,
+                        },
+                    },
+                },
+            }
+        end,
     },
 }
