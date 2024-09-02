@@ -31,7 +31,7 @@ vim.opt.signcolumn = "yes" -- Always show the gutter.
 vim.opt.showbreak = ">"
 vim.opt.showmatch = true -- Match brackets
 vim.opt.smartcase = false
-vim.opt.smartindent = false
+vim.opt.smartindent = true
 vim.opt.smoothscroll = true
 vim.opt.spell = false
 vim.opt.spellcapcheck = "" -- don't check for capital letters at start of sentence.
@@ -90,8 +90,7 @@ vim.g.home = vim.uv.os_homedir()
 vim.g.os = vim.uv.os_uname().sysname
 
 -- Flag for disabling language servers for large files.
-vim.g.large_file = false
-vim.g.large_file_size = 1024 * 512
+vim.g.large_file_bytes = 1024 * 1024 * 1024 * 10
 
 -- Load clipboard.vim faster. Neovim 0.10+ includes OSC52 support.
 if vim.env.SSH_CONNECTION then
