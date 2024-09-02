@@ -9,6 +9,22 @@ return {
                 opts.filetypes[ft] = true
             end
 
+            -- Remove Copilot ghost text when the cmp menu is opened.
+            ev.on_load("cmp", function()
+                vim.schedule(function()
+                    local cmp = require("cmp")
+
+                    cmp.event:on("menu_opened", function()
+                        require("copilot.suggestion").dismiss()
+                        vim.api.nvim_buf_set_var(0, "copilot_suggestion_hidden", true)
+                    end)
+
+                    cmp.event:on("menu_closed", function()
+                        vim.api.nvim_buf_set_var(0, "copilot_suggestion_hidden", false)
+                    end)
+                end)
+            end)
+
             require("copilot").setup(opts)
         end,
         event = ev.LazyFile,
