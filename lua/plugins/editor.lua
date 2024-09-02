@@ -374,4 +374,17 @@ return {
             windowCreationCommand = "split",
         },
     },
+    {
+        "echasnovski/mini.align",
+        keys = {
+            { "g=", desc = "mini.align: align", mode = { "n", "x" } },
+            { "g+", desc = "mini.align: align with preview", mode = { "n", "" } },
+        },
+        opts = {
+            mappings = {
+                start = "g=",
+                start_with_preview = "g+",
+            },
+        },
+    },
 }
