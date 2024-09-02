@@ -94,8 +94,8 @@ return {
                 ft = "lua",
                 opts = {
                     library = {
-                        "luvit-meta/library",
-                        "nvim-cokeline",
+                        { path = "luvit-meta/library", words = { "vim%.uv" } },
+                        { path = "lazy.nvim", words = { "LazyVim" } },
                     },
                 },
             },
@@ -384,7 +384,60 @@ return {
                         end,
                     },
                     lemminx = {}, -- XML
-                    lua_ls = {},
+                    lua_ls = {
+                        settings = {
+                            Lua = {
+                                codeLens = {
+                                    enable = true,
+                                },
+                                completion = {
+                                    autoRequire = false,
+                                    callSnippet = "Replace",
+                                    keywordSnippet = "Both",
+                                    workspaceWord = true,
+                                },
+                                diagnostics = {
+                                    -- disable = {
+                                    --     "missing-fields",
+                                    -- },
+                                    globals = {
+                                        "bit",
+                                        "defaults",
+                                        "describe",
+                                        "ev",
+                                        "it",
+                                        "keys",
+                                        "math",
+                                        "require",
+                                        "vim",
+                                    },
+                                    unusedLocalExclude = {
+                                        "_*",
+                                    },
+                                },
+                                doc = {
+                                    privateName = { "^_" },
+                                },
+                                format = {
+                                    enable = false,
+                                },
+                                hint = {
+                                    arrayIndex = "Disable",
+                                    enable = true,
+                                    paramName = "Disable",
+                                    paramType = true,
+                                    semicolon = "Disable",
+                                    setType = true,
+                                },
+                                telemetry = {
+                                    enable = false,
+                                },
+                                type = {
+                                    castNumberToInteger = true,
+                                },
+                            },
+                        },
+                    },
                     marksman = {},
                     ruff = {
                         commands = {
