@@ -66,6 +66,10 @@ return {
                     return {
                         backend = "fzf_lua",
                         fzf_lua = vim.tbl_deep_extend("force", opts, {
+                            fzf_opts = {
+                                -- Disable fuzzy matching.
+                                ["--exact"] = "",
+                            },
                             prompt = " ",
                             winopts = winopts,
                         }),
@@ -305,6 +309,15 @@ return {
                 keyword = "bg",
                 pattern = [[.{-}<(\s?(KEYWORDS):)]],
                 -- pattern = [[(KEYWORDS)\s*(\([^\)]*\))?:]],
+            },
+            keywords = {
+                BUG = { icon = "🐛", color = "error", alt = { "BROKEN", "FIXME", "ISSUE" } },
+                HACK = { icon = "🔥", color = "warning" },
+                IDEA = { icon = "💡", color = "test" },
+                NOTE = { icon = "ℹ️", color = "hint", alt = { "INFO" } },
+                TEST = { icon = "🧪", color = "test", alt = { "EXPERIMENT", "TESTING" } },
+                TODO = { icon = "✅", color = "info" },
+                WARN = { icon = "⚠️", color = "warning", alt = { "WARNING", "XXX" } },
             },
         },
     },

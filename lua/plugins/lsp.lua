@@ -33,6 +33,8 @@ return {
             --     })
             -- end)
 
+            ---@param client vim.lsp.Client
+            ---@param buffer number
             lsp.on_supports_method(methods.textDocument_documentHighlight, function(client, buffer)
                 local group = ev.group(("%s/buffer/%s"):format(client.name, buffer))
 
@@ -155,16 +157,16 @@ return {
             ev.on_load("which-key.nvim", function()
                 vim.schedule(function()
                     require("which-key").add({
-                        { "grn", require("helpers.lsp").rename, desc = "Rename", icon = "" },
-                        { "<C-S>", vim.lsp.buf.signature_help, desc = "Signature Help", mode = "i", icon = "󰠗" },
-                        { "gra", vim.lsp.buf.code_action, desc = "Actions", icon = "󰅯" },
-                        { "<leader>l", group = "LSP", icon = "" },
-                        { "<leader>lc", vim.cmd.LspCapabilities, desc = "LSP Capabilities", icon = "" },
-                        { "<leader>li", vim.cmd.LspInfo, desc = "LSP Info", icon = "" },
-                        { "<leader>ll", vim.cmd.LspLog, desc = "LSP Log", icon = "" },
-                        { "<leader>lr", vim.cmd.LspRestartBuffer, desc = "LSP Restart", icon = "" },
-                        { "<leader>ls", vim.cmd.LspStop, desc = "LSP Stop", icon = "" },
-                        { "<leader>xr", vim.diagnostic.reset, desc = "Reset", icon = "" },
+                        { "grn", require("helpers.lsp").rename, desc = "Rename", icon = " " },
+                        { "<C-S>", vim.lsp.buf.signature_help, desc = "Signature Help", mode = "i", icon = "󰠗 " },
+                        { "gra", vim.lsp.buf.code_action, desc = "Actions", icon = "󰅯 " },
+                        { "<leader>l", group = "LSP", icon = " " },
+                        { "<leader>lc", vim.cmd.LspCapabilities, desc = "LSP Capabilities", icon = " " },
+                        { "<leader>li", vim.cmd.LspInfo, desc = "LSP Info", icon = " " },
+                        { "<leader>ll", vim.cmd.LspLog, desc = "LSP Log", icon = " " },
+                        { "<leader>lr", vim.cmd.LspRestartBuffer, desc = "LSP Restart", icon = " " },
+                        { "<leader>ls", vim.cmd.LspStop, desc = "LSP Stop", icon = " " },
+                        { "<leader>xr", vim.diagnostic.reset, desc = "Reset", icon = " " },
                         { "<leader>xs", vim.diagnostic.open_float, desc = "Show", icon = "󰙨" },
                     }, { notify = false })
                 end)
