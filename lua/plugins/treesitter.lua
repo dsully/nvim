@@ -123,7 +123,14 @@ return {
                 "xml",
                 "zig",
             },
-            highlight = { enable = true },
+            highlight = {
+                ---@param _lang string
+                ---@param bufnr number
+                disable = function(_lang, bufnr)
+                    return require("helpers.file").is_large_file(bufnr)
+                end,
+                enable = true,
+            },
             indent = { enable = true },
             matchup = { enable = true },
             query_linter = {

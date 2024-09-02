@@ -25,7 +25,7 @@ return {
                 return
             end
 
-            if not vim.g.large_file then
+            if not require("helpers.file").is_large_file(args.bufnr) then
                 lint.try_lint()
                 lint.try_lint("typos")
             end
