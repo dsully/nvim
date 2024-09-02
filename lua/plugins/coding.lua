@@ -79,16 +79,13 @@ return {
                 vim.api.nvim_buf_set_var(0, "copilot_suggestion_hidden", false)
             end)
 
-            cmp.setup({
+            ---@type cmp.ConfigSchema
+            local opts = {
                 completion = {
                     autocomplete = {
                         cmp.TriggerEvent.TextChanged,
                         cmp.TriggerEvent.InsertEnter,
                     },
-                    keyword_length = 2,
-                },
-                experimental = {
-                    ghost_text = false,
                 },
                 formatting = {
                     expandable_indicator = true,
@@ -213,11 +210,15 @@ return {
                     disallow_partial_fuzzy_matching = true,
                     disallow_partial_matching = false,
                     disallow_prefix_unmatching = true,
+                    disallow_symbol_nonprefix_matching = true,
                 },
                 performance = {
                     debounce = 0, -- default is 60ms
                     throttle = 0, -- default is 30ms
                     max_view_entries = 100,
+                    async_budget = 1,
+                    confirm_resolve_timeout = 80,
+                    fetching_timeout = 500,
                 },
                 preselect = cmp.PreselectMode.Item,
                 sorting = {
@@ -307,9 +308,11 @@ return {
                         border = defaults.ui.border.name,
                     }),
                 },
-            })
+            }
 
-            cmp.setup.filetype({ "bash", "sh", "zsh" }, {
+            cmp.setup(opts)
+
+            cmp.setup.filetype({ "bash", "fish", "sh", "zsh" }, {
                 sources = cmp.config.sources({
                     { name = "nvim_lsp" },
                     { name = "snippets" },
