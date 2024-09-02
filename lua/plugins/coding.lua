@@ -9,7 +9,6 @@ return {
             "hrsh7th/cmp-cmdline",
             "hrsh7th/cmp-nvim-lsp",
             "hrsh7th/cmp-path",
-            "onsails/lspkind-nvim",
             "zjp-CN/nvim-cmp-lsp-rs",
             {
                 "garymjr/nvim-snippets",
@@ -25,19 +24,11 @@ return {
         event = ev.InsertEnter,
         config = function()
             local cmp = require("cmp")
-            local types = require("cmp.types.lsp")
             local helpers = require("helpers.cmp")
+            local icons = require("mini.icons")
 
+            local cmp_rs = require("cmp_lsp_rs").comparators
             local copilot = require("copilot.suggestion")
-
-            local cmp_rs = require("cmp_lsp_rs")
-
-            local lspkind = require("lspkind").cmp_format({
-                maxwidth = 50,
-                mode = "symbol",
-                menu = nil,
-                symbol_map = defaults.cmp.symbols,
-            })
 
             -- Better visibility check than cmp.visible().
             local function is_visible(_)
@@ -69,47 +60,51 @@ return {
                 },
                 formatting = {
                     expandable_indicator = true,
+                    --
+                    -- kind is icon, abbr is completion name, menu is [Function]
                     fields = { "kind", "abbr", "menu" },
+                    --
                     ---@param entry cmp.Entry
-                    ---@param vim_item vim.CompletedItem
+                    ---@param item vim.CompletedItem
                     ---@return vim.CompletedItem
-                    format = function(entry, vim_item)
+                    format = function(entry, item)
                         --
                         -- Give path completions a different set of icons.
                         if entry.source.name == "path" then
-                            local icon, hl_group = require("mini.icons").get("file", entry:get_completion_item().label)
+                            local icon, hl_group = icons.get("file", entry:get_completion_item().label)
 
-                            if icon then
-                                vim_item.kind = string.format(" %s ", icon)
-                                vim_item.kind_hl_group = hl_group
-                                return vim_item
+                            if icon ~= nil then
+                                item.kind = icon
+                                item.kind_hl_group = hl_group
+                            end
+
+                            return item
+                        else
+                            local icon, hl_group = icons.get("lsp", item.kind)
+
+                            if icon ~= nil then
+                                item.kind = icon
+                                item.kind_hl_group = hl_group
                             end
                         end
 
-                        local lsp_menu = defaults.cmp.menu.nvim_lsp
+                        -- Strip the `pub fn` prefix from Rust functions.
+                        -- Strip method & function parameters.
+                        item.abbr = item.abbr:gsub("pub fn (.+)", "%1"):gsub("(.+)%(.+%)~", "%1()")
 
-                        -- Rust documentation
-                        local filetype = entry.context.filetype
-                        local detail = entry.completion_item.labelDetails and entry.completion_item.labelDetails.detail
-                        local description = entry.completion_item.labelDetails and entry.completion_item.labelDetails.description
-
-                        if detail then
-                            local pattern = ""
-
-                            if filetype == "rust" then
-                                pattern = " %((use .+)%)"
-
-                                entry.completion_item.detail = detail:gsub(pattern, "%1")
-                            end
-
-                            lsp_menu = detail:gsub(pattern, "%1"):sub(1, 40)
-                        elseif description then
-                            lsp_menu = description:sub(1, 40)
+                        if entry.source.name ~= "nvim_lsp" then
+                            item.menu = " " .. defaults.cmp.menu[entry.source.name]
+                        else
+                            item.menu = ""
                         end
 
-                        vim_item.menu = (vim.tbl_extend("force", defaults.cmp.menu, { nvim_lsp = lsp_menu }))[entry.source.name]
+                        for key, width in pairs(defaults.cmp.widths) do
+                            if item[key] and vim.fn.strdisplaywidth(item[key]) > width then
+                                item[key] = vim.fn.strcharpart(item[key], 0, width - 1) .. defaults.icons.misc.ellipsis
+                            end
+                        end
 
-                        return lspkind(entry, vim_item)
+                        return item
                     end,
                 },
                 mapping = cmp.mapping({
@@ -186,65 +181,19 @@ return {
                     comparators = {
                         cmp.config.compare.exact,
                         cmp.config.compare.score, -- based on :  score = score + ((#sources - (source_index - 1)) * sorting.priority_weight)
-                        cmp_rs.comparators.inherent_import_inscope,
-                        cmp_rs.comparators.sort_by_label_but_underscore_last,
-                        cmp_rs.comparators.sort_by_kind,
-                        cmp_rs.comparators.sort_by_label_but_underscore_nil,
-                        cmp_rs.comparators.sort_underscore,
+                        cmp_rs.inherent_import_inscope,
+                        cmp_rs.sort_by_label_but_underscore_last,
+                        cmp_rs.sort_by_kind,
+                        cmp_rs.sort_by_label_but_underscore_nil,
+                        cmp_rs.sort_underscore,
                     },
                     priority_weight = 1.0,
                 },
                 sources = cmp.config.sources({
-                    {
-                        name = "snippets",
-                        max_item_count = 3,
-                        priority = 8,
-                    },
-                    {
-                        name = "nvim_lsp",
-                        -- https://github.com/hrsh7th/nvim-cmp/pull/1067
-                        --
-                        ---@param entry cmp.Entry
-                        ---@param ctx cmp.Context
-                        entry_filter = function(entry, ctx)
-                            local kind = entry:get_kind()
-                            local line = ctx.cursor_line
-
-                            -- Don't complete LSP symbols in comments or strings.
-                            if helpers.is_string_like() then
-                                return false
-                            end
-
-                            -- Don't return "Text" types from LSP completion.
-                            if vim.tbl_contains({ types.CompletionItemKind.Text }, kind) then
-                                return false
-                            end
-
-                            -- Better Rust sorting.
-                            if ctx.filetype == "rust" and cmp_rs.filter_out.rust_filter_out_methods_to_be_imported(entry) then
-                                return true
-                            end
-
-                            if string.match(line, "^%s+%w+$") then
-                                return kind == types.CompletionItemKind.Function or kind == types.CompletionItemKind.Variable
-                            end
-
-                            return true
-                        end,
-                        keyword_length = 2,
-                        priority = 7,
-                    },
-                    {
-                        name = "lazydev",
-                        group_index = 0, -- set group index to 0 to skip loading LuaLS completions
-                    },
-                    {
-                        name = "dotenv",
-                    },
-                    {
-                        name = "path",
-                        priority = 4,
-                    },
+                    helpers.config.snippets,
+                    helpers.config.lsp(),
+                    helpers.config.lazydev,
+                    helpers.config.path,
                 }),
                 view = {
                     entries = {
@@ -263,20 +212,14 @@ return {
                 },
             }
 
-            for _, source in ipairs(opts.sources) do
-                if source.name == "buffer" then
-                    source.option = vim.tbl_deep_extend("keep", { get_bufnrs = helpers.get_bufnrs }, source.option or {})
-                end
-            end
-
             cmp.setup(opts)
 
             cmp.setup.filetype({ "bash", "fish", "sh", "zsh" }, {
                 sources = cmp.config.sources({
-                    { name = "nvim_lsp" },
-                    { name = "snippets" },
-                    { name = "path" },
-                    { name = "dotenv" },
+                    helpers.config.lsp(),
+                    helpers.config.snippets,
+                    helpers.config.path,
+                    helpers.config.env,
                 }),
             })
 
@@ -284,9 +227,8 @@ return {
             cmp.setup.cmdline(":", {
                 mapping = cmp.mapping.preset.cmdline(),
                 sources = cmp.config.sources({
-                    { name = "path" },
-                    -- https://github.com/hrsh7th/nvim-cmp/issues/1511
-                    { name = "cmdline", keyword_pattern = [=[[^[:blank:]\!]*]=], option = { ignore_cmds = {} } },
+                    helpers.config.path,
+                    helpers.config.cmdline,
                 }),
             })
 

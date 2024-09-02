@@ -579,6 +579,12 @@ return {
                 return package.loaded["nvim-web-devicons"]
             end
         end,
+        config = function(_, opts)
+            local icons = require("mini.icons")
+
+            icons.setup(opts)
+            icons.tweak_lsp_kind("prepend")
+        end,
         opts = {
             style = "glyph",
             default = {
@@ -636,6 +642,7 @@ return {
                 properties = { glyph = " ", color = "#3970B4" },
                 tmpl = { glyph = "󰈙 ", color = "#3970E4" },
             },
+            lsp = defaults.icons.lsp,
         },
     },
     {
