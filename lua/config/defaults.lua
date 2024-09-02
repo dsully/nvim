@@ -364,19 +364,22 @@ local M = {
 
     root_patterns = {
         ".chezmoiroot",
-        ".neoconf.json",
-        ".neoconf.jsonc",
+        ".luacheckrc",
+        ".luarc.json",
+        ".luarc.jsonc",
         ".stylua.toml",
+        "Cargo.toml",
         "configure",
+        "go.mod",
         "package.json",
         "pyproject.toml",
         "requirements.txt",
         "ruff.toml",
         "selene.toml",
+        "selene.yml",
         "setup.cfg",
         "setup.py",
         "stylua.toml",
-        "Cargo.toml",
     },
 
     statusline = {
