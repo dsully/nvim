@@ -14,10 +14,11 @@ return {
         branch = "perf",
         cmd = "CmpStatus",
         dependencies = {
+            "hrsh7th/cmp-buffer",
             "hrsh7th/cmp-cmdline",
             "hrsh7th/cmp-nvim-lsp",
             "hrsh7th/cmp-path",
-            "bydlw98/cmp-env",
+            "SergioRibera/cmp-dotenv",
             "onsails/lspkind-nvim",
             "ryo33/nvim-cmp-rust",
             {
@@ -289,6 +290,9 @@ return {
                         group_index = 0, -- set group index to 0 to skip loading LuaLS completions
                     },
                     {
+                        name = "dotenv",
+                    },
+                    {
                         name = "path",
                         priority = 4,
                     },
@@ -317,7 +321,7 @@ return {
                     { name = "nvim_lsp" },
                     { name = "snippets" },
                     { name = "path" },
-                    { name = "env" },
+                    { name = "dotenv" },
                 }),
             })
 
