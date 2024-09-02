@@ -439,18 +439,8 @@ return {
                         },
                         -- The default nvim-lspconfig root_dir() doesn't work that well.
                         root_dir = function(fname)
-                            local root_files = {
-                                ".luarc.json",
-                                ".luarc.jsonc",
-                                ".luacheckrc",
-                                ".stylua.toml",
-                                "stylua.toml",
-                                "selene.toml",
-                                "selene.yml",
-                            }
-
                             local u = require("lspconfig.util")
-                            return u.root_pattern("lua/")(fname) or u.root_pattern(unpack(root_files))(fname) or u.find_git_ancestor(fname)
+                            return u.root_pattern("lua/")(fname) or u.root_pattern(unpack(defaults.root_patterns))(fname) or u.find_git_ancestor(fname)
                         end,
                     },
                     marksman = {},
