@@ -1,26 +1,16 @@
--- Only show matches in strings and comments.
-local is_string_like = function()
-    local context = require("cmp.config.context")
-
-    return context.in_treesitter_capture("comment")
-        or context.in_treesitter_capture("string")
-        or context.in_syntax_group("Comment")
-        or context.in_syntax_group("String")
-end
-
 return {
     {
         "yioneko/nvim-cmp",
         branch = "perf",
         cmd = "CmpStatus",
         dependencies = {
+            "SergioRibera/cmp-dotenv",
             "hrsh7th/cmp-buffer",
             "hrsh7th/cmp-cmdline",
             "hrsh7th/cmp-nvim-lsp",
             "hrsh7th/cmp-path",
-            "SergioRibera/cmp-dotenv",
             "onsails/lspkind-nvim",
-            "ryo33/nvim-cmp-rust",
+            "zjp-CN/nvim-cmp-lsp-rs",
             {
                 "garymjr/nvim-snippets",
                 opts = {
@@ -36,8 +26,11 @@ return {
         config = function()
             local cmp = require("cmp")
             local types = require("cmp.types.lsp")
+            local helpers = require("helpers.cmp")
 
             local copilot = require("copilot.suggestion")
+
+            local cmp_rs = require("cmp_lsp_rs")
 
             local lspkind = require("lspkind").cmp_format({
                 maxwidth = 50,
@@ -45,20 +38,6 @@ return {
                 menu = nil,
                 symbol_map = defaults.cmp.symbols,
             })
-
-            ---@type table<integer, integer>
-            local modified_priority = {
-                [types.CompletionItemKind.Snippet] = 0, -- top
-                [types.CompletionItemKind.EnumMember] = 1,
-                [types.CompletionItemKind.Variable] = 2,
-                [types.CompletionItemKind.Keyword] = 3,
-                [types.CompletionItemKind.Text] = 100, -- bottom
-            }
-
-            ---@param kind integer: Kind of completion entry
-            local function modified_kind(kind)
-                return modified_priority[kind] or kind
-            end
 
             -- Better visibility check than cmp.visible().
             local function is_visible(_)
@@ -69,14 +48,14 @@ return {
             vim.keymap.set("s", "<BS>", "<C-O>s")
 
             -- Remove Copilot ghost text when the cmp menu is opened.
-            require("cmp").event:on("menu_opened", function()
+            cmp.event:on("menu_opened", function()
                 if package.loaded["copilot"] then
                     require("copilot.suggestion").dismiss()
                     vim.api.nvim_buf_set_var(0, "copilot_suggestion_hidden", true)
                 end
             end)
 
-            require("cmp").event:on("menu_closed", function()
+            cmp.event:on("menu_closed", function()
                 vim.api.nvim_buf_set_var(0, "copilot_suggestion_hidden", false)
             end)
 
@@ -84,8 +63,8 @@ return {
             local opts = {
                 completion = {
                     autocomplete = {
-                        cmp.TriggerEvent.TextChanged,
                         cmp.TriggerEvent.InsertEnter,
+                        cmp.TriggerEvent.TextChanged,
                     },
                 },
                 formatting = {
@@ -97,7 +76,7 @@ return {
                     format = function(entry, vim_item)
                         --
                         -- Give path completions a different set of icons.
-                        if string.match(entry.source.name, "path") then
+                        if entry.source.name == "path" then
                             local icon, hl_group = require("mini.icons").get("file", entry:get_completion_item().label)
 
                             if icon then
@@ -107,7 +86,7 @@ return {
                             end
                         end
 
-                        local lsp_menu = "[LSP]"
+                        local lsp_menu = defaults.cmp.menu.nvim_lsp
 
                         -- Rust documentation
                         local filetype = entry.context.filetype
@@ -128,19 +107,9 @@ return {
                             lsp_menu = description:sub(1, 40)
                         end
 
-                        -- vim_item.menu = ""
-                        vim_item.menu = ({
-                            nvim_lsp = lsp_menu,
-                            path = "[Path]",
-                        })[entry.source.name]
+                        vim_item.menu = (vim.tbl_extend("force", defaults.cmp.menu, { nvim_lsp = lsp_menu }))[entry.source.name]
 
-                        if vim.tbl_contains(defaults.cmp.kind, entry.source.name) then
-                            vim_item.kind = defaults.cmp.kind[entry.source.name]
-                        else
-                            vim_item = lspkind(entry, vim_item)
-                        end
-
-                        return vim_item
+                        return lspkind(entry, vim_item)
                     end,
                 },
                 mapping = cmp.mapping({
@@ -160,16 +129,7 @@ return {
                     ["<C-p>"] = cmp.mapping.select_prev_item({ behavior = cmp.SelectBehavior.Select }),
                     ["<Up>"] = cmp.mapping.select_prev_item({ behavior = cmp.SelectBehavior.Select }),
                     ["<Down>"] = cmp.mapping.select_next_item({ behavior = cmp.SelectBehavior.Select }),
-
-                    -- https://github.com/hrsh7th/nvim-cmp/wiki/Example-mappings#safely-select-entries-with-cr
-                    ["<CR>"] = function(fallback)
-                        if is_visible(cmp) then
-                            if cmp.confirm({ behavior = cmp.ConfirmBehavior.Insert, select = true }) then
-                                return
-                            end
-                        end
-                        return fallback()
-                    end,
+                    ["<CR>"] = helpers.confirm(),
                     ["<C-CR>"] = cmp.mapping(function(fallback)
                         cmp.abort()
                         fallback()
@@ -224,29 +184,13 @@ return {
                 preselect = cmp.PreselectMode.Item,
                 sorting = {
                     comparators = {
-                        require("cmp-rust").deprioritize_postfix,
-                        require("cmp-rust").deprioritize_borrow,
-                        require("cmp-rust").deprioritize_deref,
-                        require("cmp-rust").deprioritize_common_traits,
-                        cmp.config.compare.offset,
                         cmp.config.compare.exact,
                         cmp.config.compare.score, -- based on :  score = score + ((#sources - (source_index - 1)) * sorting.priority_weight)
-                        function(entry1, entry2) -- sort by length ignoring "=~"
-                            local len1 = string.len(string.gsub(entry1.completion_item.label, "[=~()_]", ""))
-                            local len2 = string.len(string.gsub(entry2.completion_item.label, "[=~()_]", ""))
-                            if len1 ~= len2 then
-                                return len1 - len2 < 0
-                            end
-                        end,
-                        function(entry1, entry2) -- sort by compare kind (Variable, Function etc)
-                            local kind1 = modified_kind(entry1:get_kind())
-                            local kind2 = modified_kind(entry2:get_kind())
-                            if kind1 ~= kind2 then
-                                return kind1 - kind2 < 0
-                            end
-                        end,
-                        cmp.config.compare.sort_text,
-                        cmp.config.compare.order,
+                        cmp_rs.comparators.inherent_import_inscope,
+                        cmp_rs.comparators.sort_by_label_but_underscore_last,
+                        cmp_rs.comparators.sort_by_kind,
+                        cmp_rs.comparators.sort_by_label_but_underscore_nil,
+                        cmp_rs.comparators.sort_underscore,
                     },
                     priority_weight = 1.0,
                 },
@@ -260,20 +204,25 @@ return {
                         name = "nvim_lsp",
                         -- https://github.com/hrsh7th/nvim-cmp/pull/1067
                         --
+                        ---@param entry cmp.Entry
+                        ---@param ctx cmp.Context
                         entry_filter = function(entry, ctx)
                             local kind = entry:get_kind()
                             local line = ctx.cursor_line
 
                             -- Don't complete LSP symbols in comments or strings.
-                            if is_string_like() then
+                            if helpers.is_string_like() then
                                 return false
                             end
 
                             -- Don't return "Text" types from LSP completion.
-                            if vim.tbl_contains({
-                                types.CompletionItemKind.Text,
-                            }, kind) then
+                            if vim.tbl_contains({ types.CompletionItemKind.Text }, kind) then
                                 return false
+                            end
+
+                            -- Better Rust sorting.
+                            if ctx.filetype == "rust" and cmp_rs.filter_out.rust_filter_out_methods_to_be_imported(entry) then
+                                return true
                             end
 
                             if string.match(line, "^%s+%w+$") then
@@ -313,6 +262,12 @@ return {
                     }),
                 },
             }
+
+            for _, source in ipairs(opts.sources) do
+                if source.name == "buffer" then
+                    source.option = vim.tbl_deep_extend("keep", { get_bufnrs = helpers.get_bufnrs }, source.option or {})
+                end
+            end
 
             cmp.setup(opts)
 
