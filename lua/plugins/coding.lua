@@ -329,11 +329,7 @@ return {
             })
 
             -- https://github.com/hrsh7th/cmp-cmdline/issues/94
-            vim.api.nvim_create_autocmd("CmdWinEnter", {
-                callback = function()
-                    require("cmp").close()
-                end,
-            })
+            ev.on(ev.CmdWinEnter, cmp.close)
         end,
     },
     {
