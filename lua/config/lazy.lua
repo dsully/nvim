@@ -175,11 +175,11 @@ function M.setup()
     ev.on_load("which-key.nvim", function()
         vim.schedule(function()
             require("which-key").add({
-                { "<leader>p", group = "Plugins", icon = "" },
-                { "<leader>ph", vim.cmd.LazyHealth, desc = "Health", icon = "󰄬" },
-                { "<leader>pi", lazy.show, desc = "Info", icon = "" },
-                { "<leader>pp", lazy.profile, desc = "Profile", icon = "" },
-                { "<leader>ps", lazy.sync, desc = "Sync", icon = "󱋖" },
+                { "<leader>p", group = "Plugins", icon = " " },
+                { "<leader>ph", vim.cmd.LazyHealth, desc = "Health", icon = "󰄬 " },
+                { "<leader>pi", lazy.show, desc = "Info", icon = " " },
+                { "<leader>pp", lazy.profile, desc = "Profile", icon = " " },
+                { "<leader>ps", lazy.sync, desc = "Sync", icon = "󱋖 " },
             }, { notify = false })
         end)
     end)
