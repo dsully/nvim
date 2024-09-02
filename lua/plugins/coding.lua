@@ -38,18 +38,6 @@ return {
             -- Inside a snippet, use backspace to remove the placeholder.
             vim.keymap.set("s", "<BS>", "<C-O>s")
 
-            -- Remove Copilot ghost text when the cmp menu is opened.
-            cmp.event:on("menu_opened", function()
-                if package.loaded["copilot"] then
-                    require("copilot.suggestion").dismiss()
-                    vim.api.nvim_buf_set_var(0, "copilot_suggestion_hidden", true)
-                end
-            end)
-
-            cmp.event:on("menu_closed", function()
-                vim.api.nvim_buf_set_var(0, "copilot_suggestion_hidden", false)
-            end)
-
             ---@type cmp.ConfigSchema
             local opts = {
                 completion = {
