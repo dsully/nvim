@@ -66,10 +66,6 @@ return {
                     return {
                         backend = "fzf_lua",
                         fzf_lua = vim.tbl_deep_extend("force", opts, {
-                            fzf_opts = {
-                                -- Disable fuzzy matching.
-                                ["--exact"] = "",
-                            },
                             prompt = " ",
                             winopts = winopts,
                         }),
