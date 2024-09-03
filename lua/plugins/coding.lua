@@ -206,6 +206,7 @@ return {
                 sources = cmp.config.sources({
                     helpers.config.lsp(),
                     helpers.config.snippets,
+                    helpers.config.buffer,
                     helpers.config.path,
                     helpers.config.env,
                 }),
