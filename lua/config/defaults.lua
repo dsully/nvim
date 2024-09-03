@@ -344,6 +344,7 @@ local M = {
         lsp = {
             "copilot",
             "llm-ls",
+            "sonarlint.nvim",
             "typos_lsp",
         },
         paths = {
@@ -355,10 +356,12 @@ local M = {
             tostring(vim.fn.stdpath("state")),
         },
         progress = {
+            "basedpyright",
             "copilot",
             "ltex",
             "pylance",
             "pyright",
+            "sonarlint.nvim",
         },
     },
 
