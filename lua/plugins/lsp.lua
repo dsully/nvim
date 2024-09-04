@@ -371,6 +371,21 @@ return {
                         },
                     },
                     gradle_ls = {},
+                    harper_ls = {
+                        settings = {
+                            ["harper-ls"] = {
+                                codeActions = {
+                                    forceStable = true,
+                                },
+                                -- typos handles spell checking
+                                linters = {
+                                    sentence_capitalization = false,
+                                    spell_check = false,
+                                },
+                                userDictPath = vim.env.XDG_CONFIG_HOME .. "/harper/dict.txt",
+                            },
+                        },
+                    },
                     html = {},
                     -- jedi_language_server = {
                     --     ---@param client vim.lsp.Client
