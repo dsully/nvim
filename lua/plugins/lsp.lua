@@ -372,6 +372,7 @@ return {
                     },
                     gradle_ls = {},
                     harper_ls = {
+                        filetypes = { "gitcommit", "markdown", "text" },
                         settings = {
                             ["harper-ls"] = {
                                 codeActions = {

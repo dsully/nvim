@@ -20,6 +20,17 @@ return {
         end
 
         ev.on({ ev.BufEnter, ev.BufReadPost, ev.BufWritePost, ev.TextChanged, ev.InsertLeave }, function(args)
+            --
+            -- Ignore buffer types and empty file types.
+            if vim.tbl_contains(defaults.ignored.buffer_types, vim.bo.buftype) then
+                return
+            end
+
+            -- if vim.tbl_contains(vim.tbl_extend("force", defaults.ignored.file_types, { "", "large_file" }), vim.bo.filetype) then
+            if vim.tbl_contains(defaults.ignored.file_types, vim.bo.filetype) then
+                return
+            end
+
             -- Ignore 3rd party code.
             if args.file:match("/(node_modules|__pypackages__|site_packages|cargo/registry)/") then
                 return
