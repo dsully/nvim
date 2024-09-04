@@ -315,6 +315,7 @@ local M = {
             "trouble",
         },
         file_types = {
+            "",
             "Codewindow",
             "DressingInput",
             "DressingSelect",
@@ -329,6 +330,7 @@ local M = {
             "git",
             "gitrebase",
             "glowpreview",
+            "large_file",
             "keymenu",
             "lazy",
             "log",
