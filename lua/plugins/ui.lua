@@ -647,53 +647,11 @@ return {
     },
     {
         "goolord/alpha-nvim",
-        opts = function()
-            local cmd = defaults.cmd
-            local dashboard = require("alpha.themes.dashboard")
-
-            dashboard.section.header.val = {
-                [[                                                                       ]],
-                [[                                                                     ]],
-                [[       ████ ██████           █████      ██                     ]],
-                [[      ███████████             █████                             ]],
-                [[      █████████ ███████████████████ ███   ███████████   ]],
-                [[     █████████  ███    █████████████ █████ ██████████████   ]],
-                [[    █████████ ██████████ █████████ █████ █████ ████ █████   ]],
-                [[  ███████████ ███    ███ █████████ █████ █████ ████ █████  ]],
-                [[ ██████  █████████████████████ ████ █████ █████ ████ ██████ ]],
-                [[                                                                       ]],
-            }
-
-            dashboard.section.header.opts.hl = "AlphaHeader"
-            dashboard.section.footer.opts.hl = "AlphaFooter"
-
-            dashboard.section.buttons.opts.spacing = 0
-            dashboard.section.buttons.val = {
-                dashboard.button("l", "󰁯  Load Session        ", cmd("SessionLoad")),
-                dashboard.button("n", "  New File            ", cmd("ene <BAR> startinsert")),
-                dashboard.button("r", "󰈢  Recently Opened     ", cmd("FzfLua oldfiles")),
-                dashboard.button("f", "󰈞  Find Files          ", cmd("Telescope files")),
-                dashboard.button("g", "  Find Text           ", cmd("FzfLua live_grep")),
-                dashboard.button("p", "󰓅  Profile Plugins     ", cmd("Lazy profile")),
-                dashboard.button("u", "  Update Plugins      ", cmd("Lazy sync")),
-                dashboard.button("q", "󰗼  Quit Neovim         ", cmd("qa!")),
-            }
-
-            dashboard.config.layout = {
-                { type = "padding", val = vim.fn.max({ 2, vim.fn.floor(vim.fn.winheight(0) * 0.2) }) },
-                dashboard.section.header,
-                { type = "padding", val = 2 },
-                dashboard.section.buttons,
-                { type = "padding", val = 1 },
-                dashboard.section.footer,
-            }
-
-            return dashboard
-        end,
         config = function(_, dashboard)
             -- Close Lazy and re-open when the dashboard is ready
             if vim.o.filetype == "lazy" then
                 vim.cmd.close()
+
                 ev.on(ev.User, require("lazy").show, {
                     desc = "Close Lazy UI on dashboard load.",
                     pattern = "AlphaReady",
@@ -733,7 +691,133 @@ return {
         cond = function()
             return vim.fn.argc() == 0
         end,
+        dependencies = {
+            "juansalvatore/git-dashboard-nvim",
+        },
         event = ev.VimEnter,
+        opts = function()
+            local cmd = defaults.cmd
+            local startify = require("alpha.themes.theta")
+            local dashboard = require("alpha.themes.dashboard")
+
+            ---@diagnostic disable-next-line: missing-fields
+            local git_dashboard = require("git-dashboard-nvim").setup({
+                basepoints = { "master", "main" },
+                branch = { "master", "main" }, ---@diagnostic disable-line: assign-type-mismatch
+                centered = false,
+                colors = {
+                    branch_highlight = "#EBCB8B",
+                    dashboard_title = "#88C0D0",
+                    days_and_months_labels = "#88C0D0",
+                    empty_square_highlight = "#88C0D0",
+                    filled_square_highlights = { "#002C39", "#094D5B", "#387180", "#6098A7", "#88C0D0", "#C0FAFF" },
+                },
+                day_label_gap = "\t",
+                hide_cursor = false,
+                show_current_branch = true,
+                use_git_username_as_author = true,
+            })
+
+            local heatmap = {
+                type = "text",
+                val = git_dashboard,
+                opts = {
+                    position = "center",
+                },
+            }
+
+            local function button(lhs, txt, rhs, opts)
+                lhs = lhs:gsub("%s", ""):gsub("SPC", "<leader>")
+
+                local default_opts = {
+                    position = "center",
+                    shortcut = "[" .. lhs .. "] ",
+                    cursor = 1,
+                    width = 52,
+                    align_shortcut = "right",
+                    hl_shortcut = { { "Keyword", 0, 1 }, { "Function", 1, #lhs + 1 }, { "Keyword", #lhs + 1, #lhs + 2 } },
+                    shrink_margin = false,
+                    keymap = { "n", lhs, rhs, { noremap = true, silent = true, nowait = true } },
+                }
+
+                opts = vim.tbl_deep_extend("force", default_opts, opts or {})
+
+                return {
+                    type = "button",
+                    val = string.format(" %-1s  %s", opts.icon or "", txt),
+                    on_press = function()
+                        local key = vim.api.nvim_replace_termcodes(rhs .. "<Ignore>", true, false, true)
+                        vim.api.nvim_feedkeys(key, "t", false)
+                    end,
+
+                    opts = opts,
+                }
+            end
+
+            local buttons = {
+                type = "group",
+                val = {
+                    {
+                        type = "text",
+                        val = string.rep("─", 50),
+                        opts = {
+                            hl = "FloatBorder",
+                            position = "center",
+                        },
+                    },
+                    { type = "padding", val = 1 },
+                    button("l", "Load Session        ", cmd("SessionLoad"), { icon = "󰁯 ", hl = { { "String", 1, 2 }, { "Normal", 3, 52 } } }),
+                    button("n", "New File            ", cmd("ene <BAR> startinsert"), { icon = " ", hl = { { "Normal", 1, 2 }, { "Normal", 3, 52 } } }),
+                    button("f", "Find File           ", cmd("FzfLua files"), { icon = "󰱼 ", hl = { { "Normal", 1, 2 }, { "Normal", 3, 52 } } }),
+                    button("g", "Find Text           ", cmd("FzfLua live_grep"), { icon = " ", hl = { { "Normal", 1, 2 }, { "Normal", 3, 52 } } }),
+                    button("p", "Profile Plugins     ", cmd("Lazy profile"), { icon = "󰁯 ", hl = { { "@comment.todo", 1, 2 }, { "Normal", 3, 52 } } }),
+                    button("u", "Update Plugins      ", cmd("Lazy sync"), { icon = " ", hl = { { "Keyword", 1, 2 }, { "Normal", 3, 52 } } }),
+                    button("q", "Quit Neovim         ", cmd("qa!"), { icon = " ", hl = { { "@text.strong", 1, 2 }, { "Normal", 3, 52 } } }),
+                    {
+                        type = "text",
+                        val = string.rep("─", 50),
+                        opts = {
+                            hl = "FloatBorder",
+                            position = "center",
+                        },
+                    },
+                },
+            }
+
+            local mru = {
+                type = "group",
+                val = {
+                    {
+                        type = "text",
+                        val = "[ Recent files ]",
+                        opts = {
+                            hl = "Function",
+                            position = "center",
+                        },
+                    },
+                    { type = "padding", val = 1 },
+                    {
+                        type = "group",
+                        val = function()
+                            return { startify.mru(1, vim.uv.cwd(), 7) }
+                        end,
+                    },
+                    { type = "padding", val = 1 },
+                },
+            }
+
+            dashboard.config.layout = {
+                -- { type = "padding", val = vim.fn.max({ 2, vim.fn.floor(vim.fn.winheight(0) * 0.2) }) },
+                { type = "padding", val = 2 },
+                heatmap,
+                mru,
+                buttons,
+                { type = "padding", val = 1 },
+                dashboard.section.footer,
+            }
+
+            return dashboard
+        end,
         priority = 5, -- Load after session manager.
     },
     {
