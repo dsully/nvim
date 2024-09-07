@@ -73,11 +73,12 @@ local M = {
             javascript = { "biome" },
             just = { "just" },
             lua = { "stylua" },
-            markdown = { "prettier", "markdownlint-cli2", "markdown-toc" }, -- prettier ?
+            markdown = { "markdownlint-cli2", "markdown-toc" },
             rust = {},
             sh = { "shellharden", "shfmt" },
             toml = { "taplo" },
             typescript = { "biome" },
+            xml = { "xmlformat" },
         },
         on_save = {
             "bash",
@@ -107,24 +108,8 @@ local M = {
     },
 
     tools = {
-        "actionlint",
         "ast-grep",
-        "biome",
-        "curlylint",
         "gitui",
-        "gofumpt",
-        "goimports",
-        "markdown-toc",
-        "markdownlint-cli2",
-        "prettier",
-        "protolint",
-        "revive",
-        "rstcheck",
-        "shellharden",
-        "shfmt",
-        "stylua",
-        "write-good",
-        "yamllint",
     },
 
     icons = {
