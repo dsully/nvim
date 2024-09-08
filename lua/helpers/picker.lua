@@ -145,13 +145,16 @@ M.notifications = function()
     })
 end
 
-M.pick = function(command)
-    return "<cmd>FzfLua " .. command .. "<cr>"
-end
-
-M.file = function(cwd)
+---@param command string
+---@param cwd function|string|nil
+M.pick = function(command, cwd)
     return function()
-        require("fzf-lua").files({ cwd = cwd })
+        --
+        if type(cwd) == "function" then
+            cwd = cwd()
+        end
+
+        pcall(require("fzf-lua")[command], { cwd = cwd })
     end
 end
 
