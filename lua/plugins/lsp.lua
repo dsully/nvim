@@ -250,9 +250,6 @@ return {
                     --     offset_encoding = "utf-32",
                     -- }
                     clangd = {
-                        capabilities = {
-                            offsetEncoding = { "utf-16" },
-                        },
                         filetypes = { "c", "cpp", "cuda" }, -- Let SourceKit handle objective-c and objective-cpp.
                         init_options = {
                             clangdFileStatus = true,
