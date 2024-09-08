@@ -112,7 +112,7 @@ function M.setup()
         --     path = "~/dev/home/neovim",
         -- },
         install = {
-            colorscheme = { "nordish" },
+            colorscheme = { vim.g.colorscheme },
             missing = true,
         },
         performance = {

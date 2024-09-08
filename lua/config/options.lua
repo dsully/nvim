@@ -1,4 +1,4 @@
-vim.o.autoread = true -- update file content if it has been modified on disk
+vim.opt.autoread = true -- update file content if it has been modified on disk
 vim.opt.backup = false
 vim.opt.cmdheight = 0 -- Set to 0 if using Noice
 vim.opt.completeopt = { "menu", "menuone", "noselect" }
@@ -91,6 +91,9 @@ vim.g.os = vim.uv.os_uname().sysname
 
 -- Flag for disabling language servers for large files.
 vim.g.large_file_bytes = 1024 * 1024 * 1024 * 10
+
+--
+vim.g.colorscheme = "nordish"
 
 -- Load clipboard.vim faster. Neovim 0.10+ includes OSC52 support.
 if vim.env.SSH_CONNECTION then
