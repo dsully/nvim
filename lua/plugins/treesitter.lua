@@ -49,7 +49,7 @@ return {
 
             require("nvim-treesitter.configs").setup(opts)
         end,
-        event = { ev.LazyFile, ev.VeryLazy },
+        event = { ev.LazyFile },
         init = function(plugin)
             require("lazy.core.loader").add_to_rtp(plugin)
             require("nvim-treesitter.query_predicates")
@@ -57,7 +57,6 @@ return {
         keys = {
             { "<leader>i", vim.show_pos, desc = "Inspect Position" },
         },
-        lazy = vim.fn.argc(-1) == 0, -- load treesitter early when opening a file from the cmdline
         opts = {
             ensure_installed = {
                 "bash",
