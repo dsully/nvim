@@ -49,6 +49,11 @@ return {
     },
     {
         "rshkarin/mason-nvim-lint",
+        config = function(_, opts)
+            vim.schedule(function()
+                require("mason-nvim-lint").setup(opts)
+            end)
+        end,
         dependencies = {
             "williamboman/mason.nvim",
             "mfussenegger/nvim-lint",

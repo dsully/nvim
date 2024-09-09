@@ -81,7 +81,6 @@ return {
             end
 
             require("mason-lspconfig").setup({
-                automatic_installation = true,
                 ensure_installed = vim.tbl_keys(handlers),
                 handlers = handlers,
             })
@@ -101,7 +100,7 @@ return {
             },
             { "Bilal2453/luvit-meta" },
             { "williamboman/mason.nvim" },
-            { "williamboman/mason-lspconfig.nvim" },
+            { "williamboman/mason-lspconfig.nvim", config = function() end },
         },
         event = ev.LazyFile,
         init = function()
@@ -600,8 +599,17 @@ return {
                     vim.notify(("Installing %s"):format(p.name), vim.log.levels.INFO, { title = "Mason", render = "compact" })
 
                     local handle_closed = vim.schedule_wrap(function()
-                        return p:is_installed()
-                            and vim.notify(("Successfully installed %s"):format(p.name), vim.log.levels.INFO, { title = "Mason", render = "compact" })
+                        if p:is_installed() then
+                            vim.notify(("Successfully installed %s"):format(p.name), vim.log.levels.INFO, { title = "Mason", render = "compact" })
+
+                            -- Trigger FileType event to possibly load this newly installed LSP server
+                            vim.defer_fn(function()
+                                require("lazy.core.handler.event").trigger({
+                                    buf = vim.api.nvim_get_current_buf(),
+                                    event = "FileType",
+                                })
+                            end, 100)
+                        end
                     end)
 
                     p:install():once("closed", handle_closed)

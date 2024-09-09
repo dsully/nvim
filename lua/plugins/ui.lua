@@ -405,7 +405,13 @@ return {
                 return ctx.is_focused and statusline or stl_inactive
             end)
         end,
-        event = ev.VeryLazy,
+        event = ev.LazyFile,
+        init = function()
+            if vim.fn.argc(-1) > 0 then
+                -- Set an empty statusline until nougat loads
+                vim.o.statusline = " "
+            end
+        end,
     },
     {
         "folke/noice.nvim",
