@@ -294,7 +294,7 @@ return {
                 highlighters = {
                     -- Match against hex colors with no leading `#`.
                     bare_hex = {
-                        pattern = "%W()%x%x%x%x%x%x%f[%X]",
+                        pattern = "[ =:]()%x%x%x%x%x%x%f[%X]",
                         group = function(_, match, _)
                             return MiniHipatterns.compute_hex_color_group("#" .. match, "bg")
                         end,

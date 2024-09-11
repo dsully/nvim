@@ -66,7 +66,7 @@ return {
         },
         --stylua: ignore end
         opts = function()
-            local prompts = require("codecompanion.config").default_prompts
+            local prompts = require("codecompanion.config").pre_defined_prompts
 
             prompts["Custom Prompt"] = nil
             prompts["Explain"] = nil
@@ -74,7 +74,7 @@ return {
             prompts["Generate a Commit Message"] = nil
 
             return {
-                default_prompts = {
+                pre_defined_prompts = {
                     ["Optimize"] = {
                         strategy = "chat",
                         description = "Optimize the selected code",
