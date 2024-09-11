@@ -80,7 +80,7 @@ return {
                         -- Strip method & function parameters.
                         item.abbr = item.abbr:gsub("pub fn (.+)", "%1"):gsub("(.+)%(.+%)~", "%1()")
 
-                        if entry.source and entry.source.name ~= "nvim_lsp" then
+                        if entry.source ~= nil and entry.source.name ~= nil and entry.source.name ~= "nvim_lsp" then
                             item.menu = " " .. defaults.cmp.menu[entry.source.name]
                         else
                             item.menu = ""
