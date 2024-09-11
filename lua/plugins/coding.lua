@@ -265,9 +265,75 @@ return {
         "echasnovski/mini.hipatterns",
         event = ev.LazyFile,
         opts = function()
+            local vtext = defaults.icons.misc.circle_filled_large
+            local cache = {} ---@type table<string,table<string,string>>
+            local hl_groups = {} ---@type table<string,boolean>
+
+            local get_hl_group = function(hl)
+                local group = vim.inspect(hl):gsub("%W+", "_")
+
+                if not hl_groups[group] then
+                    hl = type(hl) == "string" and { link = hl } or hl
+                    hl = vim.deepcopy(hl, true)
+
+                    hl.fg = hl.fg or defaults.colors.gray.base
+
+                    if hl.fg == hl.bg then
+                        hl.fg = nil
+                    end
+
+                    vim.api.nvim_set_hl(0, group, hl)
+
+                    hl_groups[group] = true
+                end
+
+                return group
+            end
+
             return {
                 highlighters = {
-                    hex_color = require("mini.hipatterns").gen_highlighter.hex_color(),
+                    -- Match against hex colors with no leading `#`.
+                    bare_hex = {
+                        pattern = "%W()%x%x%x%x%x%x%f[%X]",
+                        group = function(_, match, _)
+                            return MiniHipatterns.compute_hex_color_group("#" .. match, "bg")
+                        end,
+                        extmark_opts = { priority = 2000 },
+                    },
+                    hex_color = require("mini.hipatterns").gen_highlighter.hex_color({ priority = 2000 }),
+                    nvim_hl_colors = {
+                        pattern = {
+                            "%f[%w]()M.colors%.[%w_%.]+()%f[%W]",
+                            "%f[%w]()defaults.colors%.[%w_%.]+()%f[%W]",
+                        },
+                        group = function(_, match)
+                            local parts = vim.split(match, ".", { plain = true })
+
+                            if (parts[1] == "M" or parts[1] == "defaults") and parts[2] == "colors" then
+                                table.remove(parts, 1)
+                                table.remove(parts, 1)
+                            end
+
+                            local color = vim.tbl_get(defaults.colors, unpack(parts))
+
+                            return type(color) == "string" and get_hl_group({ fg = color })
+                        end,
+                        extmark_opts = function(_, _, data)
+                            return { virt_text = { { vtext, data.hl_group } }, virt_text_pos = "eol", priority = 2000 }
+                        end,
+                    },
+                    shorthand = {
+                        pattern = "()#%x%x%x()%f[^%x%w]",
+                        group = function(_, _, data)
+                            ---@type string
+                            local match = data.full_match
+                            local r, g, b = match:sub(2, 2), match:sub(3, 3), match:sub(4, 4)
+                            local hex_color = "#" .. r .. r .. g .. g .. b .. b
+
+                            return MiniHipatterns.compute_hex_color_group(hex_color, "bg")
+                        end,
+                        extmark_opts = { priority = 2000 },
+                    },
                 },
             }
         end,
