@@ -2,7 +2,7 @@
 -- This is needed so types can be resolved correctly.
 --
 -- If/once upstream addresses my PR, then pulling from pypi is an option.
-do
+local function dmypy_ls()
     if vim.env.VIRTUAL_ENV and not vim.g.dmypy then
         local dmypy = vim.env.VIRTUAL_ENV .. "/bin/dmypy-ls"
         local python = vim.env.VIRTUAL_ENV .. "/bin/python"
@@ -57,3 +57,5 @@ do
         end
     end
 end
+
+vim.schedule(dmypy_ls)
