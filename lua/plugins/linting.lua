@@ -54,10 +54,6 @@ return {
                 require("mason-nvim-lint").setup(opts)
             end)
         end,
-        dependencies = {
-            "williamboman/mason.nvim",
-            "mfussenegger/nvim-lint",
-        },
         event = ev.LazyFile,
         opts = {
             quiet_mode = true,

@@ -319,7 +319,6 @@ return {
     {
         "folke/trouble.nvim",
         cmd = { "Trouble" },
-        dependencies = "echasnovski/mini.icons",
         keys = {
             -- stylua: ignore
             { "<leader>xx", function() require("trouble").toggle({ mode = "diagnostics" }) end, desc = "Trouble" },

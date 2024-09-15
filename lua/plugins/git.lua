@@ -106,14 +106,20 @@ return {
         },
     },
     {
+        -- For Github PR view
+        "chrisgrieser/nvim-tinygit",
+        opts = {
+            commitMsg = {
+                conventionalCommits = {
+                    enforce = true,
+                },
+            },
+        },
+    },
+    {
         "SuperBo/fugit2.nvim",
         build = "rockspec",
         cmd = { "Fugit2", "Fugit2Graph" },
-        dependencies = {
-            "MunifTanjim/nui.nvim",
-            "chrisgrieser/nvim-tinygit", -- For Github PR view
-            "nvim-lua/plenary.nvim",
-        },
         keys = {
             -- stylua: ignore
             { "<space>g", function() require("fugit2").git_status() end, desc = "Git UI (FuGit)" },

@@ -163,11 +163,6 @@ return {
                 },
             })
         end,
-        dependencies = {
-            "nvim-lua/plenary.nvim",
-            "echasnovski/mini.icons",
-            "stevearc/resession.nvim",
-        },
         event = ev.LazyFile,
         keys = {
             {
@@ -416,7 +411,6 @@ return {
     {
         "folke/noice.nvim",
         cmd = { "Noice", "NoiceDismiss" },
-        dependencies = { "MunifTanjim/nui.nvim" },
         event = ev.VeryLazy,
         -- stylua: ignore
         keys = {
@@ -652,6 +646,25 @@ return {
         },
     },
     {
+        "juansalvatore/git-dashboard-nvim",
+        opts = {
+            basepoints = { "master", "main" },
+            branch = { "master", "main" },
+            centered = false,
+            colors = {
+                branch_highlight = defaults.colors.yellow.base,
+                dashboard_title = defaults.colors.cyan.bright,
+                days_and_months_labels = defaults.colors.cyan.bright,
+                empty_square_highlight = defaults.colors.cyan.bright,
+                filled_square_highlights = { "#002c39", "#094d5b", "#387180", "#6098a7", defaults.colors.cyan.bright, "#c0faff" },
+            },
+            day_label_gap = "\t",
+            hide_cursor = false,
+            show_current_branch = true,
+            use_git_username_as_author = true,
+        },
+    },
+    {
         "goolord/alpha-nvim",
         config = function(_, dashboard)
             -- Close Lazy and re-open when the dashboard is ready
@@ -697,36 +710,15 @@ return {
         cond = function()
             return vim.fn.argc() == 0
         end,
-        dependencies = {
-            "juansalvatore/git-dashboard-nvim",
-        },
         event = ev.VimEnter,
         opts = function()
             local cmd = defaults.cmd
             local startify = require("alpha.themes.theta")
             local dashboard = require("alpha.themes.dashboard")
 
-            ---@diagnostic disable-next-line: missing-fields
-            local git_dashboard = require("git-dashboard-nvim").setup({
-                basepoints = { "master", "main" },
-                branch = { "master", "main" }, ---@diagnostic disable-line: assign-type-mismatch
-                centered = false,
-                colors = {
-                    branch_highlight = "#EBCB8B",
-                    dashboard_title = "#88C0D0",
-                    days_and_months_labels = "#88C0D0",
-                    empty_square_highlight = "#88C0D0",
-                    filled_square_highlights = { "#002C39", "#094D5B", "#387180", "#6098A7", "#88C0D0", "#C0FAFF" },
-                },
-                day_label_gap = "\t",
-                hide_cursor = false,
-                show_current_branch = true,
-                use_git_username_as_author = true,
-            })
-
             local heatmap = {
                 type = "text",
-                val = git_dashboard,
+                val = require("git-dashboard-nvim").heatmap(),
                 opts = {
                     position = "center",
                 },

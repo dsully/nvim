@@ -85,23 +85,6 @@ return {
                 handlers = handlers,
             })
         end,
-        dependencies = {
-            { "b0o/schemastore.nvim", version = false },
-            {
-                "folke/lazydev.nvim",
-                cmd = "LazyDev",
-                ft = "lua",
-                opts = {
-                    library = {
-                        { path = "luvit-meta/library", words = { "vim%.uv" } },
-                        { path = "lazy.nvim", words = { "LazyVim" } },
-                    },
-                },
-            },
-            { "Bilal2453/luvit-meta" },
-            { "williamboman/mason.nvim" },
-            { "williamboman/mason-lspconfig.nvim", config = function() end },
-        },
         event = ev.LazyFile,
         init = function()
             vim.lsp.set_log_level(vim.log.levels.ERROR)
@@ -572,6 +555,19 @@ return {
         end,
         priority = 900,
     },
+    { "b0o/schemastore.nvim", version = false },
+    { "Bilal2453/luvit-meta" },
+    {
+        "folke/lazydev.nvim",
+        cmd = "LazyDev",
+        ft = "lua",
+        opts = {
+            library = {
+                { path = "luvit-meta/library", words = { "vim%.uv" } },
+                { path = "lazy.nvim", words = { "LazyVim" } },
+            },
+        },
+    },
     {
         "williamboman/mason.nvim",
         build = ":MasonUpdate",
@@ -628,6 +624,7 @@ return {
             },
         },
     },
+    { "williamboman/mason-lspconfig.nvim", config = function() end },
     { "microsoft/python-type-stubs" },
     {
         "pmizio/typescript-tools.nvim",
@@ -635,7 +632,6 @@ return {
             "BufReadPre *.ts,*.tsx,*.js,*.jsx",
             "BufNewFile *.ts,*.tsx,*.js,*.jsx",
         },
-        dependencies = { "nvim-lua/plenary.nvim", "nvim-lspconfig" },
         opts = function()
             return {
                 capabilities = require("helpers.lsp").capabilities(),
@@ -668,6 +664,7 @@ return {
     { "someone-stole-my-name/yaml-companion.nvim" },
     {
         "https://gitlab.com/schrieveslaach/sonarlint.nvim",
+        cond = false,
         config = function()
             -- https://gitlab.com/schrieveslaach/sonarlint.nvim/-/issues/18
             vim.lsp.handlers["sonarlint/listFilesInFolder"] = function(_, params)

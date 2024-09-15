@@ -90,10 +90,6 @@ return {
                 require("mason-conform").setup(opts)
             end)
         end,
-        dependencies = {
-            "williamboman/mason.nvim",
-            "stevearc/conform.nvim",
-        },
         event = { ev.BufWritePre, ev.LspAttach },
     },
 }
