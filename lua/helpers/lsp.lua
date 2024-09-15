@@ -109,7 +109,7 @@ M.supports_method = {}
 
 ---@param client vim.lsp.Client
 function M.validate_client(client, buffer)
-    if not vim.api.nvim_buf_is_valid(buffer) then
+    if buffer == nil or not vim.api.nvim_buf_is_valid(buffer) then
         return
     end
 
