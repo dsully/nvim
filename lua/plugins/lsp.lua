@@ -36,16 +36,17 @@ return {
             ---@param client vim.lsp.Client
             ---@param buffer number
             lsp.on_supports_method(methods.textDocument_documentHighlight, function(client, buffer)
-                local group = ev.group(("%s/buffer/%s"):format(client.name, buffer))
+                local group = ("%s/highlight/%s"):format(client.name, buffer)
+                local id = ev.group(group)
 
                 ev.on({ ev.CursorHold, ev.CursorHoldI, ev.InsertLeave }, function()
                     if vim.api.nvim_buf_is_valid(buffer) then
                         vim.lsp.buf.document_highlight()
                     end
                 end, {
-                    group = group,
+                    group = id,
                     buffer = buffer,
-                    desc = "LSP: Highlight symbol",
+                    desc = group .. "/highlight",
                 })
 
                 ev.on({ ev.BufLeave, ev.CursorMoved, ev.InsertEnter }, function()
@@ -53,9 +54,9 @@ return {
                         vim.lsp.buf.clear_references()
                     end
                 end, {
-                    group = group,
+                    group = id,
                     buffer = buffer,
-                    desc = "LSP: Clear highlighted symbol",
+                    desc = group .. "/clear",
                 })
             end)
 
