@@ -43,19 +43,17 @@ return {
                 capabilities = require("helpers.lsp").capabilities(),
             })
         end,
-        dependencies = {
-            "mfussenegger/nvim-dap",
-            "nvim-java/lua-async-await",
-            "nvim-java/nvim-java-core",
-            "nvim-java/nvim-java-dap",
-            "nvim-java/nvim-java-refactor",
-            "nvim-java/nvim-java-test",
-        },
         ft = { "java" },
         opts = {
             jdk = { auto_install = false },
         },
     },
+    { "nvim-java/lua-async-await" },
+    { "nvim-java/nvim-java-core" },
+    { "nvim-java/nvim-java-dap" },
+    { "nvim-java/nvim-java-refactor" },
+    { "nvim-java/nvim-java-test" },
+
     {
         "OXY2DEV/markview.nvim",
         ft = "markdown",
@@ -230,11 +228,6 @@ return {
                 },
             }
         end,
-        dependencies = {
-            "mfussenegger/nvim-dap",
-            "nvim-neotest/nvim-nio",
-            "rcarriga/nvim-dap-ui", -- install debug adapter
-        },
         lazy = false,
         version = "^5", -- Recommended
     },

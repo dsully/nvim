@@ -3,25 +3,6 @@ return {
         "yioneko/nvim-cmp",
         branch = "perf",
         cmd = "CmpStatus",
-        dependencies = {
-            "SergioRibera/cmp-dotenv",
-            "hrsh7th/cmp-buffer",
-            "hrsh7th/cmp-cmdline",
-            "hrsh7th/cmp-nvim-lsp",
-            "hrsh7th/cmp-path",
-            "zjp-CN/nvim-cmp-lsp-rs",
-            {
-                "garymjr/nvim-snippets",
-                opts = {
-                    friendly_snippets = true,
-                },
-                dependencies = {
-                    "rafamadriz/friendly-snippets",
-                    lazy = false,
-                },
-            },
-        },
-        event = ev.InsertEnter,
         config = function()
             local cmp = require("cmp")
             local helpers = require("helpers.cmp")
@@ -225,6 +206,22 @@ return {
             ev.on(ev.CmdWinEnter, cmp.close)
         end,
     },
+    { "hrsh7th/cmp-buffer", event = ev.InsertEnter },
+    { "hrsh7th/cmp-cmdline", event = ev.CmdlineEnter },
+    { "hrsh7th/cmp-nvim-lsp" },
+    { "hrsh7th/cmp-path", event = ev.InsertEnter },
+    { "SergioRibera/cmp-dotenv", event = ev.InsertEnter },
+    {
+        "garymjr/nvim-snippets",
+        opts = {
+            friendly_snippets = true,
+        },
+    },
+    { "zjp-CN/nvim-cmp-lsp-rs" },
+    {
+        "rafamadriz/friendly-snippets",
+        lazy = false,
+    },
     {
         "chrisgrieser/nvim-scissors",
         cmd = { "ScissorsAddNewSnippet", "ScissorsEditSnippet" },
@@ -419,7 +416,7 @@ return {
                 return open(pair, neigh_pattern)
             end
         end,
-        event = ev.VeryLazy,
+        event = ev.InsertEnter,
         opts = {
             -- Deal with markdown code blocks better.
             markdown = true,
@@ -604,28 +601,40 @@ return {
             "CompilerToggleResults",
             "CompilerRedo",
         },
-        dependencies = {
-            "stevearc/overseer.nvim",
-            cmd = {
-                "CompilerOpen",
-                "CompilerToggleResults",
-                "CompilerRedo",
-                "OverseerRun",
-                "OverseerToggle",
+        opts = {},
+    },
+    {
+        "stevearc/overseer.nvim",
+        cmd = {
+            "CompilerOpen",
+            "CompilerToggleResults",
+            "CompilerRedo",
+            "OverseerRun",
+            "OverseerToggle",
+        },
+        opts = {
+            confirm = {
+                border = defaults.ui.border.name,
             },
-            opts = {
-                task_list = {
-                    direction = "bottom",
-                    min_height = 25,
-                    max_height = 25,
-                    -- default_detail = 1,
-                    bindings = {
-                        ["q"] = vim.cmd.OverseerClose,
-                    },
+            form = {
+                border = defaults.ui.border.name,
+            },
+            help_win = {
+                border = defaults.ui.border.name,
+            },
+            task_list = {
+                direction = "bottom",
+                min_height = 25,
+                max_height = 25,
+                -- default_detail = 1,
+                bindings = {
+                    ["q"] = vim.cmd.OverseerClose,
                 },
             },
+            task_win = {
+                border = defaults.ui.border.name,
+            },
         },
-        opts = {},
     },
     {
         "chrisgrieser/nvim-chainsaw",
