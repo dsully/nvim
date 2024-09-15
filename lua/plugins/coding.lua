@@ -324,7 +324,6 @@ return {
                             return type(color) == "string" and get_hl_group({ fg = color })
                         end,
                         extmark_opts = extmark_vtext,
-                        end,
                     },
                     shorthand = {
                         pattern = "()#%x%x%x()%f[^%x%w]",
