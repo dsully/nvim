@@ -262,6 +262,8 @@ return {
         "echasnovski/mini.hipatterns",
         event = ev.LazyFile,
         opts = function()
+            local hp = require("mini.hipatterns")
+
             local vtext = defaults.icons.misc.circle_filled_large
             local cache = {} ---@type table<string,table<string,string>>
             local hl_groups = {} ---@type table<string,boolean>
@@ -287,17 +289,23 @@ return {
                 return group
             end
 
+            local extmark_opts = { priority = 2000 }
+
+            local extmark_vtext = function(_, _, data)
+                return vim.tbl_extend("force", extmark_opts, { virt_text = { { vtext, data.hl_group } }, virt_text_pos = "eol" })
+            end
+
             return {
                 highlighters = {
                     -- Match against hex colors with no leading `#`.
                     bare_hex = {
-                        pattern = "[ =:]()%x%x%x%x%x%x%f[%X]",
+                        pattern = "[ =:'\"]()%x%x%x%x%x%x%f[%X]",
                         group = function(_, match, _)
-                            return MiniHipatterns.compute_hex_color_group("#" .. match, "bg")
+                            return hp.compute_hex_color_group("#" .. match, "bg")
                         end,
-                        extmark_opts = { priority = 2000 },
+                        extmark_opts = extmark_opts,
                     },
-                    hex_color = require("mini.hipatterns").gen_highlighter.hex_color({ priority = 2000 }),
+                    hex_color = hp.gen_highlighter.hex_color({ priority = 2000 }),
                     nvim_hl_colors = {
                         pattern = {
                             "%f[%w]()M.colors%.[%w_%.]+()%f[%W]",
@@ -315,8 +323,7 @@ return {
 
                             return type(color) == "string" and get_hl_group({ fg = color })
                         end,
-                        extmark_opts = function(_, _, data)
-                            return { virt_text = { { vtext, data.hl_group } }, virt_text_pos = "eol", priority = 2000 }
+                        extmark_opts = extmark_vtext,
                         end,
                     },
                     shorthand = {
@@ -327,9 +334,21 @@ return {
                             local r, g, b = match:sub(2, 2), match:sub(3, 3), match:sub(4, 4)
                             local hex_color = "#" .. r .. r .. g .. g .. b .. b
 
-                            return MiniHipatterns.compute_hex_color_group(hex_color, "bg")
+                            return hp.compute_hex_color_group(hex_color, "bg")
                         end,
-                        extmark_opts = { priority = 2000 },
+                        extmark_opts = extmark_opts,
+                    },
+                    separated = {
+                        pattern = "%[()%d+,%s*%d+,%s*%d+()%]",
+                        group = function(_, _match, data)
+                            ---@type string
+                            dbg(data.full_match)
+                            local r, g, b = _match:match("(%d+),%s*(%d+),%s*(%d+)")
+                            local hex_color = string.format("#%02X%02X%02X", r, g, b)
+
+                            return hp.compute_hex_color_group(hex_color, "fg")
+                        end,
+                        extmark_opts = extmark_vtext,
                     },
                 },
             }
