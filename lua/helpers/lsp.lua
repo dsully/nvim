@@ -351,7 +351,7 @@ M.find_root = function(bufnr)
     if not root then
         ---@type string?
         root = vim.fs.root(bufnr, defaults.root_patterns)
-        root = root and vim.fs.dirname(root) or cwd
+        root = root and root or cwd
     end
 
     ---@cast root string

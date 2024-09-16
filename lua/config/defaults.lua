@@ -360,6 +360,7 @@ local M = {
         ".stylua.toml",
         "Cargo.toml",
         "configure",
+        "fish_variables",
         "go.mod",
         "package.json",
         "pyproject.toml",
