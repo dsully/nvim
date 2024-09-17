@@ -47,7 +47,11 @@ return {
                 end)
             end
 
+            require("nvim-treesitter-textobjects")
             require("nvim-treesitter.configs").setup(opts)
+        end,
+        disable = function(_, bufnr) -- Disable in files with more than 5K
+            return vim.bo.filetype ~= "large_file" and require("helpers.file").is_large_file(bufnr) and "large_file" or nil
         end,
         event = { ev.LazyFile },
         init = function(plugin)
@@ -55,6 +59,8 @@ return {
             require("nvim-treesitter.query_predicates")
         end,
         keys = {
+            { "<bs>", desc = "Decrement Selection", mode = "x" },
+            { "<c-space>", desc = "Increment Selection" },
             { "<leader>i", vim.show_pos, desc = "Inspect Position" },
         },
         opts = {
@@ -130,6 +136,15 @@ return {
                 end,
                 enable = true,
             },
+            incremental_selection = {
+                enable = true,
+                keymaps = {
+                    init_selection = "<c-space>",
+                    node_incremental = "<c-space>",
+                    scope_incremental = false,
+                    node_decremental = "<bs>",
+                },
+            },
             indent = { enable = true },
             matchup = { enable = true },
             query_linter = {
@@ -137,6 +152,18 @@ return {
                 use_virtual_text = true,
                 lint_events = { ev.BufWrite, ev.CursorHold },
             },
+        },
+    },
+    {
+        "nvim-treesitter/nvim-treesitter-textobjects",
+        event = ev.VeryLazy,
+    },
+    {
+        "lewis6991/ts-install.nvim",
+        build = ":TS update",
+        cmd = "TS",
+        opts = {
+            auto_install = true,
         },
     },
     {
@@ -169,7 +196,7 @@ return {
             local mini = require("helpers.mini")
 
             local opts = {
-                n_lines = 500,
+                n_lines = 2000,
                 custom_textobjects = {
                     o = ai.gen_spec.treesitter({ -- code block
                         a = { "@block.outer", "@conditional.outer", "@loop.outer" },
