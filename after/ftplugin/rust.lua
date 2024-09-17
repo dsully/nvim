@@ -15,8 +15,3 @@ if vim.fn.executable("codesort") == 1 then
         vim.cmd(string.format("%d,%d!codesort", vim.fn.line("'<"), vim.fn.line("'>")))
     end, "Sort code", { "x" })
 end
-
--- Disable mini.pairs for lifetimes.
-if package.loaded["mini.pairs"] then
-    require("mini.pairs").unmap("i", "'", "''")
-end

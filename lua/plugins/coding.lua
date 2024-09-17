@@ -436,8 +436,42 @@ return {
         end,
         event = ev.InsertEnter,
         opts = {
+            -- https://gitspartv.github.io/lua-patterns/
+            -- https://riptutorial.com/lua/example/20315/lua-pattern-matching
+            mappings = {
+                -- Prevents the action if the cursor is just before any character or next to a "\".
+                ["("] = { action = "open", pair = "()", neigh_pattern = "[^\\][%s%)%]%}]" },
+                ["["] = { action = "open", pair = "[]", neigh_pattern = "[^\\][%s%)%]%}]" },
+                ["{"] = { action = "open", pair = "{}", neigh_pattern = "[^\\][%s%)%]%}]" },
+
+                -- This is default (prevents the action if the cursor is just next to a "\").
+                [")"] = { action = "close", pair = "()", neigh_pattern = "[^\\]." },
+                ["]"] = { action = "close", pair = "[]", neigh_pattern = "[^\\]." },
+                ["}"] = { action = "close", pair = "{}", neigh_pattern = "[^\\]." },
+
+                -- Don't autocomplete quotes around letters, except f-strings
+                ['"'] = {
+                    action = "closeopen",
+                    pair = '""',
+                    neigh_pattern = '[^A-Za-eg-z0-9\\"][^%w]',
+                    register = { cr = false },
+                },
+
+                -- Prevents the action if the cursor is just before or next to any character.
+                ["`"] = { action = "closeopen", pair = "``", neigh_pattern = "[^%w][^%w]", register = { cr = false } },
+
+                -- Restrict ' with < and & for Rust
+                ["'"] = { neigh_pattern = "[^%a\\|'|<|&]." },
+
+                -- Add | for Rust iterations
+                ["|"] = { action = "closeopen", pair = "||", neigh_pattern = "[(][)]", register = { cr = false } },
+            },
+
             -- Deal with markdown code blocks better.
             markdown = true,
+
+            -- In which modes mappings from this config should be created
+            modes = { insert = true, command = false, terminal = false },
 
             -- Skip autopair when next character is one of these
             skip_next = [=[[%w%%%'%[%"%.%`%$]]=],
