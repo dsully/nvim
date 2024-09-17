@@ -95,15 +95,6 @@ return {
         priority = 100, -- Load before alpha.nvim
     },
     {
-        "sQVe/sort.nvim",
-        cmd = "Sort",
-        keys = {
-            { "go", vim.cmd.Sort, desc = "Sort lines or elements" },
-            { "go", "<Esc><Cmd>Sort<CR>", mode = "v", desc = "Sort lines or elements" },
-        },
-        opts = true,
-    },
-    {
         "vhyrro/toml-edit.lua",
         build = "rockspec",
         priority = 1000,
