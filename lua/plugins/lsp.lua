@@ -380,7 +380,9 @@ return {
                             c.settings = vim.tbl_deep_extend("force", c.settings, { json = { schemas = require("schemastore").json.schemas() } })
                         end,
                     },
-                    lemminx = {}, -- XML
+                    lemminx = {
+                        filetypes = { "xml", "xml.plist", "xsd", "xsl", "xslt", "svg" },
+                    },
                     lua_ls = {
                         settings = {
                             Lua = {
