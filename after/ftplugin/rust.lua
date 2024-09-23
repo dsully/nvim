@@ -15,3 +15,24 @@ if vim.fn.executable("codesort") == 1 then
         vim.cmd(string.format("%d,%d!codesort", vim.fn.line("'<"), vim.fn.line("'>")))
     end, "Sort code", { "x" })
 end
+
+-- Insert Clippy allow directive above the current line
+keys.map("<leader>ri", function()
+    local line = vim.api.nvim_win_get_cursor(0)[1] - 1
+    local bufnr = vim.api.nvim_get_current_buf()
+
+    ---@type lsp.Diagnostic[]
+    local diagnostics = vim.lsp.diagnostic.from(vim.diagnostic.get(bufnr, { lnum = line }))
+
+    for _, diagnostic in ipairs(diagnostics) do
+        if diagnostic.source == "clippy" then
+            --
+            local allow_directive = diagnostic.message:match("add `(#[allow(clippy::[%w_%-]+%)])`")
+
+            if allow_directive then
+                vim.api.nvim_buf_set_lines(bufnr, line, line, false, { allow_directive })
+                return
+            end
+        end
+    end
+end, "Insert Clippy Allow")
