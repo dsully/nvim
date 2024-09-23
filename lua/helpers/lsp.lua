@@ -107,7 +107,13 @@ M.setup = function()
 
         ---@param diagnostic lsp.Diagnostic
         for _, diagnostic in ipairs(result.diagnostics) do
-            local key = string.format("%s:%s", diagnostic.code, diagnostic.range.start.line)
+            --
+            local key = string.format("%s:%s", diagnostic.code, diagnostic.source)
+
+            -- Prefer Clippy if it's the source of the current diagnostic
+            if not seen[key] then
+                seen[key] = diagnostic
+            end
 
             -- TODO: Remove after functionality is merged upstream https://github.com/neovim/neovim/issues/19649
             local related_info = diagnostic.relatedInformation
@@ -116,19 +122,33 @@ M.setup = function()
                 --
                 for _, info in ipairs(related_info) do
                     --
-                    diagnostic.message = ("%s\n%s(%d:%d)%s"):format(
-                        diagnostic.message,
-                        vim.fs.basename(info.location.uri),
-                        info.location.range.start.line + 1,
-                        info.location.range.start.character + 1,
-                        info.message and info.message ~= "" and (": %s"):format(info.message) or ""
-                    )
-                end
-            end
+                    if info.location then
+                        local tail = vim.fn.fnamemodify(vim.uri_to_fname(info.location.uri), ":t")
 
-            -- Prefer Clippy if it's the source of the current diagnostic
-            if not seen[key] or diagnostic.source == "clippy" then
-                seen[key] = diagnostic
+                        info.message = tail
+                            .. "("
+                            .. (info.location.range.start.line + 1)
+                            .. ", "
+                            .. (info.location.range.start.character + 1)
+                            .. "): "
+                            .. info.message
+
+                        if info.location.uri == vim.uri_from_bufnr(0) then
+                            local ik = string.format("%s:%s", diagnostic.code, info.location.uri)
+
+                            seen[ik] = vim.tbl_extend("force", seen[ik] or {}, {
+                                code = diagnostic.code,
+                                message = info.message,
+                                range = info.location.range,
+                                severity = vim.lsp.protocol.DiagnosticSeverity.Hint,
+                                source = diagnostic.source,
+                                relatedInformation = {},
+                            })
+                        end
+                    end
+
+                    diagnostic.message = diagnostic.message .. "\n" .. info.message
+                end
             end
         end
 
