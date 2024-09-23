@@ -358,4 +358,32 @@ M.find_root = function(bufnr)
     return root
 end
 
+M.code_action = function()
+    ---@type vim.lsp.buf.code_action.Opts
+    vim.lsp.buf.code_action({
+        context = {
+            diagnostics = {},
+            only = defaults.code_actions,
+        },
+    })
+end
+
+M.quickfix = function()
+    vim.lsp.buf.code_action({
+        apply = true,
+        context = {
+            diagnostics = {},
+            only = defaults.code_actions,
+        },
+        ---@param action lsp.CodeAction|lsp.Command
+        filter = function(action)
+            if action.isPreferred ~= nil then
+                return action.isPreferred
+            end
+
+            return action.kind == "quickfix"
+        end,
+    })
+end
+
 return M
