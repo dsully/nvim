@@ -40,6 +40,18 @@ local M = {
         },
     },
 
+    code_actions = {
+        "",
+        "quickfix",
+        -- "refactor",
+        -- "refactor.extract",
+        -- "refactor.inline",
+        "refactor.rewrite",
+        "source",
+        "source.fixAll",
+        "source.organizeImports",
+    },
+
     files = {
         ignored_patterns = {
             "%.DS_Store",

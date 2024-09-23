@@ -1,3 +1,5 @@
+local methods = vim.lsp.protocol.Methods
+
 return {
     {
         "neovim/nvim-lspconfig",
@@ -15,7 +17,6 @@ return {
 
             local lsp = require("helpers.lsp")
             local capabilities = lsp.capabilities()
-            local methods = vim.lsp.protocol.Methods
 
             lsp.setup()
             lsp.on_dynamic_capability(function() end)
@@ -125,6 +126,45 @@ return {
                 require("helpers.float").open({ filetype = "lua", lines = lines, window = { width = 0.8 } })
             end, { desc = "Show LSP Capabilities" })
 
+            vim.api.nvim_create_user_command("LspCodeActions", function()
+                local bufnr = vim.api.nvim_get_current_buf()
+
+                local params = vim.lsp.util.make_range_params()
+                params.context = { diagnostics = vim.lsp.diagnostic.get_line_diagnostics() }
+
+                vim.lsp.buf_request_all(bufnr, methods.textDocument_codeAction, params, function(results)
+                    local lines = {}
+
+                    for client_id, result in pairs(results) do
+                        local client = vim.lsp.get_client_by_id(client_id)
+                        local name = client and client.name or ""
+
+                        if not vim.tbl_contains(defaults.ignored.lsp, name) and result.result then
+                            --
+                            table.insert(lines, name .. " Code Actions:")
+                            table.insert(lines, "")
+
+                            for _, code_action in pairs(result.result or {}) do
+                                --
+                                ---@cast code_action lsp.CodeAction
+                                if code_action.title then
+                                    table.insert(lines, "Title: " .. code_action.title)
+                                    table.insert(lines, "Kind: " .. code_action.kind)
+                                    table.insert(lines, "Preferred: " .. tostring(code_action.isPreferred))
+                                    table.insert(lines, "")
+                                end
+                            end
+                        end
+                    end
+
+                    if #lines == 0 then
+                        table.insert(lines, "No code actions available")
+                    end
+
+                    require("helpers.float").open({ filetype = "lua", lines = lines, window = { width = 0.8 } })
+                end)
+            end, { desc = "Show LSP Code Actions" })
+
             vim.api.nvim_create_user_command("LspRestartBuffer", function()
                 --
                 require("helpers.lsp").apply_to_buffers(function(bufnr, client)
@@ -142,7 +182,8 @@ return {
                     require("which-key").add({
                         { "grn", require("helpers.lsp").rename, desc = "Rename", icon = " " },
                         { "<C-S>", vim.lsp.buf.signature_help, desc = "Signature Help", mode = "i", icon = "󰠗 " },
-                        { "gra", vim.lsp.buf.code_action, desc = "Actions", icon = "󰅯 " },
+                        { "gra", require("helpers.lsp").code_action, desc = "Actions", icon = "󰅯 " },
+                        { "grq", require("helpers.lsp").quickfix, desc = "Quick Fix", icon = "󰅯 " },
                         { "<leader>l", group = "LSP", icon = " " },
                         { "<leader>lc", vim.cmd.LspCapabilities, desc = "LSP Capabilities", icon = " " },
                         { "<leader>li", vim.cmd.LspInfo, desc = "LSP Info", icon = " " },
