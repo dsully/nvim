@@ -98,6 +98,45 @@ M.setup = function()
         return register_capability(err, res, ctx)
     end
 
+    -- De-duplicate diagnostics, in particular from rust-analyzer/rustc
+    ---@param result lsp.PublishDiagnosticsParams
+    vim.lsp.handlers["textDocument/publishDiagnostics"] = vim.lsp.with(function(_, result, ...)
+        --
+        ---@type table<string, lsp.Diagnostic>>
+        local seen = {}
+
+        ---@param diagnostic lsp.Diagnostic
+        for _, diagnostic in ipairs(result.diagnostics) do
+            local key = string.format("%s:%s", diagnostic.code, diagnostic.range.start.line)
+
+            -- TODO: Remove after functionality is merged upstream https://github.com/neovim/neovim/issues/19649
+            local related_info = diagnostic.relatedInformation
+
+            if related_info and #related_info > 0 then
+                --
+                for _, info in ipairs(related_info) do
+                    --
+                    diagnostic.message = ("%s\n%s(%d:%d)%s"):format(
+                        diagnostic.message,
+                        vim.fs.basename(info.location.uri),
+                        info.location.range.start.line + 1,
+                        info.location.range.start.character + 1,
+                        info.message and info.message ~= "" and (": %s"):format(info.message) or ""
+                    )
+                end
+            end
+
+            -- Prefer Clippy if it's the source of the current diagnostic
+            if not seen[key] or diagnostic.source == "clippy" then
+                seen[key] = diagnostic
+            end
+        end
+
+        result.diagnostics = vim.tbl_values(seen)
+
+        vim.lsp.diagnostic.on_publish_diagnostics(_, result, ...)
+    end, {})
+
     M.on_attach(M.validate_client)
     M.on_dynamic_capability(M.validate_client)
 
@@ -381,7 +420,7 @@ M.quickfix = function()
                 return action.isPreferred
             end
 
-            return action.kind == "quickfix"
+            return action.kind == vim.lsp.protocol.CodeActionKind.QuickFix
         end,
     })
 end
