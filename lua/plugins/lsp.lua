@@ -183,7 +183,7 @@ return {
                         { "grn", require("helpers.lsp").rename, desc = "Rename", icon = " " },
                         { "<C-S>", vim.lsp.buf.signature_help, desc = "Signature Help", mode = "i", icon = "󰠗 " },
                         { "gra", require("helpers.lsp").code_action, desc = "Actions", icon = "󰅯 " },
-                        { "grq", require("helpers.lsp").quickfix, desc = "Quick Fix", icon = "󰅯 " },
+                        { "grf", require("helpers.lsp").apply_quickfix, desc = "Apply Quick Fix", icon = "󱖑 " },
                         { "<leader>l", group = "LSP", icon = " " },
                         { "<leader>lc", vim.cmd.LspCapabilities, desc = "LSP Capabilities", icon = " " },
                         { "<leader>li", vim.cmd.LspInfo, desc = "LSP Info", icon = " " },
