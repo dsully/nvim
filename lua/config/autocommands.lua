@@ -302,23 +302,6 @@ end, {
     pattern = ";",
 })
 
-ev.on(ev.BufWritePost, function(args)
-    --- @type string
-    local file = args.file
-
-    file = file:gsub(".-/chezmoi%-edit%d+", vim.g.home)
-    file = file:gsub("dot_", ".")
-    file = file:gsub("private_", "")
-    file = file:gsub(".tmpl", "")
-
-    vim.notify("chezmoi: Applying changes to: " .. file, vim.log.DEBUG)
-
-    vim.system({ "chezmoi", "apply", "--no-tty", "--exclude", "scripts", file }):wait()
-end, {
-    desc = "Apply chezmoi changes via 'chezmoi edit'",
-    pattern = "*/chezmoi-edit*",
-})
-
 ev.on(ev.TextYankPost, function()
     vim.highlight.on_yank({ higroup = "Visual", timeout = 500 })
 
