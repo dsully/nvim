@@ -427,7 +427,7 @@ M.code_action = function()
     })
 end
 
-M.quickfix = function()
+M.apply_quickfix = function()
     vim.lsp.buf.code_action({
         apply = true,
         context = {
@@ -436,11 +436,7 @@ M.quickfix = function()
         },
         ---@param action lsp.CodeAction|lsp.Command
         filter = function(action)
-            if action.isPreferred ~= nil then
-                return action.isPreferred
-            end
-
-            return action.kind == vim.lsp.protocol.CodeActionKind.QuickFix
+            return action.isPreferred and action.isPreferred or action.kind == vim.lsp.protocol.CodeActionKind.QuickFix
         end,
     })
 end
