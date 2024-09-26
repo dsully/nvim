@@ -34,5 +34,17 @@ keys.map("<leader>ri", function()
                 return
             end
         end
+
+        if diagnostic.source == "rustc" then
+            local allow_directive = diagnostic.message:match("`(#[warn([%w_%-]+%)])`")
+
+            if allow_directive then
+                allow_directive = allow_directive:gsub("%[warn", "[allow")
+
+                vim.api.nvim_buf_set_lines(bufnr, line, line, false, { allow_directive })
+
+                return
+            end
+        end
     end
 end, "Insert Clippy Allow")
