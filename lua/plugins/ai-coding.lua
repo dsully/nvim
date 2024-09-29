@@ -55,7 +55,7 @@ return {
     },
     {
         "olimorris/codecompanion.nvim",
-        cmd = { "CodeCompanion", "CodeCompanionChat", "CodeCompanionToggle", "CodeCompanionActions" },
+        cmd = { "CodeCompanion", "CodeCompanionChat", "CodeCompanionActions" },
         --stylua: ignore start
         keys = {
             { "<leader>aa", vim.cmd.CodeCompanionActions, mode = mode, desc = "Code Companion Actions" },
