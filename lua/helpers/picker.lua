@@ -104,11 +104,21 @@ M.parents = function(opts)
     require("fzf-lua").fzf_exec(parent_directories, opts)
 end
 
+---@class Notification
+---@field display string
+---@field ordinal string
+---@field preview string
+---@field data notify.Record
+
 M.notifications = function()
     local fzf = require("fzf-lua")
     local notify = require("notify")
 
+    ---@type table<integer, notify.Record>
+    local id_mapping = {}
+
     ---@param notification notify.Record
+    ---@type Notification[]
     local notifications = vim.tbl_map(function(notification)
         local icon_color = notification.level == "ERROR" and "red" or notification.level == "WARN" and "yellow" or "green"
 
@@ -116,31 +126,62 @@ M.notifications = function()
         local level = fzf.utils.ansi_codes[icon_color](notification.level)
         local timestamp = fzf.utils.ansi_codes.grey(notification.title[2])
         local title = notification.title[1] ~= "" and notification.title[1] or "[No title]"
+        local prefix = table.concat({ timestamp, icon, level, title }, " ")
+        local id = notification.id
+
+        id_mapping[id] = notification
 
         return {
-            prefix = table.concat({ timestamp, icon, level, title }, " ") .. " > ",
-            contents = notification.message,
+            contents = { id .. ": " .. prefix },
             preview = notification.message,
             data = notification,
         }
     end, notify.history())
 
-    table.sort(notifications, function(a, b)
-        return a.data.time > b.data.time
-    end)
+    ---@param messages table<number, Notification>
+    function M.previewer(messages)
+        local previewer = require("fzf-lua.previewer.builtin").base:extend()
+
+        function previewer:new(o, opts, fzf_win)
+            previewer.super.new(self, o, opts, fzf_win)
+            self.title = "Notifications"
+            setmetatable(self, previewer)
+            return self
+        end
+
+        ---@param entry string
+        ---@return notify.Record
+        function previewer:parse_entry(entry)
+            local id = tonumber(entry:match("^%d+"))
+            local notification = id_mapping[id]
+            assert(notification, "No notification found for entry: " .. id)
+            return notification
+        end
+
+        ---@param entry string
+        function previewer:populate_preview_buf(entry)
+            local buf = self:get_tmp_buffer()
+            local notification = self:parse_entry(entry)
+
+            require("notify").open(notification, { buffer = buf, max_width = 80 })
+
+            self:set_preview_buf(buf)
+            self.win:update_title(" Notifications ")
+            self.win:update_scrollbar()
+        end
+
+        return previewer
+    end
 
     fzf.fzf_exec(notifications, {
-        fzf_opts = {
-            ["--delimiter"] = ":",
-            ["--with-nth"] = "2..",
-        },
+        previewer = M.previewer(notifications),
         actions = {
-            ["alt-q"] = fzf.actions.buf_sel_to_qf,
-        },
-        previewer = "builtin",
-        winopts = {
-            title = " Notifications ",
-            title_pos = "center",
+            ["default"] = function(selected)
+                local id = tonumber(selected[1]:match("^%d+"))
+                local entry = id_mapping[id]
+
+                vim.fn.setreg("+", table.concat(entry.message, "\n"))
+            end,
         },
     })
 end
