@@ -7,6 +7,7 @@ vim.filetype.add({
         ["Caddyfile"] = "caddyfile",
         ["MANIFEST.in"] = "pymanifest",
         ["config.custom"] = "sshconfig",
+        ["direnvrc"] = "direnv",
         ["fish_history"] = "yaml",
         ["poetry.lock"] = "toml",
         -- Set a specific filetype to enable ruff and taplo to attach as language servers.
