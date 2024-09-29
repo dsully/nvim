@@ -17,9 +17,6 @@ return {
         event = "BufReadPre *.pkl",
     },
 
-    -- Direnv highlighting & more.
-    { "direnv/direnv.vim", ft = "direnv" },
-
     {
         "vuki656/package-info.nvim",
         config = function()
