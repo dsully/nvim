@@ -775,9 +775,14 @@ M.highlights = {
     PmenuExtraSel = { link = "PmenuSel" },
     PmenuKind = { link = "Pmenu" },
     PmenuKindSel = { link = "PmenuSel" },
-    PmenuMatchSel = { bg = M.colors.gray.bright },
     PmenuSbar = { link = "PmenuSel" },
-    PmenuSel = { bg = M.colors.gray.bright },
+    -- PmenuSel = { bg = M.colors.gray.bright },
+    -- https://www.reddit.com/r/neovim/comments/1f439w8/psa_for_color_scheme_authors_you_might_want_to/
+    -- Matched text in normal item
+    PmenuSel = { fg = M.colors.blue.base, bg = M.colors.black.base, blend = 0, bold = true, reverse = true, cterm = { reverse = true } },
+    -- Matched text in selected item
+    PmenuMatchSel = { fg = M.colors.blue.base, bg = M.colors.gray.base, bold = true, reverse = true, cterm = { reverse = true } },
+
     PmenuThumb = { bg = M.colors.gray.base },
     PreCondit = { link = "PreProc" },
     PreProc = { fg = M.colors.blue.bright },
