@@ -26,19 +26,6 @@ end, {
     },
 })
 
-ev.on(ev.BufWinEnter, function(event)
-    --
-    -- Don't try to close a help buffer if explicitly edited.
-    if #vim.api.nvim_list_bufs() == 1 or #vim.v.argv == 3 then
-        return
-    end
-
-    require("helpers.help").popup(event)
-end, {
-    desc = "Open Help in a floating window.",
-    group = ev.group("filetype.help"),
-})
-
 ev.on(ev.FileType, function()
     vim.keymap.set("n", "J", function()
         --
