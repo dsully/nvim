@@ -415,32 +415,26 @@ return {
         event = ev.VeryLazy,
         -- stylua: ignore
         keys = {
-            { "<leader>fN", function() require("noice").cmd("pick") end, desc = "Noice" },
+            { "<leader>fN", function() vim.cmd.Noice("pick") end, desc = "Noice" },
         },
         opts = {
             cmdline = {
                 format = {
-                    IncRename = { title = " Rename " },
+                    git = { pattern = { "^:Gitsigns%s+", "^:Neogit%s+", "^:GitLink%s+" }, icon = " ", lang = "vim", title = " git " },
                     input = { icon = " ", lang = "text", view = "cmdline_popup", title = "" },
                     read = { pattern = "^:%s*r!", icon = "$", lang = "bash" },
-                    substitute = { pattern = "^:%%?s/", icon = " ", ft = "regex", title = "" },
                     session = { pattern = { "^:Session%s+" }, icon = " ", lang = "vim", title = " session " },
-                    git = { pattern = { "^:Gitsigns%s+", "^:Neogit%s+", "^:GitLink%s+" }, icon = " ", lang = "vim", title = " git " },
+                    substitute = { pattern = "^:%%?s/", icon = " ", ft = "regex", title = "" },
                 },
             },
             lsp = {
-                documentation = { enabled = true },
-                hover = { enabled = true },
-                message = { enabled = true },
                 override = {
                     ["vim.lsp.util.convert_input_to_markdown_lines"] = true,
                     ["vim.lsp.util.stylize_markdown"] = true,
                     ["cmp.entry.get_documentation"] = true,
                 },
-                progress = { enabled = true },
                 signature = {
                     auto_open = { enabled = false },
-                    enabled = true,
                 },
             },
             messages = { enabled = true, view = "mini", view_warn = "mini" },
@@ -448,6 +442,7 @@ return {
             popupmenu = {
                 enabled = true,
                 backend = "nui",
+                kind_icons = true,
             },
             presets = {
                 bottom_search = true, -- use a classic bottom cmdline for search
@@ -455,6 +450,7 @@ return {
                 long_message_to_split = true, -- long messages will be sent to a split
                 lsp_doc_border = true,
             },
+            ---@type NoiceRouteConfig[]
             routes = {
                 {
                     filter = {
@@ -468,47 +464,23 @@ return {
                             { find = "^%d+ change[s]?; after #%d+" },
                             { find = "^%-%-No lines in buffer%-%-$" },
 
+                            -- Unneeded info on search patterns
+                            { event = "msg_show", find = "^[/?]." },
+
+                            -- When "Noice pick" doesn't have any entries.
+                            { find = "No message found for entry" },
+
                             -- When I'm offline, and Copilot wants to connect.
                             { event = "msg_show", find = "getaddrinfo" },
 
                             -- Ignore deprecated messages from plugins.
                             { event = "msg_show", find = "vim.lsp.get_active_clients" },
-                        },
-                    },
-                    opts = { skip = true },
-                },
 
-                -- Redirect to pop-up when message is long
-                { filter = { min_height = 10 }, view = "popup" },
+                            -- Ignore useless messages
+                            { find = "Invalid buffer id" },
+                            { find = "Found a swap file by the name" },
+                            { event = "notify", find = "No information available" },
 
-                -- "Not an editor command" to mini
-                { filter = { event = "msg_show", find = "^E492:" }, view = "mini" },
-
-                -- Write/deletion messages
-                { filter = { event = "msg_show", find = "%d+B written$" }, view = "mini" },
-                { filter = { event = "msg_show", find = "%d+L, %d+B$" }, view = "mini" },
-                { filter = { event = "msg_show", find = "%-%-No lines in buffer%-%-" }, view = "mini" },
-
-                -- Yank messages
-                { filter = { event = "msg_show", find = "%d+ lines yanked" }, view = "mini" },
-
-                -- Unneeded info on search patterns
-                { filter = { event = "msg_show", find = "^[/?]." }, skip = true },
-                { filter = { event = "msg_show", find = "^E486: Pattern not found" }, view = "mini" },
-
-                -- Word added to spellfile via `zg`
-                { filter = { event = "msg_show", find = "^Word .*%.add$" }, view = "mini" },
-
-                -- Diagnostics
-                { filter = { event = "msg_show", find = "No more valid diagnostics to move to" }, view = "mini" },
-
-                -- Route nvim-treesitter to the mini view.
-                { filter = { event = "msg_show", find = "^%[nvim%-treesitter%]" }, view = "mini" },
-                { filter = { event = "notify", find = "All parsers are up%-to%-date" }, view = "mini" },
-
-                {
-                    filter = {
-                        any = {
                             -- Only show progress on multiple of 5 percent.
                             { event = "lsp", kind = "progress", find = "[^05]/" },
                             -- lua-ls is noisy.
@@ -522,16 +494,90 @@ return {
                                 end,
                             },
                             { event = "lsp", kind = "progress", find = "cargo clippy" },
+                            {
+                                event = "lsp",
+                                cond = function(message)
+                                    local content = message:content()
+                                    local skipped = {
+                                        ["unknown command"] = true,
+                                        ["Ruff encountered a problem"] = true,
+                                    }
+
+                                    return vim.bo[vim.api.nvim_get_current_buf()].filetype == "python" and skipped[content] or false
+                                end,
+                            },
                         },
                     },
                     opts = { skip = true },
                 },
+
+                -- Redirect to pop-up when message is long
+                { filter = { min_height = 10 }, view = "popup" },
+
+                -- Redirect to mini view.
                 {
-                    filter = { error = true },
-                    opts = { title = "Error", replace = true, merge = true, level = "error" },
+                    filter = {
+                        any = {
+                            -- "Not an editor command"
+                            { event = "msg_show", find = "^E492:" },
+
+                            -- Write/deletion messages
+                            { event = "msg_show", find = "%d+B written$" },
+                            { event = "msg_show", find = "%d+L, %d+B$" },
+                            { event = "msg_show", find = "%-%-No lines in buffer%-%-" },
+
+                            -- Yank messages
+                            { event = "msg_show", find = "%d+ lines yanked" },
+
+                            -- Unneeded info on search patterns
+                            { event = "msg_show", find = "^E486: Pattern not found" },
+
+                            -- Word added to spellfile via `zg`
+                            { event = "msg_show", find = "^Word .*%.add$" },
+
+                            -- Diagnostics
+                            { event = "msg_show", find = "No more valid diagnostics to move to" },
+                            { find = "No code actions available" },
+
+                            -- Route nvim-treesitter to the mini view.
+                            { event = "msg_show", find = "^%[nvim%-treesitter%]" },
+                            { event = "notify", find = "All parsers are up%-to%-date" },
+                        },
+                        view = "mini",
+                    },
+                },
+
+                -- Warnings & Errors
+                {
+                    filter = {
+                        any = {
+                            { warning = true },
+                            { event = "msg_show", find = "^Warn" },
+                            { event = "msg_show", find = "^W%d+:" },
+                            { event = "msg_show", find = "^No hunks$" },
+                        },
+                    },
+                    opts = { title = "Warning", level = vim.log.levels.WARN, merge = false, replace = false },
+                    view = "notify",
+                },
+                {
+                    opts = { title = "" },
+                    filter = { kind = { "emsg", "echo", "echomsg" } },
+                    view = "notify",
+                },
+                {
+                    filter = {
+                        any = {
+                            { error = true },
+                            { event = "msg_show", find = "^Error" },
+                            { event = "msg_show", find = "^E%d+:" },
+                        },
+                    },
+                    opts = { title = "Error", replace = true, merge = true, level = vim.log.levels.ERROR },
                     view = "notify",
                 },
             },
+            ---@type NoiceConfigViews
             views = {
                 mini = {
                     format = { "{title} ", "{message}" }, -- leave out "{level}"
@@ -540,7 +586,6 @@ return {
                 notify = {
                     -- https://github.com/folke/noice.nvim/discussions/490
                     replace = true,
-                    title = "",
                 },
                 popupmenu = {
                     relative = "editor",
