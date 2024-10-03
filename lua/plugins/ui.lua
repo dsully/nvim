@@ -456,25 +456,25 @@ return {
                     filter = {
                         any = {
                             -- Yank / undo noise
-                            { event = "msg_show", find = "%d+ more line" },
-                            { event = "msg_show", find = "%d+ line less" },
-                            { event = "msg_show", find = "%d+ fewer lines" },
+                            { find = "%d+ more line", event = "msg_show" },
+                            { find = "%d+ line less", event = "msg_show" },
+                            { find = "%d+ fewer lines", event = "msg_show" },
 
                             { find = "^%d+ change[s]?; before #%d+" },
                             { find = "^%d+ change[s]?; after #%d+" },
                             { find = "^%-%-No lines in buffer%-%-$" },
 
                             -- Unneeded info on search patterns
-                            { event = "msg_show", find = "^[/?]." },
+                            { find = "^[/?].", event = "msg_show" },
 
                             -- When "Noice pick" doesn't have any entries.
                             { find = "No message found for entry" },
 
                             -- When I'm offline, and Copilot wants to connect.
-                            { event = "msg_show", find = "getaddrinfo" },
+                            { find = "getaddrinfo", event = "msg_show" },
 
                             -- Ignore deprecated messages from plugins.
-                            { event = "msg_show", find = "vim.lsp.get_active_clients" },
+                            { find = "vim.lsp.get_active_clients", event = "msg_show" },
 
                             -- Ignore useless messages
                             { find = "Invalid buffer id" },
@@ -482,10 +482,11 @@ return {
                             { event = "notify", find = "No information available" },
 
                             -- Only show progress on multiple of 5 percent.
-                            { event = "lsp", kind = "progress", find = "[^05]/" },
+                            { find = "[^05]/", event = "lsp", kind = "progress" },
+
                             -- lua-ls is noisy.
-                            { event = "lsp", kind = "progress", find = "Diagnosing" },
-                            { event = "lsp", find = "code_action" },
+                            { find = "Diagnosing", event = "lsp", kind = "progress" },
+                            { find = "code_action", event = "lsp" },
                             {
                                 event = "lsp",
                                 kind = "progress",
@@ -493,7 +494,7 @@ return {
                                     return vim.tbl_contains(defaults.ignored.progress, vim.tbl_get(message.opts, "progress", "client"))
                                 end,
                             },
-                            { event = "lsp", kind = "progress", find = "cargo clippy" },
+                            { find = "cargo clippy", event = "lsp", kind = "progress" },
                             {
                                 event = "lsp",
                                 cond = function(message)
@@ -543,8 +544,8 @@ return {
                             { event = "msg_show", find = "^%[nvim%-treesitter%]" },
                             { event = "notify", find = "All parsers are up%-to%-date" },
                         },
-                        view = "mini",
                     },
+                    view = "mini",
                 },
 
                 -- Warnings & Errors
