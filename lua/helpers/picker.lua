@@ -138,8 +138,12 @@ M.notifications = function()
         }
     end, notify.history())
 
-    ---@param messages table<number, Notification>
-    function M.previewer(messages)
+    table.sort(notifications, function(a, b)
+        return a.data.time > b.data.time
+    end)
+
+    ---@param _messages table<number, Notification>
+    function M.previewer(_messages)
         local previewer = require("fzf-lua.previewer.builtin").base:extend()
 
         function previewer:new(o, opts, fzf_win)
