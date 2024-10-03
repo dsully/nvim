@@ -54,7 +54,7 @@ return {
         disable = function(_, bufnr) -- Disable in files with more than 5K
             return vim.bo.filetype ~= "large_file" and require("helpers.file").is_large_file(bufnr) and "large_file" or nil
         end,
-        event = { ev.LazyFile },
+        event = { ev.VeryLazy, ev.LazyFile },
         init = function(plugin)
             require("lazy.core.loader").add_to_rtp(plugin)
             require("nvim-treesitter.query_predicates")

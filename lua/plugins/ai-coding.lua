@@ -54,12 +54,30 @@ return {
         },
     },
     {
+        -- TODO: Add to WhichKey?
+        --
+        -- When in the chat buffer, there are number of keymaps available to you:
+        --
+        -- ? - Bring up the menu that lists the keymaps and commands
+        -- <CR>|<C-s> - Send the buffer to the LLM
+        -- <C-c> - Close the buffer
+        -- q - Cancel the request from the LLM
+        -- gr - Regenerate the last response from the LLM
+        -- ga - Change the adapter
+        -- gx - Clear the buffer's contents
+        -- gx - Add a codeblock
+        -- gf - To refresh the code folds in the buffer
+        -- gd - Debug the chat buffer
+        -- } - Move to the next chat
+        -- { - Move to the previous chat
+        -- ]] - Move to the next header
+        -- [[ - Move to the previous header
         "olimorris/codecompanion.nvim",
         cmd = { "CodeCompanion", "CodeCompanionChat", "CodeCompanionActions" },
         --stylua: ignore start
         keys = {
             { "<leader>aa", vim.cmd.CodeCompanionActions, mode = mode, desc = "Code Companion Actions" },
-            { "<leader>ac", vim.cmd.CodeCompanionToggle, mode = mode, desc = "Code Companion Chat" },
+            { "<leader>ac", function() vim.cmd.CodeCompanionChat("Toggle") end, mode = mode, desc = "Code Companion Chat" },
             { "<leader>ad", function() vim.cmd.CodeCompanion("/lsp") end, mode = mode, desc = "Debug Diagnostics" },
             { "<leader>af", function() vim.cmd.CodeCompanion("/fix") end, mode = mode, desc = "Fix Code" },
             { "<leader>ao", function() vim.cmd.CodeCompanion("/optimize") end, mode = mode, desc = "Optimize" },
@@ -74,6 +92,17 @@ return {
             prompts["Generate a Commit Message"] = nil
 
             return {
+                display = {
+                    -- chat = {
+                    --     window = {
+                    --         layout = "horizontal",
+                    --         height = 0.40,
+                    --     },
+                    -- },
+                    diff = {
+                        provider = "mini_diff",
+                    },
+                },
                 prompt_library = {
                     ["Optimize"] = {
                         strategy = "chat",
@@ -110,13 +139,10 @@ return {
                         },
                     },
                 },
-                display = {
-                    chat = {
-                        window = {
-                            layout = "horizontal",
-                            height = 0.40,
-                        },
-                    },
+                strategies = {
+                    agent = { adapter = "copilot" },
+                    chat = { adapter = "copilot" },
+                    inline = { adapter = "copilot" },
                 },
             }
         end,
