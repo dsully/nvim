@@ -154,12 +154,13 @@ M.notifications = function()
         end
 
         ---@param entry string
-        ---@return notify.Record
+        ---@return notify.Record?
         function previewer:parse_entry(entry)
+            --
+            ---@type number?
             local id = tonumber(entry:match("^%d+"))
-            local notification = id_mapping[id]
-            assert(notification, "No notification found for entry: " .. id)
-            return notification
+
+            return id_mapping[id]
         end
 
         ---@param entry string
@@ -167,7 +168,9 @@ M.notifications = function()
             local buf = self:get_tmp_buffer()
             local notification = self:parse_entry(entry)
 
-            require("notify").open(notification, { buffer = buf, max_width = 80 })
+            if notification ~= nil then
+                require("notify").open(notification, { buffer = buf, max_width = 80 })
+            end
 
             self:set_preview_buf(buf)
             self.win:update_title(" Notifications ")
