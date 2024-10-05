@@ -51,6 +51,7 @@ return {
     { "nvim-java/nvim-java-refactor" },
     { "nvim-java/nvim-java-test" },
 
+    { "jghauser/follow-md-links.nvim", ft = "markdown" },
     {
         "OXY2DEV/markview.nvim",
         ft = "markdown",
