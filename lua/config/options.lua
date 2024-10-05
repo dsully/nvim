@@ -73,7 +73,7 @@ vim.opt.formatoptions = {
 
 -- Mappings --
 vim.g.mapleader = ","
-vim.g.maplocalleader = "\\"
+vim.g.maplocalleader = ","
 
 -- Disable unused providers.
 vim.g.loaded_node_provider = 0
