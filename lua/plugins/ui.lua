@@ -477,9 +477,11 @@ return {
                             { find = "vim.lsp.get_active_clients", event = "msg_show" },
 
                             -- Ignore useless messages
+                            { find = "method textDocument/codeLens is not supported" },
+                            { find = "Invalid offset" },
                             { find = "Invalid buffer id" },
                             { find = "Found a swap file by the name" },
-                            { event = "notify", find = "No information available" },
+                            { find = "No information available", event = "notify" },
 
                             -- Only show progress on multiple of 5 percent.
                             { find = "[^05]/", event = "lsp", kind = "progress" },
