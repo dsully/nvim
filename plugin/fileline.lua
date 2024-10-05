@@ -43,48 +43,48 @@ local jump = function()
 end
 
 do
-    vim.api.nvim_create_autocmd("BufReadPre", {
-        callback = jump,
+    vim.api.nvim_create_autocmd("VimEnter", {
+        callback = function()
+            if vim.fn.argc() > 0 then
+                local original = vim.fn.argidx()
+                local modified = {}
+
+                ---@diagnostic disable-next-line: param-type-mismatch
+                for i, arg in ipairs(vim.fn.argv()) do
+                    --
+                    vim.cmd.edit({ vim.fn.fnameescape(arg), mods = { keepalt = true } })
+
+                    -- Process the buffer
+                    local bufname = vim.api.nvim_buf_get_name(0)
+
+                    local filename = jump()
+
+                    if filename ~= bufname then
+                        local argidx = vim.fn.argidx()
+
+                        vim.cmd.argdelete({ range = { argidx + 1 } })
+                        vim.cmd.argadd({ args = { filename }, range = { argidx } })
+                    end
+
+                    -- Set the possibly updated filename
+                    modified[i] = vim.api.nvim_buf_get_name(0)
+                end
+
+                -- Clear and rebuild the argument list
+                vim.cmd.argdelete("*")
+
+                for _, filename in ipairs(modified) do
+                    vim.cmd.argadd(vim.fn.fnameescape(filename))
+                end
+
+                -- Return to the original argument
+                vim.cmd.argument({ range = { original + 1 } })
+
+                -- Manually call autocommands, ignored by `:argdo`
+                vim.cmd.doautocmd("Syntax")
+                vim.cmd.doautocmd("FileType")
+            end
+        end,
         nested = true,
     })
-
-    if vim.fn.argc() > 0 then
-        local original = vim.fn.argidx()
-        local modified = {}
-
-        ---@diagnostic disable-next-line: param-type-mismatch
-        for i, arg in ipairs(vim.fn.argv()) do
-            --
-            vim.cmd.edit({ vim.fn.fnameescape(arg), mods = { keepalt = true } })
-
-            -- Process the buffer
-            local bufname = vim.api.nvim_buf_get_name(0)
-
-            local filename = jump()
-
-            if filename ~= bufname then
-                local argidx = vim.fn.argidx()
-
-                vim.cmd.argdelete({ range = { argidx + 1 } })
-                vim.cmd.argadd({ args = { filename }, range = { argidx } })
-            end
-
-            -- Set the possibly updated filename
-            modified[i] = vim.api.nvim_buf_get_name(0)
-        end
-
-        -- Clear and rebuild the argument list
-        vim.cmd.argdelete("*")
-
-        for _, filename in ipairs(modified) do
-            vim.cmd.argadd(vim.fn.fnameescape(filename))
-        end
-
-        -- Return to the original argument
-        vim.cmd.argument({ range = { original + 1 } })
-
-        -- Manually call autocommands, ignored by `:argdo`
-        vim.cmd.doautocmd("Syntax")
-        vim.cmd.doautocmd("FileType")
-    end
 end
