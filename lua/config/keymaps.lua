@@ -15,14 +15,15 @@ map("<leader>Y", "<cmd>%y<cr>", "Yank All Lines")
 -- Set Ctrl-W to delete a word in insert mode
 map("<C-w>", "<C-o>diw", "Delete Word", "i")
 
--- Create/edit file within the current directory
-map("<localleader>e", function()
-    return vim.ui.input({ prompt = "Save as: " }, function(name)
+map("<space>n", function()
+    local cwd = vim.uv.cwd()
+
+    return vim.ui.input({ default = cwd, prompt = "Save as: " }, function(name)
         if name then
-            vim.cmd.edit(("%s/%s"):format(vim.fs.dirname(vim.api.nvim_buf_get_name(0)), name))
+            vim.cmd.edit(name)
         end
     end)
-end, "Create relative to current buffer", { expr = false })
+end, "New File", "n", { expr = false })
 
 -- Close floating windows
 map("<leader>fq", vim.cmd.fclose, "Close all floating windows")
