@@ -47,34 +47,18 @@ do
         callback = function()
             if vim.fn.argc() > 0 then
                 local original = vim.fn.argidx()
-                local modified = {}
 
                 ---@diagnostic disable-next-line: param-type-mismatch
-                for i, arg in ipairs(vim.fn.argv()) do
+                for _, arg in ipairs(vim.fn.argv()) do
                     --
-                    vim.cmd.edit({ vim.fn.fnameescape(arg), mods = { keepalt = true } })
-
-                    -- Process the buffer
-                    local bufname = vim.api.nvim_buf_get_name(0)
+                    pcall(vim.cmd.edit, { vim.fn.fnameescape(arg), mods = { keepalt = true } })
 
                     local filename = jump()
 
-                    if filename ~= bufname then
-                        local argidx = vim.fn.argidx()
+                    local argidx = vim.fn.argidx()
 
-                        vim.cmd.argdelete({ range = { argidx + 1 } })
-                        vim.cmd.argadd({ args = { filename }, range = { argidx } })
-                    end
-
-                    -- Set the possibly updated filename
-                    modified[i] = vim.api.nvim_buf_get_name(0)
-                end
-
-                -- Clear and rebuild the argument list
-                vim.cmd.argdelete("*")
-
-                for _, filename in ipairs(modified) do
-                    vim.cmd.argadd(vim.fn.fnameescape(filename))
+                    vim.cmd.argdelete({ range = { argidx + 1 } })
+                    vim.cmd.argadd({ args = { vim.fn.fnameescape(filename) }, range = { argidx } })
                 end
 
                 -- Return to the original argument
