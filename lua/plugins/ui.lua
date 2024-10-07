@@ -280,17 +280,19 @@ return {
 
             local filetype_icon = item({
                 content = function()
+                    ---@type string?, string?
                     local icon, icon_hl = devicons.get("file", vim.api.nvim_buf_get_name(0))
 
                     if not icon then
+                        ---@type string?, string?
                         icon, icon_hl = devicons.get("filetype", vim.bo.filetype)
                     end
 
-                    local hl_name = "Statusline" .. icon_hl
+                    local hl_name = "Statusline" .. (icon_hl or "")
 
                     vim.api.nvim_set_hl(0, hl_name, {
                         bg = colors.black.base,
-                        fg = ("#%06x"):format(vim.api.nvim_get_hl(0, { name = icon_hl }).fg),
+                        fg = ("#%06x"):format(vim.api.nvim_get_hl(0, { name = icon_hl or "" }).fg),
                     })
 
                     return string.format(" %%#%s#%s %%##", hl_name, icon or " ")
@@ -672,7 +674,8 @@ return {
 
             icons.setup(opts)
             icons.tweak_lsp_kind("prepend")
-
+        end,
+        init = function()
             hl.apply({
                 { MiniIconsAzure = { fg = colors.blue.bright } },
                 { MiniIconsBlue = { fg = colors.blue.base } },
@@ -684,8 +687,7 @@ return {
                 { MiniIconsRed = { fg = colors.red.base } },
                 { MiniIconsYellow = { fg = colors.yellow.base } },
             })
-        end,
-        init = function()
+
             package.preload["nvim-web-devicons"] = function()
                 require("mini.icons").mock_nvim_web_devicons()
                 return package.loaded["nvim-web-devicons"]
