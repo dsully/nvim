@@ -225,8 +225,27 @@ return {
                     },
                 },
             }
+
+            -- Start bacon in clippy mode if it exists.
+            vim.schedule(function()
+                pcall(vim.cmd.OverseerRun, "bacon")
+            end)
         end,
         lazy = false,
         version = "^5", -- Recommended
+    },
+    {
+        "Canop/nvim-bacon",
+        cmd = { "BaconList", "BaconLoad", "BaconNext" },
+        keys = {
+            { "<leader>bn", "<cmd>BaconLoad<cr>:w<cr>:BaconNext<cr>", desc = "[B]acon [N]ext (Rust)" },
+            { "<leader>bp", vim.cmd.BaconList, desc = "[B]acon [P]revious (Rust)" },
+        },
+        opts = {
+            quickfix = {
+                enabled = true,
+                event_trigger = true,
+            },
+        },
     },
 }

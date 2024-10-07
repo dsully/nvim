@@ -232,6 +232,11 @@ return {
                     update_in_insert = false, -- https://www.reddit.com/r/neovim/comments/pfk209/nvimlsp_too_fast/
                 },
                 servers = {
+                    bacon_ls = {
+                        settings = {
+                            locationsFile = ".bacon-locations",
+                        },
+                    },
                     basedpyright = {
                         settings = {
                             basedpyright = {
