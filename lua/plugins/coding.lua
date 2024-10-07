@@ -720,13 +720,13 @@ return {
                 border = defaults.ui.border.name,
             },
             task_list = {
-                direction = "bottom",
-                min_height = 25,
-                max_height = 25,
-                -- default_detail = 1,
                 bindings = {
                     ["q"] = vim.cmd.OverseerClose,
                 },
+                default_detail = 1,
+                direction = "bottom",
+                min_height = 25,
+                max_height = 25,
             },
             task_win = {
                 border = defaults.ui.border.name,
