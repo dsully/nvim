@@ -1,6 +1,30 @@
 return {
     {
         "rcarriga/nvim-notify",
+        config = function(_, opts)
+            require("notify").setup(opts)
+
+            hl.apply({
+                { NotifyBackground = { link = "NormalFloat" } },
+                { NotifyDEBUGBorder = { fg = colors.white.base } },
+                { NotifyDEBUGIcon = { link = "NotifyDEBUGTitle" } },
+                { NotifyDEBUGTitle = { fg = colors.blue.bright } },
+                { NotifyERRORBorder = { fg = colors.red.base } },
+                { NotifyERRORIcon = { link = "NotifyERRORTitle" } },
+                { NotifyERRORTitle = { fg = colors.red.base } },
+                { NotifyINFOBorder = { fg = colors.gray.base } },
+                { NotifyINFOIcon = { link = "NotifyINFOTitle" } },
+                { NotifyINFOTitle = { fg = colors.blue.base } },
+                { NotifyLogTime = { link = "Comment" } },
+                { NotifyLogTitle = { link = "Special" } },
+                { NotifyTRACEBorder = { fg = colors.black.bright } },
+                { NotifyTRACEIcon = { link = "NotifyTRACETitle" } },
+                { NotifyTRACETitle = { fg = colors.gray.bright } },
+                { NotifyWARNBorder = { fg = colors.yellow.base } },
+                { NotifyWARNIcon = { link = "NotifyWARNTitle" } },
+                { NotifyWARNTitle = { fg = colors.yellow.base } },
+            })
+        end,
         keys = {
             -- stylua: ignore
             { "<leader>nd", function() require("notify").dismiss({ silent = true, pending = true }) end, desc = "Delete Notifications" },
@@ -412,6 +436,27 @@ return {
     {
         "folke/noice.nvim",
         cmd = { "Noice", "NoiceDismiss" },
+        config = function(_, opts)
+            require("noice").setup(opts)
+
+            hl.apply({
+                { NoiceCmdlineIcon = { link = "DiagnosticInfo" } },
+                { NoiceCmdlineIconSearch = { link = "DiagnosticWarn" } },
+                { NoiceCmdlinePopupBorder = { link = "DiagnosticInfo" } },
+                { NoiceCmdlinePopupBorderSearch = { link = "DiagnosticWarn" } },
+                { NoiceCmdlinePopupTitle = { link = "DiagnosticInfo" } },
+                { NoiceConfirmBorder = { link = "DiagnosticInfo" } },
+                { NoiceFormatLevelError = { fg = colors.red.base } },
+                { NoiceFormatLevelInfo = { fg = colors.blue.base } },
+                { NoiceFormatLevelWarn = { fg = colors.yellow.base } },
+                { NoiceFormatProgressDone = { bg = colors.black.dim, fg = colors.white.bright } },
+                { NoiceFormatProgressTodo = { bg = colors.black.dim, fg = colors.white.bright } },
+                { NoiceLspProgressClient = { fg = colors.blue.base } },
+                { NoiceLspProgressSpinner = { fg = colors.cyan.bright } },
+                { NoiceLspProgressTitle = { fg = colors.white.bright } },
+                { NoiceVirtualText = { fg = colors.blue.base } },
+            })
+        end,
         event = ev.VeryLazy,
         -- stylua: ignore
         keys = {
@@ -622,17 +667,29 @@ return {
     },
     {
         "echasnovski/mini.icons",
-        init = function()
-            package.preload["nvim-web-devicons"] = function()
-                require("mini.icons").mock_nvim_web_devicons()
-                return package.loaded["nvim-web-devicons"]
-            end
-        end,
         config = function(_, opts)
             local icons = require("mini.icons")
 
             icons.setup(opts)
             icons.tweak_lsp_kind("prepend")
+
+            hl.apply({
+                { MiniIconsAzure = { fg = colors.blue.bright } },
+                { MiniIconsBlue = { fg = colors.blue.base } },
+                { MiniIconsCyan = { fg = colors.cyan.base } },
+                { MiniIconsGreen = { fg = colors.green.base } },
+                { MiniIconsGrey = { fg = colors.gray.bright } },
+                { MiniIconsOrange = { fg = colors.orange.base } },
+                { MiniIconsPurple = { fg = colors.magenta.base } },
+                { MiniIconsRed = { fg = colors.red.base } },
+                { MiniIconsYellow = { fg = colors.yellow.base } },
+            })
+        end,
+        init = function()
+            package.preload["nvim-web-devicons"] = function()
+                require("mini.icons").mock_nvim_web_devicons()
+                return package.loaded["nvim-web-devicons"]
+            end
         end,
         opts = {
             style = "glyph",
@@ -754,6 +811,11 @@ return {
             end, {
                 desc = "Dashboard Footer Update",
                 pattern = "LazyVimStarted",
+            })
+
+            hl.apply({
+                { AlphaHeader = { fg = colors.blue.bright } },
+                { AlphaFooter = { fg = colors.blue.base } },
             })
         end,
         cond = function()

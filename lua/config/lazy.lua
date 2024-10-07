@@ -167,6 +167,12 @@ function M.setup()
         },
     })
 
+    hl.apply({
+        { LazyCommit = { fg = colors.white.bright } },
+        { LazyDimmed = { fg = colors.white.bright } },
+        { LazyProp = { fg = colors.white.bright } },
+    })
+
     vim.api.nvim_create_user_command("LazyHealth", function()
         vim.cmd.Lazy({ "load all", bang = true })
         vim.cmd.checkhealth()

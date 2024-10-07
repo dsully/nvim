@@ -204,6 +204,43 @@ return {
 
             -- https://github.com/hrsh7th/cmp-cmdline/issues/94
             ev.on(ev.CmdWinEnter, cmp.close)
+
+            hl.apply({
+                { CmpDocumentation = { bg = colors.black.base, fg = colors.white.base } },
+                { CmpDocumentationBorder = { bg = colors.black.base, fg = colors.gray.bright } },
+                { CmpGhostText = { link = "Comment" } },
+                { CmpItemAbbr = { fg = colors.white.bright } },
+                { CmpItemAbbrDeprecated = { fg = colors.gray.base, strikethrough = true } },
+                { CmpItemAbbrMatch = { bold = true, fg = colors.blue.base } },
+                { CmpItemAbbrMatchFuzzy = { bold = true, fg = colors.blue.base } },
+                { CmpItemKind = { fg = colors.white.bright } },
+                { CmpItemKindClass = { fg = colors.yellow.base } },
+                { CmpItemKindColor = { link = "CmpItemKind" } },
+                { CmpItemKindConstant = { fg = colors.orange.base } },
+                { CmpItemKindConstructor = { fg = colors.yellow.base } },
+                { CmpItemKindEnum = { fg = colors.yellow.base } },
+                { CmpItemKindEnumMember = { fg = colors.cyan.base } },
+                { CmpItemKindEvent = { fg = colors.magenta.base } },
+                { CmpItemKindField = { fg = colors.blue.base } },
+                { CmpItemKindFile = { link = "CmpItemKind" } },
+                { CmpItemKindFolder = { link = "CmpItemKind" } },
+                { CmpItemKindFunction = { fg = colors.magenta.base } },
+                { CmpItemKindInterface = { fg = colors.yellow.base } },
+                { CmpItemKindKeyword = { fg = colors.magenta.base } },
+                { CmpItemKindMethod = { fg = colors.magenta.base } },
+                { CmpItemKindModule = { fg = colors.blue.base } },
+                { CmpItemKindOperator = { fg = colors.magenta.base } },
+                { CmpItemKindProperty = { fg = colors.blue.base } },
+                { CmpItemKindReference = { fg = colors.magenta.base } },
+                { CmpItemKindSnippet = { fg = colors.white.base } },
+                { CmpItemKindStruct = { fg = colors.yellow.base } },
+                { CmpItemKindText = { link = "CmpItemKind" } },
+                { CmpItemKindTypeParameter = { fg = colors.yellow.base } },
+                { CmpItemKindUnit = { fg = colors.magenta.base } },
+                { CmpItemKindValue = { fg = colors.blue.base } },
+                { CmpItemKindVariable = { fg = colors.blue.base } },
+                { CmpItemMenu = { fg = colors.white.dim, bg = "NONE", italic = true } },
+            })
         end,
     },
     { "hrsh7th/cmp-buffer", event = ev.InsertEnter },
@@ -355,6 +392,14 @@ return {
     },
     {
         "echasnovski/mini.indentscope",
+        config = function(_, opts)
+            require("mini.indentscope").setup(opts)
+
+            hl.apply({
+                { MiniIndentscopeSymbol = { fg = colors.blue.bright } },
+                { MiniIndentscopePrefix = { nocombine = true } },
+            })
+        end,
         event = ev.LazyFile,
         init = function()
             ev.on(ev.FileType, function()

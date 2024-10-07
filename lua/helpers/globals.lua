@@ -1,6 +1,8 @@
 -- Make my life easier..
 _G.defaults = require("config.defaults")
+_G.colors = require("config.defaults").colors
 _G.ev = require("helpers.event")
+_G.hl = require("helpers.highlights")
 _G.keys = require("helpers.keys")
 
 ---@return string
@@ -37,16 +39,18 @@ local _dump = function(value, opts)
             M._dump(value, opts)
         end)
     end
+
     opts.location = vim.fn.fnamemodify(opts.location, ":~:.")
 
-    local msg = vim.inspect(value)
+    local msg = opts.location .. "\n\n" .. vim.inspect(value)
 
     if opts.bt then
         msg = msg .. "\n" .. debug.traceback("", 2)
     end
 
     vim.notify(msg, vim.log.levels.INFO, {
-        title = "Debug: " .. opts.location,
+        title = "Debug: ",
+        icon = "",
         on_open = function(win)
             vim.wo[win].conceallevel = 3
             vim.wo[win].concealcursor = ""
