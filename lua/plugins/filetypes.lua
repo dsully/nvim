@@ -85,12 +85,12 @@ return {
                         vim.wo[win].concealcursor = "nc"
                     end,
                 },
+                checkboxes = presets.checkboxes.nerd,
                 code_blocks = {
                     enable = true,
                     style = "minimal",
                 },
-                headings = presets.headings.glow_labels,
-                highlight_groups = presets.highlight_groups,
+                headings = presets.headings.glow,
                 hybrid_modes = { "n" },
                 list_items = {
                     enable = true,
@@ -98,7 +98,6 @@ return {
                     indent_size = 2,
                 },
                 modes = { "n", "no", "c" },
-                tables = presets.tables.border_single,
             }
         end,
     },
@@ -225,27 +224,8 @@ return {
                     },
                 },
             }
-
-            -- Start bacon in clippy mode if it exists.
-            vim.schedule(function()
-                pcall(vim.cmd.OverseerRun, "bacon")
-            end)
         end,
         lazy = false,
         version = "^5", -- Recommended
-    },
-    {
-        "Canop/nvim-bacon",
-        cmd = { "BaconList", "BaconLoad", "BaconNext" },
-        keys = {
-            { "<leader>bn", "<cmd>BaconLoad<cr>:w<cr>:BaconNext<cr>", desc = "[B]acon [N]ext (Rust)" },
-            { "<leader>bp", vim.cmd.BaconList, desc = "[B]acon [P]revious (Rust)" },
-        },
-        opts = {
-            quickfix = {
-                enabled = true,
-                event_trigger = true,
-            },
-        },
     },
 }
