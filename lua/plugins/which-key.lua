@@ -2,9 +2,8 @@ local icons = defaults.icons
 
 return {
     "folke/which-key.nvim",
-    config = function(_, opts)
-        require("which-key").setup(opts)
-
+    event = ev.VeryLazy,
+    init = function()
         hl.apply({
             { WhichKey = { link = "Identifier" } },
             { WhichKeyBorder = { default = true, link = "FloatBorder" } },
@@ -15,7 +14,6 @@ return {
             { WhichKeyValue = { link = "Comment" } },
         })
     end,
-    event = ev.VeryLazy,
     opts = {
         delay = 1000,
         disable = {

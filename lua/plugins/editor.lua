@@ -153,7 +153,8 @@ return {
             end
 
             fzf.setup(vim.tbl_deep_extend("force", add_prompt(require("fzf-lua.profiles.default-title")), opts))
-
+        end,
+        init = function()
             hl.apply({
                 { FzfLuaPathColNr = { fg = colors.gray.base } },
                 { FzfLuaPathLineNr = { fg = colors.gray.base } },
@@ -289,9 +290,8 @@ return {
     },
     {
         "SmiteshP/nvim-navic",
-        config = function(_, opts)
-            require("nvim-navic").setup(opts)
-
+        event = ev.LazyFile,
+        init = function()
             hl.apply({
                 { NavicIconsArray = { bg = colors.gray.base, fg = colors.yellow.base } },
                 { NavicIconsBoolean = { bg = colors.gray.base, fg = colors.orange.base } },
@@ -322,9 +322,7 @@ return {
                 { NavicSeparator = { bg = colors.gray.base, fg = colors.cyan.base } },
                 { NavicText = { bg = colors.gray.base, fg = colors.white.base } },
             })
-        end,
-        event = ev.LazyFile,
-        init = function()
+
             vim.g.navic_silence = true
         end,
         opts = {

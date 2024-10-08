@@ -1,9 +1,7 @@
 return {
     {
         "rcarriga/nvim-notify",
-        config = function(_, opts)
-            require("notify").setup(opts)
-
+        init = function()
             hl.apply({
                 { NotifyBackground = { link = "NormalFloat" } },
                 { NotifyDEBUGBorder = { fg = colors.white.base } },
@@ -438,9 +436,8 @@ return {
     {
         "folke/noice.nvim",
         cmd = { "Noice", "NoiceDismiss" },
-        config = function(_, opts)
-            require("noice").setup(opts)
-
+        event = ev.VeryLazy,
+        init = function()
             hl.apply({
                 { NoiceCmdlineIcon = { link = "DiagnosticInfo" } },
                 { NoiceCmdlineIconSearch = { link = "DiagnosticWarn" } },
@@ -459,7 +456,6 @@ return {
                 { NoiceVirtualText = { fg = colors.blue.base } },
             })
         end,
-        event = ev.VeryLazy,
         -- stylua: ignore
         keys = {
             { "<leader>fN", function() vim.cmd.Noice("pick") end, desc = "Noice" },
@@ -814,16 +810,17 @@ return {
                 desc = "Dashboard Footer Update",
                 pattern = "LazyVimStarted",
             })
-
-            hl.apply({
-                { AlphaHeader = { fg = colors.blue.bright } },
-                { AlphaFooter = { fg = colors.blue.base } },
-            })
         end,
         cond = function()
             return vim.fn.argc() == 0
         end,
         event = ev.VimEnter,
+        init = function()
+            hl.apply({
+                { AlphaHeader = { fg = colors.blue.bright } },
+                { AlphaFooter = { fg = colors.blue.base } },
+            })
+        end,
         opts = function()
             local cmd = defaults.cmd
             local startify = require("alpha.themes.theta")
