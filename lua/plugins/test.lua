@@ -1,9 +1,7 @@
 return {
     {
         "nvim-neotest/neotest",
-        config = function(_, opts)
-            require("neotest").setup(opts)
-
+        init = function()
             hl.apply({
                 { NeotestAdapterName = { bold = true, fg = colors.magenta.base } },
                 { NeotestDir = { fg = colors.cyan.base } },

@@ -392,20 +392,17 @@ return {
     },
     {
         "echasnovski/mini.indentscope",
-        config = function(_, opts)
-            require("mini.indentscope").setup(opts)
-
-            hl.apply({
-                { MiniIndentscopeSymbol = { fg = colors.blue.bright } },
-                { MiniIndentscopePrefix = { nocombine = true } },
-            })
-        end,
         event = ev.LazyFile,
         init = function()
             ev.on(ev.FileType, function()
                 vim.b.miniindentscope_disable = true
             end, {
                 pattern = defaults.ignored.file_types,
+            })
+
+            hl.apply({
+                { MiniIndentscopeSymbol = { fg = colors.blue.bright } },
+                { MiniIndentscopePrefix = { nocombine = true } },
             })
         end,
         opts = function()
