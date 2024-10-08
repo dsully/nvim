@@ -1,5 +1,123 @@
 return {
     {
+        "saghen/blink.cmp",
+        config = function(_, opts)
+            require("blink.cmp").setup(opts)
+
+            -- Remove Copilot ghost text when the cmp menu is opened.
+            ev.on_load("copilot", function()
+                vim.schedule(function()
+                    local cmp = require("blink.cmp")
+
+                    cmp.on_show(function()
+                        require("copilot.suggestion").dismiss()
+                        vim.api.nvim_buf_set_var(0, "copilot_suggestion_hidden", true)
+                    end)
+
+                    cmp.on_hide(function()
+                        vim.api.nvim_buf_set_var(0, "copilot_suggestion_hidden", false)
+                    end)
+                end)
+            end)
+        end,
+        dev = true,
+        init = function()
+            hl.apply({
+                { BlinkCmpMenu = { link = "Pmenu" } },
+                { BlinkCmpMenuBorder = { link = "Pmenu" } },
+                { BlinkCmpMenuSelection = { link = "PmenuSel" } },
+
+                { BlinkCmpDoc = { bg = colors.black.dim, fg = colors.white.base } },
+                { BlinkCmpDocBorder = { bg = colors.black.base, fg = colors.gray.bright } },
+
+                { BlinkCmpDocCursorLine = { link = "Visual" } },
+
+                { BlinkCmpSignatureHelp = { bg = colors.black.base, fg = colors.white.base } },
+                { BlinkCmpSignatureHelpBorder = { bg = colors.black.base, fg = colors.gray.bright } },
+
+                { BlinkCmpSignatureHelpActiveParameter = { link = "LspSignatureActiveParameter" } },
+
+                { BlinkCmpLabel = { fg = colors.white.bright } },
+                { BlinkCmpLabelDeprecated = { fg = colors.gray.base, strikethrough = true } },
+                { BlinkCmpLabelMatch = { bold = true, fg = colors.blue.base } },
+                { BlinkCmpKind = { fg = colors.white.bright } },
+
+                { BlinkCmpKindClass = { fg = colors.yellow.base } },
+                { BlinkCmpKindColor = { link = "BlinkCmpKind" } },
+                { BlinkCmpKindConstant = { fg = colors.orange.base } },
+                { BlinkCmpKindConstructor = { fg = colors.yellow.base } },
+                { BlinkCmpKindEnum = { fg = colors.yellow.base } },
+                { BlinkCmpKindEnumMember = { fg = colors.cyan.base } },
+                { BlinkCmpKindEvent = { fg = colors.magenta.base } },
+                { BlinkCmpKindField = { fg = colors.blue.base } },
+                { BlinkCmpKindFile = { link = "BlinkCmpKind" } },
+                { BlinkCmpKindFolder = { link = "BlinkCmpKind" } },
+                { BlinkCmpKindFunction = { fg = colors.magenta.base } },
+                { BlinkCmpKindInterface = { fg = colors.yellow.base } },
+                { BlinkCmpKindKeyword = { fg = colors.magenta.base } },
+                { BlinkCmpKindMethod = { fg = colors.magenta.base } },
+                { BlinkCmpKindModule = { fg = colors.blue.base } },
+                { BlinkCmpKindOperator = { fg = colors.magenta.base } },
+                { BlinkCmpKindProperty = { fg = colors.blue.base } },
+                { BlinkCmpKindReference = { fg = colors.magenta.base } },
+                { BlinkCmpKindSnippet = { fg = colors.white.base } },
+                { BlinkCmpKindStruct = { fg = colors.yellow.base } },
+                { BlinkCmpKindText = { link = "BlinkCmpKind" } },
+                { BlinkCmpKindTypeParameter = { fg = colors.yellow.base } },
+                { BlinkCmpKindUnit = { fg = colors.magenta.base } },
+                { BlinkCmpKindValue = { fg = colors.blue.base } },
+                { BlinkCmpKindVariable = { fg = colors.blue.base } },
+            })
+        end,
+        lazy = false,
+        keys = {
+            -- Inside a snippet, use backspace to remove the placeholder.
+            { "<bs>", "<C-O>s", desc = "Remove Snippet Placeholder", mode = "s" },
+            {
+                ["<C-e>"] = function()
+                    local cmp = require("blink.cmp")
+                    local copilot = require("copilot")
+
+                    if vim.snippet.active() then
+                        vim.snippet.stop()
+                    elseif cmp.windows.autocomplete.win:is_open() then
+                        cmp.hide()
+                    elseif copilot.is_visible() then
+                        copilot.dismiss()
+                    end
+                end,
+                desc = "Hide Completion",
+                mode = { "i", "c" },
+            },
+        },
+        opts = {
+            accept = {
+                -- experimental auto-brackets support
+                auto_brackets = {
+                    enabled = true,
+                },
+            },
+            keymap = {
+                accept = "<CR>",
+                select_next = { "<Tab>", "<Down>", "<C-j>" },
+                select_prev = { "<S-Tab>", "<Up>", "<C-k>" },
+            },
+            nerd_font_variant = "mono",
+            trigger = {
+                -- experimental signature help support
+                signature_help = {
+                    enabled = false,
+                },
+            },
+            windows = {
+                documentation = {
+                    border = defaults.ui.border.name,
+                },
+            },
+        },
+        version = "v0.*",
+    },
+    {
         "yioneko/nvim-cmp",
         branch = "perf",
         cmd = "CmpStatus",
@@ -242,19 +360,20 @@ return {
                 { CmpItemMenu = { fg = colors.white.dim, bg = "NONE", italic = true } },
             })
         end,
+        enabled = false,
     },
-    { "hrsh7th/cmp-buffer", event = ev.InsertEnter },
-    { "hrsh7th/cmp-cmdline", event = ev.CmdlineEnter },
-    { "hrsh7th/cmp-nvim-lsp" },
-    { "hrsh7th/cmp-path", event = ev.InsertEnter },
-    { "SergioRibera/cmp-dotenv", event = ev.InsertEnter },
+    { "hrsh7th/cmp-buffer", enabled = false, event = ev.InsertEnter },
+    { "hrsh7th/cmp-cmdline", enabled = false, event = ev.CmdlineEnter },
+    { "hrsh7th/cmp-nvim-lsp", enabled = false },
+    { "hrsh7th/cmp-path", enabled = false, event = ev.InsertEnter },
+    { "SergioRibera/cmp-dotenv", enabled = false, event = ev.InsertEnter },
     {
         "garymjr/nvim-snippets",
         opts = {
             friendly_snippets = true,
         },
     },
-    { "zjp-CN/nvim-cmp-lsp-rs" },
+    { "zjp-CN/nvim-cmp-lsp-rs", enabled = false },
     {
         "rafamadriz/friendly-snippets",
         lazy = false,
@@ -481,15 +600,17 @@ return {
             -- https://gitspartv.github.io/lua-patterns/
             -- https://riptutorial.com/lua/example/20315/lua-pattern-matching
             mappings = {
+                -- Map <cr> to false to prevent conflict with blink.cmp.
+                --
                 -- Prevents the action if the cursor is just before any character or next to a "\".
-                ["("] = { action = "open", pair = "()", neigh_pattern = "[^\\][%s%)%]%}]" },
-                ["["] = { action = "open", pair = "[]", neigh_pattern = "[^\\][%s%)%]%}]" },
-                ["{"] = { action = "open", pair = "{}", neigh_pattern = "[^\\][%s%)%]%}]" },
+                ["("] = { action = "open", pair = "()", neigh_pattern = "[^\\][%s%)%]%}]", register = { cr = false } },
+                ["["] = { action = "open", pair = "[]", neigh_pattern = "[^\\][%s%)%]%}]", register = { cr = false } },
+                ["{"] = { action = "open", pair = "{}", neigh_pattern = "[^\\][%s%)%]%}]", register = { cr = false } },
 
                 -- This is default (prevents the action if the cursor is just next to a "\").
-                [")"] = { action = "close", pair = "()", neigh_pattern = "[^\\]." },
-                ["]"] = { action = "close", pair = "[]", neigh_pattern = "[^\\]." },
-                ["}"] = { action = "close", pair = "{}", neigh_pattern = "[^\\]." },
+                [")"] = { action = "close", pair = "()", neigh_pattern = "[^\\].", register = { cr = false } },
+                ["]"] = { action = "close", pair = "[]", neigh_pattern = "[^\\].", register = { cr = false } },
+                ["}"] = { action = "close", pair = "{}", neigh_pattern = "[^\\].", register = { cr = false } },
 
                 -- Don't autocomplete quotes around letters, except f-strings
                 ['"'] = {
@@ -503,7 +624,7 @@ return {
                 ["`"] = { action = "closeopen", pair = "``", neigh_pattern = "[^%w][^%w]", register = { cr = false } },
 
                 -- Restrict ' with < and & for Rust
-                ["'"] = { neigh_pattern = "[^%a\\|'|<|&]." },
+                ["'"] = { neigh_pattern = "[^%a\\|'|<|&].", register = { cr = false } },
 
                 -- Add | for Rust iterations
                 ["|"] = { action = "closeopen", pair = "||", neigh_pattern = "[(][)]", register = { cr = false } },
@@ -659,18 +780,10 @@ return {
     {
         "Saecki/crates.nvim",
         event = { "BufReadPost Cargo.toml" },
-        init = function()
-            ev.on(ev.BufReadPost, function()
-                require("cmp").setup.buffer({ sources = { { name = "crates" } } })
-            end, {
-                group = ev.group("CmpSourceCargo", true),
-                pattern = "Cargo.toml",
-            })
-        end,
         opts = {
             completion = {
                 cmp = {
-                    enabled = true,
+                    enabled = false,
                 },
                 crates = {
                     enabled = true,

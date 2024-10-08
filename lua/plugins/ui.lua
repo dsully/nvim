@@ -669,7 +669,6 @@ return {
             local icons = require("mini.icons")
 
             icons.setup(opts)
-            icons.tweak_lsp_kind("prepend")
         end,
         init = function()
             hl.apply({
