@@ -170,7 +170,7 @@ function M.setup()
 
     hl.apply({
         { LazyCommit = { fg = colors.white.bright } },
-        { LazyDimmed = { fg = colors.white.bright } },
+        { LazyDimmed = { link = "Comment" } },
         { LazyProp = { fg = colors.white.bright } },
     })
 
