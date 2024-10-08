@@ -28,20 +28,18 @@ return {
                 { BlinkCmpMenuSelection = { link = "PmenuSel" } },
 
                 { BlinkCmpDoc = { bg = colors.black.dim, fg = colors.white.base } },
-                { BlinkCmpDocBorder = { bg = colors.black.base, fg = colors.gray.bright } },
-
+                { BlinkCmpDocBorder = { bg = colors.black.dim, fg = colors.gray.bright } },
                 { BlinkCmpDocCursorLine = { link = "Visual" } },
 
                 { BlinkCmpSignatureHelp = { bg = colors.black.base, fg = colors.white.base } },
                 { BlinkCmpSignatureHelpBorder = { bg = colors.black.base, fg = colors.gray.bright } },
-
                 { BlinkCmpSignatureHelpActiveParameter = { link = "LspSignatureActiveParameter" } },
 
                 { BlinkCmpLabel = { fg = colors.white.bright } },
                 { BlinkCmpLabelDeprecated = { fg = colors.gray.base, strikethrough = true } },
                 { BlinkCmpLabelMatch = { bold = true, fg = colors.blue.base } },
-                { BlinkCmpKind = { fg = colors.white.bright } },
 
+                { BlinkCmpKind = { fg = colors.white.bright } },
                 { BlinkCmpKindClass = { fg = colors.yellow.base } },
                 { BlinkCmpKindColor = { link = "BlinkCmpKind" } },
                 { BlinkCmpKindConstant = { fg = colors.orange.base } },
@@ -74,7 +72,8 @@ return {
             -- Inside a snippet, use backspace to remove the placeholder.
             { "<bs>", "<C-O>s", desc = "Remove Snippet Placeholder", mode = "s" },
             {
-                ["<C-e>"] = function()
+                "<C-e>",
+                function()
                     local cmp = require("blink.cmp")
                     local copilot = require("copilot")
 
@@ -118,262 +117,11 @@ return {
         version = "v0.*",
     },
     {
-        "yioneko/nvim-cmp",
-        branch = "perf",
-        cmd = "CmpStatus",
-        config = function()
-            local cmp = require("cmp")
-            local helpers = require("helpers.cmp")
-            local icons = require("mini.icons")
-
-            local cmp_rs = require("cmp_lsp_rs").comparators
-            local copilot = require("copilot.suggestion")
-
-            -- Better visibility check than cmp.visible().
-            local function is_visible(_)
-                return cmp.core.view:visible() or vim.fn.pumvisible() == 1
-            end
-
-            -- Inside a snippet, use backspace to remove the placeholder.
-            vim.keymap.set("s", "<BS>", "<C-O>s")
-
-            ---@type cmp.ConfigSchema
-            local opts = {
-                completion = {
-                    autocomplete = {
-                        cmp.TriggerEvent.InsertEnter,
-                        cmp.TriggerEvent.TextChanged,
-                    },
-                },
-                formatting = {
-                    expandable_indicator = true,
-                    --
-                    -- kind is icon, abbr is completion name, menu is [Function]
-                    fields = { "kind", "abbr", "menu" },
-                    --
-                    ---@param entry cmp.Entry
-                    ---@param item vim.CompletedItem
-                    ---@return vim.CompletedItem
-                    format = function(entry, item)
-                        --
-                        -- Give path completions a different set of icons.
-                        if entry.source.name == "path" then
-                            local icon, hl_group = icons.get("file", entry:get_completion_item().label)
-
-                            if icon ~= nil then
-                                item.kind = icon
-                                item.kind_hl_group = hl_group
-                            end
-
-                            return item
-                        else
-                            local icon, hl_group = icons.get("lsp", item.kind)
-
-                            if icon ~= nil then
-                                item.kind = icon
-                                item.kind_hl_group = hl_group
-                            end
-                        end
-
-                        -- Strip the `pub fn` prefix from Rust functions.
-                        -- Strip method & function parameters.
-                        item.abbr = item.abbr:gsub("pub fn (.+)", "%1"):gsub("(.+)%(.+%)~", "%1()")
-
-                        if entry.source ~= nil and entry.source.name ~= nil and entry.source.name ~= "nvim_lsp" then
-                            item.menu = " " .. (defaults.cmp.menu[entry.source.name] or "")
-                        else
-                            item.menu = ""
-                        end
-
-                        for key, width in pairs(defaults.cmp.widths) do
-                            if item[key] and vim.fn.strdisplaywidth(item[key]) > width then
-                                item[key] = vim.fn.strcharpart(item[key], 0, width - 1) .. defaults.icons.misc.ellipsis
-                            end
-                        end
-
-                        return item
-                    end,
-                },
-                mapping = cmp.mapping({
-                    ["<C-e>"] = cmp.mapping(function()
-                        if vim.snippet.active() then
-                            vim.snippet.stop()
-                        elseif is_visible(cmp) then
-                            cmp.abort()
-                        elseif copilot.is_visible() then
-                            copilot.dismiss()
-                        end
-                    end, { "i", "c" }),
-                    --
-                    -- Bring up the completion menu manually.
-                    ["<C-Space>"] = cmp.mapping.complete(),
-                    ["<C-n>"] = cmp.mapping.select_next_item({ behavior = cmp.SelectBehavior.Select }),
-                    ["<C-p>"] = cmp.mapping.select_prev_item({ behavior = cmp.SelectBehavior.Select }),
-                    ["<Up>"] = cmp.mapping.select_prev_item({ behavior = cmp.SelectBehavior.Select }),
-                    ["<Down>"] = cmp.mapping.select_next_item({ behavior = cmp.SelectBehavior.Select }),
-                    ["<CR>"] = helpers.confirm(),
-                    ["<C-CR>"] = cmp.mapping(function(fallback)
-                        cmp.abort()
-                        fallback()
-                    end),
-                    ["<Tab>"] = cmp.mapping(function(fallback)
-                        --
-                        -- Terminal
-                        if vim.api.nvim_get_mode().mode == "t" then
-                            fallback()
-                            return
-                        end
-
-                        if vim.api.nvim_get_mode().mode == "s" then
-                            vim.snippet.jump(1)
-                            return
-                        end
-
-                        if is_visible(cmp) then
-                            cmp.select_next_item({ behavior = cmp.SelectBehavior.Select })
-                        elseif vim.snippet.active({ direction = 1 }) then
-                            vim.snippet.jump(1)
-                        else
-                            fallback()
-                        end
-                    end),
-                    ["<S-Tab>"] = cmp.mapping(function(fallback)
-                        if is_visible(cmp) then
-                            cmp.select_prev_item()
-                        elseif vim.snippet.active({ direction = -1 }) then
-                            vim.snippet.jump(1)
-                        else
-                            fallback()
-                        end
-                    end),
-                }),
-                matching = {
-                    disallow_fullfuzzy_matching = true,
-                    disallow_fuzzy_matching = true,
-                    disallow_partial_fuzzy_matching = true,
-                    disallow_partial_matching = false,
-                    disallow_prefix_unmatching = true,
-                    disallow_symbol_nonprefix_matching = true,
-                },
-                performance = {
-                    debounce = 0, -- default is 60ms
-                    throttle = 0, -- default is 30ms
-                    max_view_entries = 100,
-                    async_budget = 1,
-                    confirm_resolve_timeout = 80,
-                    fetching_timeout = 500,
-                },
-                preselect = cmp.PreselectMode.Item,
-                sorting = {
-                    comparators = {
-                        cmp.config.compare.exact,
-                        cmp.config.compare.score, -- based on :  score = score + ((#sources - (source_index - 1)) * sorting.priority_weight)
-                        cmp_rs.inherent_import_inscope,
-                        cmp_rs.sort_by_label_but_underscore_last,
-                        cmp_rs.sort_by_kind,
-                        cmp_rs.sort_by_label_but_underscore_nil,
-                        cmp_rs.sort_underscore,
-                    },
-                    priority_weight = 1.0,
-                },
-                sources = cmp.config.sources({
-                    helpers.config.snippets,
-                    helpers.config.lsp(),
-                    helpers.config.lazydev,
-                    helpers.config.path,
-                }),
-                view = {
-                    entries = {
-                        follow_cursor = true,
-                        name = "custom", -- "native | wildmenu"
-                    },
-                },
-                window = {
-                    completion = {
-                        col_offset = -3,
-                        side_padding = 0,
-                    },
-                    documentation = cmp.config.window.bordered({
-                        border = defaults.ui.border.name,
-                    }),
-                },
-            }
-
-            cmp.setup(opts)
-
-            cmp.setup.filetype({ "bash", "fish", "sh", "zsh" }, {
-                sources = cmp.config.sources({
-                    helpers.config.lsp(),
-                    helpers.config.snippets,
-                    helpers.config.buffer,
-                    helpers.config.path,
-                    helpers.config.env,
-                }),
-            })
-
-            -- Completions for : command mode
-            cmp.setup.cmdline(":", {
-                mapping = cmp.mapping.preset.cmdline(),
-                sources = cmp.config.sources({
-                    helpers.config.path,
-                    helpers.config.cmdline,
-                }),
-            })
-
-            -- https://github.com/hrsh7th/cmp-cmdline/issues/94
-            ev.on(ev.CmdWinEnter, cmp.close)
-
-            hl.apply({
-                { CmpDocumentation = { bg = colors.black.base, fg = colors.white.base } },
-                { CmpDocumentationBorder = { bg = colors.black.base, fg = colors.gray.bright } },
-                { CmpGhostText = { link = "Comment" } },
-                { CmpItemAbbr = { fg = colors.white.bright } },
-                { CmpItemAbbrDeprecated = { fg = colors.gray.base, strikethrough = true } },
-                { CmpItemAbbrMatch = { bold = true, fg = colors.blue.base } },
-                { CmpItemAbbrMatchFuzzy = { bold = true, fg = colors.blue.base } },
-                { CmpItemKind = { fg = colors.white.bright } },
-                { CmpItemKindClass = { fg = colors.yellow.base } },
-                { CmpItemKindColor = { link = "CmpItemKind" } },
-                { CmpItemKindConstant = { fg = colors.orange.base } },
-                { CmpItemKindConstructor = { fg = colors.yellow.base } },
-                { CmpItemKindEnum = { fg = colors.yellow.base } },
-                { CmpItemKindEnumMember = { fg = colors.cyan.base } },
-                { CmpItemKindEvent = { fg = colors.magenta.base } },
-                { CmpItemKindField = { fg = colors.blue.base } },
-                { CmpItemKindFile = { link = "CmpItemKind" } },
-                { CmpItemKindFolder = { link = "CmpItemKind" } },
-                { CmpItemKindFunction = { fg = colors.magenta.base } },
-                { CmpItemKindInterface = { fg = colors.yellow.base } },
-                { CmpItemKindKeyword = { fg = colors.magenta.base } },
-                { CmpItemKindMethod = { fg = colors.magenta.base } },
-                { CmpItemKindModule = { fg = colors.blue.base } },
-                { CmpItemKindOperator = { fg = colors.magenta.base } },
-                { CmpItemKindProperty = { fg = colors.blue.base } },
-                { CmpItemKindReference = { fg = colors.magenta.base } },
-                { CmpItemKindSnippet = { fg = colors.white.base } },
-                { CmpItemKindStruct = { fg = colors.yellow.base } },
-                { CmpItemKindText = { link = "CmpItemKind" } },
-                { CmpItemKindTypeParameter = { fg = colors.yellow.base } },
-                { CmpItemKindUnit = { fg = colors.magenta.base } },
-                { CmpItemKindValue = { fg = colors.blue.base } },
-                { CmpItemKindVariable = { fg = colors.blue.base } },
-                { CmpItemMenu = { fg = colors.white.dim, bg = "NONE", italic = true } },
-            })
-        end,
-        enabled = false,
-    },
-    { "hrsh7th/cmp-buffer", enabled = false, event = ev.InsertEnter },
-    { "hrsh7th/cmp-cmdline", enabled = false, event = ev.CmdlineEnter },
-    { "hrsh7th/cmp-nvim-lsp", enabled = false },
-    { "hrsh7th/cmp-path", enabled = false, event = ev.InsertEnter },
-    { "SergioRibera/cmp-dotenv", enabled = false, event = ev.InsertEnter },
-    {
         "garymjr/nvim-snippets",
         opts = {
             friendly_snippets = true,
         },
     },
-    { "zjp-CN/nvim-cmp-lsp-rs", enabled = false },
     {
         "rafamadriz/friendly-snippets",
         lazy = false,

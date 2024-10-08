@@ -1,45 +1,6 @@
 local copilot = " "
 
 local M = {
-    ai_file_types = {
-        "bash",
-        "c",
-        "cpp",
-        "fish",
-        "go",
-        "html",
-        "java",
-        "javascript",
-        "just",
-        "lua",
-        "python",
-        "rust",
-        "sh",
-        "typescript",
-        "zsh",
-    },
-
-    cmp = {
-        backend = "nvim-cmp",
-        menu = {
-            buffer = " [Buffer]",
-            calc = "󰃬 [Calc]",
-            cmdline = "󰘳 [Command]",
-            crates = "󱘗 [Crates]",
-            copilot = copilot .. "[Copilot]",
-            dotenv = " [Env]",
-            fish = "󰈺 [Fish]",
-            luasnip = " [LuaSnip]",
-            snippets = " [Snippets]",
-            nvim_lsp = " [LSP]",
-            path = " [Path]",
-        },
-        widths = {
-            abbr = 40,
-            menu = 30,
-        },
-    },
-
     code_actions = {
         "",
         "quickfix",
@@ -330,7 +291,6 @@ local M = {
             "chatgpt",
             "chatgpt-input",
             "checkhealth",
-            "cmp_menu",
             "crates.nvim",
             "git",
             "gitrebase",
