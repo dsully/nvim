@@ -108,9 +108,10 @@ function M.setup()
             lazy = true,
             version = false, -- always use the latest git commit
         },
-        -- dev = {
-        --     path = "~/dev/home/neovim",
-        -- },
+        ---@diagnostic disable-next-line: assign-type-mismatch
+        dev = {
+            path = vim.env.HOME .. "/dev/home/forked",
+        },
         install = {
             colorscheme = { vim.g.colorscheme },
             missing = true,

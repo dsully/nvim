@@ -51,10 +51,9 @@ M.apply_to_buffers = function(callback, filter)
     end
 end
 
--- Hook up autocomplete for LSP to nvim-cmp, see: https://github.com/hrsh7th/cmp-nvim-lsp
 ---@return lsp.ClientCapabilities
 M.capabilities = function()
-    return vim.tbl_deep_extend("force", {}, vim.lsp.protocol.make_client_capabilities(), require("cmp_nvim_lsp").default_capabilities() or {})
+    return vim.lsp.protocol.make_client_capabilities()
 end
 
 -- Handle code actions.
@@ -72,7 +71,6 @@ M.action = setmetatable({}, {
     end,
 })
 
----@return lsp.ClientCapabilities
 M.setup = function()
     -- Handle dynamic registration.
     --
@@ -159,8 +157,6 @@ M.setup = function()
 
     M.on_attach(M.validate_client)
     M.on_dynamic_capability(M.validate_client)
-
-    return M.capabilities()
 end
 
 ---@type table<string, table<vim.lsp.Client, table<number, boolean>>>
