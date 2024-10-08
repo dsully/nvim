@@ -135,5 +135,36 @@ return {
         end,
         opts = {},
     },
+    {
+        "stevearc/profile.nvim",
+        cond = vim.env.NVIM_PROFILE or false,
+        config = function()
+            require("profile").instrument_autocmds()
+
+            if os.getenv("NVIM_PROFILE"):lower():match("^start") then
+                require("profile").start("*")
+            else
+                require("profile").instrument("*")
+            end
+
+            vim.keymap.set("", "<c-p>", function()
+                local prof = require("profile")
+                if prof.is_recording() then
+                    prof.stop()
+
+                    vim.ui.input({ prompt = "Save profile to:", completion = "file", default = "profile.json" }, function(filename)
+                        if filename then
+                            prof.export(filename)
+                            vim.notify(string.format("Wrote %s", filename))
+                        end
+                    end)
+                else
+                    prof.start("*")
+                end
+            end)
+        end,
+        lazy = false,
+        priority = 999,
+    },
     -- { "lewis6991/fileline.nvim", lazy = false },
 }
