@@ -580,17 +580,11 @@ M.highlights = {
     LineNrBelow = { link = "LineNr" },
     LspCodeLens = { fg = M.colors.gray.bright },
     LspCodeLensSeparator = { fg = M.colors.gray.base },
-    LspFloatWinBorder = { fg = M.colors.gray.base },
-    LspFloatWinNormal = { bg = M.colors.black.base },
-    LspInfoBorder = { default = true, link = "Label" },
     LspInlayHint = { fg = M.colors.gray.bright },
     LspReferenceRead = { bg = M.colors.gray.base },
     LspReferenceText = { bg = M.colors.gray.base },
     LspReferenceWrite = { bg = M.colors.gray.base },
     LspSignatureActiveParameter = { fg = M.colors.gray.base },
-    LspTroubleCount = { bg = M.colors.gray.base, fg = M.colors.magenta.base },
-    LspTroubleNormal = { bg = M.colors.black.base, fg = M.colors.gray.base },
-    LspTroubleText = { fg = M.colors.white.base },
     Macro = { link = "PreProc" },
     MatchBackground = { link = "ColorColumn" },
     MatchParen = { bg = M.colors.gray.base, fg = M.colors.cyan.bright },
@@ -616,13 +610,11 @@ M.highlights = {
     PmenuKind = { link = "Pmenu" },
     PmenuKindSel = { link = "PmenuSel" },
     PmenuSbar = { link = "PmenuSel" },
-    -- PmenuSel = { bg = M.colors.gray.bright },
     -- https://www.reddit.com/r/neovim/comments/1f439w8/psa_for_color_scheme_authors_you_might_want_to/
     -- Matched text in normal item
     PmenuSel = { fg = M.colors.blue.base, bg = M.colors.black.base, blend = 0, bold = true, reverse = true, cterm = { reverse = true } },
     -- Matched text in selected item
     PmenuMatchSel = { fg = M.colors.blue.base, bg = M.colors.gray.base, bold = true, reverse = true, cterm = { reverse = true } },
-
     PmenuThumb = { bg = M.colors.gray.base },
     PreCondit = { link = "PreProc" },
     PreProc = { fg = M.colors.blue.bright },
