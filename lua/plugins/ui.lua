@@ -526,6 +526,9 @@ return {
                             { find = "Found a swap file by the name" },
                             { find = "No information available", event = "notify" },
 
+                            -- Semantic Tokens failure in the neovim runtime.
+                            { find = "index out of range" },
+
                             -- Only show progress on multiple of 5 percent.
                             { find = "[^05]/", event = "lsp", kind = "progress" },
 
