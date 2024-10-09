@@ -101,11 +101,21 @@ return {
                 select_next = { "<Tab>", "<Down>", "<C-j>" },
                 select_prev = { "<S-Tab>", "<Up>", "<C-k>" },
             },
+            kind_icons = defaults.icons.lsp,
             nerd_font_variant = "mono",
+            sources = {
+                providers = {
+                    {
+                        "blink.cmp.sources.snippets",
+                        opts = {
+                            search_paths = { vim.fn.stdpath("config") .. "/snippets" },
+                        },
+                    },
+                },
+            },
             trigger = {
-                -- experimental signature help support
                 signature_help = {
-                    enabled = false,
+                    enabled = true,
                 },
             },
             windows = {
