@@ -37,6 +37,19 @@ if vim.g.os == "Darwin" then
 
         vim.system({ "open", filename }):wait()
     end, "Open in App")
+
+    map("<space>T", function()
+        local stdout = vim.system({ "git", "rev-parse", "--show-toplevel" }):wait().stdout
+        local root = vim.uv.cwd()
+
+        if stdout then
+            root = vim.trim(stdout)
+        else
+            return vim.notify("󰏋 Not in a git repository", vim.log.levels.WARN)
+        end
+
+        vim.system({ "/usr/bin/open", "-g", "-a", "Tower", root }):wait()
+    end, "Open Tower")
 end
 
 -- Common misspellings
