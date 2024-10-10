@@ -70,9 +70,9 @@ return {
         keys = {
             { "<leader>aa", vim.cmd.CodeCompanionActions, mode = mode, desc = "Code Companion Actions" },
             { "<leader>ac", function() vim.cmd.CodeCompanionChat("Toggle") end, mode = mode, desc = "Code Companion Chat" },
-            { "<leader>ad", function() vim.cmd.CodeCompanion("/lsp") end, mode = mode, desc = "Debug Diagnostics" },
-            { "<leader>af", function() vim.cmd.CodeCompanion("/fix") end, mode = mode, desc = "Fix Code" },
-            { "<leader>ao", function() vim.cmd.CodeCompanion("/optimize") end, mode = mode, desc = "Optimize" },
+            { "<leader>ad", function() require("codecompanion").prompt("lsp") end, mode = mode, desc = "Debug Diagnostics" },
+            { "<leader>af", function() require("codecompanion").prompt("fix") end, mode = mode, desc = "Fix Code" },
+            { "<leader>ao", function() require("codecompanion").prompt("optimize") end, mode = mode, desc = "Optimize" },
         },
         --stylua: ignore end
         opts = function()
