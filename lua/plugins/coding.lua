@@ -103,16 +103,6 @@ return {
             },
             kind_icons = defaults.icons.lsp,
             nerd_font_variant = "mono",
-            sources = {
-                providers = {
-                    {
-                        "blink.cmp.sources.snippets",
-                        opts = {
-                            search_paths = { vim.fn.stdpath("config") .. "/snippets" },
-                        },
-                    },
-                },
-            },
             trigger = {
                 signature_help = {
                     enabled = true,
