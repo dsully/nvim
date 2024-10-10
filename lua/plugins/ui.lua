@@ -287,11 +287,14 @@ return {
                     end
 
                     local hl_name = "Statusline" .. (icon_hl or "")
+                    local existing = vim.api.nvim_get_hl(0, { name = icon_hl or "" })
 
-                    vim.api.nvim_set_hl(0, hl_name, {
-                        bg = colors.black.base,
-                        fg = ("#%06x"):format(vim.api.nvim_get_hl(0, { name = icon_hl or "" }).fg),
-                    })
+                    if existing and existing.fg then
+                        vim.api.nvim_set_hl(0, hl_name, {
+                            bg = colors.black.base,
+                            fg = ("#%06x"):format(existing.fg),
+                        })
+                    end
 
                     return string.format(" %%#%s#%s %%##", hl_name, icon or " ")
                 end,
@@ -491,7 +494,7 @@ return {
                 bottom_search = true, -- use a classic bottom cmdline for search
                 command_palette = false, -- position the cmdline and popupmenu together
                 long_message_to_split = true, -- long messages will be sent to a split
-                lsp_doc_border = true,
+                lsp_doc_border = false,
             },
             ---@type NoiceRouteConfig[]
             routes = {
