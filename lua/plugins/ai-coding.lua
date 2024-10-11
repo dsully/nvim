@@ -92,7 +92,7 @@ return {
                     --     },
                     -- },
                     diff = {
-                        provider = "mini_diff",
+                        provider = "default",
                     },
                 },
                 prompt_library = {
