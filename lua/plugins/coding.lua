@@ -1,6 +1,6 @@
 return {
     {
-        "saghen/blink.cmp",
+        "Saghen/blink.cmp",
         config = function(_, opts)
             require("blink.cmp").setup(opts)
 
@@ -113,16 +113,39 @@ return {
                 },
             },
             windows = {
+                autocomplete = {
+                    -- https://github.com/Saghen/blink.cmp/blob/f456c2aa0994f709f9aec991ed2b4b705f787e48/lua/blink/cmp/windows/autocomplete.lua#L227
+                    ---@param ctx blink.cmp.CompletionRenderContext
+                    draw = function(ctx)
+                        local icon = ctx.kind_icon
+
+                        -- Give path completions a different set of icons.
+                        if ctx.item.source == "blink.cmp.sources.path" then
+                            local fi, _ = require("mini.icons").get("file", ctx.item.label)
+
+                            if fi ~= nil then
+                                icon = fi
+                            end
+                        end
+
+                        -- Strip the `pub fn` prefix from Rust functions.
+                        -- Strip method & function parameters.
+                        -- ctx.item.detail = ctx.item.detail:gsub("pub fn (.+)", "%1"):gsub("(.+)%(.+%)~", "%1()")
+
+                        return {
+                            {
+                                " " .. ctx.item.label .. " ",
+                                fill = true,
+                                hl_group = ctx.deprecated and "BlinkCmpLabelDeprecated" or "BlinkCmpLabel",
+                            },
+                            { icon .. " ", hl_group = "BlinkCmpKind" .. ctx.kind },
+                        }
+                    end,
+                },
                 documentation = {
                     border = defaults.ui.border.name,
                 },
             },
-        },
-    },
-    {
-        "garymjr/nvim-snippets",
-        opts = {
-            friendly_snippets = true,
         },
     },
     {
