@@ -20,7 +20,6 @@ return {
                 end)
             end)
         end,
-        dev = true,
         init = function()
             hl.apply({
                 { BlinkCmpMenu = { link = "Pmenu" } },
