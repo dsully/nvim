@@ -293,7 +293,7 @@ M.emit = function(event, opts)
     if M[event] then
         vim.api.nvim_exec_autocmds(event, opts)
     else
-        vim.notify("Unknown event: " .. event, vim.log.levels.ERROR)
+        notify.error("Unknown event: " .. event)
     end
 end
 

@@ -109,7 +109,7 @@ return {
 
                 if ok then
                     ev.on(ev.BufWritePost, function(args)
-                        vim.notify("chezmoi: Adding changes to: " .. args.file, vim.log.DEBUG)
+                        notify.info("chezmoi: Adding changes to: " .. args.file)
 
                         require("chezmoi.commands.__base").execute({
                             cmd = "add",
@@ -157,7 +157,7 @@ return {
                     vim.ui.input({ prompt = "Save profile to:", completion = "file", default = "profile.json" }, function(filename)
                         if filename then
                             prof.export(filename)
-                            vim.notify(string.format("Wrote %s", filename))
+                            notify.info("Wrote profile to: " .. filename)
                         end
                     end)
                 else

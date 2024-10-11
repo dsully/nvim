@@ -171,7 +171,7 @@ return {
                     --
                     vim.lsp.stop_client(client.id, true)
 
-                    vim.notify(("Restarting LSP %s for %s"):format(client.name, vim.fs.basename(vim.api.nvim_buf_get_name(bufnr))))
+                    notify.info(("Restarting LSP %s for %s"):format(client.name, vim.fs.basename(vim.api.nvim_buf_get_name(bufnr))))
                 end, { bufnr = vim.api.nvim_get_current_buf() })
 
                 vim.cmd.edit()
@@ -536,7 +536,11 @@ return {
                                     "taplo/associatedSchema",
                                     vim.tbl_extend("force", vim.lsp.util.make_position_params(), { documentUri = vim.uri_from_bufnr(bufnr) }),
                                     function(_, result)
-                                        vim.notify(vim.inspect(result))
+                                        require("helpers.float").open({
+                                            filetype = "toml",
+                                            lines = vim.split(result, "\n"),
+                                            window = { width = 0.8 },
+                                        })
                                     end,
                                     bufnr
                                 )
@@ -567,7 +571,7 @@ return {
                                     local schema = require("yaml-companion").get_buf_schema(vim.api.nvim_get_current_buf())
 
                                     if schema.result[1].name ~= "none" then
-                                        vim.notify(schema.result[1].name)
+                                        notify.info(schema.result[1].name)
                                     end
                                 end,
                                 desc = "Show YAML schema",
@@ -647,11 +651,11 @@ return {
                         return
                     end
 
-                    vim.notify(("Installing %s"):format(p.name), vim.log.levels.INFO, { title = "Mason", render = "compact" })
+                    notify.info(("Installing %s"):format(p.name), { title = "Mason", render = "compact" })
 
                     local handle_closed = vim.schedule_wrap(function()
                         if p:is_installed() then
-                            vim.notify(("Successfully installed %s"):format(p.name), vim.log.levels.INFO, { title = "Mason", render = "compact" })
+                            notify.info(("Successfully installed %s"):format(p.name), { title = "Mason", render = "compact" })
 
                             -- Trigger FileType event to possibly load this newly installed LSP server
                             vim.defer_fn(function()

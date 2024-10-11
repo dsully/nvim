@@ -33,7 +33,7 @@ if vim.g.os == "Darwin" then
     map("<leader>o", function()
         local filename = vim.api.nvim_buf_get_name(0)
 
-        vim.notify("󰏋 Opening " .. vim.fs.basename(filename))
+        notify.info("Opening " .. vim.fs.basename(filename), { icon = "󰏋" })
 
         vim.system({ "open", filename }):wait()
     end, "Open in App")
@@ -45,7 +45,8 @@ if vim.g.os == "Darwin" then
         if stdout then
             root = vim.trim(stdout)
         else
-            return vim.notify("󰏋 Not in a git repository", vim.log.levels.WARN)
+            notify.error("Not in a Git repository!", { icon = "󰏋" })
+            return
         end
 
         vim.system({ "/usr/bin/open", "-g", "-a", "Tower", root }):wait()

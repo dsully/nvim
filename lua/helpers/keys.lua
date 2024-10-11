@@ -54,9 +54,9 @@ function M.toggle.wrap(toggle)
             local state = toggle.get()
 
             if state then
-                vim.notify("Enabled " .. toggle.name, vim.log.levels.INFO, { title = toggle.name })
+                notify.info("Enabled " .. toggle.name, { title = toggle.name })
             else
-                vim.notify("Disabled " .. toggle.name, vim.log.levels.WARN, { title = toggle.name })
+                notify.warn("Disabled " .. toggle.name, { title = toggle.name })
             end
 
             return state
@@ -81,7 +81,7 @@ function M.toggle.wk(lhs, toggle)
         local ok, enabled = pcall(toggle.get)
 
         if not ok then
-            vim.notify("Failed to get toggle state for **" .. toggle.name .. "**:\n" .. enabled, vim.log.levels.ERROR, { once = true })
+            notify.error("Failed to get toggle state for **" .. toggle.name .. "**:\n" .. enabled, { once = true })
         end
 
         return enabled

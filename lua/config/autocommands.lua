@@ -88,7 +88,7 @@ ev.on({ ev.BufReadPost, ev.FileReadPost }, function(args)
     vim.schedule(function()
         vim.bo[args.buf].syntax = vim.filetype.match({ buf = args.buf }) or ""
 
-        vim.notify("File is too large, disabling treesitter, syntax & language servers.")
+        notify.warn("File is too large, disabling treesitter, syntax & language servers.")
 
         for _, client in pairs(vim.lsp.get_clients({ bufnr = args.buf })) do
             pcall(vim.lsp.buf_detach_client, args.buf, client.id)
@@ -187,7 +187,7 @@ ev.on(ev.TextYankPost, function()
         local ok, error = pcall(vim.fn.setreg, "+", str)
 
         if not ok then
-            vim.notify("Failed to copy to clipboard: " .. error, vim.log.levels.ERROR)
+            notify.error("Failed to copy to clipboard: " .. error)
             return
         end
     end
@@ -195,7 +195,7 @@ ev.on(ev.TextYankPost, function()
     local present, yank_data = pcall(vim.fn.getreg, '"')
 
     if not present then
-        vim.notify('Failed to get content from register ": ' .. yank_data, vim.log.levels.ERROR)
+        notify.error('Failed to get content from register ": ' .. yank_data)
         return
     end
 
