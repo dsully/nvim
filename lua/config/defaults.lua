@@ -82,6 +82,7 @@ local M = {
         jinja = { "curlylint" },
         markdown = { "markdownlint-cli2", "write_good" },
         protobuf = { "protolint" },
+        python = { "mypy" },
         rst = { "rstcheck", "write_good" },
         text = { "write_good" },
         yaml = { "yamllint" },
