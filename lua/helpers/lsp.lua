@@ -348,13 +348,15 @@ M.rename = function()
     input:on(event.BufLeave, input.input_props.on_close, { once = true })
 end
 
--- Adapted from folke/lazyvim
--- Searches & sets the root directory based on:
---
--- * LSP workspace folders
--- * LSP root_dir
--- * root pattern of filename of the current buffer
--- * root pattern of cwd
+--- Adapted from folke/lazyvim
+--- Searches & sets the root directory based on:
+---
+--- * LSP workspace folders
+--- * LSP root_dir
+--- * root pattern of filename of the current buffer
+--- * root pattern of cwd
+---
+---@param bufnr? integer
 M.find_root = function(bufnr)
     bufnr = bufnr or vim.api.nvim_get_current_buf()
 
