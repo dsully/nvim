@@ -119,7 +119,7 @@ return {
     {
         "SuperBo/fugit2.nvim",
         build = "rockspec",
-        cmd = { "Fugit2", "Fugit2Graph" },
+        cmd = { "Fugit2", "Fugit2Blame", "Fugit2Graph" },
         keys = {
             -- stylua: ignore
             { "<space>g", function() require("fugit2").git_status() end, desc = "Git UI (FuGit)" },
@@ -132,6 +132,8 @@ return {
             end
 
             return {
+                width = 0.8,
+                height = 0.8,
                 libgit2_path = vim.env.HOMEBREW_PREFIX .. lib,
             }
         end,
