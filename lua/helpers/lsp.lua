@@ -246,20 +246,15 @@ M.rename = function()
     local current_name = vim.fn.expand("<cword>")
 
     local params = vim.lsp.util.make_position_params()
+    local notify_opts = { icon = "", title = "LSP" }
 
     local function on_submit(new_name)
         --
         if not new_name or #new_name == 0 then
-            vim.api.nvim_notify("Cancelled: New name is empty!", vim.log.levels.INFO, {
-                icon = "",
-                title = "LSP",
-            })
+            notify.info("Cancelled: New name is empty!", notify_opts)
             return
         elseif new_name == current_name then
-            vim.api.nvim_notify("Cancelled: New and current names are the same!", vim.log.levels.INFO, {
-                icon = "",
-                title = "LSP",
-            })
+            notify.warn("Cancelled: New and current names are the same!", notify_opts)
             return
         end
 
@@ -276,7 +271,7 @@ M.rename = function()
         vim.lsp.buf_request(0, methods.textDocument_rename, params, function(err, result, ctx, _)
             --
             if err or not result then
-                vim.notify(("Error running LSP query '%s': %s"):format(ctx.method, err), vim.log.levels.ERROR)
+                notify.error(("Error running LSP query '%s': %s"):format(ctx.method, err))
                 return
             end
 
@@ -292,10 +287,7 @@ M.rename = function()
                     table.insert(msg, ("%d changes: %s"):format(#changes.edits, relative_path(changes.textDocument.uri)))
                 end
 
-                vim.api.nvim_notify("Renamed " .. current_name .. " into " .. new_name .. ".", vim.log.levels.INFO, {
-                    icon = "",
-                    title = "LSP",
-                })
+                notify.info("Renamed " .. current_name .. " into " .. new_name .. ".", notify_opts)
 
                 -- After the edits are applied, the files are not saved automatically.
                 local total_files = vim.tbl_count(result.documentChanges)

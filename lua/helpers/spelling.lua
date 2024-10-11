@@ -16,7 +16,7 @@ M.add_word_to_typos = function(word)
     local config = toml.parse(fs.read(path))
 
     if not config then
-        vim.notify("~/.typos.toml file not found!", vim.log.levels.ERROR)
+        notify.error("~/.typos.toml file not found!")
         return
     end
 

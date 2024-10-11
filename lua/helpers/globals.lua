@@ -4,9 +4,12 @@ _G.colors = require("config.defaults").colors
 _G.ev = require("helpers.event")
 _G.hl = require("helpers.highlights")
 _G.keys = require("helpers.keys")
+_G.notify = require("helpers.notify")
+
+local M = {}
 
 ---@return string
-local location = function()
+M.location = function()
     ---@type debuginfo
     local me = debug.getinfo(1, "S")
     local level = 2
@@ -30,13 +33,13 @@ end
 
 ---@param value any
 ---@param opts? {location:string, bt?:boolean}
-local _dump = function(value, opts)
+M.dump = function(value, opts)
     opts = opts or {}
-    opts.location = opts.location or location()
+    opts.location = opts.location or M.location()
 
     if vim.in_fast_event() then
         return vim.schedule(function()
-            M._dump(value, opts)
+            M.dump(value, opts)
         end)
     end
 
@@ -48,7 +51,7 @@ local _dump = function(value, opts)
         msg = msg .. "\n" .. debug.traceback("", 2)
     end
 
-    vim.notify(msg, vim.log.levels.INFO, {
+    notify.info(msg, {
         title = "Debug: ",
         icon = "",
         on_open = function(win)
@@ -76,7 +79,7 @@ _G.dbg = function(...)
         value = vim.islist(value) and vim.tbl_count(value) <= 1 and value[1] or value
     end
 
-    _dump(value)
+    M.dump(value)
 end
 
 --- Global backtrace function
@@ -90,7 +93,7 @@ _G.bt = function(...)
         value = vim.islist(value) and vim.tbl_count(value) <= 1 and value[1] or value
     end
 
-    _dump(value, { bt = true })
+    M.dump(value, { bt = true })
 end
 
 --- Create a namespace.
@@ -102,6 +105,7 @@ end
 -- Handling to open GitHub partial URLs: organization/repository
 local open = vim.ui.open
 
+---@param uri string
 vim.ui.open = function(uri) ---@diagnostic disable-line: duplicate-set-field
     --
     if not string.match(uri, "[a-z]*://[^ >,;]*") and string.match(uri, "[%w%p\\-]*/[%w%p\\-]*") then
