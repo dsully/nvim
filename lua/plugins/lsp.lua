@@ -197,6 +197,8 @@ return {
             end)
         end,
         opts = function()
+            local config = vim.env.XDG_CONFIG_HOME or vim.uv.cwd()
+
             ---@class PluginLspOpts
             local opts = {
                 ---@type vim.diagnostic.Opts
@@ -269,21 +271,6 @@ return {
                         },
                     },
                     bzl = {},
-                    -- ccls = {
-                    --     capabilities = capabilities,
-                    --     filetypes = { "c", "cpp", "cuda" },
-                    --     init_options = {
-                    --         clang = {
-                    --             excludeArgs = { "-frounding-math" },
-                    --         },
-                    --         compilationDatabaseDirectory = "build",
-                    --         index = {
-                    --             threads = 0,
-                    --         },
-                    --     },
-                    --     mason = false,
-                    --     offset_encoding = "utf-32",
-                    -- }
                     clangd = {
                         filetypes = { "c", "cpp", "cuda" }, -- Let SourceKit handle objective-c and objective-cpp.
                         init_options = {
@@ -420,7 +407,7 @@ return {
                                     sentence_capitalization = false,
                                     spell_check = false,
                                 },
-                                userDictPath = vim.env.XDG_CONFIG_HOME .. "/harper/dict.txt",
+                                userDictPath = config .. "/harper/dict.txt",
                             },
                         },
                     },
@@ -515,6 +502,7 @@ return {
                         },
                         -- Use ruff from Homebrew
                         mason = false,
+                        --
                         ---@param client vim.lsp.Client
                         on_attach = function(client)
                             client.server_capabilities.hoverProvider = false
@@ -556,7 +544,7 @@ return {
                             taplo = {
                                 config_file = {
                                     enabled = true,
-                                    path = vim.env.XDG_CONFIG_HOME .. "/taplo.toml",
+                                    path = config .. "/taplo.toml",
                                 },
                                 schema = {
                                     enabled = true,
