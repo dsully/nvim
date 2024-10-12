@@ -113,7 +113,6 @@ return {
                 },
             },
         },
-        version = "v0.*",
     },
     {
         "garymjr/nvim-snippets",
