@@ -510,6 +510,9 @@ return {
                             { find = "^%d+ change[s]?; after #%d+" },
                             { find = "^%-%-No lines in buffer%-%-$" },
 
+                            -- Ignored swap file.
+                            { find = "W325:" },
+
                             -- Unneeded info on search patterns
                             { find = "^[/?].", event = "msg_show" },
 
