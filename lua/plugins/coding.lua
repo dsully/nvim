@@ -95,6 +95,11 @@ return {
                     enabled = true,
                 },
             },
+            fuzzy = {
+                prebuiltBinaries = {
+                    download = false,
+                },
+            },
             keymap = {
                 accept = "<CR>",
                 select_next = { "<Tab>", "<Down>", "<C-j>" },
