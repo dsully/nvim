@@ -261,13 +261,21 @@ M.config = function()
 end
 
 ---@param command string
-M.execute = function(command)
-    vim.lsp.buf.execute_command({
-        command = command,
-        arguments = {
-            { uri = vim.uri_from_bufnr(0) },
-        },
-    })
+M.command = function(command)
+    --
+    return function()
+        for _, client in ipairs(vim.lsp.get_clients({ name = "ruff" })) do
+            client.request(vim.lsp.protocol.Methods.workspace_executeCommand, {
+                command = command,
+                arguments = {
+                    {
+                        uri = vim.uri_from_bufnr(0),
+                        version = vim.lsp.util.buf_versions[vim.api.nvim_get_current_buf()],
+                    },
+                },
+            })
+        end
+    end
 end
 
 return M

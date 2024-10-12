@@ -489,15 +489,11 @@ return {
                     ruff = {
                         commands = {
                             RuffAutofix = {
-                                function()
-                                    require("helpers.ruff").execute("ruff.applyAutofix")
-                                end,
+                                require("helpers.ruff").command("ruff.applyAutofix"),
                                 description = "Ruff: Fix all auto-fixable problems",
                             },
                             RuffOrganizeImports = {
-                                function()
-                                    require("helpers.ruff").execute("ruff.applyOrganizeImports")
-                                end,
+                                require("helpers.ruff").command("ruff.applyOrganizeImports"),
                                 description = "Ruff: Format imports",
                             },
                         },
