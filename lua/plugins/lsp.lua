@@ -233,6 +233,7 @@ return {
                 },
                 servers = {
                     bacon_ls = {
+                        enabled = defaults.lsp.rust.bacon,
                         settings = {
                             locationsFile = ".bacon-locations",
                         },
