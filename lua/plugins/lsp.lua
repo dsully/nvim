@@ -315,20 +315,24 @@ return {
                     },
                     cssls = {},
                     dockerls = {},
-                    -- Disable for now.
-                    -- fish_lsp = {
-                    --     initializationOptions = {
-                    --         workspaces = {
-                    --             paths = {
-                    --                 defaults = {
-                    --                     vim.env.HOME .. "/.config/fish",
-                    --                     vim.env.HOMEBREW_PREFIX .. "/share/fish/",
-                    --                 },
-                    --             },
-                    --         },
-                    --     },
-                    --     mason = false,
-                    -- },
+                    fish_lsp = {
+                        initializationOptions = {
+                            workspaces = {
+                                paths = {
+                                    defaults = {
+                                        config .. "/fish",
+                                        vim.env.HOMEBREW_PREFIX .. "/share/fish/",
+                                    },
+                                },
+                            },
+                        },
+                        mason = false,
+                        --
+                        ---@param client vim.lsp.Client
+                        on_attach = function(client)
+                            client.server_capabilities.diagnosticProvider = {}
+                        end,
+                    },
                     gopls = {
                         filetypes = { "go", "gomod", "gowork" }, -- Don't attach for gotmpl.
                         init_options = {
