@@ -147,6 +147,7 @@ return {
                             },
                             check = {
                                 command = "clippy",
+                                enable = not defaults.lsp.rust.bacon,
                                 extraArgs = {
                                     "--",
                                     "--no-deps", -- run Clippy only on the given crate
@@ -168,6 +169,7 @@ return {
                             },
                             diagnostics = {
                                 disabled = { "inactive-code", "macro-error", "unresolved-macro-call" },
+                                enable = not defaults.lsp.rust.bacon,
                                 experimental = { enable = true },
                                 styleLints = { enable = true },
                             },
