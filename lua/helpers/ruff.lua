@@ -260,4 +260,14 @@ M.config = function()
     return config
 end
 
+---@param command string
+M.execute = function(command)
+    vim.lsp.buf.execute_command({
+        command = command,
+        arguments = {
+            { uri = vim.uri_from_bufnr(0) },
+        },
+    })
+end
+
 return M
