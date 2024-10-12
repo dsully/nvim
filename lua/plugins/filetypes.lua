@@ -54,18 +54,17 @@ return {
     { "jghauser/follow-md-links.nvim", ft = "markdown" },
     {
         "OXY2DEV/markview.nvim",
-        ft = "markdown",
         keys = {
             {
                 "<space>tc",
                 function()
-                    local char = "x"
+                    local char = defaults.icons.misc.check
                     local current_line = vim.api.nvim_get_current_line()
 
-                    local _, _, checkbox_state = string.find(current_line, "%[([ " .. char .. string.upper(char) .. "])%]")
+                    local _, _, current_state = string.find(current_line, "%[([ " .. char .. string.upper(char) .. "])%]")
 
-                    if checkbox_state then
-                        local new_state = checkbox_state == " " and char or " "
+                    if current_state then
+                        local new_state = current_state == " " and char or " "
                         local new_line = string.gsub(current_line, "%[.-%]", "[" .. new_state .. "]")
 
                         vim.api.nvim_set_current_line(new_line)
@@ -79,25 +78,24 @@ return {
             local presets = require("markview.presets")
 
             return {
-                callbacks = {
-                    on_enable = function(_, win)
-                        vim.wo[win].conceallevel = 2
-                        vim.wo[win].concealcursor = "nc"
-                    end,
-                },
+                buf_ignore = defaults.ignored.buffer_types,
                 checkboxes = presets.checkboxes.nerd,
                 code_blocks = {
-                    enable = true,
-                    style = "minimal",
+                    icons = "mini",
                 },
                 headings = presets.headings.glow,
+                horizontal_rules = presets.horizontal_rules.thick,
                 hybrid_modes = { "n" },
-                list_items = {
-                    enable = true,
-                    shift_width = 2,
-                    indent_size = 2,
+                tables = {
+                    --stylua: ignore
+                    text = {
+                        top       = { "┌", "─", "┐", "┬" },
+                        header    = { "│", "│", "│" },
+                        separator = { "├", "┼", "┤", "─" },
+                        row       = { "│", "│", "│" },
+                        bottom    = { "└", "─", "┘", "┴" },
+                    },
                 },
-                modes = { "n", "no", "c" },
             }
         end,
     },
