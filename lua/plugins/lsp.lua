@@ -488,13 +488,17 @@ return {
                     marksman = {},
                     ruff = {
                         commands = {
-                            RuffAutoFix = {
-                                require("helpers.lsp").action["source.fixAll"],
-                                description = "Ruff: Auto Fix",
+                            RuffAutofix = {
+                                function()
+                                    require("helpers.ruff").execute("ruff.applyAutofix")
+                                end,
+                                description = "Ruff: Fix all auto-fixable problems",
                             },
                             RuffOrganizeImports = {
-                                require("helpers.lsp").action["source.organizeImports"],
-                                description = "Ruff: Organize Imports",
+                                function()
+                                    require("helpers.ruff").execute("ruff.applyOrganizeImports")
+                                end,
+                                description = "Ruff: Format imports",
                             },
                         },
                         init_options = {
