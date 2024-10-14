@@ -2,6 +2,7 @@ vim.opt.autoread = true -- update file content if it has been modified on disk
 vim.opt.backup = false
 vim.opt.cmdheight = 0 -- Set to 0 if using Noice
 vim.opt.completeopt = { "menu", "menuone", "noselect" }
+vim.opt.confirm = true
 vim.opt.expandtab = true
 vim.opt.exrc = true
 vim.opt.fileformats = "unix" -- force \n
@@ -124,7 +125,3 @@ elseif vim.g.os == "Darwin" then
         cache_enabled = false,
     }
 end
-
--- Prevent LSP from overwriting treesitter color settings
--- https://github.com/NvChad/NvChad/issues/1907
--- vim.highlight.priorities.semantic_tokens = 95 -- Or any number lower than 100, treesitter's priority level
