@@ -276,7 +276,6 @@ return {
                         pattern = "%[()%d+,%s*%d+,%s*%d+()%]",
                         group = function(_, _match, data)
                             ---@type string
-                            dbg(data.full_match)
                             local r, g, b = _match:match("(%d+),%s*(%d+),%s*(%d+)")
                             local hex_color = string.format("#%02X%02X%02X", r, g, b)
 
