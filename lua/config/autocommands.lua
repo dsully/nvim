@@ -22,7 +22,6 @@ end, {
         "nofile",
         "qf",
         "scratch",
-        "tsplayground",
     },
 })
 

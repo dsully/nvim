@@ -179,6 +179,13 @@ return {
 
             vim.g.matchup_matchparen_deferred = 1
             vim.g.matchup_matchparen_offscreen = { method = "status_manual" }
+
+            hl.apply({
+                { MatchBackground = { link = "ColorColumn" } },
+                { MatchParen = { bg = colors.gray.base, fg = colors.cyan.bright } },
+                { MatchParenCur = { link = "MatchParen" } },
+                { MatchWord = { link = "MatchParen" } },
+            })
         end,
     },
     {

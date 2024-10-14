@@ -1,8 +1,8 @@
 -- Make my life easier..
 _G.defaults = require("config.defaults")
-_G.colors = require("config.defaults").colors
+_G.colors = require("config.highlights").colors
 _G.ev = require("helpers.event")
-_G.hl = require("helpers.highlights")
+_G.hl = require("config.highlights")
 _G.keys = require("helpers.keys")
 _G.notify = require("helpers.notify")
 
