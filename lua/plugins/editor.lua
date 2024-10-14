@@ -83,6 +83,7 @@ return {
 
             { "<leader>f/", pickers.grep_curbuf_cword, desc = "Current Buffer <cword>" },
             { "<leader>f;", pick("resume"), desc = "Resume Picker" },
+            { "<leader>fb", pick("buffers"), desc = "Buffer Picker" },
             { "<leader>fC", pick("git_bcommits", require("helpers.lsp").find_root), desc = "Buffer Commits" },
             { "<leader>fD", pick("diagnostics_document"), desc = "Diagnostics: Document" },
             { "<leader>fG", pick("git_files", require("helpers.lsp").find_root), desc = "Git Files" },
