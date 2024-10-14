@@ -182,7 +182,7 @@ return {
                     hl = type(hl) == "string" and { link = hl } or hl
                     hl = vim.deepcopy(hl, true)
 
-                    hl.fg = hl.fg or defaults.colors.gray.base
+                    hl.fg = hl.fg or colors.gray.base
 
                     if hl.fg == hl.bg then
                         hl.fg = nil
@@ -216,6 +216,7 @@ return {
                     nvim_hl_colors = {
                         pattern = {
                             "%f[%w]()M.colors%.[%w_%.]+()%f[%W]",
+                            "%f[%w]()colors%.[%w_%.]+()%f[%W]",
                             "%f[%w]()defaults.colors%.[%w_%.]+()%f[%W]",
                         },
                         group = function(_, match)
@@ -226,7 +227,11 @@ return {
                                 table.remove(parts, 1)
                             end
 
-                            local color = vim.tbl_get(defaults.colors, unpack(parts))
+                            if parts[1] == "colors" then
+                                table.remove(parts, 1)
+                            end
+
+                            local color = vim.tbl_get(colors, unpack(parts))
 
                             return type(color) == "string" and get_hl_group({ fg = color })
                         end,

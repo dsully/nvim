@@ -28,7 +28,7 @@ return {
             { "<leader>nd", function() require("notify").dismiss({ silent = true, pending = true }) end, desc = "Delete Notifications" },
         },
         opts = {
-            background_colour = defaults.colors.black.dim,
+            background_colour = colors.black.dim,
             focusable = false,
             fps = 60,
             max_height = function()
@@ -210,7 +210,6 @@ return {
             local sep = require("nougat.separator")
             local statusline = bar("statusline")
 
-            local colors = defaults.colors
             local icons = defaults.icons
             local devicons = require("mini.icons")
 
@@ -442,15 +441,6 @@ return {
         event = ev.VeryLazy,
         init = function()
             hl.apply({
-                { NoiceCmdlineIcon = { link = "DiagnosticInfo" } },
-                { NoiceCmdlineIconSearch = { link = "DiagnosticWarn" } },
-                { NoiceCmdlinePopupBorder = { link = "DiagnosticInfo" } },
-                { NoiceCmdlinePopupBorderSearch = { link = "DiagnosticWarn" } },
-                { NoiceCmdlinePopupTitle = { link = "DiagnosticInfo" } },
-                { NoiceConfirmBorder = { link = "DiagnosticInfo" } },
-                { NoiceFormatLevelError = { fg = colors.red.base } },
-                { NoiceFormatLevelInfo = { fg = colors.blue.base } },
-                { NoiceFormatLevelWarn = { fg = colors.yellow.base } },
                 { NoiceFormatProgressDone = { bg = colors.black.dim, fg = colors.white.bright } },
                 { NoiceFormatProgressTodo = { bg = colors.black.dim, fg = colors.white.bright } },
                 { NoiceLspProgressClient = { fg = colors.blue.base } },
@@ -764,11 +754,11 @@ return {
             branch = { "master", "main" },
             centered = false,
             colors = {
-                branch_highlight = defaults.colors.yellow.base,
-                dashboard_title = defaults.colors.cyan.bright,
-                days_and_months_labels = defaults.colors.cyan.bright,
-                empty_square_highlight = defaults.colors.cyan.bright,
-                filled_square_highlights = { "#002c39", "#094d5b", "#387180", "#6098a7", defaults.colors.cyan.bright, "#c0faff" },
+                branch_highlight = colors.yellow.base,
+                dashboard_title = colors.cyan.bright,
+                days_and_months_labels = colors.cyan.bright,
+                empty_square_highlight = colors.cyan.bright,
+                filled_square_highlights = { "#002c39", "#094d5b", "#387180", "#6098a7", colors.cyan.bright, "#c0faff" },
             },
             day_label_gap = "\t",
             hide_cursor = false,
@@ -830,7 +820,11 @@ return {
             })
         end,
         opts = function()
-            local cmd = defaults.cmd
+            ---@param c string
+            local cmd = function(c)
+                return string.format("<cmd>%s<cr>", c)
+            end
+
             local startify = require("alpha.themes.theta")
             local dashboard = require("alpha.themes.dashboard")
 

@@ -159,7 +159,7 @@ return {
                 { FzfLuaPathColNr = { fg = colors.gray.base } },
                 { FzfLuaPathLineNr = { fg = colors.gray.base } },
                 { FzfLuaBorder = { link = "FloatBorder" } },
-                { FzfLuaBackdrop = { fg = "NONE", bg = colors.black.dim } },
+                { FzfLuaBackdrop = { fg = colors.none, bg = colors.black.dim } },
                 { FzfLuaBufName = { fg = colors.cyan.bright, bg = colors.black.dim } },
                 { FzfLuaBufNr = { fg = colors.cyan.base, bg = colors.black.dim } },
                 { FzfLuaFzfGutter = { fg = colors.black.base, bg = colors.black.dim } },
