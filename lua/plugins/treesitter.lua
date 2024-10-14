@@ -1,7 +1,6 @@
 return {
     {
         "nvim-treesitter/nvim-treesitter",
-        build = ":TSUpdate",
         cmd = {
             "TSBufDisable",
             "TSBufEnable",
@@ -35,19 +34,6 @@ return {
             -- https://github.com/MeanderingProgrammer/render-markdown.nvim#vimwiki
             vim.treesitter.language.register("markdown", "vimwiki")
 
-            if type(opts.ensure_installed) == "table" then
-                ---@type table<string, boolean>
-                local added = {}
-
-                opts.ensure_installed = vim.iter(opts.ensure_installed):filter(function(lang)
-                    if added[lang] then
-                        return false
-                    end
-                    added[lang] = true
-                    return true
-                end)
-            end
-
             require("nvim-treesitter-textobjects")
             require("nvim-treesitter.configs").setup(opts)
         end,
@@ -56,6 +42,9 @@ return {
         end,
         event = { ev.VeryLazy, ev.LazyFile },
         init = function(plugin)
+            -- Per lewis6991/ts-install.nvim
+            vim.g.loaded_nvim_treesitter = 1
+
             require("lazy.core.loader").add_to_rtp(plugin)
             require("nvim-treesitter.query_predicates")
         end,
@@ -65,70 +54,7 @@ return {
             { "<leader>i", vim.show_pos, desc = "Inspect Position" },
         },
         opts = {
-            ensure_installed = {
-                "bash",
-                "c",
-                "caddy",
-                "cmake",
-                "comment",
-                "cpp",
-                "css",
-                "diff",
-                "dockerfile",
-                "editorconfig",
-                "fish",
-                "git_config",
-                "git_rebase",
-                "gitignore",
-                "go",
-                "gomod",
-                "gotmpl",
-                "graphql",
-                "groovy",
-                "hcl",
-                "html",
-                "htmldjango",
-                "http",
-                "ini",
-                "java",
-                "javascript",
-                "jsdoc",
-                "json",
-                "jsonc",
-                "just",
-                "kdl",
-                "kotlin",
-                "lua",
-                "luadoc",
-                "luap",
-                "make",
-                "markdown",
-                "markdown_inline",
-                "mermaid",
-                "passwd",
-                "proto",
-                "python",
-                "query",
-                "regex",
-                "requirements",
-                "rst",
-                "ruby",
-                "ssh_config",
-                "strace",
-                "swift",
-                "teal",
-                "textproto",
-                "ron",
-                "rust",
-                "toml",
-                "tsx",
-                "typescript",
-                "vim",
-                "vimdoc",
-                "yaml",
-                "xml",
-                "zig",
-            },
+            ensure_installed = {},
             highlight = {
                 ---@param _lang string
                 ---@param bufnr number
@@ -146,8 +72,12 @@ return {
                     node_decremental = "<bs>",
                 },
             },
-            indent = { enable = true },
-            matchup = { enable = true },
+            indent = {
+                enable = false,
+            },
+            matchup = {
+                enable = true,
+            },
             query_linter = {
                 enable = true,
                 use_virtual_text = true,
@@ -165,6 +95,7 @@ return {
         cmd = "TS",
         opts = {
             auto_install = true,
+            ensure_installed = defaults.treesitter.install,
         },
     },
     {
