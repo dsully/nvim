@@ -40,7 +40,7 @@ return {
             on_open = function(win)
                 vim.api.nvim_win_set_config(win, { zindex = 100 })
             end,
-            render = "wrapped-default",
+            render = "wrapped-compact",
             stages = "static",
             timeout = 3000,
         },
@@ -557,36 +557,47 @@ return {
                 },
 
                 -- Redirect to pop-up when message is long
-                { filter = { min_height = 10 }, view = "popup" },
+                {
+                    filter = {
+                        any = {
+                            { min_height = 10 },
+                            { find = "Treesitter" },
+                        },
+                    },
+                    view = "popup",
+                },
 
                 -- Redirect to mini view.
                 {
                     filter = {
                         any = {
                             -- "Not an editor command"
-                            { event = "msg_show", find = "^E492:" },
+                            { find = "^E492:", event = "msg_show" },
 
                             -- Write/deletion messages
-                            { event = "msg_show", find = "%d+B written$" },
-                            { event = "msg_show", find = "%d+L, %d+B$" },
-                            { event = "msg_show", find = "%-%-No lines in buffer%-%-" },
+                            { find = "%d+B written$", event = "msg_show" },
+                            { find = "%d+L, %d+B$", event = "msg_show" },
+                            { find = "%-%-No lines in buffer%-%-", event = "msg_show" },
 
                             -- Yank messages
-                            { event = "msg_show", find = "%d+ lines yanked" },
+                            { find = "%d+ lines yanked", event = "msg_show" },
 
                             -- Unneeded info on search patterns
-                            { event = "msg_show", find = "^E486: Pattern not found" },
+                            { find = "^E486: Pattern not found", event = "msg_show" },
 
                             -- Word added to spellfile via `zg`
-                            { event = "msg_show", find = "^Word .*%.add$" },
+                            { find = "^Word .*%.add$", event = "msg_show" },
 
                             -- Diagnostics
-                            { event = "msg_show", find = "No more valid diagnostics to move to" },
+                            { find = "No more valid diagnostics to move to", event = "msg_show" },
                             { find = "No code actions available" },
 
                             -- Route nvim-treesitter to the mini view.
-                            { event = "msg_show", find = "^%[nvim%-treesitter%]" },
-                            { event = "notify", find = "All parsers are up%-to%-date" },
+                            { find = "^%[nvim%-treesitter%]", event = "msg_show" },
+                            { find = "All parsers are up%-to%-date", event = "msg_show" },
+
+                            -- Route chezmoi updates
+                            { find = "chezmoi:", event = "notify" },
                         },
                     },
                     view = "mini",
