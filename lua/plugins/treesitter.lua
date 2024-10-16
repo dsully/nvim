@@ -42,9 +42,6 @@ return {
         end,
         event = { ev.VeryLazy, ev.LazyFile },
         init = function(plugin)
-            -- Per lewis6991/ts-install.nvim
-            vim.g.loaded_nvim_treesitter = 1
-
             require("lazy.core.loader").add_to_rtp(plugin)
             require("nvim-treesitter.query_predicates")
         end,
