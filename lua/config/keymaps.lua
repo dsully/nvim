@@ -25,9 +25,6 @@ map("<space>n", function()
     end)
 end, "New File", "n", { expr = false })
 
--- Close floating windows
-map("<leader>fq", vim.cmd.fclose, "Close all floating windows")
-
 -- Open in the filetype default application (macOS)
 if vim.g.os == "Darwin" then
     map("<leader>o", function()
