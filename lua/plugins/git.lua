@@ -84,7 +84,7 @@ return {
         -- stylua: ignore
         keys = {
             { "<leader>gC", vim.cmd.GitLink, desc = "Copy Git URL", mode = { "n", "x" } },
-            { "<leader>go", function() vim.cmd.GitLink({ bang = true }) end, desc = "Open Git URL", mode = { "x", "x" } },
+            { "<leader>go", function() vim.cmd.GitLink({ bang = true }) end, desc = "Open Git URL", mode = { "n", "x" } },
         },
         opts = {
             message = false,
