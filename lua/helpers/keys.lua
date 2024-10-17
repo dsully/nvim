@@ -1,6 +1,35 @@
 ---@class helpers.keys
 local M = {}
 
+-- Wrapper around vim.keymap.set that will not create a keymap if a lazy.nvim key handler exists.
+-- It will also set `silent` to true by default.
+function M.safe_set(mode, lhs, rhs, opts)
+    local keys = require("lazy.core.handler").handlers.keys
+
+    ---@cast keys LazyKeysHandler
+    local modes = type(mode) == "string" and { mode } or mode
+
+    ---@param m string
+    modes = vim.tbl_filter(function(m)
+        return not (keys.have and keys:have(lhs, m))
+    end, modes)
+
+    -- Do not create the keymap if a lazy keys handler exists
+    if #modes > 0 then
+        opts = opts or {}
+        opts.silent = opts.silent ~= false
+
+        if opts.remap and not vim.g.vscode then
+            ---@diagnostic disable-next-line: no-unknown
+            opts.remap = nil
+        end
+
+        vim.keymap.set(modes, lhs, rhs, opts)
+    else
+        notify.warn("Keymap already exists for " .. lhs .. " in: " .. (vim.fn.execute("map " .. lhs) or "?"))
+    end
+end
+
 ---Create a global key mapping. Defaults to normal mode.
 ---@param lhs string
 ---@param rhs function|string
@@ -9,7 +38,7 @@ local M = {}
 ---@param opts table?
 function M.map(lhs, rhs, desc, mode, opts)
     --
-    vim.keymap.set(
+    M.safe_set(
         mode or "n",
         lhs,
         rhs,
@@ -31,6 +60,12 @@ end
 function M.bmap(lhs, rhs, desc, buffer, mode, opts)
     --
     M.map(lhs, rhs, desc, mode, vim.tbl_deep_extend("force", opts or {}, { buffer = buffer or true }))
+end
+
+---@param keymap string
+---@param mode string
+M.feed = function(keymap, mode)
+    vim.api.nvim_feedkeys(vim.api.nvim_replace_termcodes(keymap, true, false, true), mode, false)
 end
 
 -- Adapted from LazyVim
@@ -69,9 +104,9 @@ end
 function M.toggle.map(lhs, toggle)
     local t = M.toggle.wrap(toggle)
 
-    vim.keymap.set("n", lhs, function()
+    M.map(lhs, function()
         t()
-    end, { desc = "Toggle " .. toggle.name })
+    end, "Toggle " .. toggle.name)
 
     M.toggle.wk(lhs, toggle)
 end
