@@ -114,3 +114,5 @@ vim.ui.open = function(uri) ---@diagnostic disable-line: duplicate-set-field
 
     open(uri)
 end
+
+return M
