@@ -3,7 +3,12 @@ local M = {}
 
 -- Wrapper around vim.keymap.set that will not create a keymap if a lazy.nvim key handler exists.
 -- It will also set `silent` to true by default.
-function M.safe_set(mode, lhs, rhs, opts)
+---@param lhs string
+---@param rhs function|string
+---@param mode table<string>
+---@param opts table?
+---@param override boolean?
+function M.safe_set(lhs, rhs, mode, opts, override)
     local keys = require("lazy.core.handler").handlers.keys
 
     ---@cast keys LazyKeysHandler
@@ -15,7 +20,7 @@ function M.safe_set(mode, lhs, rhs, opts)
     end, modes)
 
     -- Do not create the keymap if a lazy keys handler exists
-    if #modes > 0 then
+    if #modes > 0 or override then
         opts = opts or {}
         opts.silent = opts.silent ~= false
 
@@ -36,17 +41,23 @@ end
 ---@param desc string?
 ---@param mode string|table<string>|nil
 ---@param opts table?
-function M.map(lhs, rhs, desc, mode, opts)
+---@param override boolean?
+function M.map(lhs, rhs, desc, mode, opts, override)
     --
+    if type(mode) == "string" then
+        mode = { mode }
+    end
+
     M.safe_set(
-        mode or "n",
         lhs,
         rhs,
+        mode or { "n" },
         vim.tbl_deep_extend("force", {
             desc = desc or "Undocumented",
             noremap = true,
             silent = true,
-        }, opts or {})
+        }, opts or {}),
+        override or false
     )
 end
 
@@ -59,7 +70,7 @@ end
 ---@param opts table?
 function M.bmap(lhs, rhs, desc, buffer, mode, opts)
     --
-    M.map(lhs, rhs, desc, mode, vim.tbl_deep_extend("force", opts or {}, { buffer = buffer or true }))
+    M.map(lhs, rhs, desc, mode, vim.tbl_deep_extend("force", opts or {}, { buffer = buffer or true }), true)
 end
 
 ---@param keymap string

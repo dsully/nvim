@@ -17,7 +17,7 @@ if vim.fn.executable("codesort") == 1 then
 end
 
 -- Insert Clippy allow directive above the current line
-keys.map("<leader>ri", function()
+keys.bmap("<leader>ri", function()
     local line = vim.api.nvim_win_get_cursor(0)[1] - 1
     local bufnr = vim.api.nvim_get_current_buf()
 
@@ -52,3 +52,12 @@ keys.map("<leader>ri", function()
         end
     end
 end, "Insert Clippy Allow")
+
+do
+    -- Start bacon in clippy mode if it exists.
+    -- vim.schedule(function()
+    --     if vim.uv.fs_access("bacon.toml", "R") then
+    --         vim.cmd.OverseerRun("bacon")
+    --     end
+    -- end)
+end
