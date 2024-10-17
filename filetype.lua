@@ -12,6 +12,7 @@ vim.filetype.add({
         ["poetry.lock"] = "toml",
         -- Set a specific filetype to enable ruff and taplo to attach as language servers.
         ["pyproject.toml"] = "toml.pyproject",
+        ["uv.lock"] = "toml",
     },
     extension = {
         conf = "conf",
