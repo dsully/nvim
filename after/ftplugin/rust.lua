@@ -27,22 +27,26 @@ keys.map("<leader>ri", function()
     for _, diagnostic in ipairs(diagnostics) do
         if diagnostic.source == "clippy" then
             --
-            local allow_directive = diagnostic.message:match("add `(#[allow(clippy::[%w_%-]+%)])`")
+            -- Match both the new pattern and the old pattern
+            local directive = diagnostic.message:match("`#%[deny%(clippy::([%w_]+)%)%]`") or diagnostic.message:match("add `(#%[allow%(clippy::[%w_%-]+%)%])`")
 
-            if allow_directive then
-                vim.api.nvim_buf_set_lines(bufnr, line, line, false, { allow_directive })
+            if directive then
+                -- If it's the new pattern, construct the full directive
+                if not directive:match("^#%[") then
+                    directive = string.format("#[allow(clippy::%s)]", directive)
+                end
+
+                vim.api.nvim_buf_set_lines(bufnr, line, line, false, { directive })
                 return
             end
         end
 
         if diagnostic.source == "rustc" then
-            local allow_directive = diagnostic.message:match("`(#[warn([%w_%-]+%)])`")
+            local directive = diagnostic.message:match("`(#%[deny%([%w_%-]+%)%])`") or diagnostic.message:match("`(#%[warn%([%w_%-]+%)%])`")
 
-            if allow_directive then
-                allow_directive = allow_directive:gsub("%[warn", "[allow")
-
-                vim.api.nvim_buf_set_lines(bufnr, line, line, false, { allow_directive })
-
+            if directive then
+                directive = directive:gsub("%[deny", "[allow"):gsub("%[warn", "[allow")
+                vim.api.nvim_buf_set_lines(bufnr, line, line, false, { directive })
                 return
             end
         end
