@@ -1,6 +1,7 @@
 return {
     {
         "Saghen/blink.cmp",
+        build = "cargo build --release",
         config = function(_, opts)
             require("blink.cmp").setup(opts)
 
