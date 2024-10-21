@@ -92,7 +92,7 @@ return {
         cmd = "TS",
         opts = {
             auto_install = true,
-            ensure_installed = defaults.treesitter.install,
+            ensure_install = defaults.treesitter.install,
         },
     },
     {
