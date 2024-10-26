@@ -91,15 +91,17 @@ return {
         },
         opts = {
             accept = {
-                -- experimental auto-brackets support
                 auto_brackets = {
-                    enabled = false,
+                    enabled = true,
                 },
             },
             fuzzy = {
                 prebuiltBinaries = {
                     download = false,
                 },
+            },
+            ghost_text = {
+                enabled = true,
             },
             keymap = {
                 accept = "<CR>",
@@ -108,20 +110,36 @@ return {
             },
             kind_icons = defaults.icons.lsp,
             nerd_font_variant = "mono",
+            providers = {
+                snippets = {
+                    min_keyword_length = 1, -- don't show when triggered manually, useful for JSON keys
+                    score_offset = -1,
+                },
+                path = {
+                    opts = { get_cwd = vim.uv.cwd },
+                },
+                buffer = {
+                    fallback_for = {},
+                    max_items = 4,
+                    min_keyword_length = 4,
+                    score_offset = -3,
+                },
+            },
             trigger = {
                 signature_help = {
-                    enabled = true,
+                    enabled = false,
                 },
             },
             windows = {
                 autocomplete = {
+                    cycle = { from_top = false }, -- cycle at bottom, but not at the top
                     -- https://github.com/Saghen/blink.cmp/blob/f456c2aa0994f709f9aec991ed2b4b705f787e48/lua/blink/cmp/windows/autocomplete.lua#L227
                     ---@param ctx blink.cmp.CompletionRenderContext
                     draw = function(ctx)
                         local icon = ctx.kind_icon
 
                         -- Give path completions a different set of icons.
-                        if ctx.item.source == "blink.cmp.sources.path" then
+                        if ctx.item.source_name == "blink.cmp.sources.path" then
                             local fi, _ = require("mini.icons").get("file", ctx.item.label)
 
                             if fi ~= nil then
@@ -131,7 +149,9 @@ return {
 
                         -- Strip the `pub fn` prefix from Rust functions.
                         -- Strip method & function parameters.
-                        -- ctx.item.detail = ctx.item.detail:gsub("pub fn (.+)", "%1"):gsub("(.+)%(.+%)~", "%1()")
+                        if ctx.item.detail ~= nil then
+                            ctx.item.detail = ctx.item.detail:gsub("pub fn (.+)", "%1"):gsub("(.+)%(.+%)~", "%1()")
+                        end
 
                         return {
                             {
