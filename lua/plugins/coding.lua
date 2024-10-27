@@ -10,12 +10,12 @@ return {
                 vim.schedule(function()
                     local cmp = require("blink.cmp")
 
-                    cmp.on_show(function()
+                    cmp.on_open(function()
                         require("copilot.suggestion").dismiss()
                         vim.api.nvim_buf_set_var(0, "copilot_suggestion_hidden", true)
                     end)
 
-                    cmp.on_hide(function()
+                    cmp.on_close(function()
                         vim.api.nvim_buf_set_var(0, "copilot_suggestion_hidden", false)
                     end)
                 end)
@@ -216,7 +216,7 @@ return {
             local hp = require("mini.hipatterns")
 
             local vtext = defaults.icons.misc.circle_filled_large
-            local cache = {} ---@type table<string,table<string,string>>
+            -- local cache = {} ---@type table<string,table<string,string>>
             local hl_groups = {} ---@type table<string,boolean>
 
             local get_hl_group = function(hl)
