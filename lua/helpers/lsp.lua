@@ -268,6 +268,7 @@ M.rename = function()
 
         params.newName = new_name ---@diagnostic disable-line: inject-field
 
+        ---@param result lsp.WorkspaceEdit
         vim.lsp.buf_request(0, methods.textDocument_rename, params, function(err, result, ctx, _)
             --
             if err or not result then
@@ -283,8 +284,10 @@ M.rename = function()
             if result.documentChanges then
                 local msg = {}
 
-                for _, changes in pairs(result.documentChanges) do
-                    table.insert(msg, ("%d changes: %s"):format(#changes.edits, relative_path(changes.textDocument.uri)))
+                for _, change in pairs(result.documentChanges) do
+                    if change.textDocument ~= nil then
+                        table.insert(msg, ("%d changes: %s"):format(#change.edits, relative_path(change.textDocument.uri)))
+                    end
                 end
 
                 notify.info("Renamed " .. current_name .. " into " .. new_name .. ".", notify_opts)
