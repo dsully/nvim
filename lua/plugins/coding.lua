@@ -104,9 +104,15 @@ return {
                 enabled = true,
             },
             keymap = {
-                accept = "<CR>",
-                select_next = { "<Tab>", "<Down>", "<C-j>" },
-                select_prev = { "<S-Tab>", "<Up>", "<C-k>" },
+                ["<CR>"] = { "accept" },
+
+                ["<Tab>"] = { "select_next", "fallback" },
+                ["<Down>"] = { "select_next", "fallback" },
+                ["<C-j>"] = { "select_next", "fallback" },
+
+                ["<S-Tab>"] = { "select_prev", "fallback" },
+                ["<Up>"] = { "select_prev", "fallback" },
+                ["<C-k>"] = { "select_prev", "fallback" },
             },
             kind_icons = defaults.icons.lsp,
             nerd_font_variant = "mono",
