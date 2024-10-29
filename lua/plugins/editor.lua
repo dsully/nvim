@@ -95,7 +95,6 @@ return {
             { "<leader>fk", pick("keymaps"), desc = "Key Maps" },
             { "<leader>fo", pick("oldfiles"), desc = "Recently Opened" },
             { "<leader>fq", pick("quickfix"), desc = "Quickfix List" },
-            { "<leader>fs", pick("lsp_document_symbols"), desc = "Symbols: Document" },
             { "<leader>fw", pick("grep_cword"), desc = "Words" },
 
             { "<leader>fn", pickers.notifications, desc = "Notifications" },
@@ -112,6 +111,7 @@ return {
             { "gi", pick("lsp_implementations"), desc = "Goto Implementation" },
             { "gi", pick("lsp_implementations"), desc = "Goto Implementation" },
             { "grr", pick("lsp_references"), desc = "References", nowait = true },
+            { "gO", pick("lsp_document_symbols"), desc = "Symbols: Document" },
             { "z=", pick("spell_suggest"), desc = "Suggest Spelling" },
         },
         config = function(_, opts)
