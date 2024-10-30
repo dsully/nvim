@@ -104,7 +104,7 @@ return {
                 enabled = true,
             },
             keymap = {
-                ["<CR>"] = { "accept" },
+                ["<CR>"] = { "accept", "fallback" },
 
                 ["<Tab>"] = { "select_next", "fallback" },
                 ["<Down>"] = { "select_next", "fallback" },
