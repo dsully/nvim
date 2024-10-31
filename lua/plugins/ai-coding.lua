@@ -100,7 +100,7 @@ return {
                         strategy = "chat",
                         description = "Optimize the selected code",
                         opts = {
-                            mapping = "<localleader>ao",
+                            mapping = "<leader>ao",
                             modes = { "v" },
                             short_name = "optimize",
                             auto_submit = true,
