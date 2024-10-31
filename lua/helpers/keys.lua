@@ -7,8 +7,7 @@ local M = {}
 ---@param rhs function|string
 ---@param mode table<string>
 ---@param opts table?
----@param override boolean?
-function M.safe_set(lhs, rhs, mode, opts, override)
+function M.safe_set(lhs, rhs, mode, opts)
     local keys = require("lazy.core.handler").handlers.keys
 
     ---@cast keys LazyKeysHandler
@@ -19,13 +18,14 @@ function M.safe_set(lhs, rhs, mode, opts, override)
         return not (keys.have and keys:have(lhs, m))
     end, modes)
 
+    opts = opts or {}
+
     -- Do not create the keymap if a lazy keys handler exists
-    if #modes > 0 or override then
-        opts = opts or {}
+    -- But allow for buffer-local keymaps.
+    if #modes > 0 or opts and opts.buffer ~= nil then
         opts.silent = opts.silent ~= false
 
         if opts.remap and not vim.g.vscode then
-            ---@diagnostic disable-next-line: no-unknown
             opts.remap = nil
         end
 
@@ -41,8 +41,7 @@ end
 ---@param desc string?
 ---@param mode string|table<string>|nil
 ---@param opts table?
----@param override boolean?
-function M.map(lhs, rhs, desc, mode, opts, override)
+function M.map(lhs, rhs, desc, mode, opts)
     --
     if type(mode) == "string" then
         mode = { mode }
@@ -56,8 +55,7 @@ function M.map(lhs, rhs, desc, mode, opts, override)
             desc = desc or "Undocumented",
             noremap = true,
             silent = true,
-        }, opts or {}),
-        override or false
+        }, opts or {})
     )
 end
 
@@ -70,7 +68,27 @@ end
 ---@param opts table?
 function M.bmap(lhs, rhs, desc, buffer, mode, opts)
     --
-    M.map(lhs, rhs, desc, mode, vim.tbl_deep_extend("force", opts or {}, { buffer = buffer or true }), true)
+    M.map(lhs, rhs, desc, mode, vim.tbl_deep_extend("force", opts or {}, { buffer = buffer or true }))
+end
+
+---Create a global key mapping in x/v mode.
+---@param lhs string
+---@param rhs function|string
+---@param desc string?
+---@param buffer integer?
+---@param opts table?
+function M.xmap(lhs, rhs, desc, buffer, opts)
+    --
+    M.safe_set(
+        lhs,
+        rhs,
+        { "x" },
+        vim.tbl_deep_extend("force", {
+            desc = desc or "Undocumented",
+            noremap = true,
+            silent = true,
+        }, vim.tbl_deep_extend("force", opts or {}, { buffer = buffer or true }))
+    )
 end
 
 ---@param keymap string

@@ -1,25 +1,26 @@
+local bufnr = vim.api.nvim_get_current_buf()
+
 -- https://github.com/Canop/codesort
 -- cargo install codesort
 if vim.fn.executable("codesort") == 1 then
     --
-    keys.map("<localleader>cs", function()
+    keys.bmap("<leader>cs", function()
         local current_line = vim.api.nvim_win_get_cursor(0)[1]
         local filename = vim.fn.shellescape(vim.api.nvim_buf_get_name(0):match("([^/\\]+)$"))
 
         vim.api.nvim_buf_set_mark(0, "a", current_line, 0, {})
         vim.cmd(string.format("%%!codesort --around %d --detect %s", current_line, filename))
-        vim.cmd("normal! `a")
-    end, "Sort code")
+        vim.cmd.normal({ "`a", bang = true })
+    end, "Sort code", bufnr)
 
-    keys.map("<localleader>cs", function()
+    keys.xmap("<leader>cs", function()
         vim.cmd(string.format("%d,%d!codesort", vim.fn.line("'<"), vim.fn.line("'>")))
-    end, "Sort code", { "x" })
+    end, "Sort code", bufnr)
 end
 
 -- Insert Clippy allow directive above the current line
 keys.bmap("<leader>ri", function()
     local line = vim.api.nvim_win_get_cursor(0)[1] - 1
-    local bufnr = vim.api.nvim_get_current_buf()
 
     ---@type lsp.Diagnostic[]
     local diagnostics = vim.lsp.diagnostic.from(vim.diagnostic.get(bufnr, { lnum = line }))
@@ -51,7 +52,7 @@ keys.bmap("<leader>ri", function()
             end
         end
     end
-end, "Insert Clippy Allow")
+end, "Insert Clippy Allow", bufnr)
 
 do
     -- Start bacon in clippy mode if it exists.

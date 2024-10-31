@@ -134,6 +134,14 @@ return {
                             vim.cmd.RustLsp("openDocs")
                         end, "Open external documentation", bufnr, { "n", "x" })
 
+                        -- keys.bmap("gra", function()
+                        --     vim.cmd.RustLsp("codeAction")
+                        -- end, "󱘗 Code Action", bufnr)
+
+                        keys.bmap("K", function()
+                            vim.cmd.RustLsp({ "hover", "actions" })
+                        end, "󱘗 Documentation", bufnr)
+
                         vim.cmd.compiler("cargo")
                     end,
                     default_settings = {

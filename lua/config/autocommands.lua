@@ -175,7 +175,7 @@ end, {
 })
 
 ev.on(ev.TextYankPost, function()
-    vim.highlight.on_yank({ higroup = "Visual", timeout = 500 })
+    vim.hl.on_yank({ higroup = "Visual", timeout = 500 })
 
     -- Copy data to system clipboard only when we are pressing 'y'. 'd', 'x' will be filtered out.
     if vim.v.operator ~= "y" then
