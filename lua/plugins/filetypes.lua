@@ -14,6 +14,12 @@ return {
     -- Apple's PKL language.
     {
         "apple/pkl-neovim",
+        build = function()
+            require("pkl-neovim.internal").init()
+
+            -- Set up syntax highlighting.
+            vim.cmd.TSInstall({ "pkl", bang = true })
+        end,
         event = "BufReadPre *.pkl",
     },
 
