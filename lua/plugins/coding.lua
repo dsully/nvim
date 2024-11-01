@@ -116,19 +116,32 @@ return {
             },
             kind_icons = defaults.icons.lsp,
             nerd_font_variant = "mono",
-            providers = {
-                snippets = {
-                    min_keyword_length = 1, -- don't show when triggered manually, useful for JSON keys
-                    score_offset = -1,
+            sources = {
+                completion = {
+                    enabled_providers = { "lsp", "path", "snippets", "buffer", "lazydev" },
                 },
-                path = {
-                    opts = { get_cwd = vim.uv.cwd },
-                },
-                buffer = {
-                    fallback_for = {},
-                    max_items = 4,
-                    min_keyword_length = 4,
-                    score_offset = -3,
+                providers = {
+                    buffer = {
+                        fallback_for = {},
+                        max_items = 4,
+                        min_keyword_length = 4,
+                        score_offset = -3,
+                    },
+                    lazydev = {
+                        name = "LazyDev",
+                        module = "lazydev.integrations.blink",
+                    },
+                    -- Don/t show LuaLS require statements when lazydev has items
+                    lsp = {
+                        fallback_for = { "lazydev" },
+                    },
+                    path = {
+                        opts = { get_cwd = vim.uv.cwd },
+                    },
+                    snippets = {
+                        min_keyword_length = 1, -- don't show when triggered manually, useful for JSON keys
+                        score_offset = -1,
+                    },
                 },
             },
             trigger = {
