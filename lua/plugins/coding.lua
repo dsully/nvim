@@ -23,6 +23,7 @@ return {
         end,
         init = function()
             hl.apply({
+                { BlinkCmpGhostText = { link = "Comment" } },
                 { BlinkCmpMenu = { link = "Pmenu" } },
                 { BlinkCmpMenuBorder = { link = "Pmenu" } },
                 { BlinkCmpMenuSelection = { link = "PmenuSel" } },
@@ -95,13 +96,8 @@ return {
                     enabled = true,
                 },
             },
-            fuzzy = {
-                prebuiltBinaries = {
-                    download = false,
-                },
-            },
             ghost_text = {
-                enabled = true,
+                enabled = false,
             },
             keymap = {
                 ["<CR>"] = { "accept", "fallback" },
@@ -181,6 +177,8 @@ return {
                             { icon .. " ", hl_group = "BlinkCmpKind" .. ctx.kind },
                         }
                     end,
+                    selection = "manual",
+                    winblend = vim.o.pumblend,
                 },
                 documentation = {
                     border = defaults.ui.border.name,
