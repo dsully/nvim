@@ -18,6 +18,7 @@ vim.opt.mouse = ""
 vim.opt.mousemodel = "extend"
 vim.opt.mousescroll = { "ver:0", "hor:0" } -- Disable mouse scrolling.
 vim.opt.number = false
+vim.opt.pumblend = 10 -- Popup blend
 vim.opt.pumheight = 10 -- maximum number of completion-menu items
 vim.opt.sessionoptions = {
     "buffers",
