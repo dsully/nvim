@@ -98,7 +98,7 @@ vim.g.large_file_bytes = 1024 * 1024 * 1024 * 10
 vim.g.colorscheme = "nordish"
 
 -- Load clipboard.vim faster. Neovim 0.10+ includes OSC52 support.
-if vim.env.SSH_CONNECTION then
+if vim.env.SSH_CONNECTION or vim.env.ZELLIJ then
     local osc52 = require("vim.ui.clipboard.osc52")
 
     vim.g.clipboard = {
