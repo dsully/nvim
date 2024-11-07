@@ -178,7 +178,6 @@ return {
                         }
                     end,
                     selection = "manual",
-                    winblend = vim.o.pumblend,
                 },
                 documentation = {
                     border = defaults.ui.border.name,
