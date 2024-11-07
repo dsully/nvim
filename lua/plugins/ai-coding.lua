@@ -132,9 +132,8 @@ return {
                     },
                 },
                 strategies = {
-                    agent = { adapter = "copilot" },
-                    chat = { adapter = "copilot" },
-                    inline = { adapter = "copilot" },
+                    chat = { adapter = "anthropic" },
+                    inline = { adapter = "anthropic" },
                 },
             }
         end,
