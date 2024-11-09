@@ -30,7 +30,6 @@ return {
                         return
                     end
 
-                    -- if vim.tbl_contains(vim.tbl_extend("force", defaults.ignored.file_types, { "", "large_file" }), vim.bo.filetype) then
                     if vim.tbl_contains(defaults.ignored.file_types, vim.bo.filetype) then
                         return
                     end
@@ -40,10 +39,8 @@ return {
                         return
                     end
 
-                    if not require("helpers.file").is_large_file(args.bufnr) then
-                        lint.try_lint()
-                        lint.try_lint("typos")
-                    end
+                    lint.try_lint()
+                    lint.try_lint("typos")
                 end),
                 {
                     group = vim.api.nvim_create_augroup("nvim-lint", { clear = true }),

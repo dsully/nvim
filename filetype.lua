@@ -87,8 +87,5 @@ vim.filetype.add({
 
             return "yaml"
         end,
-        [".*"] = function(_path)
-            return vim.bo.filetype ~= "large_file" and require("helpers.file").is_large_file() and "large_file" or nil
-        end,
     },
 })

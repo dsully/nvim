@@ -168,4 +168,84 @@ return {
         lazy = false,
         priority = 999,
     },
+    {
+        "folke/snacks.nvim",
+        priority = 1000,
+        lazy = false,
+        ---@type snacks.Config
+        opts = {
+            notifier = {
+                enabled = true,
+                timeout = 3000,
+            },
+            styles = {
+                notification = {
+                    border = defaults.ui.border.name,
+                    wo = { wrap = true },
+                },
+                terminal = defaults.ui.float,
+                win = defaults.ui.float,
+            },
+        },
+        -- stylua: ignore
+        keys = {
+            ---@diagnostic disable-next-line: param-type-mismatch
+            { "<leader>nd", function() require("snacks").notifier:hide() end, desc = "Notification: Dismiss" },
+            { "]]", function() require("snacks").words.jump(vim.v.count1) end, desc = "snacks: goto next reference" },
+            { "[[", function() require("snacks").words.jump(-vim.v.count1) end, desc = "snacks: goto prev reference" },
+
+            { [[<C-\>]], function() require("snacks").terminal.toggle(vim.env.SHELL) end, mode = { "n", "t" }, desc = "Terminal" },
+        },
+        init = function()
+            vim.api.nvim_create_autocmd("User", {
+                pattern = "VeryLazy",
+                callback = function()
+                    local snacks = require("snacks")
+
+                    -- Setup some globals for debugging (lazy-loaded)
+                    _G.dbg = function(...)
+                        snacks.debug.inspect(...)
+                    end
+
+                    _G.bt = snacks.debug.backtrace
+                    _G.notify = snacks.notify
+
+                    vim.print = _G.dbg -- Override print to use snacks for `:=` command
+
+                    -- Toggle mappings
+                    snacks.toggle.diagnostics():map("<space>td")
+                    snacks.toggle.inlay_hints():map("<space>ti")
+                    snacks.toggle.line_number():map("<space>tn")
+                    snacks.toggle.treesitter():map("<space>tt")
+                    snacks.toggle.option("spell", { name = "Spelling" }):map("<space>ts")
+                    snacks.toggle.option("wrap", { name = "Wrap" }):map("<space>tw")
+                end,
+            })
+
+            hl.apply({
+                { SnacksNormal = { link = "Normal" } },
+                { SnacksBackdrop = { link = "Normal" } },
+
+                { SnacksNotifierTrace = { fg = colors.gray.base } },
+                { SnacksNotifierIconTrace = { link = "SnacksNotifierTrace" } },
+                { SnacksNotifierBorderTrace = { fg = colors.white.bright } },
+
+                { SnacksNotifierDebug = { fg = colors.white.base } },
+                { SnacksNotifierIconDebug = { link = "SnacksNotifierDebug" } },
+                { SnacksNotifierBorderDebug = { fg = colors.white.bright } },
+
+                { SnacksNotifierInfo = { fg = colors.cyan.base } },
+                { SnacksNotifierIconInfo = { link = "SnacksNotifierInfo" } },
+                { SnacksNotifierBorderInfo = { fg = colors.white.bright } },
+
+                { SnacksNotifierWarn = { fg = colors.yellow.base } },
+                { SnacksNotifierIconWarn = { link = "SnacksNotifierWarn" } },
+                { SnacksNotifierBorderWarn = { fg = colors.white.bright } },
+
+                { SnacksNotifierError = { fg = colors.red.base } },
+                { SnacksNotifierIconError = { link = "SnacksNotifierError" } },
+                { SnacksNotifierBorderError = { fg = colors.white.bright } },
+            })
+        end,
+    },
 }

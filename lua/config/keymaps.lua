@@ -58,13 +58,6 @@ vim.cmd.cnoreabbrev("Qa", "qa")
 vim.cmd.cnoreabbrev("Bd", "bd")
 vim.cmd.cnoreabbrev("bD", "bd")
 
--- Toggle options
-toggle.map("<space>td", toggle.diagnostics)
-toggle.map("<space>tn", toggle("number", { name = "Line Numbers" }))
-toggle.map("<space>ts", toggle("spell", { name = "Spelling" }))
-toggle.map("<space>tt", toggle.treesitter)
-toggle.map("<space>tw", toggle("wrap", { name = "Wrap" }))
-
 map("zg", function()
     require("helpers.spelling").add_word_to_typos(vim.fn.expand("<cword>"))
 end, "Add word to spell list")
