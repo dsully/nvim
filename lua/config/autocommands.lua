@@ -83,47 +83,6 @@ end, {
     desc = "Hide Windows line endings.",
 })
 
-ev.on({ ev.BufReadPost, ev.FileReadPost }, function(args)
-    vim.schedule(function()
-        vim.bo[args.buf].syntax = vim.filetype.match({ buf = args.buf }) or ""
-
-        notify.warn("File is too large, disabling treesitter, syntax & language servers.")
-
-        for _, client in pairs(vim.lsp.get_clients({ bufnr = args.buf })) do
-            pcall(vim.lsp.buf_detach_client, args.buf, client.id)
-        end
-
-        -- Create a autocommand just in case.
-        ev.on(ev.LspAttach, function(a)
-            vim.lsp.buf_detach_client(args.buf, a.data.client_id)
-        end, {
-            buffer = args.buf,
-        })
-
-        vim.diagnostic.enable(false)
-
-        -- Disable indentline
-        vim.b.miniindentscope_disable = true
-
-        vim.cmd.TSDisable("highlight")
-        vim.cmd.TSDisable("incremental_selection")
-        vim.cmd.TSDisable("indent")
-        vim.cmd.syntax("off")
-
-        vim.bo.swapfile = false
-        vim.bo.undolevels = -1
-
-        vim.api.nvim_set_option_value("foldmethod", "manual", { scope = "local", win = 0 })
-        vim.api.nvim_set_option_value("list", false, { scope = "local", win = 0 })
-        vim.api.nvim_set_option_value("spell", false, { scope = "local", win = 0 })
-
-        vim.opt.undoreload = 0
-    end)
-end, {
-    desc = "Disable features for large files.",
-    pattern = "large_file",
-})
-
 ev.on(ev.FileType, function()
     --
     ev.on(ev.BufWritePre, function()

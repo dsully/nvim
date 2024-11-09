@@ -31,13 +31,3 @@ M.write = function(path, data)
         vim.uv.fs_close(fd)
     end
 end
-
---- Whether buf is big (`uv.fs_stat` only works for file)
----@param bufnr? integer
----@return boolean
-function M.is_large_file(bufnr)
-    bufnr = bufnr or 0
-    return vim.api.nvim_buf_get_offset(bufnr, vim.api.nvim_buf_line_count(bufnr)) > vim.g.large_file_bytes
-end
-
-return M

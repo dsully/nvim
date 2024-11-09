@@ -123,7 +123,7 @@ return {
                     end
                 end
 
-                require("helpers.float").open({ filetype = "lua", lines = lines, window = { width = 0.8 } })
+                vim.ui.float({ ft = "lua" }, lines):show()
             end, { desc = "Show LSP Capabilities" })
 
             vim.api.nvim_create_user_command("LspCodeActions", function()
@@ -161,7 +161,7 @@ return {
                         table.insert(lines, "No code actions available")
                     end
 
-                    require("helpers.float").open({ filetype = "lua", lines = lines, window = { width = 0.8 } })
+                    vim.ui.float({ ft = "lua" }, lines):show()
                 end)
             end, { desc = "Show LSP Code Actions" })
 
@@ -180,7 +180,8 @@ return {
             ev.on_load("which-key.nvim", function()
                 vim.schedule(function()
                     require("which-key").add({
-                        { "grn", require("helpers.lsp").rename, desc = "Rename", icon = " " },
+                        -- stylua: ignore
+                        { "grn", function() Snacks.rename() end, desc = "Rename", icon = " " },
                         { "<C-S>", vim.lsp.buf.signature_help, desc = "Signature Help", mode = "i", icon = "󰠗 " },
                         { "gra", require("helpers.lsp").code_action, desc = "Actions", icon = "󰅯 " },
                         { "grq", require("helpers.lsp").apply_quickfix, desc = "Apply Quick Fix", icon = "󱖑 " },
@@ -270,6 +271,7 @@ return {
                             },
                         },
                     },
+                    buf_ls = {},
                     bzl = {},
                     clangd = {
                         filetypes = { "c", "cpp", "cuda" }, -- Let SourceKit handle objective-c and objective-cpp.
@@ -529,11 +531,7 @@ return {
                                     "taplo/associatedSchema",
                                     vim.tbl_extend("force", vim.lsp.util.make_position_params(), { documentUri = vim.uri_from_bufnr(bufnr) }),
                                     function(_, result)
-                                        require("helpers.float").open({
-                                            filetype = "toml",
-                                            lines = vim.split(result, "\n"),
-                                            window = { width = 0.8 },
-                                        })
+                                        vim.ui.float({ ft = "toml" }, vim.split(result, "\n")):show()
                                     end,
                                     bufnr
                                 )
@@ -617,6 +615,7 @@ return {
             library = {
                 { path = "luvit-meta/library", words = { "vim%.uv" } },
                 { path = "lazy.nvim", words = { "LazyVim" } },
+                { path = "snacks.nvim", words = { "Snacks" } },
             },
         },
     },

@@ -113,7 +113,7 @@ return {
             { "<leader>fp", pick("files", require("lazy.core.config").options.root), desc = "Plugins" },
 
             { "gD", pick("lsp_typedefs"), desc = "Goto Type Definition" },
-            { "gd", pick("lsp_definitions"), desc = "Goto Definition" },
+            { "gd", pick("lsp_definitions", nil, { unique_line_items = true }), desc = "Goto Definition" },
             { "gi", pick("lsp_implementations"), desc = "Goto Implementation" },
             { "gi", pick("lsp_implementations"), desc = "Goto Implementation" },
             { "grr", pick("lsp_references"), desc = "References", nowait = true },

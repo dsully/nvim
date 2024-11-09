@@ -108,19 +108,18 @@ end
 ---@field display string
 ---@field ordinal string
 ---@field preview string
----@field data notify.Record
+---@field data snacks.notifier.Notif
 
 M.notifications = function()
     local fzf = require("fzf-lua")
-    local notify = require("notify")
 
-    ---@type table<integer, notify.Record>
+    ---@type table<integer, snacks.notifier.Notif>
     local id_mapping = {}
 
-    ---@param notification notify.Record
+    ---@param notification snacks.notifier.Notif
     ---@type Notification[]
     local notifications = vim.tbl_map(function(notification)
-        local icon_color = notification.level == "ERROR" and "red" or notification.level == "WARN" and "yellow" or "green"
+        local icon_color = notification.level == "error" and "red" or notification.level == "warn" and "yellow" or "green"
 
         local icon = fzf.utils.ansi_codes[icon_color](notification.icon)
         local level = fzf.utils.ansi_codes[icon_color](notification.level)
@@ -133,13 +132,13 @@ M.notifications = function()
 
         return {
             contents = { id .. ": " .. prefix },
-            preview = notification.message,
+            preview = notification.msg,
             data = notification,
         }
-    end, notify.history())
+    end, Snacks.notifier.get_history())
 
     table.sort(notifications, function(a, b)
-        return a.data.time > b.data.time
+        return a.data.shown > b.data.shown
     end)
 
     ---@param _messages table<number, Notification>
@@ -154,7 +153,7 @@ M.notifications = function()
         end
 
         ---@param entry string
-        ---@return notify.Record?
+        ---@return snacks.notifier.Notif?
         function previewer:parse_entry(entry)
             --
             ---@type number?
@@ -195,14 +194,15 @@ end
 
 ---@param command string
 ---@param cwd function|string|nil
-M.pick = function(command, cwd)
+---@param opts table<string, any>?
+M.pick = function(command, cwd, opts)
     return function()
         --
         if type(cwd) == "function" then
             cwd = cwd()
         end
 
-        pcall(require("fzf-lua")[command], { cwd = cwd })
+        pcall(require("fzf-lua")[command], vim.tbl_deep_extend("force", opts or {}, { cwd = cwd }))
     end
 end
 

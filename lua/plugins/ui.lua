@@ -1,51 +1,5 @@
 return {
     {
-        "rcarriga/nvim-notify",
-        init = function()
-            hl.apply({
-                { NotifyBackground = { link = "NormalFloat" } },
-                { NotifyDEBUGBorder = { fg = colors.white.base } },
-                { NotifyDEBUGIcon = { link = "NotifyDEBUGTitle" } },
-                { NotifyDEBUGTitle = { fg = colors.blue.bright } },
-                { NotifyERRORBorder = { fg = colors.red.base } },
-                { NotifyERRORIcon = { link = "NotifyERRORTitle" } },
-                { NotifyERRORTitle = { fg = colors.red.base } },
-                { NotifyINFOBorder = { fg = colors.gray.base } },
-                { NotifyINFOIcon = { link = "NotifyINFOTitle" } },
-                { NotifyINFOTitle = { fg = colors.blue.base } },
-                { NotifyLogTime = { link = "Comment" } },
-                { NotifyLogTitle = { link = "Special" } },
-                { NotifyTRACEBorder = { fg = colors.black.bright } },
-                { NotifyTRACEIcon = { link = "NotifyTRACETitle" } },
-                { NotifyTRACETitle = { fg = colors.gray.bright } },
-                { NotifyWARNBorder = { fg = colors.yellow.base } },
-                { NotifyWARNIcon = { link = "NotifyWARNTitle" } },
-                { NotifyWARNTitle = { fg = colors.yellow.base } },
-            })
-        end,
-        keys = {
-            -- stylua: ignore
-            { "<leader>nd", function() require("notify").dismiss({ silent = true, pending = true }) end, desc = "Delete Notifications" },
-        },
-        opts = {
-            background_colour = colors.black.dim,
-            focusable = false,
-            fps = 60,
-            max_height = function()
-                return math.floor(vim.o.lines * 0.75)
-            end,
-            max_width = function()
-                return math.floor(vim.o.columns * 0.75)
-            end,
-            on_open = function(win)
-                vim.api.nvim_win_set_config(win, { zindex = 100 })
-            end,
-            render = "wrapped-compact",
-            stages = "static",
-            timeout = 3000,
-        },
-    },
-    {
         "willothy/nvim-cokeline",
         config = function()
             local icons = defaults.icons
@@ -940,31 +894,5 @@ return {
             return dashboard
         end,
         priority = 5, -- Load after session manager.
-    },
-    {
-        "numToStr/FTerm.nvim",
-        --stylua: ignore
-        keys = {
-            { [[<C-\>]], function() require("FTerm").toggle() end, mode = { "n", "t" }, desc = "Terminal" },
-        },
-        opts = {
-            hl = "Terminal",
-        },
-    },
-    {
-        "luukvbaal/statuscol.nvim",
-        event = ev.LazyFile,
-        opts = {
-            bt_ignore = defaults.ignored.buffer_types,
-            ft_ignore = defaults.ignored.file_types,
-            clickmod = "a",
-            relculright = true,
-            segments = {
-                { click = "v:lua.ScSa", sign = { colwidth = 1, namespace = { "gitsigns" } } },
-                -- { click = "v:lua.ScSa", sign = { colwidth = 1, maxwidth = 2, namespace = { "diagnostic/signs" } } },
-                { click = "v:lua.ScSa", sign = { colwidth = 1, maxwidth = 2, name = { ".*" }, namespace = { ".*" }, text = { ".*" } } },
-            },
-            separator = " ", -- separator between line number and buffer text ("│" or extra " " padding)
-        },
     },
 }

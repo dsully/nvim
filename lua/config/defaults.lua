@@ -292,7 +292,6 @@ local M = {
             "crates.nvim",
             "git",
             "gitrebase",
-            "large_file",
             "lazy",
             "log",
             "lspinfo",
@@ -472,6 +471,13 @@ local M = {
         border = {
             name = "single",
             chars = { "─", "│", "─", "│", "┌", "┐", "┘", "└" },
+        },
+        float = {
+            border = "single",
+            relative = "editor",
+            style = "minimal",
+            height = 0.75,
+            width = 0.8,
         },
     },
 }

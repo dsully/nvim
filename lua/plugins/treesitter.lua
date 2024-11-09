@@ -37,9 +37,6 @@ return {
             require("nvim-treesitter-textobjects")
             require("nvim-treesitter.configs").setup(opts)
         end,
-        disable = function(_, bufnr) -- Disable in files with more than 5K
-            return vim.bo.filetype ~= "large_file" and require("helpers.file").is_large_file(bufnr) and "large_file" or nil
-        end,
         event = { ev.VeryLazy, ev.LazyFile },
         init = function(plugin)
             require("lazy.core.loader").add_to_rtp(plugin)
@@ -53,11 +50,6 @@ return {
         opts = {
             ensure_installed = {},
             highlight = {
-                ---@param _lang string
-                ---@param bufnr number
-                disable = function(_lang, bufnr)
-                    return require("helpers.file").is_large_file(bufnr)
-                end,
                 enable = true,
             },
             incremental_selection = {

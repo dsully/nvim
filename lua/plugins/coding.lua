@@ -311,7 +311,7 @@ return {
                     },
                     separated = {
                         pattern = "%[()%d+,%s*%d+,%s*%d+()%]",
-                        group = function(_, _match, data)
+                        group = function(_, _match, _data)
                             ---@type string
                             local r, g, b = _match:match("(%d+),%s*(%d+),%s*(%d+)")
                             local hex_color = string.format("#%02X%02X%02X", r, g, b)
@@ -354,15 +354,17 @@ return {
         config = function(_, opts)
             local pairs = require("mini.pairs")
 
-            keys.toggle.map("<space>tp", {
-                name = "Mini Pairs",
-                get = function()
-                    return not vim.g.minipairs_disable
-                end,
-                set = function(state)
-                    vim.g.minipairs_disable = not state
-                end,
-            })
+            Snacks.toggle
+                .new({
+                    name = "Mini Pairs",
+                    get = function()
+                        return not vim.g.minipairs_disable
+                    end,
+                    set = function(state)
+                        vim.g.minipairs_disable = not state
+                    end,
+                })
+                :map("<space>tp")
 
             pairs.setup(opts)
 
