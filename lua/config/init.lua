@@ -3,21 +3,20 @@ require("config.options")
 
 vim.cmd.colorscheme(vim.g.colorscheme)
 
--- auto-commands can be loaded lazily when not opening a file
-local lazy_autocmds = vim.fn.argc(-1) == 0
-
-if not lazy_autocmds then
+-- perf: Defer loading of filetype and autocommands if no files were passed.
+if vim.fn.argc(-1) == 0 then
+    --
+    ev.on(ev.User, function()
+        require("config.autocommands")
+        require("config.filetype")
+    end, {
+        pattern = "VeryLazy",
+        once = true,
+    })
+else
     require("config.autocommands")
+    require("config.filetype")
 end
 
-ev.on(ev.User, function()
-    if lazy_autocmds then
-        require("config.autocommands")
-    end
-    require("config.keymaps")
-end, {
-    pattern = "VeryLazy",
-    once = true,
-})
-
 require("config.lazy").setup()
+require("config.keymaps")
