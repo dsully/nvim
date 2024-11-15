@@ -58,7 +58,7 @@ local M = {
             toml = { "taplo" },
             tsx = { "biome" },
             typescript = { "biome" },
-            xml = { "xmlformat" },
+            xml = { "xmlformatter" },
         },
         on_save = {
             "bash",
