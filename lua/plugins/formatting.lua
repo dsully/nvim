@@ -75,7 +75,7 @@ return {
                     taplo = {
                         args = { "format", "--config=" .. vim.env.XDG_CONFIG_HOME .. "/taplo.toml", "-" },
                     },
-                    xmlformat = {
+                    xmlformatter = {
                         prepend_args = { "--blanks", "--indent", "4" },
                     },
                 },
