@@ -1,6 +1,5 @@
 local map = keys.map
 local mode = { "n", "x" }
-local toggle = keys.toggle
 
 map("Y", "y$", "Yank to clipboard", mode)
 map("gY", '"*y$', "Yank until end of line to system clipboard", mode)
@@ -35,19 +34,18 @@ if vim.g.os == "Darwin" then
         vim.system({ "open", filename }):wait()
     end, "Open in App")
 
-    map("<space>T", function()
+    vim.api.nvim_create_user_command("Tower", function()
         local stdout = vim.system({ "git", "rev-parse", "--show-toplevel" }):wait().stdout
-        local root = vim.uv.cwd()
 
-        if stdout then
-            root = vim.trim(stdout)
-        else
+        if not stdout then
             notify.error("Not in a Git repository!", { icon = "󰏋" })
             return
         end
 
-        vim.system({ "/usr/bin/open", "-g", "-a", "Tower", root }):wait()
-    end, "Open Tower")
+        vim.system({ "/usr/bin/open", "-g", "-a", "Tower", vim.uv.cwd() }):wait()
+    end, { desc = "Open Tower", nargs = 0 })
+
+    map("<space>T", vim.cmd.Tower, "Open in Tower")
 end
 
 -- Common misspellings
