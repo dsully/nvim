@@ -174,10 +174,12 @@ return {
         lazy = false,
         ---@type snacks.Config
         opts = {
+            bigfile = { enabled = true },
             notifier = {
                 enabled = true,
                 timeout = 3000,
             },
+            statuscolumn = { enabled = true },
             styles = {
                 notification = {
                     border = defaults.ui.border.name,
@@ -186,6 +188,7 @@ return {
                 terminal = defaults.ui.float,
                 win = defaults.ui.float,
             },
+            words = { enabled = true },
         },
         -- stylua: ignore
         keys = {
@@ -198,7 +201,7 @@ return {
         },
         init = function()
             vim.api.nvim_create_autocmd("User", {
-                pattern = "VeryLazy",
+                pattern = ev.VeryLazy,
                 callback = function()
                     local snacks = require("snacks")
 
