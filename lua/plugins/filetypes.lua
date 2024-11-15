@@ -203,6 +203,12 @@ return {
                                 },
                                 -- watcher = "server",
                             },
+                            imports = {
+                                granularity = {
+                                    group = "module",
+                                },
+                                prefix = "self",
+                            },
                             inlayHints = {
                                 closureReturnTypeHints = { enable = "with_block" },
                                 closureStyle = "rust_analyzer",
