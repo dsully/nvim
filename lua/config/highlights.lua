@@ -1,3 +1,5 @@
+--
+-- Nord palette : https://www.nordtheme.com/docs/colors-and-palettes
 local colors = {
     -- Slightly tweaked to be more like nordic.nvim.
     red = { base = "#bf616a", bright = "#d06f79", dim = "#a54e56" },
@@ -24,10 +26,69 @@ local colors = {
     none = "NONE",
 }
 
+-- Aliases
 colors.fg = colors.white.base
 colors.bg = colors.black.dim
 
-vim.g.terminal_color_0 = colors.blue.base
+colors.night = {
+    c0 = colors.black.dim,
+    c1 = colors.black.base,
+    c2 = colors.black.bright,
+    c3 = colors.gray.base,
+}
+
+colors.snow = {
+    c0 = colors.white.dim,
+    c1 = colors.white.base,
+    c2 = colors.white.bright,
+}
+
+colors.frost = {
+    blue = colors.blue.bright,
+    light_blue = colors.blue.base,
+    sea = colors.cyan.base,
+    turquoise = colors.cyan.bright,
+}
+
+colors.aurora = {
+    green = colors.green.base,
+    orange = colors.orange.base,
+    purple = colors.magenta.base,
+    red = colors.red.base,
+    yellow = colors.yellow.base,
+}
+
+colors.blend = {
+    red = "#3c3944",
+    yellow = "#414348",
+    green = "#3a4248",
+    turquoise = "#37424e",
+    blue = "#384356",
+    bluec1 = "#3c4b60",
+    comment = "#5c6881",
+}
+
+colors.special = {
+    sea = "#8ebdbc",
+    light_blue = "#7aa1be",
+}
+
+vim.g.terminal_color_0 = colors.black.dark
+vim.g.terminal_color_8 = colors.black.base
+vim.g.terminal_color_1 = colors.red.base
+vim.g.terminal_color_9 = colors.red.bright
+vim.g.terminal_color_2 = colors.green.base
+vim.g.terminal_color_10 = colors.green.bright
+vim.g.terminal_color_3 = colors.yellow.base
+vim.g.terminal_color_11 = colors.yellow.bright
+vim.g.terminal_color_4 = colors.blue.bright
+vim.g.terminal_color_12 = colors.cyan.bright
+vim.g.terminal_color_5 = colors.magenta.base
+vim.g.terminal_color_13 = colors.magenta.bright
+vim.g.terminal_color_6 = colors.cyan.base
+vim.g.terminal_color_14 = colors.cyan.bright
+vim.g.terminal_color_7 = colors.white.base
+vim.g.terminal_color_15 = colors.white.dim
 
 local M = {
     colors = colors,
@@ -46,10 +107,26 @@ M.ui = {
         CursorColumn = { bg = colors.gray.base },
         CursorLine = { bg = "None" },
         CursorLineNr = { bold = true, fg = colors.yellow.base },
-        DiffAdd = { fg = colors.green.base },
-        DiffChange = { fg = colors.yellow.base },
-        DiffDelete = { fg = colors.red.base },
-        DiffText = { fg = colors.red.base },
+        DiffAdd = {
+            fg = colors.green.base,
+            bg = colors.black.dim,
+            -- bg = colors.blend.green,
+        },
+        DiffChange = {
+            fg = colors.yellow.base,
+            bg = colors.black.dim,
+            -- bg = colors.blend.yellow,
+        },
+        DiffDelete = {
+            fg = colors.red.base,
+            bg = colors.black.dim,
+            -- bg = colors.blend.red,
+        },
+        DiffText = {
+            fg = colors.blue.base,
+            bg = colors.black.dim,
+            -- bg = colors.bg,
+        },
         Directory = { fg = colors.white.bright },
         EndOfBuffer = { fg = colors.black.dim },
         ErrorMsg = { fg = colors.red.base },
