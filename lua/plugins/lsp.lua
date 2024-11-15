@@ -488,6 +488,7 @@ return {
                         end,
                     },
                     marksman = {},
+                    red_knot = {},
                     ruff = {
                         commands = {
                             RuffAutofix = {
