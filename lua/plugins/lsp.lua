@@ -181,7 +181,8 @@ return {
                 vim.schedule(function()
                     require("which-key").add({
                         -- stylua: ignore
-                        { "grn", function() Snacks.rename() end, desc = "Rename", icon = " " },
+                        { "grf", function() require("snacks").rename.rename_file() end, desc = "Rename File", icon = " ", },
+                        { "grn", vim.lsp.buf.rename, desc = "Rename", icon = " " },
                         { "<C-S>", vim.lsp.buf.signature_help, desc = "Signature Help", mode = "i", icon = "󰠗 " },
                         { "gra", require("helpers.lsp").code_action, desc = "Actions", icon = "󰅯 " },
                         { "grq", require("helpers.lsp").apply_quickfix, desc = "Apply Quick Fix", icon = "󱖑 " },
