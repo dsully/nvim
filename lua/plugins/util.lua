@@ -179,7 +179,12 @@ return {
                 enabled = true,
                 timeout = 3000,
             },
-            statuscolumn = { enabled = true },
+            statuscolumn = {
+                enabled = true,
+                left = { "git" },
+                right = { "sign" },
+                git = { patterns = { "GitSign" } },
+            },
             styles = {
                 notification = {
                     border = defaults.ui.border.name,
