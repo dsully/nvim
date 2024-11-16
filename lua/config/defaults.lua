@@ -112,6 +112,8 @@ local M = {
             warn = "󰀪 ",
             info = " ",
             hint = "󰌶 ",
+            debug = " ",
+            trace = " ",
         },
         fold = {
             open = " ",
