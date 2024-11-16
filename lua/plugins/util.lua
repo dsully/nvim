@@ -178,6 +178,25 @@ return {
             notifier = {
                 enabled = true,
                 timeout = 3000,
+                width = { min = 40, max = 0.4 },
+                height = { min = 1, max = 0.6 },
+                --
+                -- Editor margin to keep free. tabline and statusline are taken into account automatically
+                margin = { top = 0, right = 1, bottom = 0 },
+                padding = true, -- add 1 cell of left/right padding to the notification window
+                sort = { "added" }, -- sort by level and time
+                icons = {
+                    error = defaults.icons.diagnostics.error,
+                    warn = defaults.icons.diagnostics.warn,
+                    info = defaults.icons.diagnostics.info,
+                    debug = defaults.icons.diagnostics.debug,
+                    trace = defaults.icons.diagnostics.trace,
+                },
+                ---@type snacks.notifier.style
+                style = "compact",
+                top_down = true, -- place notifications from top to bottom
+                date_format = "%R", -- time format for notifications
+                refresh = 50, -- refresh at most every 50ms
             },
             statuscolumn = {
                 enabled = true,

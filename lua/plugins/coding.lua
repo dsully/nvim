@@ -114,7 +114,7 @@ return {
             nerd_font_variant = "mono",
             sources = {
                 completion = {
-                    enabled_providers = { "lsp", "path", "snippets", "buffer", "lazydev" },
+                    enabled_providers = { "lsp", "path", "snippets", "lazydev" },
                 },
                 providers = {
                     buffer = {

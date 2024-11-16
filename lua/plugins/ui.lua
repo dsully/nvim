@@ -423,6 +423,9 @@ return {
                     ["vim.lsp.util.stylize_markdown"] = true,
                     ["cmp.entry.get_documentation"] = false,
                 },
+                progress = {
+                    enabled = true,
+                },
                 signature = {
                     auto_open = { enabled = false },
                 },
@@ -474,6 +477,8 @@ return {
                             { find = "Invalid offset" },
                             { find = "Invalid buffer id" },
                             { find = "Found a swap file by the name" },
+                            { find = "An error happened while handling a ui event" }, -- Coming from noice.
+                            { find = "multiple different client offset_encodings detected" },
                             { find = "No information available", event = "notify" },
 
                             -- Semantic Tokens failure in the neovim runtime.
