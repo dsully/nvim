@@ -90,6 +90,7 @@ return {
                 mode = { "i", "c" },
             },
         },
+        --- @type blink.cmp.Config
         opts = {
             accept = {
                 auto_brackets = {
@@ -100,14 +101,15 @@ return {
                 enabled = false,
             },
             keymap = {
-                ["<CR>"] = { "accept", "fallback" },
-
-                ["<Tab>"] = { "select_next", "fallback" },
-                ["<Down>"] = { "select_next", "fallback" },
-                ["<C-j>"] = { "select_next", "fallback" },
-
+                preset = "enter",
+                ["<Tab>"] = {
+                    function(cmp)
+                        return cmp.is_in_snippet() and cmp.snippet_forward() or cmp.select_next()
+                    end,
+                    "fallback",
+                },
                 ["<S-Tab>"] = { "select_prev", "fallback" },
-                ["<Up>"] = { "select_prev", "fallback" },
+                ["<C-j>"] = { "select_next", "fallback" },
                 ["<C-k>"] = { "select_prev", "fallback" },
             },
             kind_icons = defaults.icons.lsp,
@@ -118,6 +120,7 @@ return {
                 },
                 providers = {
                     buffer = {
+                        name = "buffer",
                         fallback_for = {},
                         max_items = 4,
                         min_keyword_length = 4,
@@ -129,12 +132,15 @@ return {
                     },
                     -- Don/t show LuaLS require statements when lazydev has items
                     lsp = {
+                        name = "LSP",
                         fallback_for = { "lazydev" },
                     },
                     path = {
+                        name = "Path",
                         opts = { get_cwd = vim.uv.cwd },
                     },
                     snippets = {
+                        name = "Snippets",
                         min_keyword_length = 1, -- don't show when triggered manually, useful for JSON keys
                         score_offset = -1,
                     },
