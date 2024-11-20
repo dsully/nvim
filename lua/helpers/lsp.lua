@@ -181,7 +181,7 @@ function M.validate_client(client, buffer)
 
         if not clients[client][buffer] then
             --
-            if client.supports_method and client.supports_method(method, { bufnr = buffer }) then
+            if client:supports_method(method, buffer) then
                 clients[client][buffer] = true
 
                 ev.emit(ev.User, {

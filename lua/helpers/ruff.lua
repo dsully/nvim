@@ -265,7 +265,7 @@ M.command = function(command)
     --
     return function()
         for _, client in ipairs(vim.lsp.get_clients({ name = "ruff" })) do
-            client.request(vim.lsp.protocol.Methods.workspace_executeCommand, {
+            client:request(vim.lsp.protocol.Methods.workspace_executeCommand, {
                 command = command,
                 arguments = {
                     {
