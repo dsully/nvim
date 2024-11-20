@@ -529,7 +529,7 @@ return {
                             vim.keymap.set("n", "<leader>vs", function()
                                 local bufnr = vim.api.nvim_get_current_buf()
 
-                                client.request(
+                                client:request(
                                     "taplo/associatedSchema",
                                     vim.tbl_extend("force", vim.lsp.util.make_position_params(), { documentUri = vim.uri_from_bufnr(bufnr) }),
                                     function(_, result)

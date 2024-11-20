@@ -31,3 +31,5 @@ M.write = function(path, data)
         vim.uv.fs_close(fd)
     end
 end
+
+return M
