@@ -121,8 +121,7 @@ return {
         build = "rockspec",
         cmd = { "Fugit2", "Fugit2Blame", "Fugit2Graph" },
         keys = {
-            -- stylua: ignore
-            { "<space>g", function() require("fugit2").git_status() end, desc = "Git UI (FuGit)" },
+            { "<space>g", vim.cmd.Fugit2, desc = "Git UI (FuGit)" },
         },
         opts = function()
             local lib = "/lib/libgit2.dylib"
