@@ -474,6 +474,9 @@ return {
                                     semicolon = "Disable",
                                     setType = true,
                                 },
+                                hover = {
+                                    expandAlias = true,
+                                },
                                 telemetry = {
                                     enable = false,
                                 },
