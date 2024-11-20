@@ -119,13 +119,6 @@ return {
                     enabled_providers = { "lsp", "path", "snippets", "lazydev" },
                 },
                 providers = {
-                    buffer = {
-                        name = "buffer",
-                        fallback_for = {},
-                        max_items = 4,
-                        min_keyword_length = 4,
-                        score_offset = -3,
-                    },
                     lazydev = {
                         name = "LazyDev",
                         module = "lazydev.integrations.blink",
@@ -137,12 +130,22 @@ return {
                     },
                     path = {
                         name = "Path",
-                        opts = { get_cwd = vim.uv.cwd },
+                        opts = {
+                            get_cwd = vim.uv.cwd,
+                        },
                     },
                     snippets = {
                         name = "Snippets",
-                        min_keyword_length = 1, -- don't show when triggered manually, useful for JSON keys
-                        score_offset = -1,
+                        --- Disable the snippet provider after pressing trigger characters (i.e. ".")
+                        enabled = function(ctx)
+                            return ctx ~= nil and ctx.trigger.kind == vim.lsp.protocol.CompletionTriggerKind.TriggerCharacter
+                        end,
+                        opts = {
+                            get_filetype = function()
+                                return vim.bo.filetype
+                            end,
+                            ignored_filetypes = defaults.ignored.file_types,
+                        },
                     },
                 },
             },
@@ -154,35 +157,110 @@ return {
             windows = {
                 autocomplete = {
                     cycle = { from_top = false }, -- cycle at bottom, but not at the top
-                    -- https://github.com/Saghen/blink.cmp/blob/f456c2aa0994f709f9aec991ed2b4b705f787e48/lua/blink/cmp/windows/autocomplete.lua#L227
-                    ---@param ctx blink.cmp.CompletionRenderContext
-                    draw = function(ctx)
-                        local icon = ctx.kind_icon
+                    -- draw = {
+                    --     padding = 1,
+                    --     gap = 1,
+                    --
+                    --     -- Components to render, grouped by column
+                    --     -- columns = { { "kind_icon" }, { "label", "label_description", gap = 1 } },
+                    --     -- for a setup similar to nvim-cmp: https://github.com/Saghen/blink.cmp/pull/245#issuecomment-2463659508
+                    --     columns = { { "label", "label_description", gap = 1 }, { "kind_icon", "kind" } },
+                    --     -- columns = {
+                    --     --     { "kind_icon" },
+                    --     --     { "label", "label_description", gap = 1 },
+                    --     --     { "kind" },
+                    --     -- },
+                    --     components = {
+                    --         kind_icon = {
+                    --             ellipsis = false,
+                    --             text = function(ctx)
+                    --                 return ctx.kind_icon .. " "
+                    --             end,
+                    --             highlight = function(ctx)
+                    --                 return "BlinkCmpKind" .. ctx.kind
+                    --             end,
+                    --         },
+                    --
+                    --         kind = {
+                    --             ellipsis = false,
+                    --             text = function(ctx)
+                    --                 return ctx.kind .. " "
+                    --             end,
+                    --             highlight = function(ctx)
+                    --                 return "BlinkCmpKind" .. ctx.kind
+                    --             end,
+                    --         },
+                    --
+                    --         label = {
+                    --             width = { fill = true, max = 60 },
+                    --             text = function(ctx)
+                    --                 return ctx.label .. (ctx.label_detail or "")
+                    --             end,
+                    --             highlight = function(ctx)
+                    --                 -- label and label details
+                    --                 local highlights = {
+                    --                     {
+                    --                         0,
+                    --                         #ctx.label,
+                    --                         group = ctx.deprecated and "BlinkCmpLabelDeprecated" or "BlinkCmpLabel",
+                    --                     },
+                    --                 }
+                    --                 if ctx.label_detail then
+                    --                     table.insert(highlights, {
+                    --                         #ctx.label + 1,
+                    --                         #ctx.label + #ctx.label_detail,
+                    --                         group = "BlinkCmpLabelDetail",
+                    --                     })
+                    --                 end
+                    --
+                    --                 -- characters matched on the label by the fuzzy matcher
+                    --                 if ctx.label_matched_indices ~= nil then
+                    --                     for _, idx in ipairs(ctx.label_matched_indices) do
+                    --                         table.insert(highlights, { idx, idx + 1, group = "BlinkCmpLabelMatch" })
+                    --                     end
+                    --                 end
+                    --
+                    --                 return highlights
+                    --             end,
+                    --         },
+                    --
+                    --         label_description = {
+                    --             width = { max = 30 },
+                    --             text = function(ctx)
+                    --                 return ctx.label_description or ""
+                    --             end,
+                    --             highlight = "BlinkCmpLabelDescription",
+                    --         },
+                    --     },
+                    -- },
 
-                        -- Give path completions a different set of icons.
-                        if ctx.item.source_name == "blink.cmp.sources.path" then
-                            local fi, _ = require("mini.icons").get("file", ctx.item.label)
-
-                            if fi ~= nil then
-                                icon = fi
-                            end
-                        end
-
-                        -- Strip the `pub fn` prefix from Rust functions.
-                        -- Strip method & function parameters.
-                        if ctx.item.detail ~= nil then
-                            ctx.item.detail = ctx.item.detail:gsub("pub fn (.+)", "%1"):gsub("(.+)%(.+%)~", "%1()")
-                        end
-
-                        return {
-                            {
-                                " " .. ctx.item.label .. " ",
-                                fill = true,
-                                hl_group = ctx.deprecated and "BlinkCmpLabelDeprecated" or "BlinkCmpLabel",
-                            },
-                            { icon .. " ", hl_group = "BlinkCmpKind" .. ctx.kind },
-                        }
-                    end,
+                    -- draw = function(ctx)
+                    --     local icon = ctx.kind_icon
+                    --
+                    --     -- Give path completions a different set of icons.
+                    --     if ctx.item.source_name == "blink.cmp.sources.path" then
+                    --         local fi, _ = require("mini.icons").get("file", ctx.item.label)
+                    --
+                    --         if fi ~= nil then
+                    --             icon = fi
+                    --         end
+                    --     end
+                    --
+                    --     -- Strip the `pub fn` prefix from Rust functions.
+                    --     -- Strip method & function parameters.
+                    --     if ctx.item.detail ~= nil then
+                    --         ctx.item.detail = ctx.item.detail:gsub("pub fn (.+)", "%1"):gsub("(.+)%(.+%)~", "%1()")
+                    --     end
+                    --
+                    --     return {
+                    --         {
+                    --             " " .. ctx.item.label .. " ",
+                    --             fill = true,
+                    --             hl_group = ctx.deprecated and "BlinkCmpLabelDeprecated" or "BlinkCmpLabel",
+                    --         },
+                    --         { icon .. " ", hl_group = "BlinkCmpKind" .. ctx.kind },
+                    --     }
+                    -- end,
                     selection = "manual",
                 },
                 documentation = {
