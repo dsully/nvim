@@ -141,9 +141,6 @@ return {
                             return ctx ~= nil and ctx.trigger.kind == vim.lsp.protocol.CompletionTriggerKind.TriggerCharacter
                         end,
                         opts = {
-                            get_filetype = function()
-                                return vim.bo.filetype
-                            end,
                             ignored_filetypes = defaults.ignored.file_types,
                         },
                     },
