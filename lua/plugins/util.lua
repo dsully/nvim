@@ -95,10 +95,8 @@ return {
         },
         init = function()
             -- Watch chezmoi files for changes in the source-path, and apply them.
-            ev.on({ ev.BufReadPost, ev.BufNewFile }, function(args)
-                vim.schedule(function()
-                    require("chezmoi.commands.__edit").watch(args.buf)
-                end)
+            ev.on(ev.BufWritePost, function()
+                vim.schedule(require("chezmoi.commands.__edit").watch)
             end, {
                 pattern = { vim.env.XDG_DATA_HOME .. "/chezmoi/*" },
             })
@@ -111,10 +109,7 @@ return {
                     ev.on(ev.BufWritePost, function(args)
                         notify.info("chezmoi: Adding changes to: " .. args.file)
 
-                        require("chezmoi.commands.__base").execute({
-                            cmd = "add",
-                            args = { args.file },
-                        })
+                        vim.system({ "chezmoi", "add", args.file }, { text = true }):wait()
                     end, {
                         desc = "Apply chezmoi changes via 'chezmoi edit'",
                         pattern = targets,
