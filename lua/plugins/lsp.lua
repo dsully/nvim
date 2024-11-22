@@ -165,6 +165,10 @@ return {
                 end)
             end, { desc = "Show LSP Code Actions" })
 
+            vim.api.nvim_create_user_command("LspLogClear", function()
+                vim.uv.fs_unlink(vim.fs.joinpath(tostring(vim.fn.stdpath("state")), "lsp.log"))
+            end, { desc = "Clear LSP Log" })
+
             vim.api.nvim_create_user_command("LspRestartBuffer", function()
                 --
                 require("helpers.lsp").apply_to_buffers(function(bufnr, client)
@@ -179,13 +183,9 @@ return {
 
             ev.on_load("which-key.nvim", function()
                 vim.schedule(function()
+                    -- stylua: ignore
                     require("which-key").add({
-                        -- stylua: ignore
-                        { "grf", function() require("snacks").rename.rename_file() end, desc = "Rename File", icon = " ", },
-                        { "grn", vim.lsp.buf.rename, desc = "Rename", icon = " " },
                         { "<C-S>", vim.lsp.buf.signature_help, desc = "Signature Help", mode = "i", icon = "󰠗 " },
-                        { "gra", require("helpers.lsp").code_action, desc = "Actions", icon = "󰅯 " },
-                        { "grq", require("helpers.lsp").apply_quickfix, desc = "Apply Quick Fix", icon = "󱖑 " },
                         { "<leader>l", group = "LSP", icon = " " },
                         { "<leader>lc", vim.cmd.LspCapabilities, desc = "LSP Capabilities", icon = " " },
                         { "<leader>li", vim.cmd.LspInfo, desc = "LSP Info", icon = " " },
@@ -194,6 +194,10 @@ return {
                         { "<leader>ls", vim.cmd.LspStop, desc = "LSP Stop", icon = " " },
                         { "<leader>xr", vim.diagnostic.reset, desc = "Reset", icon = " " },
                         { "<leader>xs", vim.diagnostic.open_float, desc = "Show", icon = "󰙨" },
+                        { "gra", require("helpers.lsp").code_action, desc = "Actions", icon = "󰅯 " },
+                        { "grf", function() require("snacks").rename.rename_file() end, desc = "Rename File", icon = " ", },
+                        { "grn", vim.lsp.buf.rename, desc = "Rename", icon = " " },
+                        { "grq", require("helpers.lsp").apply_quickfix, desc = "Apply Quick Fix", icon = "󱖑 " },
                     }, { notify = false })
                 end)
             end)
