@@ -105,16 +105,18 @@ M.parents = function(opts)
 end
 
 ---@class Notification
----@field display string
----@field ordinal string
+---@field contents string[]
 ---@field preview string
 ---@field data snacks.notifier.Notif
 
 M.notifications = function()
     local fzf = require("fzf-lua")
 
+    local white = fzf.utils.ansi_codes.white
+    local strip = fzf.utils.strip_ansi_coloring
+
     ---@type table<integer, snacks.notifier.Notif>
-    local id_mapping = {}
+    local mapping = {}
 
     ---@param notification snacks.notifier.Notif
     ---@type Notification[]
@@ -123,26 +125,26 @@ M.notifications = function()
 
         local icon = fzf.utils.ansi_codes[icon_color](notification.icon)
         local level = fzf.utils.ansi_codes[icon_color](notification.level)
-        local timestamp = fzf.utils.ansi_codes.grey(notification.title[2])
-        local title = notification.title[1] ~= "" and notification.title[1] or "[No title]"
-        local prefix = table.concat({ timestamp, icon, level, title }, " ")
-        local id = notification.id
+        local timestamp = white(tostring(os.date("%R", notification.added)))
+        local title = notification.title ~= "" and notification.title or "[No title]"
+        local prefix = table.concat({ timestamp, icon, level:upper(), title }, " ")
 
-        id_mapping[id] = notification
+        mapping[strip(prefix)] = notification
 
         return {
-            contents = { id .. ": " .. prefix },
+            contents = { prefix },
             preview = notification.msg,
             data = notification,
         }
-    end, Snacks.notifier.get_history())
+    end, Snacks.notifier.get_history({ reverse = true }))
 
-    table.sort(notifications, function(a, b)
-        return a.data.shown > b.data.shown
-    end)
+    if #notifications == 0 then
+        notify.info("No notifications.", { title = "Notification history", icon = "󰎟" })
+        return
+    end
 
-    ---@param _messages table<number, Notification>
-    function M.previewer(_messages)
+    ---@param entries Notification[]
+    function M.previewer(entries) ---@diagnostic disable-line: unused-local
         local previewer = require("fzf-lua.previewer.builtin").base:extend()
 
         function previewer:new(o, opts, fzf_win)
@@ -152,28 +154,30 @@ M.notifications = function()
             return self
         end
 
-        ---@param entry string
-        ---@return snacks.notifier.Notif?
-        function previewer:parse_entry(entry)
-            --
-            ---@type number?
-            local id = tonumber(entry:match("^%d+"))
-
-            return id_mapping[id]
-        end
-
-        ---@param entry string
-        function previewer:populate_preview_buf(entry)
+        ---@param selected string
+        function previewer:populate_preview_buf(selected)
             local buf = self:get_tmp_buffer()
-            local notification = self:parse_entry(entry)
+            local notification = mapping[strip(selected)]
 
             if notification ~= nil then
-                require("notify").open(notification, { buffer = buf, max_width = 80 })
+                vim.api.nvim_buf_set_lines(buf, 0, -1, false, vim.split(notification.msg, "\n", { plain = true }))
+                vim.bo[buf].filetype = "lua"
             end
 
             self:set_preview_buf(buf)
             self.win:update_title(" Notifications ")
             self.win:update_scrollbar()
+        end
+
+        -- Disable line numbering and word wrap
+        function previewer:gen_winopts()
+            local new_winopts = {
+                cursorline = false,
+                number = false,
+                wrap = false,
+            }
+
+            return vim.tbl_extend("force", self.winopts, new_winopts)
         end
 
         return previewer
@@ -183,10 +187,12 @@ M.notifications = function()
         previewer = M.previewer(notifications),
         actions = {
             ["default"] = function(selected)
-                local id = tonumber(selected[1]:match("^%d+"))
-                local entry = id_mapping[id]
+                local id = strip(selected[1])
+                local entry = mapping[id]
 
-                vim.fn.setreg("+", table.concat(entry.message, "\n"))
+                if entry ~= nil then
+                    vim.fn.setreg("+", entry.msg)
+                end
             end,
         },
     })
