@@ -615,14 +615,13 @@ return {
         priority = 900,
     },
     { "b0o/schemastore.nvim", version = false },
-    { "Bilal2453/luvit-meta" },
     {
         "folke/lazydev.nvim",
         cmd = "LazyDev",
         ft = "lua",
         opts = {
             library = {
-                { path = "luvit-meta/library", words = { "vim%.uv" } },
+                { path = "${3rd}/luv/library", words = { "vim%.uv" } },
                 { path = "lazy.nvim", words = { "LazyVim" } },
                 { path = "snacks.nvim", words = { "Snacks" } },
             },
