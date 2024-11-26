@@ -37,7 +37,7 @@ return {
             ---@param client vim.lsp.Client
             ---@param buffer number
             lsp.on_supports_method(methods.textDocument_documentHighlight, function(client, buffer)
-                local group = ("%s/highlight/%s"):format(client.name, buffer)
+                local group = string.format("%s/highlight/%s", client.name, buffer)
                 local id = ev.group(group)
 
                 ev.on({ ev.CursorHold, ev.CursorHoldI, ev.InsertLeave }, function()
@@ -127,18 +127,17 @@ return {
             end, { desc = "Show LSP Capabilities" })
 
             vim.api.nvim_create_user_command("LspCodeActions", function()
+                --
                 local bufnr = vim.api.nvim_get_current_buf()
+                local lines = {}
 
-                local params = vim.lsp.util.make_range_params()
-                params.context = { diagnostics = vim.lsp.diagnostic.get_line_diagnostics() }
+                for _, client in ipairs(vim.lsp.get_clients({ bufnr = bufnr, method = methods.textDocument_codeAction })) do
+                    local name = client and client.name or ""
 
-                vim.lsp.buf_request_all(bufnr, methods.textDocument_codeAction, params, function(results)
-                    local lines = {}
+                    local params = vim.lsp.util.make_range_params(0, client.offset_encoding)
+                    params.context = { diagnostics = vim.lsp.diagnostic.get_line_diagnostics() } ---@diagnostic disable-line: inject-field
 
-                    for client_id, result in pairs(results) do
-                        local client = vim.lsp.get_client_by_id(client_id)
-                        local name = client and client.name or ""
-
+                    client:request(methods.textDocument_codeAction, params, function(_, result)
                         if not vim.tbl_contains(defaults.ignored.lsp, name) and result.result then
                             --
                             table.insert(lines, name .. " Code Actions:")
@@ -155,14 +154,14 @@ return {
                                 end
                             end
                         end
-                    end
+                    end, bufnr)
+                end
 
-                    if #lines == 0 then
-                        table.insert(lines, "No code actions available")
-                    end
+                if #lines == 0 then
+                    table.insert(lines, "No code actions available")
+                end
 
-                    vim.ui.float({ ft = "lua" }, lines):show()
-                end)
+                vim.ui.float({ ft = "lua" }, lines):show()
             end, { desc = "Show LSP Code Actions" })
 
             vim.api.nvim_create_user_command("LspLogClear", function()
@@ -538,7 +537,11 @@ return {
 
                                 client:request(
                                     "taplo/associatedSchema",
-                                    vim.tbl_extend("force", vim.lsp.util.make_position_params(), { documentUri = vim.uri_from_bufnr(bufnr) }),
+                                    vim.tbl_extend(
+                                        "force",
+                                        vim.lsp.util.make_position_params(0, client.offset_encoding),
+                                        { documentUri = vim.uri_from_bufnr(bufnr) }
+                                    ),
                                     function(_, result)
                                         vim.ui.float({ ft = "toml" }, vim.split(result, "\n")):show()
                                     end,

@@ -197,7 +197,7 @@ end
 function M.on_attach(on_attach)
     --
     ev.on(ev.LspAttach, function(args)
-        local buffer = args.buf ---@type number
+        local buffer = args.buf ---@type integer
         local client = vim.lsp.get_client_by_id(args.data.client_id)
 
         if client and not M.should_ignore(client) then
