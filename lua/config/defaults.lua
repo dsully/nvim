@@ -108,12 +108,12 @@ local M = {
             close_round = "󰅙 ",
         },
         diagnostics = {
-            error = "󰅚 ",
-            warn = "󰀪 ",
-            info = " ",
-            hint = "󰌶 ",
-            debug = " ",
-            trace = " ",
+            error = "󰅚",
+            warn = "󰀪",
+            info = "",
+            hint = "󰌶",
+            debug = "",
+            trace = "",
         },
         fold = {
             open = " ",

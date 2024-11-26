@@ -259,24 +259,19 @@ return {
                 { SnacksNormal = { link = "Normal" } },
                 { SnacksBackdrop = { link = "Normal" } },
 
-                { SnacksNotifierTrace = { fg = colors.gray.base } },
-                { SnacksNotifierIconTrace = { link = "SnacksNotifierTrace" } },
+                { SnacksNotifierIconTrace = { fg = colors.gray.base } },
                 { SnacksNotifierBorderTrace = { fg = colors.white.bright } },
 
-                { SnacksNotifierDebug = { fg = colors.white.base } },
-                { SnacksNotifierIconDebug = { link = "SnacksNotifierDebug" } },
+                { SnacksNotifierIconDebug = { fg = colors.white.base } },
                 { SnacksNotifierBorderDebug = { fg = colors.white.bright } },
 
-                { SnacksNotifierInfo = { fg = colors.cyan.base } },
-                { SnacksNotifierIconInfo = { link = "SnacksNotifierInfo" } },
+                { SnacksNotifierIconInfo = { fg = colors.cyan.base } },
                 { SnacksNotifierBorderInfo = { fg = colors.white.bright } },
 
-                { SnacksNotifierWarn = { fg = colors.yellow.base } },
-                { SnacksNotifierIconWarn = { link = "SnacksNotifierWarn" } },
+                { SnacksNotifierIconWarn = { fg = colors.yellow.base } },
                 { SnacksNotifierBorderWarn = { fg = colors.white.bright } },
 
-                { SnacksNotifierError = { fg = colors.red.base } },
-                { SnacksNotifierIconError = { link = "SnacksNotifierError" } },
+                { SnacksNotifierIconError = { fg = colors.red.base } },
                 { SnacksNotifierBorderError = { fg = colors.white.bright } },
             })
         end,
