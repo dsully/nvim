@@ -79,18 +79,6 @@ return {
         },
     },
     {
-        "linrongbin16/gitlinker.nvim",
-        cmd = "GitLink",
-        -- stylua: ignore
-        keys = {
-            { "<leader>gC", vim.cmd.GitLink, desc = "Copy Git URL", mode = { "n", "x" } },
-            { "<leader>go", function() vim.cmd.GitLink({ bang = true }) end, desc = "Open Git URL", mode = { "n", "x" } },
-        },
-        opts = {
-            message = false,
-        },
-    },
-    {
         "aspeddro/gitui.nvim",
         -- stylua: ignore
         keys = { { "<space>G", function() require("gitui").open() end, desc = "Git UI" } },

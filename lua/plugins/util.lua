@@ -138,7 +138,7 @@ return {
         config = function()
             require("profile").instrument_autocmds()
 
-            if os.getenv("NVIM_PROFILE"):lower():match("^start") then
+            if vim.env.NVIM_PROFILE:lower():match("^start") then
                 require("profile").start("*")
             else
                 require("profile").instrument("*")
@@ -219,11 +219,15 @@ return {
         -- stylua: ignore
         keys = {
             ---@diagnostic disable-next-line: param-type-mismatch
-            { "<leader>nd", function() require("snacks").notifier:hide() end, desc = "Notification: Dismiss" },
-            { "]]", function() require("snacks").words.jump(vim.v.count1) end, desc = "snacks: goto next reference" },
-            { "[[", function() require("snacks").words.jump(-vim.v.count1) end, desc = "snacks: goto prev reference" },
+            { "<leader>nd", function() Snacks.notifier:hide() end, desc = "Notification: Dismiss" },
+            { "]]", function() Snacks.words.jump(vim.v.count1) end, desc = "snacks: goto next reference" },
+            { "[[", function() Snacks.words.jump(-vim.v.count1) end, desc = "snacks: goto prev reference" },
 
-            { [[<C-\>]], function() require("snacks").terminal.toggle(vim.env.SHELL) end, mode = { "n", "t" }, desc = "Terminal" },
+            { [[<C-\>]], function() Snacks.terminal.toggle(vim.env.SHELL) end, mode = { "n", "t" }, desc = "Terminal" },
+
+            -- Git helpers.
+            { "<leader>gC", function() Snacks.gitbrowse.open({ open = clip }) end, desc = "Copy Git URL" },
+            { "<leader>go", function() Snacks.gitbrowse.open() end, desc = "Open Git URL" },
         },
         init = function()
             vim.api.nvim_create_autocmd("User", {
