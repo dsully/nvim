@@ -479,7 +479,9 @@ return {
                             { find = "Found a swap file by the name" },
                             { find = "An error happened while handling a ui event" }, -- Coming from noice.
                             { find = "multiple different client offset_encodings detected" },
+                            { find = "offset_encoding is required" },
                             { find = "No information available", event = "notify" },
+                            { find = "Opening ", event = "notify" }, -- Snacks git browse
 
                             -- Semantic Tokens failure in the neovim runtime.
                             { find = "index out of range" },
