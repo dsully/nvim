@@ -555,20 +555,53 @@ return {
         --
         -- vim.keymap.set({ "n", "x" }, "s", "<Nop>")
         "echasnovski/mini.surround",
-        optional = true,
+        -- stylua: ignore
+        init = function()
+            keys.xmap('"', function() keys.feed('ma"', "t") end, "Surround Add Double Quote")
+            keys.xmap("[", function() keys.feed("ma[<left>", "t") vim.schedule(function() keys.feed("%", "m") end) end, "Surround Add Square Bracket")
+            keys.xmap("{", function() keys.feed("ma{<left>", "t") vim.schedule(function() keys.feed("%", "m") end) end, "Surround Add Curly Bracket")
+            keys.xmap("(", function() keys.feed("ma(<left>", "t") vim.schedule(function() keys.feed("%", "m") end) end, "Surround Add Parenthesis")
+            keys.xmap("`", function() keys.feed("ma`", "t") end, "Surround Add Backtick")
+
+            vim.defer_fn(function() keys.xmap("<", function() keys.feed("ma<", "t") end, "Surround Add Angle Bracket") end, 2000)
+
+            keys.map("of", function() keys.feed("<esc>m6", "n") keys.feed("daf", "m") keys.feed("`6", "n") end, "Surround Delete Function Call", "o")
+        end,
+        keys = function(plugin, keys)
+            local opts = require("lazy.core.plugin").values(plugin, "opts", false)
+
+            local mappings = {
+                { opts.mappings.add, desc = "Add surrounding", mode = { "n", "x" } },
+                { opts.mappings.delete, desc = "Delete surrounding" },
+                { opts.mappings.find, desc = "Find right surrounding" },
+                { opts.mappings.find_left, desc = "Find left surrounding" },
+                { opts.mappings.replace, desc = "Replace surrounding" },
+                { opts.mappings.update_n_lines, desc = "Update `MiniSurround.config.n_lines`" },
+            }
+
+            return vim.tbl_deep_extend("keep", mappings, keys)
+        end,
+        lazy = false,
         opts = {
-            mappings = {
-                add = "gza", -- Add surrounding in Normal and Visual modes
-                delete = "gzd", -- Delete surrounding
-                find = "gzf", -- Find surrounding (to the right)
-                find_left = "gzF", -- Find surrounding (to the left)
-                highlight = "gzh", -- Highlight surrounding
-                replace = "gzr", -- Replace surrounding
-                update_n_lines = "gzn", -- Update `n_lines`
+            custom_surroundings = {
+                -- ["("] = { input = { "%b()", "^.().*().$" }, output = { left = "(", right = ")" } },
+                ["["] = { input = { "%b[]", "^.().*().$" }, output = { left = "[", right = "]" } },
+                ["{"] = { input = { "%b{}", "^.().*().$" }, output = { left = "{", right = "}" } },
+                ["<"] = { input = { "%b<>", "^.().*().$" }, output = { left = "<", right = ">" } },
+
+                -- https://www.reddit.com/r/neovim/comments/1g14g6l/minisurround_puts_space_when_adding_surrounding/
+                ["("] = { output = { left = "(", right = ")" } },
+                [")"] = { output = { left = "( ", right = " )" } },
             },
-        },
-        keys = {
-            { "gz", "", desc = "+surround" },
+            mappings = {
+                add = "<leader>sa", -- Add surrounding in Normal and Visual modes
+                delete = "<leader>sd", -- Delete surrounding
+                find = "<leader>sf", -- Find surrounding (to the right)
+                find_left = "<leader>sF", -- Find surrounding (to the left)
+                highlight = "<leader>sh", -- Highlight surrounding
+                replace = "<leader>sr", -- Replace surrounding
+                update_n_lines = "<leader>sn", -- Update `n_lines`
+            },
         },
     },
     {
