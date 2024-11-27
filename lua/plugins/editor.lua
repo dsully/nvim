@@ -392,10 +392,11 @@ return {
         cmd = "GrugFar",
         keys = {
             {
-                "<leader>cr",
+                "<leader>s/",
                 function()
                     local grug = require("grug-far")
                     local ext = vim.bo.buftype == "" and vim.fn.expand("%:e")
+
                     grug.open({
                         transient = true,
                         prefills = {
