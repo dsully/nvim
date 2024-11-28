@@ -3,7 +3,7 @@ vim.api.nvim_set_hl(0, "@function.call.ruby", { link = "Keyword" })
 vim.api.nvim_set_hl(0, "@symbol.ruby", { link = "Special" })
 
 ev.on(ev.BufWritePre, function(args)
-    if args.file == "Brewfile.tmpl" then
+    if args.file:match("Brewfile.tmpl") then
         return
     end
 

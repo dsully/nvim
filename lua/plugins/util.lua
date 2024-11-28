@@ -95,10 +95,14 @@ return {
         },
         init = function()
             -- Watch chezmoi files for changes in the source-path, and apply them.
-            ev.on(ev.BufWritePost, function()
+            ev.on(ev.BufWritePost, function(args)
+                if args.file and args.file:match(".tmpl") then
+                    return
+                end
+
                 vim.schedule(require("chezmoi.commands.__edit").watch)
             end, {
-                pattern = { vim.env.XDG_DATA_HOME .. "/chezmoi/*" },
+                pattern = { vim.env.XDG_DATA_HOME .. "/chezmoi/home/*" },
             })
 
             -- Watch chezmoi files for changes in the target-path, and add them.
