@@ -174,7 +174,7 @@ M.notifications = function()
             local new_winopts = {
                 cursorline = false,
                 number = false,
-                wrap = false,
+                wrap = true,
             }
 
             return vim.tbl_extend("force", self.winopts, new_winopts)
