@@ -92,19 +92,34 @@ return {
         },
         --- @type blink.cmp.Config
         opts = {
-            accept = {
-                auto_brackets = {
-                    enabled = true,
-                },
+            appearance = {
+                kind_icons = defaults.icons.lsp,
+                nerd_font_variant = "mono",
             },
-            ghost_text = {
-                enabled = false,
+            completion = {
+                accept = {
+                    auto_brackets = {
+                        enabled = true,
+                    },
+                },
+                documentation = {
+                    window = {
+                        border = defaults.ui.border.name,
+                    },
+                },
+                ghost_text = {
+                    enabled = false,
+                },
+
+                list = {
+                    selection = "manual",
+                },
             },
             keymap = {
                 preset = "enter",
                 ["<Tab>"] = {
                     function(cmp)
-                        return cmp.is_in_snippet() and cmp.snippet_forward() or cmp.select_next()
+                        return cmp.snippet_active() and cmp.snippet_forward() or cmp.select_next()
                     end,
                     "fallback",
                 },
@@ -112,8 +127,6 @@ return {
                 ["<C-j>"] = { "select_next", "fallback" },
                 ["<C-k>"] = { "select_prev", "fallback" },
             },
-            kind_icons = defaults.icons.lsp,
-            nerd_font_variant = "mono",
             sources = {
                 completion = {
                     enabled_providers = { "lsp", "path", "snippets", "lazydev" },
@@ -153,7 +166,6 @@ return {
             },
             windows = {
                 autocomplete = {
-                    cycle = { from_top = false }, -- cycle at bottom, but not at the top
                     -- draw = {
                     --     padding = 1,
                     --     gap = 1,
@@ -259,9 +271,6 @@ return {
                     --     }
                     -- end,
                     selection = "manual",
-                },
-                documentation = {
-                    border = defaults.ui.border.name,
                 },
             },
         },

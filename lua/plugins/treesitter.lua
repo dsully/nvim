@@ -51,7 +51,7 @@ return {
             { "<leader>i", vim.show_pos, desc = "Inspect Position" },
         },
         opts = {
-            ensure_installed = {},
+            ensure_installed = defaults.treesitter.install,
             highlight = {
                 enable = true,
             },

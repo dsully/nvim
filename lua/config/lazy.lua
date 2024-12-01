@@ -160,6 +160,7 @@ function M.setup()
             require = false,
         },
         rocks = {
+            -- On Linux, libncurses-dev and libreadline-dev need to be installed for hererocks to build.
             hererocks = true,
         },
         ui = {
