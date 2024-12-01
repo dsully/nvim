@@ -165,7 +165,6 @@ return {
             local statusline = bar("statusline")
 
             local icons = defaults.icons
-            local devicons = require("mini.icons")
 
             local word_filetypes = {
                 markdown = true,
@@ -235,6 +234,8 @@ return {
 
             local filetype_icon = item({
                 content = function()
+                    local devicons = require("mini.icons")
+
                     ---@type string?, string?
                     local icon, icon_hl = devicons.get("file", vim.api.nvim_buf_get_name(0))
 
@@ -262,7 +263,10 @@ return {
                 content = function()
                     return vim.bo.filetype
                 end,
-                hl = { bg = colors.black.base, fg = colors.white.base },
+                hl = {
+                    bg = colors.black.base,
+                    fg = colors.white.base,
+                },
                 suffix = " ",
                 sep_right = sep.right_lower_triangle_solid(true),
             })
@@ -275,7 +279,10 @@ return {
                 hidden = function()
                     return vim.bo.filetype == ""
                 end,
-                hl = { bg = colors.black.base, fg = colors.white.base },
+                hl = {
+                    bg = colors.black.base,
+                    fg = colors.white.base,
+                },
             })
 
             local git_status = require("nougat.nut.git.branch").create({
@@ -283,7 +290,10 @@ return {
                 hidden = function()
                     return not vim.g.gitsigns_head
                 end,
-                hl = { bg = colors.black.base, fg = colors.white.base },
+                hl = {
+                    bg = colors.black.base,
+                    fg = colors.white.base,
+                },
                 prefix = "  ",
                 sep_left = sep.left_lower_triangle_solid(true),
                 suffix = " ",
@@ -330,14 +340,20 @@ return {
                 hidden = function(_, ctx)
                     return not word_filetypes[vim.api.nvim_get_option_value("filetype", { buf = ctx.bufnr })]
                 end,
-                hl = { bg = colors.black.base, fg = colors.white.base },
+                hl = {
+                    bg = colors.black.base,
+                    fg = colors.white.base,
+                },
                 sep_left = sep.left_lower_triangle_solid(true),
                 prefix = " ",
                 suffix = " ",
             })
 
             local counts = item({
-                hl = { bg = colors.black.base, fg = colors.white.base },
+                hl = {
+                    bg = colors.black.base,
+                    fg = colors.white.base,
+                },
                 prefix = " ",
                 sep_left = sep.left_lower_triangle_solid(true),
                 content = table.concat({
