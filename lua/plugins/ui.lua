@@ -173,17 +173,21 @@ return {
                 vimwiki = true,
             }
 
-            local highlight = {
-                inactive = {},
+            local base_style = {
+                bg = colors.cyan.base,
+                fg = colors.black.base,
+                bold = true,
             }
 
-            for _, kind in pairs({ "normal", "visual", "insert", "replace", "commandline", "terminal" }) do
-                highlight[kind] = {
-                    bg = colors.cyan.base,
-                    fg = colors.black.base,
-                    bold = true,
-                }
-            end
+            local highlight = {
+                inactive = {},
+                normal = base_style,
+                visual = base_style,
+                insert = base_style,
+                replace = base_style,
+                commandline = base_style,
+                terminal = base_style,
+            }
 
             local mode = require("nougat.nut.mode").create({
                 prefix = " ",
@@ -203,13 +207,13 @@ return {
                 end
             end
 
-            local white_right_lower_triangle = paired_sep({
+            local white_right_triangle = paired_sep({
                 content = "",
                 hl = { bg = colors.white.base },
                 sep_right = sep.right_lower_triangle_solid(true),
             })
 
-            local white_left_lower_triangle = paired_sep({
+            local white_left_triangle = paired_sep({
                 hl = { bg = colors.white.base },
                 sep_left = sep.left_lower_triangle_solid(true),
                 stuffix = " ",
@@ -268,7 +272,9 @@ return {
                     filetype_icon,
                     filetype_name,
                 },
-                hidden = vim.bo.filetype == nil,
+                hidden = function()
+                    return vim.bo.filetype == ""
+                end,
                 hl = { bg = colors.black.base, fg = colors.white.base },
             })
 
@@ -285,6 +291,10 @@ return {
 
             local hl_search = item({
                 content = function()
+                    if not package.loaded["noice"] then
+                        return ""
+                    end
+
                     ---@diagnostic disable-next-line: undefined-field
                     local text = require("noice").api.status.search.get()
                     local query = vim.F.if_nil(text:match("%/(.-)%s"), text:match("%?(.-)%s"))
@@ -343,49 +353,35 @@ return {
                 }),
             })
 
-            -- MODE
-            statusline:add_item(mode)
+            local items = {
+                { mode },
+                { white_right_triangle(filetype), filetype },
+                { white_right_triangle(diagnostics), diagnostics },
+                { white_right_triangle(hl_search), hl_search },
+                { white_right_triangle(navic), navic },
+                { require("nougat.nut.spacer").create() },
+                { require("nougat.nut.truncation_point").create() },
+                { white_left_triangle(git_status), git_status },
+                { white_left_triangle(wordcount), wordcount },
+                { white_left_triangle(counts), counts },
+            }
 
-            statusline:add_item(white_right_lower_triangle(filetype))
-            statusline:add_item(filetype)
+            for _, item_pair in ipairs(items) do
+                for _, component in ipairs(item_pair) do
+                    statusline:add_item(component)
+                end
+            end
 
-            statusline:add_item(white_right_lower_triangle(diagnostics))
-            statusline:add_item(diagnostics)
-
-            statusline:add_item(white_right_lower_triangle(hl_search))
-            statusline:add_item(hl_search)
-
-            statusline:add_item(white_right_lower_triangle(navic))
-            statusline:add_item(navic)
-
-            -----------------------------------------------
-            statusline:add_item(require("nougat.nut.spacer").create())
-            statusline:add_item(require("nougat.nut.truncation_point").create())
-            -----------------------------------------------
-
-            statusline:add_item(white_left_lower_triangle(git_status))
-            statusline:add_item(git_status)
-
-            statusline:add_item(white_left_lower_triangle(wordcount))
-            statusline:add_item(wordcount)
-
-            statusline:add_item(white_left_lower_triangle(counts))
-            statusline:add_item(counts)
-
-            local stl_inactive = bar("statusline")
-
-            stl_inactive:add_item(mode)
-            stl_inactive:add_item(require("nougat.nut.spacer").create())
-
-            require("nougat").set_statusline(function(ctx)
-                return ctx.is_focused and statusline or stl_inactive
-            end)
+            require("nougat").set_statusline(statusline)
         end,
         event = ev.LazyFile,
         init = function()
             if vim.fn.argc(-1) > 0 then
                 -- Set an empty statusline until nougat loads
                 vim.o.statusline = " "
+            else
+                -- Hide the statusline on the starter page
+                vim.o.laststatus = 0
             end
         end,
     },
