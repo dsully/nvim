@@ -137,37 +137,6 @@ return {
         opts = {},
     },
     {
-        "stevearc/profile.nvim",
-        cond = vim.env.NVIM_PROFILE or false,
-        config = function()
-            require("profile").instrument_autocmds()
-
-            if vim.env.NVIM_PROFILE:lower():match("^start") then
-                require("profile").start("*")
-            else
-                require("profile").instrument("*")
-            end
-
-            vim.keymap.set("", "<c-p>", function()
-                local prof = require("profile")
-                if prof.is_recording() then
-                    prof.stop()
-
-                    vim.ui.input({ prompt = "Save profile to:", completion = "file", default = "profile.json" }, function(filename)
-                        if filename then
-                            prof.export(filename)
-                            notify.info("Wrote profile to: " .. filename)
-                        end
-                    end)
-                else
-                    prof.start("*")
-                end
-            end)
-        end,
-        lazy = false,
-        priority = 999,
-    },
-    {
         "folke/snacks.nvim",
         config = function(_, opts)
             local notify = vim.notify
@@ -232,6 +201,8 @@ return {
             -- Git helpers.
             { "<leader>gC", function() Snacks.gitbrowse.open({ open = clip }) end, desc = "Copy Git URL" },
             { "<leader>go", function() Snacks.gitbrowse.open() end, desc = "Open Git URL" },
+
+            { "<leader>pS", function() Snacks.profiler.scratch() end, desc = "Profiler Scratch Buffer" },
         },
         init = function()
             vim.api.nvim_create_autocmd("User", {
@@ -256,6 +227,9 @@ return {
                     snacks.toggle.treesitter():map("<space>tt")
                     snacks.toggle.option("spell", { name = "Spelling" }):map("<space>ts")
                     snacks.toggle.option("wrap", { name = "Wrap" }):map("<space>tw")
+
+                    snacks.toggle.profiler():map("<leader>pP")
+                    snacks.toggle.profiler_highlights():map("<leader>pH")
                 end,
             })
 
