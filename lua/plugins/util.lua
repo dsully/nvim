@@ -141,7 +141,7 @@ return {
         config = function(_, opts)
             local notify = vim.notify
             require("snacks").setup(opts)
-            -- HACK: restore vim.notify after snacks setup and let noice.nvim take over
+            -- Restore vim.notify after snacks setup and let noice.nvim take over
             -- this is needed to have early notifications show up in noice history
             vim.notify = notify
         end,
@@ -150,6 +150,9 @@ return {
         ---@type snacks.Config
         opts = {
             bigfile = { enabled = true },
+            gitbrowse = {
+                notify = false,
+            },
             notifier = {
                 enabled = true,
                 timeout = 3000,
@@ -202,6 +205,7 @@ return {
             { "<leader>gC", function() Snacks.gitbrowse.open({ open = clip }) end, desc = "Copy Git URL" },
             { "<leader>go", function() Snacks.gitbrowse.open() end, desc = "Open Git URL" },
 
+            -- Profiler
             { "<leader>pS", function() Snacks.profiler.scratch() end, desc = "Profiler Scratch Buffer" },
         },
         init = function()
