@@ -11,7 +11,7 @@ return {
                 -- stylua: ignore
                 map("<leader>" .. i, function() mappings.by_index('focus', i) end, "which_key_ignore")
 
-                -- Allow Option-N in Wezterm.
+                -- Allow Option-N in terminals.
                 -- stylua: ignore
                 map(string.format("<M-%d>", i), function() mappings.by_index("focus", i) end, "which_key_ignore")
             end
@@ -493,7 +493,6 @@ return {
                             { find = "multiple different client offset_encodings detected" },
                             { find = "offset_encoding is required" },
                             { find = "No information available", event = "notify" },
-                            { find = "Opening ", event = "notify" }, -- Snacks git browse
 
                             -- Semantic Tokens failure in the neovim runtime.
                             { find = "index out of range" },
@@ -760,6 +759,7 @@ return {
                 ev.on(ev.User, require("lazy").show, {
                     desc = "Close Lazy UI on dashboard load.",
                     pattern = "AlphaReady",
+                    once = true,
                 })
             end
 
