@@ -206,8 +206,10 @@ return {
             { [[<C-\>]], function() Snacks.terminal.toggle(vim.env.SHELL) end, mode = { "n", "t" }, desc = "Terminal" },
 
             -- Git helpers.
-            { "<leader>gC", function() Snacks.gitbrowse.open({ open = clip }) end, desc = "Copy Git URL" },
             { "<leader>go", function() Snacks.gitbrowse.open() end, desc = "Open Git URL" },
+            { "<leader>gC", function()
+                Snacks.gitbrowse({ open = function(url) vim.fn.setreg("+", url) end, notify = false })
+            end, desc = "Copy Git URL" },
 
             -- Profiler
             { "<leader>pS", function() Snacks.profiler.scratch() end, desc = "Profiler Scratch Buffer" },
