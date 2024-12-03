@@ -11,11 +11,6 @@ _G.ns = function(name)
     return vim.api.nvim_create_namespace("dsully/" .. name)
 end
 
---- Add a string to the clipboard.
-_G.clip = function(s)
-    vim.fn.setreg("+", s)
-end
-
 --- Create a floating window using snacks.win
 ---@param options snacks.win.Config
 ---@param lines string[]

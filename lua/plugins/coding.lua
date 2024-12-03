@@ -110,9 +110,11 @@ return {
                 ghost_text = {
                     enabled = false,
                 },
-
                 list = {
                     selection = "manual",
+                },
+                menu = {
+                    draw = { treesitter = true },
                 },
             },
             keymap = {
