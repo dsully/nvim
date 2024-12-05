@@ -59,45 +59,8 @@ return {
 
     { "jghauser/follow-md-links.nvim", ft = "markdown" },
     {
-        "MeanderingProgrammer/render-markdown.nvim",
+        "OXY2DEV/markview.nvim",
         ft = { "markdown", "vimwiki" },
-        init = function()
-            hl.apply({
-                { RenderMarkdownChecked = { fg = colors.green.base } },
-                { RenderMarkdownTodo = { fg = colors.blue.base } },
-                { RenderMarkdownPending = { fg = colors.blue.base } },
-
-                { RenderMarkdownH1 = { fg = colors.white.base, bg = colors.blue.bright } },
-                { RenderMarkdownH2 = { fg = colors.white.base, bg = colors.green.dim } },
-                { RenderMarkdownH3 = { fg = colors.white.base, bg = colors.red.base } },
-                { RenderMarkdownH4 = { fg = colors.white.base, bg = colors.magenta.dim } },
-                { RenderMarkdownH5 = { fg = colors.white.base, bg = colors.yellow.dim } },
-                { RenderMarkdownH6 = { fg = colors.white.base, bg = colors.cyan.dim } },
-
-                { RenderMarkdownH1Bg = { link = "RenderMarkdownH1" } },
-                { RenderMarkdownH2Bg = { link = "RenderMarkdownH2" } },
-                { RenderMarkdownH3Bg = { link = "RenderMarkdownH3" } },
-                { RenderMarkdownH4Bg = { link = "RenderMarkdownH4" } },
-                { RenderMarkdownH5Bg = { link = "RenderMarkdownH5" } },
-            })
-
-            require("snacks")
-                .toggle({
-                    name = "Markdown",
-                    get = function()
-                        return require("render-markdown.state").enabled
-                    end,
-                    set = function(enabled)
-                        local m = require("render-markdown")
-                        if enabled then
-                            m.enable()
-                        else
-                            m.disable()
-                        end
-                    end,
-                })
-                :map("<leader>tm")
-        end,
         keys = {
             {
                 "<space>tc",
@@ -118,21 +81,42 @@ return {
                 { noremap = true, silent = true },
             },
         },
-        ---@type render.md.UserConfig
-        opts = {
-            code = {
-                sign = false,
-                width = "block",
-                right_pad = 1,
-            },
-            file_types = {
-                "markdown",
-                "vimwiki",
-            },
-            heading = {
-                sign = false,
-            },
-        },
+        opts = function()
+            require("snacks")
+                .toggle({
+                    name = "Markdown",
+                    get = function()
+                        return require("markview").state.enable
+                    end,
+                    set = function()
+                        vim.cmd.Markview("toggleAll")
+                    end,
+                })
+                :map("<space>tm")
+
+            local presets = require("markview.presets")
+
+            return {
+                buf_ignore = defaults.ignored.buffer_types,
+                checkboxes = presets.checkboxes.nerd,
+                code_blocks = {
+                    icons = "mini",
+                },
+                headings = presets.headings.glow,
+                horizontal_rules = presets.horizontal_rules.thick,
+                hybrid_modes = { "n" },
+                tables = {
+                    --stylua: ignore
+                    text = {
+                        top       = { "┌", "─", "┐", "┬" },
+                        header    = { "│", "│", "│" },
+                        separator = { "├", "┼", "┤", "─" },
+                        row       = { "│", "│", "│" },
+                        bottom    = { "└", "─", "┘", "┴" },
+                    },
+                },
+            }
+        end,
     },
     {
         "mrcjkb/rustaceanvim",
