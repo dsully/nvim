@@ -3,84 +3,6 @@ local pick = pickers.pick
 
 return {
     {
-        -- For whatever reason I can't get the native fzf vim.ui.select() replacement to work with codecompanion.
-        -- The window is created and then immediately closed.
-        "stevearc/dressing.nvim",
-        init = function()
-            ---@diagnostic disable-next-line: duplicate-set-field
-            vim.ui.select = function(items, opts, on_choice)
-                if not package.loaded["dressing.nvim"] then
-                    require("lazy").load({ plugins = { "dressing.nvim" } })
-                end
-
-                -- Don't show the picker if there's nothing to pick.
-                if #items > 0 then
-                    return vim.ui.select(items, opts, on_choice)
-                end
-            end
-        end,
-        opts = {
-            -- Noice handles input.
-            input = {
-                enabled = false,
-            },
-            select = {
-                enabled = true,
-                trim_prompt = true,
-                get_config = function(opts, items)
-                    --
-                    local winopts = {
-                        title = " " .. vim.trim((opts.prompt or "Select"):gsub("%s*:%s*$", "")) .. " ",
-
-                        -- height is number of items, with a max of 80% screen height
-                        height = math.floor(math.min(vim.o.lines * 0.8, #items + 2) + 0.5) + 1,
-                        width = 0.7,
-                    }
-
-                    if opts.kind == "codeaction" then
-                        winopts = vim.tbl_deep_extend("force", winopts, {
-                            -- height is number of items minus 18 lines for the preview, with a max of 80% screen height
-                            height = math.floor(math.min(vim.o.lines * 0.8 - 18, #items + 2) + 0.5) + 18,
-                            preview = {
-                                layout = "vertical",
-                                vertical = "down:15,border-top",
-                            },
-                        })
-                    end
-
-                    if opts.kind ~= "codeaction" or opts.kind ~= "codecompanion.nvim" then
-                        -- Auto-width
-                        local min_w, max_w = 0.05, 0.80
-                        local longest = 0
-
-                        for _, e in ipairs(items) do
-                            -- Format the item or convert it to a string
-                            local format_entry = opts.format_item and opts.format_item(e) or tostring(e)
-                            local length = #format_entry
-
-                            if length > longest then
-                                longest = length
-                            end
-                        end
-
-                        -- Needs minimum 7 in my case due to the extra stuff fzf adds on the left side (markers, numbers, extra padding, etc).
-                        local w = math.min(math.max((longest + 9) / vim.o.columns, min_w), max_w)
-
-                        winopts = vim.tbl_deep_extend("force", winopts, { winopts = { width = w } })
-                    end
-
-                    return {
-                        backend = "fzf_lua",
-                        fzf_lua = vim.tbl_deep_extend("force", opts, {
-                            prompt = " ",
-                            winopts = winopts,
-                        }),
-                    }
-                end,
-            },
-        },
-    },
-    {
         "ibhagwan/fzf-lua",
         cmd = "FzfLua",
         keys = {
@@ -159,7 +81,57 @@ return {
                 return t
             end
 
+            -- Lazy load nvim-treesitter or help files err with: Query error at 2:4. Invalid node type "delimiter"
+            -- This is due to fzf-lua calling `vim.treesitter.language.add` before nvim-treesitter is loaded
+            pcall(require, "nvim-treesitter")
+
             fzf.setup(vim.tbl_deep_extend("force", add_prompt(require("fzf-lua.profiles.default-title")), opts))
+
+            -- register fzf-lua as vim.ui.select interface
+            fzf.register_ui_select(function(o, items)
+                --
+                local winopts = {
+                    title = " " .. vim.trim((o.prompt or "Select"):gsub("%s*:%s*$", "")) .. " ",
+
+                    -- height is number of items, with a max of 80% screen height
+                    height = math.floor(math.min(vim.o.lines * 0.8, #items + 2) + 0.5) + 1,
+                    width = 0.7,
+                }
+
+                if o.kind == "codeaction" then
+                    winopts = vim.tbl_deep_extend("force", winopts, {
+                        -- height is number of items minus 18 lines for the preview, with a max of 80% screen height
+                        height = math.floor(math.min(vim.o.lines * 0.8 - 18, #items + 2) + 0.5) + 18,
+                        preview = {
+                            layout = "vertical",
+                            vertical = "down:15,border-top",
+                        },
+                    })
+                end
+
+                if o.kind ~= "codeaction" or o.kind ~= "codecompanion.nvim" then
+                    -- Auto-width
+                    local min_w, max_w = 0.05, 0.80
+                    local longest = 0
+
+                    for _, e in ipairs(items) do
+                        -- Format the item or convert it to a string
+                        local format_entry = o.format_item and o.format_item(e) or tostring(e)
+                        local length = #format_entry
+
+                        if length > longest then
+                            longest = length
+                        end
+                    end
+
+                    -- Needs minimum 7 in my case due to the extra stuff fzf adds on the left side (markers, numbers, extra padding, etc).
+                    local w = math.min(math.max((longest + 9) / vim.o.columns, min_w), max_w)
+
+                    winopts = vim.tbl_deep_extend("force", winopts, { winopts = { width = w } })
+                end
+
+                return { winopts = winopts }
+            end)
         end,
         init = function()
             hl.apply({
