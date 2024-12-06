@@ -85,6 +85,9 @@ return {
             -- This is due to fzf-lua calling `vim.treesitter.language.add` before nvim-treesitter is loaded
             pcall(require, "nvim-treesitter")
 
+            -- Require markview.nvim for previewer rendering.
+            pcall(require, "markview")
+
             fzf.setup(vim.tbl_deep_extend("force", add_prompt(require("fzf-lua.profiles.default-title")), opts))
 
             -- register fzf-lua as vim.ui.select interface
