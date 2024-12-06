@@ -240,6 +240,7 @@ return {
                     ["webp"] = "viu",
                 },
             },
+            treesitter = true,
             -- https://github.com/ibhagwan/fzf-lua/issues/775
             winopts = {
                 border = defaults.ui.border.name,
