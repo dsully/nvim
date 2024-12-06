@@ -191,6 +191,11 @@ return {
                     border = defaults.ui.border.name,
                     wo = { wrap = true },
                 },
+                scratch = {
+                    border = defaults.ui.border.name,
+                    height = 0.8,
+                    width = 0.8,
+                },
                 terminal = defaults.ui.float,
                 win = defaults.ui.float,
             },
@@ -213,6 +218,9 @@ return {
 
             -- Profiler
             { "<leader>pS", function() Snacks.profiler.scratch() end, desc = "Profiler Scratch Buffer" },
+
+            -- Scratch
+            { "<leader>.",  function() Snacks.scratch() end, desc = "Toggle Scratch Buffer" },
         },
         init = function()
             vim.api.nvim_create_autocmd("User", {
