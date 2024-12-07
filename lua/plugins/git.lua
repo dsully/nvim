@@ -12,6 +12,18 @@ return {
                     vim.keymap.set(mode or "n", l, r, { buffer = buffer, desc = desc })
                 end
 
+                require("snacks")
+                    .toggle({
+                        name = "Git Signs",
+                        get = function()
+                            return require("gitsigns.config").config.signcolumn
+                        end,
+                        set = function(state)
+                            require("gitsigns").toggle_signs(state)
+                        end,
+                    })
+                    :map("<space>tg")
+
                 -- stylua: ignore start
                 bmap("]h", function()
                     if vim.wo.diff then
