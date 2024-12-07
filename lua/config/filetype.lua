@@ -67,12 +67,13 @@ vim.filetype.add({
     pattern = {
         ["*.dockerignore"] = "gitignore",
         ["*Caddyfile*"] = "caddyfile",
-        [".*/themes?/.*%.theme"] = "fish",
         [".*/.github/workflows/.*%.yaml"] = "yaml.ghaction",
         [".*/.github/workflows/.*%.yml"] = "yaml.ghaction",
+        [".*/themes?/.*%.theme"] = "fish",
         [".*requirements%.in"] = "requirements",
         [".*requirements%.txt"] = "requirements",
         ["Brewfile.*"] = "brewfile",
+        [".*/.config/ghostty/.*"] = "ghostty",
         ["Dockerfile.*"] = function(path)
             if path:find(".dockerignore*$") then
                 return "gitignore"
