@@ -262,10 +262,11 @@ local M = {
 }
 
 ---@alias EventOpts vim.api.keyset.create_autocmd
+---@alias EventCallback string|(fun(args: vim.api.keyset.create_autocmd.callback_args): boolean?)
 ---@alias EmitOpts vim.api.keyset.exec_autocmds
 
 ---@param event string | string[]
----@param callback fun(args: table)|EventOpts
+---@param callback EventCallback
 ---@param opts EventOpts?
 ---@return integer
 M.on = function(event, callback, opts)
