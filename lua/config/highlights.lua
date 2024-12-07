@@ -94,7 +94,10 @@ local M = {
     colors = colors,
 }
 
----@type table<string, table<string, vim.api.keyset.highlight>>
+---@alias HighlightName string
+---@alias Highlight table<string, vim.api.keyset.highlight>>
+
+---@type table<HighlightName, Highlight>
 M.ui = {
     core = {
         Added = { link = "DiffAdd" },
