@@ -13,7 +13,7 @@ ev.on({ ev.BufEnter, ev.FileType }, function(event)
         vim.cmd.close({ mods = { emsg_silent = true, silent = true } })
     end, "Close Buffer", event.buf)
 end, {
-    desc = "Map q to close the buffer.",
+    desc = "Map 'q' to close the buffer.",
     pattern = {
         "checkhealth",
         "grug-far",
@@ -32,7 +32,13 @@ ev.on(ev.FileType, function()
     end, { expr = true, desc = "Remove trailing backslash when joining lines." })
 end, {
     desc = "Keymap for removing backslashes when joining lines.",
-    pattern = { "bash", "fish", "make", "sh", "zsh" },
+    pattern = {
+        "bash",
+        "fish",
+        "make",
+        "sh",
+        "zsh",
+    },
 })
 
 ev.on(ev.FileType, function()
@@ -46,6 +52,7 @@ ev.on(ev.BufReadCmd, function(args)
     vim.cmd.bdelete({ args.buf, bang = true })
     vim.cmd.edit(vim.uri_to_fname(args.file))
 end, {
+    desc = "Allow opening of file:/// URLs as a file.",
     nested = true,
     pattern = "file:///*",
 })
@@ -106,7 +113,13 @@ ev.on(ev.FileType, function()
     end)
 end, {
     desc = "Mark script files with shebangs as executable on write.",
-    pattern = { "bash", "python", "sh", "zsh" },
+    pattern = {
+        "bash",
+        "fish",
+        "python",
+        "sh",
+        "zsh",
+    },
 })
 
 ev.on(ev.BufWritePre, function()
@@ -117,11 +130,7 @@ end, {
 })
 
 ev.on(ev.BufWritePre, function(args)
-    local path = vim.fs.dirname(args.file)
-
-    if path and not vim.uv.fs_stat(path) then
-        vim.uv.fs_mkdir(path, 511)
-    end
+    pcall(vim.uv.fs_mkdir, vim.fs.dirname(args.file), 511)
 end, {
     desc = "Create parent directories before write.",
 })
