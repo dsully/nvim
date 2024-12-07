@@ -31,7 +31,7 @@ function M.safe_set(lhs, rhs, mode, opts)
 
         vim.keymap.set(modes, lhs, rhs, opts)
     else
-        notify.warn("Keymap already exists for " .. lhs .. " in: " .. (vim.fn.execute("map " .. lhs) or "?"))
+        vim.notify("Keymap already exists for " .. lhs .. " in: " .. (vim.fn.execute("map " .. lhs) or "?"), vim.log.levels.WARN)
     end
 end
 
