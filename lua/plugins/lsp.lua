@@ -496,7 +496,7 @@ return {
                         end,
                     },
                     marksman = {},
-                    red_knot = {},
+                    -- red_knot = {},
                     ruff = {
                         commands = {
                             RuffAutofix = {
