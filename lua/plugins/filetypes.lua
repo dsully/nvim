@@ -261,4 +261,12 @@ return {
         lazy = false,
         version = "^5", -- Recommended
     },
+    {
+        "ghostty",
+        cond = function()
+            return vim.fn.executable("ghostty") == 1
+        end,
+        dir = "/Applications/Ghostty.app/Contents/Resources/vim/vimfiles/",
+        lazy = false,
+    },
 }
