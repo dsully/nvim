@@ -14,6 +14,27 @@ map("<leader>Y", "<cmd>%y<cr>", "Yank All Lines")
 -- Set Ctrl-W to delete a word in insert mode
 map("<C-w>", "<C-o>diw", "Delete Word", "i")
 
+map("<C-a>", "gg<S-v>G", "Select All")
+map("<C-c>", "ciw", "Change In Word")
+
+-- Duplicate a line and comment out the first line
+map("yc", "<cmd>norm yygcc<cr>p", "Duplicate line and comment original")
+
+-- Alt + jk to move line up/down
+map("<A-j>", ":m .+1<cr>==", "Move line down")
+map("<A-k>", ":m .-2<cr>==", "Move line up")
+map("<A-j>", "<Esc>:m .+1<cr>==gi", "Move line down (insert mode)", "i")
+map("<A-k>", "<Esc>:m .-2<cr>==gi", "Move line up (insert mode)", "i")
+map("<A-j>", ":m '>+1<cr>gv=gv", "Move block down", "x")
+map("<A-k>", ":m '<-2<cr>gv=gv", "Move block up", "x")
+
+-- Search for ^[<>=] ??
+-- map("<leader>fc", "/<<<<CR>", "[F]ind [C]onflicts")
+map("<leader>mc", "^[<>=]", "[F]ind [C]onflicts")
+map("<leader>gcu", "dd/|||<CR>0v/>>><CR>$x", "[G]it [C]onflict Choose [U]pstream")
+map("<leader>gcb", "0v/|||<CR>$x/====<CR>0v/>>><CR>$x", "[G]it [C]onflict Choose [B]ase")
+map("<leader>gcs", "0v/====<CR>$x/>>><CR>dd", "[G]it [C]onflict Choose [S]tashed")
+
 map("<space>n", function()
     local cwd = vim.uv.cwd()
 
