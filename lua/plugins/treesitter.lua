@@ -162,6 +162,7 @@ return {
 
             return opts
         end,
+        virtual = true,
     },
     {
         -- Build treesitter queries.

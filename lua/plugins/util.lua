@@ -1,6 +1,7 @@
 return {
     { "nvim-lua/plenary.nvim" },
     { "MunifTanjim/nui.nvim" },
+    { "echasnovski/mini.nvim", lazy = false },
     {
         "stevearc/resession.nvim",
         init = function()
