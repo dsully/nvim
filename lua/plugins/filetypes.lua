@@ -1,10 +1,13 @@
 return {
     -- Log file syntax highlighting.
-    { "MTDL9/vim-log-highlighting", ft = "log" },
+    { "fei6409/log-highlight.nvim", event = "BufRead *.log", opts = {} },
 
     -- Caddy
     { "isobit/vim-caddyfile", ft = "caddyfile" },
     { "https://github.com/Samonitari/tree-sitter-caddy", ft = "caddyfile" },
+
+    -- Jinja
+    { "geigerzaehler/tree-sitter-jinja2", lazy = false },
 
     -- Better vim help.
     {
