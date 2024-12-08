@@ -39,8 +39,11 @@ return {
                 formatters = {
                     caddy = {
                         command = "caddy",
-                        args = { "fmt", "-" },
+                        args = { "fmt" },
                         stdin = true,
+                        condition = function(ctx)
+                            return vim.fs.basename(ctx.filename) ~= "Caddyfile"
+                        end,
                     },
                     -- Use dprint if there is a dprint.json file in the project root.
                     dprint = {
