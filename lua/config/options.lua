@@ -143,9 +143,6 @@ vim.filetype.add({
     extension = {
         conf = "conf",
         ivy = "xml",
-        j2 = "htmldjango",
-        jinja = "htmldjango",
-        jinja2 = "jinja",
         pdl = "pdl",
         plist = "xml.plist", -- macOS PropertyList files
         -- We always want LaTeX, avoid slow detection logic
