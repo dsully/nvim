@@ -4,6 +4,7 @@ return {
 
     -- Caddy
     { "isobit/vim-caddyfile", ft = "caddyfile" },
+    { "https://github.com/Samonitari/tree-sitter-caddy", ft = "caddyfile" },
 
     -- Better vim help.
     {
