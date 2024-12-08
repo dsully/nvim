@@ -344,6 +344,7 @@ return {
             undo = { suffix = "" },
             yank = { suffix = "" },
         },
+        virtual = true,
     },
     {
         "echasnovski/mini.bufremove",
@@ -351,6 +352,7 @@ return {
         opts = {
             silent = true,
         },
+        virtual = true,
     },
     {
         "echasnovski/mini.hipatterns",
@@ -450,6 +452,7 @@ return {
                 },
             }
         end,
+        virtual = true,
     },
     {
         "echasnovski/mini.indentscope",
@@ -475,13 +478,14 @@ return {
                 options = { try_as_border = true },
             }
         end,
+        virtual = true,
     },
     {
         "echasnovski/mini.pairs",
         config = function(_, opts)
             local pairs = require("mini.pairs")
 
-            Snacks.toggle
+            require("snacks").toggle
                 .new({
                     name = "Mini Pairs",
                     get = function()
@@ -589,6 +593,7 @@ return {
             -- Skip autopair when next character is closing pair and there are more closing pairs than opening pairs.
             skip_unbalanced = true,
         },
+        virtual = true,
     },
     {
         -- Add/delete/replace surroundings (brackets, quotes, etc.)
@@ -649,6 +654,7 @@ return {
                 update_n_lines = "<leader>sn", -- Update `n_lines`
             },
         },
+        virtual = true,
     },
     {
         "monaqa/dial.nvim",

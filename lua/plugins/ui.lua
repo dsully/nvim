@@ -647,11 +647,6 @@ return {
     },
     {
         "echasnovski/mini.icons",
-        config = function(_, opts)
-            local icons = require("mini.icons")
-
-            icons.setup(opts)
-        end,
         init = function()
             hl.apply({
                 { MiniIconsAzure = { fg = colors.blue.bright } },
@@ -670,6 +665,8 @@ return {
                 return package.loaded["nvim-web-devicons"]
             end
         end,
+        -- Can't be lazy so the nvim-web-devicons run time patching can happen early.
+        lazy = false,
         opts = {
             style = "glyph",
             default = {
@@ -729,6 +726,7 @@ return {
             },
             lsp = defaults.icons.lsp,
         },
+        virtual = true,
     },
     {
         "juansalvatore/git-dashboard-nvim",

@@ -409,5 +409,6 @@ return {
                 start_with_preview = "g+",
             },
         },
+        virtual = true,
     },
 }
