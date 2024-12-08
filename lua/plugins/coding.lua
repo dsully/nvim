@@ -1,3 +1,14 @@
+-- CompletionItem.data that rust-analyzer returns.
+---@class RustCompletionImport
+---@field full_import_path string
+---@field imported_name string
+
+---@class RustCompletionResolveData
+---@field imports RustCompletionImport[]
+---@field position lsp.TextDocumentPositionParams
+
+---@alias RustData RustCompletionResolveData | nil
+
 return {
     { "giuxtaposition/blink-cmp-copilot" },
     {
@@ -91,7 +102,7 @@ return {
                 mode = { "i", "c" },
             },
         },
-        --- @type blink.cmp.Config
+        ---@type blink.cmp.Config
         ---@diagnostic disable: missing-fields
         opts = {
             ---@diagnostic disable-next-line: missing-fields
@@ -286,6 +297,49 @@ return {
                     lsp = {
                         name = "LSP",
                         fallback_for = { "lazydev" },
+                        --
+                        ---@param ctx blink.cmp.Context
+                        ---@param items blink.cmp.CompletionItem[]
+                        transform_items = function(ctx, items)
+                            --
+                            local types = require("blink.cmp.types").CompletionItemKind
+                            local is_word_only = string.match(ctx.line, "^%s+%w+$")
+                            local ft = vim.bo[ctx.bufnr].filetype
+
+                            ---@param item blink.cmp.CompletionItem
+                            return vim.tbl_filter(function(item)
+                                --
+                                if item.kind == types.Text or item.deprecated then
+                                    return false
+                                end
+
+                                if is_word_only and (item.kind == types.Function or item.kind == types.Variable) then
+                                    return false
+                                end
+
+                                if ft == "rust" then
+                                    ---@type RustData
+                                    local data = item.data ---@diagnostic disable-line: assign-type-mismatch
+
+                                    -- Only filter out imported methods.
+                                    if data == nil or #data.imports == 0 or item.kind ~= types.Method then
+                                        return true
+                                    end
+
+                                    for _, to_be_imported in ipairs(data.imports) do
+                                        --
+                                        -- Can be the crate name or a module name.
+                                        for _, unwanted_prefix in ipairs({ "owo_colors" }) do
+                                            if vim.startswith(to_be_imported.full_import_path, unwanted_prefix) then
+                                                return false
+                                            end
+                                        end
+                                    end
+                                end
+
+                                return true
+                            end, items)
+                        end,
                     },
                     path = {
                         name = "Path",
