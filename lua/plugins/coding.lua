@@ -326,6 +326,13 @@ return {
                     local is_word_only = string.match(ctx.line, "^%s+%w+$")
                     local ft = vim.bo[ctx.bufnr].filetype
 
+                    -- Sort snippets lower.
+                    for _, item in ipairs(items) do
+                        if item.kind == require("blink.cmp.types").CompletionItemKind.Snippet then
+                            item.score_offset = item.score_offset - 3
+                        end
+                    end
+
                     ---@param item blink.cmp.CompletionItem
                     return vim.tbl_filter(function(item)
                         --
