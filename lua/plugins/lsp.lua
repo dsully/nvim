@@ -564,7 +564,7 @@ return {
                             client.server_capabilities.documentRangeFormattingProvider = false
                             client.server_capabilities.documentOnTypeFormattingProvider = nil
 
-                            vim.keymap.set("n", "<leader>vs", function()
+                            keys.map("<leader>vs", function()
                                 local bufnr = vim.api.nvim_get_current_buf()
 
                                 client:request(
@@ -579,7 +579,7 @@ return {
                                     end,
                                     bufnr
                                 )
-                            end, { buffer = true, desc = "Show associated TOML schema" })
+                            end, "Show associated TOML schema")
                         end,
                         -- This doesn't work. https://github.com/tamasfe/taplo/issues/560
                         settings = {
@@ -623,12 +623,7 @@ return {
                                 },
                             })
 
-                            -- vs = View Schema
-                            vim.keymap.set("n", "<leader>vs", vim.cmd.YAMLSchema, { buffer = true, desc = "Show YAML schema" })
-
-                            vim.keymap.set("n", "<leader>fy", function()
-                                require("telescope").extensions.yaml_schema.yaml_schema()
-                            end, { buffer = true, desc = "YAML Schemas" })
+                            keys.map("<leader>vs", vim.cmd.YAMLSchema, "Show YAML schema")
                         end,
                         settings = {
                             yaml = {
