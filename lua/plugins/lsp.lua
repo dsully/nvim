@@ -83,6 +83,7 @@ return {
             end
 
             require("mason-lspconfig").setup({
+                automatic_installation = true,
                 ensure_installed = vim.tbl_keys(handlers),
                 handlers = handlers,
             })
@@ -123,7 +124,7 @@ return {
                     end
                 end
 
-                vim.ui.float({ ft = "lua" }, lines):show()
+                vim.ui.float({ ft = "lua", relative = "editor" }, lines):show()
             end, { desc = "Show LSP Capabilities" })
 
             vim.api.nvim_create_user_command("LspCodeActions", function()
@@ -161,7 +162,7 @@ return {
                     table.insert(lines, "No code actions available")
                 end
 
-                vim.ui.float({ ft = "lua" }, lines):show()
+                vim.ui.float({ ft = "lua", relative = "editor" }, lines):show()
             end, { desc = "Show LSP Code Actions" })
 
             vim.api.nvim_create_user_command("LspLogClear", function()
@@ -320,11 +321,6 @@ return {
                             },
                         },
                         mason = false,
-                        --
-                        ---@param client vim.lsp.Client
-                        on_attach = function(client)
-                            client.server_capabilities.diagnosticProvider = {}
-                        end,
                     },
                     gopls = {
                         filetypes = { "go", "gomod", "gowork" }, -- Don't attach for gotmpl.
@@ -575,7 +571,7 @@ return {
                                         { documentUri = vim.uri_from_bufnr(bufnr) }
                                     ),
                                     function(_, result)
-                                        vim.ui.float({ ft = "toml" }, vim.split(result, "\n")):show()
+                                        vim.ui.float({ ft = "toml", relative = "editor" }, vim.split(result, "\n")):show()
                                     end,
                                     bufnr
                                 )
