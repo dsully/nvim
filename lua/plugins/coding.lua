@@ -275,18 +275,22 @@ return {
                 ["<C-k>"] = { "select_prev", "fallback" },
             },
             sources = {
-                completion = {
-                    enabled_providers = {
-                        "lsp",
-                        "path",
-                        -- "snippets",
-                        "lazydev",
-                        "copilot",
-                    },
+                default = {
+                    "lsp",
+                    "path",
+                    -- "snippets",
+                    "lazydev",
+                    "codecompanion",
+                    -- "copilot",
                 },
                 providers = {
+                    codecompanion = {
+                        name = "CodeCompanion",
+                        module = "codecompanion.providers.completion.blink",
+                    },
                     copilot = {
                         name = "Copilot",
+                        kind = "Copilot",
                         module = "blink-cmp-copilot",
                     },
                     lazydev = {
@@ -296,7 +300,7 @@ return {
                     -- Don't show LuaLS require statements when lazydev has items
                     lsp = {
                         name = "LSP",
-                        fallback_for = { "lazydev" },
+                        fallbacks = { "lazydev" },
                         --
                         ---@param ctx blink.cmp.Context
                         ---@param items blink.cmp.CompletionItem[]
