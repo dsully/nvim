@@ -51,7 +51,7 @@ local M = {
             jsx = { "biome" },
             just = { "just" },
             lua = { "stylua" },
-            markdown = { "markdownlint-cli2", "markdown-toc" },
+            markdown = { "markdownlint-cli2" },
             python = { "ruff_organize_imports", "ruff_format", "ruff_fix" },
             rust = {},
             sh = { "shellharden", "shfmt" },
@@ -94,10 +94,7 @@ local M = {
         },
     },
 
-    tools = {
-        "ast-grep",
-        "gitui",
-    },
+    tools = {},
 
     icons = {
         actions = {
