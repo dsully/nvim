@@ -280,35 +280,35 @@ return {
                     },
                     buf_ls = {},
                     bzl = {},
-                    clangd = {
-                        filetypes = { "c", "cpp", "cuda" }, -- Let SourceKit handle objective-c and objective-cpp.
-                        init_options = {
-                            clangdFileStatus = true,
-                            completeUnimported = true,
-                            usePlaceholders = true,
-                            semanticHighlighting = true,
-                        },
-                        on_attach = function()
-                            -- https://github.com/p00f/clangd_extensions.nvim
-                            require("clangd_extensions").setup()
-
-                            local inlay_hints = require("clangd_extensions.inlay_hints")
-
-                            inlay_hints.setup_autocmd()
-                            inlay_hints.set_inlay_hints()
-                            inlay_hints.toggle_inlay_hints()
-                        end,
-                        root_dir = function(fname)
-                            return require("lspconfig.util").root_pattern("Makefile", "configure.in", "meson.build", "build.ninja")(fname)
-                                or require("lspconfig.util").find_git_ancestor(fname)
-                        end,
-                        settings = {
-                            clangd = {
-                                semanticHighlighting = true,
-                                single_file_support = false,
-                            },
-                        },
-                    },
+                    -- clangd = {
+                    --     filetypes = { "c", "cpp", "cuda" }, -- Let SourceKit handle objective-c and objective-cpp.
+                    --     init_options = {
+                    --         clangdFileStatus = true,
+                    --         completeUnimported = true,
+                    --         usePlaceholders = true,
+                    --         semanticHighlighting = true,
+                    --     },
+                    --     on_attach = function()
+                    --         -- https://github.com/p00f/clangd_extensions.nvim
+                    --         require("clangd_extensions").setup()
+                    --
+                    --         local inlay_hints = require("clangd_extensions.inlay_hints")
+                    --
+                    --         inlay_hints.setup_autocmd()
+                    --         inlay_hints.set_inlay_hints()
+                    --         inlay_hints.toggle_inlay_hints()
+                    --     end,
+                    --     root_dir = function(fname)
+                    --         return require("lspconfig.util").root_pattern("Makefile", "configure.in", "meson.build", "build.ninja")(fname)
+                    --             or require("lspconfig.util").find_git_ancestor(fname)
+                    --     end,
+                    --     settings = {
+                    --         clangd = {
+                    --             semanticHighlighting = true,
+                    --             single_file_support = false,
+                    --         },
+                    --     },
+                    -- },
                     cssls = {},
                     dockerls = {
                         mason = false,
@@ -752,7 +752,7 @@ return {
             }
         end,
     },
-    { "p00f/clangd_extensions.nvim" },
+    -- { "p00f/clangd_extensions.nvim" },
     -- TODO: Replace with https://github.com/cenk1cenk2/yaml-companion.nvim
     { "someone-stole-my-name/yaml-companion.nvim" },
 }
