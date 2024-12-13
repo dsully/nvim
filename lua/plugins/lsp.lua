@@ -247,6 +247,7 @@ return {
                         },
                     },
                     basedpyright = {
+                        mason = false,
                         settings = {
                             basedpyright = {
                                 analysis = {
@@ -263,6 +264,7 @@ return {
                     },
                     bashls = {
                         filetypes = { "bash", "direnv", "sh" },
+                        mason = false,
                         ---@param client vim.lsp.Client
                         on_attach = function(client)
                             client.server_capabilities.documentFormattingProvider = false
@@ -308,7 +310,9 @@ return {
                         },
                     },
                     cssls = {},
-                    dockerls = {},
+                    dockerls = {
+                        mason = false,
+                    },
                     fish_lsp = {
                         initializationOptions = {
                             workspaces = {
@@ -327,6 +331,7 @@ return {
                         init_options = {
                             usePlaceholders = true,
                         },
+                        mason = false,
                         ---@param client vim.lsp.Client
                         on_attach = function(client)
                             -- As of v0.11.0, gopls does not send a Semantic Token legend (in a
@@ -460,6 +465,7 @@ return {
                         filetypes = { "xml", "xml.plist", "xsd", "xsl", "xslt", "svg" },
                     },
                     lua_ls = {
+                        mason = false,
                         settings = {
                             Lua = {
                                 codeLens = {
@@ -552,6 +558,7 @@ return {
                     },
                     taplo = {
                         filetypes = { "toml", "toml.pyproject" },
+                        mason = false,
                         ---@param client vim.lsp.Client
                         on_attach = function(client)
                             --
@@ -609,6 +616,7 @@ return {
                             },
                         },
                         filetypes = { "yaml", "yaml.ghaction", "!yaml.ansible" },
+                        mason = false,
                         on_new_config = function(c)
                             c.settings = vim.tbl_deep_extend("force", c.settings, { yaml = { schemas = require("schemastore").yaml.schemas() } })
 
@@ -747,45 +755,4 @@ return {
     { "p00f/clangd_extensions.nvim" },
     -- TODO: Replace with https://github.com/cenk1cenk2/yaml-companion.nvim
     { "someone-stole-my-name/yaml-companion.nvim" },
-    {
-        "https://gitlab.com/schrieveslaach/sonarlint.nvim",
-        cond = false,
-        config = function()
-            -- https://gitlab.com/schrieveslaach/sonarlint.nvim/-/issues/18
-            vim.lsp.handlers["sonarlint/listFilesInFolder"] = function(_, params)
-                local result = {
-                    foundFiles = {},
-                }
-
-                for _, path in ipairs(vim.fs.find("*", { path = params.folderUri, type = "file" })) do
-                    table.insert(result.foundFiles, {
-                        fileName = vim.fs.basename(path),
-                        filePath = path,
-                    })
-                end
-
-                return result
-            end
-
-            require("sonarlint").setup({
-                server = {
-                    cmd = {
-                        "sonarlint-language-server",
-                        "-stdio",
-                        "-analyzers",
-                        vim.fn.expand("$MASON/share/sonarlint-analyzers/sonarpython.jar"),
-                    },
-                    settings = {
-                        sonarlint = {
-                            test = "test",
-                        },
-                    },
-                },
-                filetypes = {
-                    "python",
-                },
-            })
-        end,
-        ft = "python",
-    },
 }

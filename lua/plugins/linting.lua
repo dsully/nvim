@@ -58,6 +58,16 @@ return {
         end,
         event = ev.LazyFile,
         opts = {
+            ignore_install = {
+                "actionlint",
+                "fish",
+                "markdownlint-cli2",
+                "mypy",
+                "protolint",
+                "revive",
+                "typos",
+                "write_good",
+            },
             quiet_mode = true,
         },
     },
