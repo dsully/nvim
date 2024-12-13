@@ -75,7 +75,7 @@ ev.on(ev.BufWinEnter, function(args)
         -- If we're at the end of the screen, set the cursor position and move the window up by one with C-e.
         -- This is to show that we are at the end of the file. If we did "zz" half the screen would be blank.
         elseif count ~= vim.fn.line("w$") then
-            vim.api.nvim_feedkeys(vim.api.nvim_replace_termcodes("<C-e>", true, false, true), "n", false)
+            keys.feed("<C-e>", "n")
         end
     end
 end, {

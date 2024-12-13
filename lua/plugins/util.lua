@@ -218,7 +218,7 @@ return {
             end, desc = "Copy Git URL" },
 
             -- Profiler
-            { "<leader>pS", function() Snacks.profiler.scratch() end, desc = "Profiler Scratch Buffer" },
+            { "<leader>dps", function() Snacks.profiler.scratch() end, desc = "Profiler Scratch Buffer" },
 
             -- Scratch
             { "<leader>.",  function() Snacks.scratch() end, desc = "Toggle Scratch Buffer" },
@@ -247,8 +247,8 @@ return {
                     snacks.toggle.option("spell", { name = "Spelling" }):map("<space>ts")
                     snacks.toggle.option("wrap", { name = "Wrap" }):map("<space>tw")
 
-                    snacks.toggle.profiler():map("<leader>pP")
-                    snacks.toggle.profiler_highlights():map("<leader>pH")
+                    snacks.toggle.profiler():map("<leader>dpp")
+                    snacks.toggle.profiler_highlights():map("<leader>dph")
                 end,
             })
 
