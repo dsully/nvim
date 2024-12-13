@@ -606,6 +606,7 @@ return {
                 },
             },
             ---@type NoiceConfigViews
+            ---@diagnostic disable-next-line: missing-fields
             views = {
                 mini = {
                     format = { "{title} ", "{message}" }, -- leave out "{level}"
@@ -838,10 +839,8 @@ return {
                     type = "button",
                     val = string.format(" %-1s  %s", opts.icon or "", txt),
                     on_press = function()
-                        local key = vim.api.nvim_replace_termcodes(rhs .. "<Ignore>", true, false, true)
-                        vim.api.nvim_feedkeys(key, "t", false)
+                        keys.feed(rhs .. "<Ignore>", "t")
                     end,
-
                     opts = opts,
                 }
             end

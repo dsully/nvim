@@ -97,6 +97,7 @@ function M.ai_whichkey(opts)
         { "}", desc = "{} with ws" },
     }
 
+    ---@type wk.Spec[]
     local ret = { mode = { "o", "x" } }
 
     ---@type table<string, string>

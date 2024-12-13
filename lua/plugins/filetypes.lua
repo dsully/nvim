@@ -87,7 +87,7 @@ return {
         },
         opts = function()
             require("snacks")
-                .toggle({
+                .toggle({ ---@diagnostic disable-line: missing-fields
                     name = "Markdown",
                     get = function()
                         return require("markview").state.enable
@@ -211,12 +211,15 @@ return {
                                     ".venv",
                                     ".vscode",
                                     "assets",
+                                    "bin",
                                     "ci",
                                     "data",
                                     "docs",
                                     "js",
+                                    "node_modules",
                                     "target",
                                     "venv",
+                                    ".venv",
                                 },
                                 -- watcher = "server",
                             },

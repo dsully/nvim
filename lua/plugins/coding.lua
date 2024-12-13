@@ -572,7 +572,7 @@ return {
                 local before = line:sub(1, cursor[2])
 
                 if opts.markdown and o == "`" and vim.bo.filetype == "markdown" and before:match("^%s*``") then
-                    return "`\n```" .. vim.api.nvim_replace_termcodes("<up>", true, true, true)
+                    return "`\n```" .. Snacks.util.keycode("<up>")
                 end
 
                 if opts.skip_next and next ~= "" and next:match(opts.skip_next) then

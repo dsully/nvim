@@ -69,6 +69,7 @@ return {
             { "<leader>b", group = "Buffers", icon = "" },
             { "<leader>c", group = "Code", icon = icons.misc.code, mode = { "n", "t" } },
             { "<leader>d", group = "Debug" },
+            { "<leader>dp", group = "Profiler" },
             { "<leader>f", group = "Find", icon = icons.misc.telescope },
             { "<leader>g", group = "Git", icon = icons.misc.git, mode = { "n", "x" } },
             { "<leader>gh", group = "GitHub", icon = icons.misc.github, mode = { "n", "x" } },
