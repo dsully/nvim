@@ -92,7 +92,7 @@ return {
 
                     if vim.snippet.active() then
                         vim.snippet.stop()
-                    elseif cmp.windows.autocomplete.win:is_open() then
+                    elseif cmp.is_visible() then
                         cmp.hide()
                     elseif copilot.is_visible() then
                         copilot.dismiss()
@@ -135,7 +135,7 @@ return {
                     },
                     --- @type blink.cmp.Draw
                     draw = {
-                        treesitter = true,
+                        treesitter = { "lsp" },
                         columns = {
                             { "kind_icon", gap = 1 },
                             { "label", "label_description", gap = 2 },
