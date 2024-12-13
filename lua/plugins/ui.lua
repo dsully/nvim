@@ -635,18 +635,6 @@ return {
         },
     },
     {
-        "lukas-reineke/indent-blankline.nvim",
-        ft = { "yaml" },
-        main = "ibl",
-        opts = {
-            indent = {
-                char = "│",
-                tab_char = "│",
-            },
-            scope = { enabled = false },
-        },
-    },
-    {
         "echasnovski/mini.icons",
         init = function()
             hl.apply({

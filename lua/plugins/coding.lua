@@ -513,32 +513,6 @@ return {
         virtual = true,
     },
     {
-        "echasnovski/mini.indentscope",
-        event = ev.LazyFile,
-        init = function()
-            ev.on(ev.FileType, function()
-                vim.b.miniindentscope_disable = true
-            end, {
-                pattern = defaults.ignored.file_types,
-            })
-
-            hl.apply({
-                { MiniIndentscopeSymbol = { fg = colors.blue.bright } },
-                { MiniIndentscopePrefix = { nocombine = true } },
-            })
-        end,
-        opts = function()
-            return {
-                draw = {
-                    animation = require("mini.indentscope").gen_animation.none(),
-                },
-                symbol = "│",
-                options = { try_as_border = true },
-            }
-        end,
-        virtual = true,
-    },
-    {
         "echasnovski/mini.pairs",
         config = function(_, opts)
             local pairs = require("mini.pairs")

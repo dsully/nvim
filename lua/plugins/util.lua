@@ -153,10 +153,25 @@ return {
         priority = 1000,
         lazy = false,
         ---@type snacks.Config
+        ---@diagnostic disable: missing-fields
         opts = {
-            bigfile = { enabled = true },
+            bigfile = {
+                enabled = true,
+            },
             gitbrowse = {
                 notify = false,
+            },
+            ---@type snacks.indent.Config
+            indent = {
+                animate = {
+                    enabled = false,
+                },
+                indent = {
+                    enabled = false,
+                },
+            },
+            input = {
+                enable = true,
             },
             notifier = {
                 enabled = true,
@@ -181,6 +196,9 @@ return {
                 date_format = "%R", -- time format for notifications
                 refresh = 50, -- refresh at most every 50ms
             },
+            scope = {
+                enabled = true,
+            },
             statuscolumn = {
                 enabled = true,
                 left = { "git" },
@@ -188,6 +206,9 @@ return {
                 git = { patterns = { "GitSign" } },
             },
             styles = {
+                input = {
+                    border = defaults.ui.border.name,
+                },
                 notification = {
                     border = defaults.ui.border.name,
                     wo = { wrap = true },
@@ -255,6 +276,8 @@ return {
             hl.apply({
                 { SnacksNormal = { link = "Normal" } },
                 { SnacksBackdrop = { link = "Normal" } },
+
+                { SnacksIndentScope = { fg = colors.blue.bright } },
 
                 { SnacksNotifierIconTrace = { fg = colors.gray.base } },
                 { SnacksNotifierBorderTrace = { fg = colors.white.bright } },
