@@ -145,8 +145,6 @@ return {
                         { "%u[%l%d]+%f[^%l%d]", "%f[%S][%l%d]+%f[^%l%d]", "%f[%P][%l%d]+%f[^%l%d]", "^[%l%d]+%f[^%l%d]" },
                         "^().*()$",
                     },
-
-                    i = mini.ai_indent, -- indent
                     g = mini.ai_buffer, -- buffer
 
                     u = ai.gen_spec.function_call(), -- u for "Usage"
