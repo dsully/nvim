@@ -1,0 +1,35 @@
+vim.lsp.config.ts_ls = {
+    cmd = { "typescript-language-server", "--stdio" },
+    filetypes = {
+        "javascript",
+        "javascriptreact",
+        "javascript.jsx",
+        "typescript",
+        "typescriptreact",
+        "typescript.tsx",
+    },
+    init_options = { hostInfo = "neovim" },
+    root_markers = { "tsconfig.json" },
+    settings = {
+        code_lens = "on",
+        expose_as_code_actions = { "all" },
+        publish_diagnostic_on = "insert_leave",
+        tsserver_file_preferences = {
+            includeInlayEnumMemberValueHints = true,
+            includeInlayFunctionLikeReturnTypeHints = true,
+            includeInlayFunctionParameterTypeHints = true,
+            includeInlayParameterNameHints = "all",
+            includeInlayParameterNameHintsWhenArgumentMatchesName = true,
+            includeInlayPropertyDeclarationTypeHints = true,
+            includeInlayVariableTypeHints = true,
+            includeInlayVariableTypeHintsWhenTypeMatchesName = false,
+        },
+        tsserver_format_preferences = {
+            convertTabsToSpaces = true,
+            indentSize = 2,
+            trimTrailingWhitespace = false,
+            semicolons = "insert",
+        },
+    },
+    single_file_support = true,
+}

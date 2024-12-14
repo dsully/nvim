@@ -1,4 +1,4 @@
-require("helpers.globals")
+require("config.globals")
 require("config.options")
 
 vim.cmd.colorscheme(vim.g.colorscheme)

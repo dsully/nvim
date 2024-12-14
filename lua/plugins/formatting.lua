@@ -77,26 +77,4 @@ return {
             }
         end,
     },
-    {
-        "zapling/mason-conform.nvim",
-        config = function(_, opts)
-            vim.schedule(function()
-                require("mason-conform").setup(opts)
-            end)
-        end,
-        event = { ev.BufWritePre, ev.LspAttach },
-        opts = {
-            ignore_install = {
-                "biome",
-                "buildifier",
-                "gofumpt",
-                "markdownlint-cli2",
-                "ruff",
-                "shellharden",
-                "shfmt",
-                "stylua",
-                "taplo",
-            },
-        },
-    },
 }
