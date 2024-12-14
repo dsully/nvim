@@ -10,8 +10,10 @@ return {
         cmd = "LazyDev",
         ft = "lua",
         opts = {
-            cmp = false,
-            lspconfig = false,
+            integrations = {
+                cmp = false,
+                lspconfig = false,
+            },
             library = {
                 { path = "${3rd}/luv/library", words = { "vim%.uv" } },
                 { path = "lazy.nvim", words = { "LazyVim", "package" } },
