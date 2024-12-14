@@ -17,7 +17,7 @@ local jump = function()
         local current_buf = vim.api.nvim_get_current_buf()
 
         -- Open the file while keeping the alternate file unchanged
-        vim.cmd.edit({ vim.fn.fnameescape(filename), mods = { keepalt = true } })
+        vim.cmd.edit({ vim.fs.normalize(filename), mods = { keepalt = true } })
 
         -- If the file was opened with '/path/to/filename:' we won't have a position.
         local line = math.min(math.max(1, pos[1]), vim.api.nvim_buf_line_count(0))
@@ -56,14 +56,14 @@ do
                 ---@diagnostic disable-next-line: param-type-mismatch
                 for _, arg in ipairs(vim.fn.argv()) do
                     --
-                    pcall(vim.cmd.edit, { vim.fn.fnameescape(arg), mods = { keepalt = true } })
+                    pcall(vim.cmd.edit, { vim.fs.normalize(arg), mods = { keepalt = true } })
 
                     local filename = jump()
 
                     local argidx = vim.fn.argidx()
 
                     vim.cmd.argdelete({ range = { argidx + 1 } })
-                    vim.cmd.argadd({ args = { vim.fn.fnameescape(filename) }, range = { argidx } })
+                    vim.cmd.argadd({ args = { vim.fs.normalize(filename) }, range = { argidx } })
                 end
 
                 -- Return to the original argument

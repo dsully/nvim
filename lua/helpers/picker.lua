@@ -81,14 +81,14 @@ end
 
 M.parents = function(opts)
     opts = opts or {}
-    opts.cwd = opts.cwd or vim.fn.getcwd()
+    opts.cwd = opts.cwd or vim.uv.cwd()
 
     local parent_directories = {}
     local cwd = opts.cwd
 
     while cwd ~= "/" do
         table.insert(parent_directories, cwd)
-        cwd = vim.fn.fnamemodify(cwd, ":h")
+        cwd = vim.fs.dirname(cwd)
     end
 
     opts.actions = {
