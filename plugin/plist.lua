@@ -2,9 +2,12 @@
 --
 local M = {
     mapping = { ["json"] = "json", ["binary"] = "binary1", ["xml"] = "xml1" },
+    pattern = "*.plist",
 }
 
 if vim.g.os == "Darwin" then
+    local ev = require("helpers.event")
+
     ev.on(ev.BufReadCmd, function(args)
         vim.cmd.doautocmd(ev.BufReadPre)
         --
@@ -12,12 +15,17 @@ if vim.g.os == "Darwin" then
 
         local levels = vim.o.undolevels
         vim.o.undolevels = -1
-        vim.cmd("silent 1delete")
+
+        vim.cmd.delete({
+            mods = { emsg_silent = true, silent = true },
+            range = { 1 },
+        })
+
         vim.o.undolevels = levels
 
         vim.cmd.doautocmd(ev.BufReadPost)
     end, {
-        pattern = "*.plist",
+        pattern = M.pattern,
     })
 
     ev.on(ev.FileReadCmd, function(args)
@@ -26,24 +34,24 @@ if vim.g.os == "Darwin" then
         M.read_command(args)
         vim.cmd.doautocmd(ev.FileReadPost .. " " .. args.file)
     end, {
-        pattern = "*.plist",
         nested = true,
+        pattern = M.pattern,
     })
 
     ev.on(ev.BufWriteCmd, function(args)
         vim.cmd.doautocmd(ev.BufWritePre)
         M.write_command(args)
     end, {
-        pattern = "*.plist",
         nested = true,
+        pattern = M.pattern,
     })
 
     ev.on(ev.FileWriteCmd, function(args)
         vim.cmd.doautocmd(ev.FileWritePre)
         M.write_command(args)
     end, {
-        pattern = "*.plist",
         nested = true,
+        pattern = M.pattern,
     })
 end
 
@@ -77,7 +85,9 @@ M.read_command = function(args)
         vim.bo[bufnr].readonly = false
         vim.opt_local.wrap = false
 
-        vim.notify(string.format("%s, %dB [%s]", args.file, vim.fn.getfsize(args.file), vim.b.plist_original_format))
+        local size = (vim.uv.fs_stat(args.file) or {}).size or 0
+
+        vim.notify(string.format("%s, %dB [%s]", args.file, size, vim.b.plist_original_format))
     end
 end
 
