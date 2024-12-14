@@ -5,16 +5,35 @@ local bufnr = vim.api.nvim_get_current_buf()
 if vim.fn.executable("codesort") == 1 then
     --
     keys.bmap("<leader>cs", function()
-        local current_line = vim.api.nvim_win_get_cursor(0)[1]
-        local filename = vim.fn.shellescape(vim.api.nvim_buf_get_name(0):match("([^/\\]+)$"))
+        --
+        local result = vim.system({
+            "codesort",
+            "--around",
+            tostring(vim.api.nvim_win_get_cursor(0)[1]),
+            "--detect",
+            vim.fs.normalize(vim.fs.basename(vim.api.nvim_buf_get_name(0))),
+        }, {
+            stdin = vim.api.nvim_buf_get_lines(bufnr, 0, -1, false),
+        }):wait()
 
-        vim.api.nvim_buf_set_mark(0, "a", current_line, 0, {})
-        vim.cmd(string.format("%%!codesort --around %d --detect %s", current_line, filename))
-        vim.cmd.normal({ "`a", bang = true })
+        if result.code == 0 and result.stdout then
+            vim.api.nvim_buf_set_lines(bufnr, 0, -1, false, vim.split(result.stdout, "\n", { trimempty = true }))
+        else
+            vim.notify("Error running codesort: " .. (result.stderr or ""), vim.log.levels.ERROR)
+        end
     end, "Sort code", bufnr)
 
     keys.xmap("<leader>cs", function()
-        vim.cmd(string.format("%d,%d!codesort", vim.fn.line("'<"), vim.fn.line("'>")))
+        local start_line = vim.api.nvim_buf_get_mark(0, "<")[1]
+        local end_line = vim.api.nvim_buf_get_mark(0, ">")[1]
+
+        local result = vim.system({ "codesort" }, { stdin = vim.api.nvim_buf_get_lines(0, start_line - 1, end_line, false) }):wait()
+
+        if result.code == 0 and result.stdout then
+            vim.api.nvim_buf_set_lines(0, start_line - 1, end_line, false, vim.split(result.stdout, "\n", { trimempty = true }))
+        else
+            vim.notify("Error running codesort: " .. (result.stderr or ""), vim.log.levels.ERROR)
+        end
     end, "Sort code", bufnr)
 end
 
