@@ -16,9 +16,6 @@ vim.lsp.config.lua_ls = {
                 workspaceWord = true,
             },
             diagnostics = {
-                -- disable = {
-                --     "missing-fields",
-                -- },
                 globals = {
                     "LazyVim",
                     "Snacks",
@@ -67,14 +64,14 @@ vim.lsp.config.lua_ls = {
         },
     },
     root_markers = {
+        ".luacheckrc",
         ".luarc.json",
         ".luarc.jsonc",
-        ".luacheckrc",
         ".stylua.toml",
-        "stylua.toml",
+        "lazy-lock.json",
         "selene.toml",
         "selene.yml",
-        "lua/",
+        "stylua.toml",
     },
     single_file_support = true,
 }
