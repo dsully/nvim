@@ -92,9 +92,42 @@ local M = {
         rust = {
             bacon = os.getenv("BACON") or false,
         },
+
+        servers = {
+            "bashls",
+            "cssls",
+            "dockerls",
+            "fish_lsp",
+            "gopls",
+            "harper",
+            "html",
+            "jsonls",
+            "lemminx",
+            "lua_ls",
+            "marksman",
+            "red_knot",
+            "ruff",
+            "taplo",
+            "ts_ls",
+            "yamlls",
+            "zls",
+        },
     },
 
-    tools = {},
+    tools = {
+        "css-lsp",
+        "curlylint",
+        "goimports",
+        "harper-ls",
+        "html-lsp",
+        "json-lsp",
+        "lemminx",
+        "marksman",
+        "rstcheck",
+        "xmlformatter",
+        "yamllint",
+        "zls",
+    },
 
     icons = {
         actions = {

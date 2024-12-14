@@ -51,11 +51,6 @@ M.apply_to_buffers = function(callback, filter)
     end
 end
 
----@return lsp.ClientCapabilities
-M.capabilities = function()
-    return require("blink.cmp").get_lsp_capabilities({}, true)
-end
-
 -- Handle code actions.
 M.action = setmetatable({}, {
     __index = function(_, action)
@@ -70,35 +65,6 @@ M.action = setmetatable({}, {
         end
     end,
 })
-
-M.setup = function()
-    -- Handle dynamic registration.
-    --
-    -- https://github.com/neovim/neovim/issues/24229
-    local register_capability = vim.lsp.handlers[methods.client_registerCapability]
-
-    ---@param res lsp.RegistrationParams
-    ---@param ctx lsp.HandlerContext
-    vim.lsp.handlers[methods.client_registerCapability] = function(err, res, ctx)
-        local client_id = ctx.client_id
-        local client = vim.lsp.get_client_by_id(client_id)
-
-        if client then
-            for buffer in pairs(client.attached_buffers) do
-                --
-                ev.emit(ev.User, {
-                    pattern = ev.LspDynamicCapability,
-                    data = { client_id = client.id, buffer = buffer },
-                })
-            end
-        end
-
-        return register_capability(err, res, ctx)
-    end
-
-    M.on_attach(M.validate_client)
-    M.on_dynamic_capability(M.validate_client)
-end
 
 ---@type table<string, table<vim.lsp.Client, table<number, boolean>>>
 M.supports_method = {}
@@ -263,6 +229,99 @@ M.apply_quickfix = function()
             return action.isPreferred and action.isPreferred or action.kind == vim.lsp.protocol.CodeActionKind.QuickFix
         end,
     })
+end
+
+M.commands = function()
+    vim.api.nvim_create_user_command("LspCapabilities", function()
+        --
+        ---@type vim.lsp.Client[]
+        local clients = vim.lsp.get_clients({ bufnr = vim.api.nvim_get_current_buf() })
+
+        local lines = {}
+
+        for i, client in ipairs(clients) do
+            if not vim.tbl_contains(defaults.ignored.lsp, client.name) then
+                table.insert(lines, client.name .. " Capabilities: ")
+                table.insert(lines, "")
+
+                for s in vim.inspect(client.server_capabilities):gmatch("[^\r\n]+") do
+                    table.insert(lines, s)
+                end
+
+                if client.config.settings then
+                    table.insert(lines, "")
+                    table.insert(lines, client.name .. " Config: ")
+                    table.insert(lines, "")
+
+                    for s in vim.inspect(client.config.settings):gmatch("[^\r\n]+") do
+                        table.insert(lines, s)
+                    end
+                end
+
+                if i < #clients then
+                    table.insert(lines, "")
+                end
+            end
+        end
+
+        vim.ui.float({ ft = "lua", relative = "editor" }, lines):show()
+    end, { desc = "Show LSP Capabilities" })
+
+    vim.api.nvim_create_user_command("LspCodeActions", function()
+        --
+        local bufnr = vim.api.nvim_get_current_buf()
+        local lines = {}
+
+        for _, client in ipairs(vim.lsp.get_clients({ bufnr = bufnr, method = methods.textDocument_codeAction })) do
+            local name = client and client.name or ""
+
+            local params = vim.lsp.util.make_range_params(0, client.offset_encoding)
+            params.context = { diagnostics = vim.lsp.diagnostic.get_line_diagnostics() } ---@diagnostic disable-line: inject-field
+
+            client:request(methods.textDocument_codeAction, params, function(_, result)
+                if not vim.tbl_contains(defaults.ignored.lsp, name) and result.result then
+                    --
+                    table.insert(lines, name .. " Code Actions:")
+                    table.insert(lines, "")
+
+                    for _, code_action in pairs(result.result or {}) do
+                        --
+                        ---@cast code_action lsp.CodeAction
+                        if code_action.title then
+                            table.insert(lines, "Title: " .. code_action.title)
+                            table.insert(lines, "Kind: " .. code_action.kind)
+                            table.insert(lines, "Preferred: " .. tostring(code_action.isPreferred))
+                            table.insert(lines, "")
+                        end
+                    end
+                end
+            end, bufnr)
+        end
+
+        if #lines == 0 then
+            table.insert(lines, "No code actions available")
+        end
+
+        vim.ui.float({ ft = "lua", relative = "editor" }, lines):show()
+    end, { desc = "Show LSP Code Actions" })
+
+    vim.api.nvim_create_user_command("LspLog", function()
+        vim.cmd.tabnew(vim.lsp.get_log_path())
+    end, {
+        desc = "Opens the Nvim LSP client log.",
+    })
+
+    vim.api.nvim_create_user_command("LspRestartBuffer", function()
+        --
+        require("helpers.lsp").apply_to_buffers(function(bufnr, client)
+            --
+            vim.lsp.stop_client(client.id, true)
+
+            notify.info(("Restarting LSP %s for %s"):format(client.name, vim.fs.basename(vim.api.nvim_buf_get_name(bufnr))))
+        end, { bufnr = vim.api.nvim_get_current_buf() })
+
+        vim.cmd.edit()
+    end, { desc = "Restart Language Server for Buffer" })
 end
 
 return M

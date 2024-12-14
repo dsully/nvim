@@ -92,9 +92,8 @@ function M.setup()
 
     lazy.setup({
         spec = {
-            -- { import = "core" },
             { import = "plugins" },
-            -- { import = "plugins.lang" },
+            { import = "plugins.languages" },
         },
         change_detection = {
             enabled = false,
