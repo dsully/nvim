@@ -29,7 +29,7 @@ ev.on(ev.FileType, function()
     keys.map("J", function()
         --
         return vim.endswith(vim.api.nvim_get_current_line(), [[\]]) and "$xJ" or "J"
-    end, "Remove trailing backslash when joining lines.", { expr = true })
+    end, "Remove trailing backslash when joining lines.", "n", { expr = true })
 end, {
     desc = "Keymap for removing backslashes when joining lines.",
     pattern = {
