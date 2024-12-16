@@ -79,6 +79,17 @@ return {
                 { BlinkCmpKindValue = { fg = colors.blue.base } },
                 { BlinkCmpKindVariable = { fg = colors.blue.base } },
             })
+
+            -- Clear search and stop snippet on escape
+            keys.map("<esc>", function()
+                vim.cmd.nohlsearch()
+
+                if vim.snippet then
+                    vim.snippet.stop()
+                end
+
+                return "<esc>"
+            end, "Escape and Clear hlsearch", { "i", "n", "s" }, { expr = true })
         end,
         lazy = false,
         keys = {
@@ -303,11 +314,10 @@ return {
                     lazydev = {
                         name = "LazyDev",
                         module = "lazydev.integrations.blink",
+                        score_offset = 100, -- show at a higher priority than the LSP
                     },
-                    -- Don't show LuaLS require statements when lazydev has items
                     lsp = {
                         name = "LSP",
-                        fallbacks = { "lazydev" },
                     },
                     path = {
                         name = "Path",
