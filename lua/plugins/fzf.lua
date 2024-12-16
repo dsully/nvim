@@ -208,6 +208,7 @@ return {
             },
             lsp = {
                 code_actions = {
+                    async_or_timeout = 5000,
                     previewer = "codeaction_native",
                     preview_pager = "delta --width=$COLUMNS --hunk-header-style='omit' --file-style='omit'",
                 },
@@ -219,6 +220,9 @@ return {
                 ignore_current_line = true,
                 includeDeclaration = false,
                 jump_to_single_result = true,
+                symbols = {
+                    symbol_icons = defaults.icons.lsp,
+                },
             },
             oldfiles = {
                 include_current_session = true,
@@ -229,8 +233,12 @@ return {
                     args = "--style=plain --color=always",
                 },
                 builtin = {
+                    delay = 0,
                     -- https://github.com/ibhagwan/fzf-lua/discussions/1364
                     toggle_behavior = "extend",
+                    treesitter = {
+                        enable = false,
+                    },
                 },
                 extensions = {
                     ["png"] = "viu",
@@ -252,6 +260,7 @@ return {
                 preview = {
                     border = "border-sharp", -- equivalent to `fzf --preview=border-sharp`
                     default = "bat",
+                    delay = 0,
                     hidden = "nohidden",
                     layout = "vertical",
                     scrollbar = false,
