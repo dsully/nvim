@@ -103,20 +103,12 @@ return {
             },
         },
         ---@type blink.cmp.Config
-        ---@diagnostic disable: missing-fields
         opts = {
-            ---@diagnostic disable-next-line: missing-fields
             appearance = {
                 kind_icons = defaults.icons.lsp,
                 nerd_font_variant = "mono",
             },
-            ---@diagnostic disable-next-line: missing-fields
             completion = {
-                accept = {
-                    auto_brackets = {
-                        enabled = true,
-                    },
-                },
                 documentation = {
                     window = {
                         border = defaults.ui.border.name,
@@ -129,10 +121,6 @@ return {
                     selection = "manual",
                 },
                 menu = {
-                    direction_priority = {
-                        "n",
-                        "s",
-                    },
                     --- @type blink.cmp.Draw
                     draw = {
                         treesitter = { "lsp" },
@@ -265,9 +253,8 @@ return {
             keymap = {
                 preset = "enter",
                 ["<Tab>"] = {
-                    function(cmp)
-                        return cmp.snippet_active() and cmp.snippet_forward() or cmp.select_next()
-                    end,
+                    "select_next",
+                    "snippet_forward",
                     "fallback",
                 },
                 ["<S-Tab>"] = { "select_prev", "fallback" },
@@ -275,22 +262,43 @@ return {
                 ["<C-k>"] = { "select_prev", "fallback" },
             },
             sources = {
-                default = {
-                    "lsp",
-                    "path",
-                    -- "snippets",
-                    "lazydev",
-                    "codecompanion",
-                    -- "copilot",
-                },
+                -- Disable cmdline for now.
+                cmdline = {},
+                default = function()
+                    local node = vim.treesitter.get_node()
+
+                    if node and vim.tbl_contains({ "comment", "line_comment", "block_comment" }, node:type()) then
+                        return {}
+                    end
+
+                    local copilot = package.loaded["copilot.suggestion"]
+                    local is_visible = copilot and copilot.is_visible()
+
+                    if vim.b.copilot_suggestion_auto_trigger or is_visible then
+                        return {}
+                    end
+
+                    return {
+                        "lsp",
+                        "path",
+                        "snippets",
+                        "lazydev",
+                        "codecompanion",
+                        -- "copilot",
+                    }
+                end,
                 providers = {
                     codecompanion = {
                         name = "CodeCompanion",
                         module = "codecompanion.providers.completion.blink",
+                        score_offset = 100,
+                        async = true,
                     },
                     copilot = {
                         name = "Copilot",
                         module = "blink-cmp-copilot",
+                        score_offset = 100,
+                        async = true,
                     },
                     lazydev = {
                         name = "LazyDev",
