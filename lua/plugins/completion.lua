@@ -120,6 +120,11 @@ return {
                 nerd_font_variant = "mono",
             },
             completion = {
+                accept = {
+                    auto_brackets = {
+                        enabled = false,
+                    },
+                },
                 documentation = {
                     window = {
                         border = defaults.ui.border.name,
