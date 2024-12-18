@@ -94,6 +94,7 @@ local M = {
         },
 
         servers = {
+            "basedpyright",
             "bashls",
             "cssls",
             "dockerls",

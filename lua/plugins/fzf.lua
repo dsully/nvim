@@ -233,7 +233,6 @@ return {
                     args = "--style=plain --color=always",
                 },
                 builtin = {
-                    delay = 0,
                     -- https://github.com/ibhagwan/fzf-lua/discussions/1364
                     toggle_behavior = "extend",
                     treesitter = {
@@ -260,7 +259,6 @@ return {
                 preview = {
                     border = "border-sharp", -- equivalent to `fzf --preview=border-sharp`
                     default = "bat",
-                    delay = 0,
                     hidden = "nohidden",
                     layout = "vertical",
                     scrollbar = false,
