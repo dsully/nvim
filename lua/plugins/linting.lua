@@ -17,6 +17,10 @@ return {
 
             lint.linters_by_ft = defaults.linters
 
+            if vim.fn.executable("mypy") == 1 then
+                lint.linters_by_ft["python"] = { "mypy" }
+            end
+
             if vim.g.os == "Linux" then
                 lint.linters_by_ft["systemd"] = { "systemd-analyze" }
             end

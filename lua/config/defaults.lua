@@ -74,6 +74,7 @@ local M = {
     },
 
     linters = {
+        css = { "stylelint" },
         fish = { "fish" },
         ghaction = { "actionlint" },
         gitcommit = { "write_good" },
@@ -82,7 +83,6 @@ local M = {
         jinja = { "curlylint" },
         markdown = { "markdownlint-cli2", "write_good" },
         protobuf = { "protolint" },
-        python = { "mypy" },
         rst = { "rstcheck", "write_good" },
         text = { "write_good" },
         yaml = { "yamllint" },
@@ -108,7 +108,6 @@ local M = {
             "marksman",
             "red_knot",
             "ruff",
-            "taplo",
             "ts_ls",
             "yamlls",
             "zls",
