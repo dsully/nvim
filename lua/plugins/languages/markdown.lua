@@ -1,5 +1,4 @@
 return {
-    { "jghauser/follow-md-links.nvim", ft = "markdown" },
     {
         "OXY2DEV/markview.nvim",
         ft = { "markdown", "vimwiki" },
