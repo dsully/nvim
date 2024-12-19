@@ -34,7 +34,15 @@ return {
 
         -- Set defaults
         vim.lsp.config("*", {
-            capabilities = require("blink.cmp").get_lsp_capabilities({}, true),
+            capabilities = require("blink.cmp").get_lsp_capabilities({
+                textDocument = {
+                    completion = {
+                        completionItem = {
+                            snippetSupport = false,
+                        },
+                    },
+                },
+            }, true),
             root_markers = { ".git" },
         })
 
