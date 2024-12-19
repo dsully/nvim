@@ -16,8 +16,10 @@ vim.lsp.config.basedpyright = {
                 autoSearchPaths = true,
                 diagnosticMode = "openFilesOnly",
                 reportMissingTypeStubs = false,
-                reportUnreachable = true,
-                typeCheckingMode = "off", -- standard
+                reportUndefinedVariable = "none", -- covered by ruff
+                reportUnreachable = "none",
+                reportUnusedImport = "none", -- covered by ruff
+                typeCheckingMode = "basic", -- standard
                 useLibraryCodeForTypes = true,
             },
             disableOrganizeImports = true,
