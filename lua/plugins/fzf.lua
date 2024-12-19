@@ -81,10 +81,6 @@ return {
                 return t
             end
 
-            -- Lazy load nvim-treesitter or help files err with: Query error at 2:4. Invalid node type "delimiter"
-            -- This is due to fzf-lua calling `vim.treesitter.language.add` before nvim-treesitter is loaded
-            pcall(require, "nvim-treesitter")
-
             -- Require markview.nvim for previewer rendering.
             pcall(require, "markview")
 
@@ -205,6 +201,16 @@ return {
                 RIPGREP_CONFIG_PATH = vim.env.RIPGREP_CONFIG_PATH,
                 fzf_opts = { ["--keep-right"] = "" },
                 resume = true,
+                rg_glob = true,
+                --- @param query string First returned string is the new search query
+                --- @param _opts string Second returned string are (optional) additional rg flags
+                --- @return string, string?
+                rg_glob_fn = function(query, _opts)
+                    local regex, flags = query:match("^(.-)%s%-%-(.*)$")
+
+                    -- If no separator is detected will return the original query
+                    return (regex or query), flags
+                end,
             },
             lsp = {
                 code_actions = {
@@ -225,7 +231,9 @@ return {
                 },
             },
             oldfiles = {
+                cwd_only = true,
                 include_current_session = true,
+                stat_file = true,
             },
             previewers = {
                 bat = {
@@ -233,6 +241,8 @@ return {
                     args = "--style=plain --color=always",
                 },
                 builtin = {
+                    -- Don't syntax highlight files larger than 100KB
+                    syntax_limit_b = 1024 * 100, -- 100KB
                     -- https://github.com/ibhagwan/fzf-lua/discussions/1364
                     toggle_behavior = "extend",
                     treesitter = {
