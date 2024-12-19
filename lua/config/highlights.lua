@@ -149,14 +149,16 @@ M.ui = {
         MsgArea = {},
         NonText = { fg = colors.white.base },
         Normal = { bg = colors.black.dim, fg = colors.white.dim },
-        NormalFloat = { bg = colors.black.dim, fg = colors.white.dim },
+        NormalFloat = { bg = colors.black.bright, fg = colors.white.dim },
         NormalNC = { bg = colors.black.dim, fg = colors.white.dim },
         Pmenu = { bg = colors.gray.base, fg = colors.white.dim },
         PmenuSbar = { link = "PmenuSel" },
         -- https://www.reddit.com/r/neovim/comments/1f439w8/psa_for_color_scheme_authors_you_might_want_to/
         -- Matched text in normal item
+        ---@diagnostic disable-next-line: assign-type-mismatch
         PmenuSel = { fg = colors.blue.base, bg = colors.black.base, blend = 0, bold = true, reverse = true, cterm = { reverse = true } },
         -- Matched text in selected item
+        ---@diagnostic disable-next-line: assign-type-mismatch
         PmenuMatchSel = { fg = colors.blue.base, bg = colors.gray.base, bold = true, reverse = true, cterm = { reverse = true } },
         PmenuThumb = { bg = colors.gray.base },
         Question = { link = "MoreMsg" },
