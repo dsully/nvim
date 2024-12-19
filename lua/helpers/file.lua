@@ -1,5 +1,32 @@
 local M = {}
 
+local realpath = function(path)
+    return (vim.uv.fs_realpath(path) or path)
+end
+
+---Edit a new file relative to the same directory as the current buffer
+function M.edit()
+    local buf = vim.api.nvim_get_current_buf()
+    local file = realpath(vim.api.nvim_buf_get_name(buf))
+    local root = assert(realpath(vim.uv.cwd() or "."))
+
+    if file:find(root, 1, true) ~= 1 then
+        root = vim.fs.dirname(file)
+    end
+
+    vim.ui.input({
+        prompt = "File Name: ",
+        default = vim.fs.joinpath(root, ""),
+        completion = "file",
+    }, function(newfile)
+        if not newfile or newfile == "" or newfile == file:sub(#root + 2) then
+            return
+        end
+
+        vim.cmd.edit(vim.fs.normalize(vim.fs.joinpath(root, newfile)))
+    end)
+end
+
 ---Read the content of a file.
 ---@param path string
 ---@return string?

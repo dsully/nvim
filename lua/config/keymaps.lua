@@ -35,15 +35,7 @@ map("<leader>gcu", "dd/|||<CR>0v/>>><CR>$x", "[G]it [C]onflict Choose [U]pstream
 map("<leader>gcb", "0v/|||<CR>$x/====<CR>0v/>>><CR>$x", "[G]it [C]onflict Choose [B]ase")
 map("<leader>gcs", "0v/====<CR>$x/>>><CR>dd", "[G]it [C]onflict Choose [S]tashed")
 
-map("<space>n", function()
-    local cwd = vim.uv.cwd()
-
-    return vim.ui.input({ default = cwd, prompt = "Save as: " }, function(name)
-        if name then
-            vim.cmd.edit(name)
-        end
-    end)
-end, "New File", "n", { expr = false })
+map("<space>n", require("helpers.file").edit, "New File", "n", { expr = false })
 
 -- Open in the filetype default application (macOS)
 if vim.g.os == "Darwin" then
