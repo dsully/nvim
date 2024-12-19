@@ -1,6 +1,7 @@
 return {
     {
-        "OXY2DEV/markview.nvim",
+        "dsully/markview.nvim",
+        branch = "treesitter-compat",
         ft = { "markdown", "vimwiki" },
         keys = {
             {

@@ -1,21 +1,12 @@
 return {
     {
         "nvim-treesitter/nvim-treesitter",
-        cmd = {
-            "TSBufDisable",
-            "TSBufEnable",
-            "TSDisable",
-            "TSEnable",
-            "TSInstall",
-            "TSModuleInfo",
-            "TSUpdate",
-            "TSUpdateSync",
-        },
+        branch = "main",
         config = function(_, opts)
-            local parser = require("nvim-treesitter.parsers").get_parser_configs()
+            local parsers = require("nvim-treesitter.parsers")
 
             ---@diagnostic disable-next-line: inject-field
-            parser.caddy = {
+            parsers.caddy = {
                 install_info = {
                     url = "https://github.com/Samonitari/tree-sitter-caddy",
                     files = { "src/parser.c", "src/scanner.c" },
@@ -24,10 +15,10 @@ return {
                 },
                 filetype = "caddyfile",
                 maintainers = {},
+                tier = 3,
             }
 
             -- Map languages to my created file types.
-            vim.treesitter.language.register("bash", "sh")
             vim.treesitter.language.register("bash", "direnv")
             vim.treesitter.language.register("ruby", "brewfile")
 
@@ -38,12 +29,12 @@ return {
             vim.highlight.priorities.treesitter = 125
 
             require("nvim-treesitter-textobjects")
-            require("nvim-treesitter.configs").setup(opts)
+            require("nvim-treesitter").setup(opts)
         end,
-        event = { ev.VeryLazy, ev.LazyFile },
-        init = function(plugin)
-            require("lazy.core.loader").add_to_rtp(plugin)
-            require("nvim-treesitter.query_predicates")
+        lazy = false,
+        init = function()
+            -- ts-install handles commands and installs.
+            vim.g.loaded_nvim_treesitter = 1
         end,
         keys = {
             { "<bs>", desc = "Decrement Selection", mode = "x" },
@@ -51,22 +42,6 @@ return {
             { "<leader>i", vim.show_pos, desc = "Inspect Position" },
         },
         opts = {
-            ensure_installed = defaults.treesitter.install,
-            highlight = {
-                enable = true,
-            },
-            incremental_selection = {
-                enable = true,
-                keymaps = {
-                    init_selection = "<c-space>",
-                    node_incremental = "<c-space>",
-                    scope_incremental = false,
-                    node_decremental = "<bs>",
-                },
-            },
-            indent = {
-                enable = false,
-            },
             matchup = {
                 enable = true,
             },
@@ -79,12 +54,21 @@ return {
     },
     {
         "nvim-treesitter/nvim-treesitter-textobjects",
+        branch = "main",
         event = ev.VeryLazy,
     },
     {
         "lewis6991/ts-install.nvim",
         build = ":TS update",
         cmd = "TS",
+        init = function()
+            ev.on(ev.FileType, function(args)
+                pcall(vim.treesitter.start, args.buf)
+            end, {
+                desc = "Start treesitter highlighting",
+            })
+        end,
+        lazy = false,
         opts = {
             auto_install = true,
             ensure_install = defaults.treesitter.install,

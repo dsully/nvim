@@ -16,7 +16,7 @@ return {
     { "vhyrro/toml-edit.lua", build = "rockspec", priority = 1000 },
 
     -- Better vim help.
-    { "OXY2DEV/helpview.nvim", lazy = false },
+    { "dsully/helpview.nvim", branch = "treesitter-compat", lazy = false },
 
     -- Apple's PKL language.
     {
