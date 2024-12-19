@@ -112,12 +112,6 @@ return {
         end,
     },
     {
-        -- Build treesitter queries.
-        "ziontee113/query-secretary",
-        -- stylua: ignore
-        keys = { { "<leader>fQ", function() require("query-secretary").query_window_initiate() end, desc = "Find TS Query" } },
-    },
-    {
         "folke/ts-comments.nvim",
         event = ev.VeryLazy,
         opts = {},
