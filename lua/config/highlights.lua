@@ -149,7 +149,7 @@ M.ui = {
         MsgArea = {},
         NonText = { fg = colors.white.base },
         Normal = { bg = colors.black.dim, fg = colors.white.dim },
-        NormalFloat = { bg = colors.black.bright, fg = colors.white.dim },
+        NormalFloat = { bg = colors.black.base, fg = colors.white.dim },
         NormalNC = { bg = colors.black.dim, fg = colors.white.dim },
         Pmenu = { bg = colors.gray.base, fg = colors.white.dim },
         PmenuSbar = { link = "PmenuSel" },
