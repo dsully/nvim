@@ -188,7 +188,6 @@ return {
                                     fill = true,
                                 },
                             },
-
                             kind = {
                                 ellipsis = false,
                                 width = { fill = true },
@@ -207,7 +206,6 @@ return {
                                     return "BlinkCmpKind" .. ctx.kind
                                 end,
                             },
-
                             label = {
                                 width = {
                                     fill = true,
@@ -242,7 +240,6 @@ return {
                                     return highlights
                                 end,
                             },
-
                             label_description = {
                                 width = {
                                     max = 30,
@@ -252,7 +249,6 @@ return {
                                 end,
                                 highlight = "BlinkCmpLabelDescription",
                             },
-
                             source_name = {
                                 width = {
                                     max = 30,
@@ -323,6 +319,55 @@ return {
                     },
                     lsp = {
                         name = "LSP",
+                        ---@param ctx blink.cmp.Context
+                        ---@param items blink.cmp.CompletionItem[]
+                        transform_items = function(ctx, items)
+                            --
+                            local types = require("blink.cmp.types").CompletionItemKind
+                            local is_word_only = string.match(ctx.line, "^%s+%w+$")
+                            local ft = vim.bo[ctx.bufnr].filetype
+
+                            -- Sort snippets lower.
+                            for _, item in ipairs(items) do
+                                if item.kind == require("blink.cmp.types").CompletionItemKind.Snippet then
+                                    item.score_offset = item.score_offset - 3
+                                end
+                            end
+
+                            ---@param item blink.cmp.CompletionItem
+                            return vim.tbl_filter(function(item)
+                                --
+                                if item.kind == types.Text or item.deprecated then
+                                    return false
+                                end
+
+                                if is_word_only and (item.kind == types.Function or item.kind == types.Variable) then
+                                    return false
+                                end
+
+                                if ft == "rust" then
+                                    ---@type RustData
+                                    local data = item.data ---@diagnostic disable-line: assign-type-mismatch
+
+                                    -- Only filter out imported methods.
+                                    if data == nil or #data.imports == 0 or item.kind ~= types.Method then
+                                        return true
+                                    end
+
+                                    for _, to_be_imported in ipairs(data.imports) do
+                                        --
+                                        -- Can be the crate name or a module name.
+                                        for _, unwanted_prefix in ipairs({ "owo_colors" }) do
+                                            if vim.startswith(to_be_imported.full_import_path, unwanted_prefix) then
+                                                return false
+                                            end
+                                        end
+                                    end
+                                end
+
+                                return true
+                            end, items)
+                        end,
                     },
                     path = {
                         name = "Path",
@@ -341,55 +386,6 @@ return {
                         },
                     },
                 },
-                ---@param ctx blink.cmp.Context
-                ---@param items blink.cmp.CompletionItem[]
-                transform_items = function(ctx, items)
-                    --
-                    local types = require("blink.cmp.types").CompletionItemKind
-                    local is_word_only = string.match(ctx.line, "^%s+%w+$")
-                    local ft = vim.bo[ctx.bufnr].filetype
-
-                    -- Sort snippets lower.
-                    for _, item in ipairs(items) do
-                        if item.kind == require("blink.cmp.types").CompletionItemKind.Snippet then
-                            item.score_offset = item.score_offset - 3
-                        end
-                    end
-
-                    ---@param item blink.cmp.CompletionItem
-                    return vim.tbl_filter(function(item)
-                        --
-                        if item.kind == types.Text or item.deprecated then
-                            return false
-                        end
-
-                        if is_word_only and (item.kind == types.Function or item.kind == types.Variable) then
-                            return false
-                        end
-
-                        if ft == "rust" then
-                            ---@type RustData
-                            local data = item.data ---@diagnostic disable-line: assign-type-mismatch
-
-                            -- Only filter out imported methods.
-                            if data == nil or #data.imports == 0 or item.kind ~= types.Method then
-                                return true
-                            end
-
-                            for _, to_be_imported in ipairs(data.imports) do
-                                --
-                                -- Can be the crate name or a module name.
-                                for _, unwanted_prefix in ipairs({ "owo_colors" }) do
-                                    if vim.startswith(to_be_imported.full_import_path, unwanted_prefix) then
-                                        return false
-                                    end
-                                end
-                            end
-                        end
-
-                        return true
-                    end, items)
-                end,
             },
         },
     },
