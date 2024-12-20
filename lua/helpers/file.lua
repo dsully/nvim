@@ -14,6 +14,7 @@ function M.edit()
         root = vim.fs.dirname(file)
     end
 
+    ---@diagnostic disable-next-line: missing-fields
     vim.ui.input({
         prompt = "File Name: ",
         default = vim.fs.joinpath(root, ""),

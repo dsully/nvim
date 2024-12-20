@@ -75,25 +75,12 @@ return {
         },
     },
     {
-        -- Better % matching.
-        "andymass/vim-matchup",
-        event = ev.LazyFile,
-        init = function()
-            vim.o.matchpairs = "(:),{:},[:],<:>"
-
-            -- Don't recognize anything in comments
-            vim.g.matchup_delim_noskips = 2
-
-            vim.g.matchup_matchparen_deferred = 1
-            vim.g.matchup_matchparen_offscreen = { method = "status_manual" }
-
-            hl.apply({
-                { MatchBackground = { link = "ColorColumn" } },
-                { MatchParen = { bg = colors.gray.base, fg = colors.cyan.bright } },
-                { MatchParenCur = { link = "MatchParen" } },
-                { MatchWord = { link = "MatchParen" } },
-            })
-        end,
+        "dsully/treesitter-jump.nvim",
+        keys = {
+            -- stylua: ignore
+            { "%", function() require("treesitter-jump").jump() end },
+        },
+        opts = {},
     },
     {
         "folke/ts-comments.nvim",
