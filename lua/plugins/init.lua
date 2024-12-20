@@ -16,6 +16,8 @@ return {
             },
             library = {
                 { path = "${3rd}/luv/library", words = { "vim%.uv" } },
+                { path = "${3rd}/busted/library", words = { "describe" } },
+                { path = "${3rd}/luassert/library", words = { "assert" } },
                 { path = "lazy.nvim", words = { "LazyVim", "package" } },
                 { path = "snacks.nvim", words = { "Snacks" } },
             },
