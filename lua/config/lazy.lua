@@ -109,7 +109,7 @@ function M.setup()
         },
         ---@diagnostic disable-next-line: assign-type-mismatch
         dev = {
-            path = vim.env.HOME .. "/dev/home/forked",
+            path = vim.env.HOME .. "/dev/home/neovim",
         },
         install = {
             colorscheme = { vim.g.colorscheme },
