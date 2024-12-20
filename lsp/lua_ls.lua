@@ -1,10 +1,14 @@
 vim.lsp.config.lua_ls = {
     cmd = { "lua-language-server" },
     filetypes = { "lua" },
-    on_attach = function(...)
-        require("lazydev.buf").on_attach(...)
+    --- @param client vim.lsp.Client
+    on_init = function(client)
+        -- Use stylua via conform.nvim
+        client.server_capabilities.documentFormattingProvider = nil
+        client.server_capabilities.documentRangeFormattingProvider = nil
     end,
     settings = {
+        ---@type LuaLanguageServerSettings
         Lua = {
             codeLens = {
                 enable = true,
@@ -72,6 +76,7 @@ vim.lsp.config.lua_ls = {
         "selene.toml",
         "selene.yml",
         "stylua.toml",
+        "lua/",
     },
     single_file_support = true,
 }
