@@ -81,6 +81,7 @@ local M = {
         go = { "revive" },
         htmldjango = { "curlylint" },
         jinja = { "curlylint" },
+        lua = { "luacheck" },
         markdown = { "markdownlint-cli2", "write_good" },
         protobuf = { "protolint" },
         rst = { "rstcheck", "write_good" },
