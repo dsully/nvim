@@ -291,13 +291,17 @@ return {
                     end
 
                     return {
+                        "lazydev",
                         "lsp",
                         "path",
                         "snippets",
-                        "lazydev",
+                        "copilot",
                         "codecompanion",
-                        -- "copilot",
                     }
+                end,
+                -- Disable completion for markdown.
+                min_keyword_length = function()
+                    return vim.bo.filetype == "markdown" and 2 or 0
                 end,
                 providers = {
                     codecompanion = {
@@ -315,10 +319,12 @@ return {
                     lazydev = {
                         name = "LazyDev",
                         module = "lazydev.integrations.blink",
-                        score_offset = 100, -- show at a higher priority than the LSP
+                        -- Make lazydev completions top priority
+                        score_offset = 100,
                     },
                     lsp = {
                         name = "LSP",
+                        timeout_ms = 400,
                         ---@param ctx blink.cmp.Context
                         ---@param items blink.cmp.CompletionItem[]
                         transform_items = function(ctx, items)
