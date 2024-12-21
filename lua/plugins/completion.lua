@@ -155,34 +155,18 @@ return {
                             kind_icon = {
                                 ellipsis = false,
                                 text = function(ctx)
-                                    local icon = ctx.kind_icon
                                     --
-                                    -- Give path completions a different set of icons.
-                                    if ctx.item.source_name == "Path" then
-                                        local fi, _ = require("mini.icons").get("file", ctx.item.label)
-
-                                        if fi ~= nil then
-                                            icon = fi
-                                        end
-                                    end
-
                                     if ctx.item.source_name == "Copilot" then
                                         return defaults.icons.misc.copilot
                                     end
 
-                                    return icon .. ctx.icon_gap
+                                    local kind_icon, _, _ = require("mini.icons").get("lsp", ctx.kind)
+                                    return kind_icon
                                 end,
                                 highlight = function(ctx)
                                     --
-                                    if ctx.item.source_name == "Path" then
-                                        local _, hl = require("mini.icons").get("file", ctx.item.label)
-
-                                        if hl ~= nil then
-                                            return hl
-                                        end
-                                    end
-
-                                    return "BlinkCmpKind" .. ctx.kind
+                                    local _, hl, _ = require("mini.icons").get("lsp", ctx.kind)
+                                    return hl
                                 end,
                                 width = {
                                     fill = true,
@@ -277,9 +261,9 @@ return {
                 -- Disable cmdline for now.
                 cmdline = {},
                 default = function()
-                    local node = vim.treesitter.get_node()
+                    local success, node = pcall(vim.treesitter.get_node)
 
-                    if node and vim.tbl_contains({ "comment", "line_comment", "block_comment" }, node:type()) then
+                    if success and node and vim.tbl_contains({ "comment", "line_comment", "block_comment" }, node:type()) then
                         return {}
                     end
 
