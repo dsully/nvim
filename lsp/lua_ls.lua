@@ -1,4 +1,4 @@
-vim.lsp.config.lua_ls = {
+return {
     cmd = { "lua-language-server" },
     filetypes = { "lua" },
     --- @param client vim.lsp.Client

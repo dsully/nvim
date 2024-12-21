@@ -1,4 +1,4 @@
-vim.lsp.config.harper = {
+return {
     cmd = { "harper-ls", "--stdio" },
     filetypes = { "gitcommit", "markdown", "text" },
     settings = {

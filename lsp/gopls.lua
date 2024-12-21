@@ -1,4 +1,4 @@
-vim.lsp.config.gopls = {
+return {
     cmd = { "gopls" },
     filetypes = { "go", "gomod", "gowork" }, -- Don't attach for gotmpl.
     init_options = {

@@ -1,4 +1,4 @@
-vim.lsp.config.clangd = {
+return {
     cmd = {
         "clangd",
         "--clang-tidy",
