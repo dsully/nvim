@@ -1,4 +1,4 @@
-vim.lsp.config.html = {
+return {
     cmd = { "vscode-html-language-server", "--stdio" },
     filetypes = { "html", "htmldjango", "templ" },
     init_options = {

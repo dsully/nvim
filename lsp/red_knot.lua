@@ -1,4 +1,4 @@
-vim.lsp.config.red_knot = {
+return {
     cmd = {
         vim.env.HOME .. "/src/rust/ruff/target/release/red_knot",
         "--target-version",

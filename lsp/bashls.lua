@@ -1,4 +1,4 @@
-vim.lsp.config.bashls = {
+return {
     cmd = { "bash-language-server", "start" },
     filetypes = { "bash", "direnv", "sh", "zsh" },
     --
