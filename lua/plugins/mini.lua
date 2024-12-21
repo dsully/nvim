@@ -174,10 +174,10 @@ return {
                     },
                     separated = {
                         pattern = "%[()%d+,%s*%d+,%s*%d+()%]",
-                        group = function(_, _match, _data)
+                        group = function(_, matched, _data)
                             ---@type string
-                            local r, g, b = _match:match("(%d+),%s*(%d+),%s*(%d+)")
-                            local hex_color = string.format("#%02X%02X%02X", r, g, b)
+                            local r, g, b = matched:match("(%d+),%s*(%d+),%s*(%d+)")
+                            local hex_color = matched.format("#%02X%02X%02X", r, g, b)
 
                             return hp.compute_hex_color_group(hex_color, "fg")
                         end,

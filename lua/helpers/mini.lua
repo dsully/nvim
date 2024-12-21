@@ -80,7 +80,7 @@ function M.ai_whichkey(opts)
                 desc = desc:gsub(" with ws", "")
             end
 
-            ret[#ret + 1] = { prefix .. obj[1], desc = obj.desc }
+            ret[#ret + 1] = { prefix .. obj[1], desc = desc }
         end
     end
 

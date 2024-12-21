@@ -143,8 +143,7 @@ M.notifications = function()
         return
     end
 
-    ---@param entries Notification[]
-    function M.previewer(entries) ---@diagnostic disable-line: unused-local
+    function M.previewer()
         local previewer = require("fzf-lua.previewer.builtin").base:extend()
 
         function previewer:new(o, opts, fzf_win)
@@ -184,7 +183,7 @@ M.notifications = function()
     end
 
     fzf.fzf_exec(notifications, {
-        previewer = M.previewer(notifications),
+        previewer = M.previewer(),
         actions = {
             ["default"] = function(selected)
                 local id = strip(selected[1])
