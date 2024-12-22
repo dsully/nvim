@@ -100,7 +100,7 @@ function M.setup()
             { import = "plugins.languages" },
         },
         change_detection = {
-            enabled = false,
+            enabled = true,
             notify = false,
         },
         checker = {
@@ -113,7 +113,18 @@ function M.setup()
         },
         ---@diagnostic disable-next-line: assign-type-mismatch
         dev = {
+            fallback = true,
             path = vim.env.HOME .. "/dev/home/neovim",
+            patterns = { vim.env.USER },
+        },
+        diff = {
+            -- diff command <d> can be one of:
+            -- * browser: opens the github compare view. Note that this is always mapped to <K> as well,
+            --   so you can have a different command for diff <d>
+            -- * git: will run git diff and open a buffer with filetype git
+            -- * terminal_git: will open a pseudo terminal with git diff
+            -- * diffview.nvim: will open Diffview to show the diff
+            cmd = "diffview.nvim",
         },
         install = {
             colorscheme = { vim.g.colorscheme },
