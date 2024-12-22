@@ -1,6 +1,5 @@
 return {
     "williamboman/mason.nvim",
-    build = ":MasonUpdate",
     cmd = {
         "Mason",
         "MasonInstall",
@@ -10,9 +9,9 @@ return {
         "MasonToolsUpdate",
     },
     config = function(_, opts)
-        require("mason").setup(opts)
+        vim.defer_fn(function()
+            require("mason").setup(opts)
 
-        vim.schedule(function()
             local mr = require("mason-registry")
 
             vim.iter(opts.ensure_installed):each(function(tool)
@@ -32,7 +31,7 @@ return {
                         vim.defer_fn(function()
                             require("lazy.core.handler.event").trigger({
                                 buf = vim.api.nvim_get_current_buf(),
-                                event = "FileType",
+                                event = ev.FileType,
                             })
                         end, 100)
                     end
@@ -40,8 +39,9 @@ return {
 
                 p:install():once("closed", handle_closed)
             end)
-        end)
+        end, 5000)
     end,
+    event = ev.LazyFile,
     opts = {
         ---@type string[]
         ensure_installed = defaults.tools,
