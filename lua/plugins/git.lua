@@ -1,20 +1,24 @@
 return {
     {
         "lewis6991/gitsigns.nvim",
-        event = ev.LazyFile,
-        init = function()
-            require("snacks")
-                .toggle({
-                    name = "Git Signs",
-                    get = function()
-                        return require("gitsigns.config").config.signcolumn
-                    end,
-                    set = function(state)
-                        require("gitsigns").toggle_signs(state)
-                    end,
-                })
-                :map("<space>tg")
+        config = function(_, opts)
+            vim.defer_fn(function()
+                require("gitsigns").setup(opts)
+
+                require("snacks")
+                    .toggle({
+                        name = "Git Signs",
+                        get = function()
+                            return require("gitsigns.config").config.signcolumn
+                        end,
+                        set = function(state)
+                            require("gitsigns").toggle_signs(state)
+                        end,
+                    })
+                    :map("<space>tg")
+            end, 500)
         end,
+        event = ev.LazyFile,
         opts = {
             attach_to_untracked = true,
             --- @param buffer integer
@@ -22,6 +26,7 @@ return {
                 local gs = package.loaded.gitsigns
 
                 local function bmap(l, r, desc, mode)
+                    ---@diagnostic disable-next-line: missing-fields
                     vim.keymap.set(mode or "n", l, r, { buffer = buffer, desc = desc })
                 end
 
