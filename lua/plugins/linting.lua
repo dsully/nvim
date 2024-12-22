@@ -2,32 +2,33 @@ return {
     {
         "mfussenegger/nvim-lint",
         config = function()
-            local debounce = require("helpers.debounce").debounce
-            local lint = require("lint")
+            vim.schedule(function()
+                local lint = require("lint")
 
-            lint.linters["markdownlint-cli2"].args = {
-                "--config",
-                string.format("%s/markdownlint/config.yaml", vim.env.XDG_CONFIG_HOME),
-            }
+                lint.linters["markdownlint-cli2"].args = {
+                    "--config",
+                    string.format("%s/markdownlint/config.yaml", vim.env.XDG_CONFIG_HOME),
+                }
 
-            lint.linters.yamllint.args = {
-                "--config",
-                string.format("%s/yamllint.yaml", vim.env.XDG_CONFIG_HOME),
-            }
+                lint.linters.yamllint.args = {
+                    "--config",
+                    string.format("%s/yamllint.yaml", vim.env.XDG_CONFIG_HOME),
+                }
 
-            lint.linters_by_ft = defaults.linters
+                lint.linters_by_ft = defaults.linters
 
-            if vim.fn.executable("mypy") == 1 then
-                lint.linters_by_ft["python"] = { "mypy" }
-            end
+                if vim.fn.executable("mypy") == 1 then
+                    lint.linters_by_ft["python"] = { "mypy" }
+                end
 
-            if vim.g.os == "Linux" then
-                lint.linters_by_ft["systemd"] = { "systemd-analyze" }
-            end
+                if vim.g.os == "Linux" then
+                    lint.linters_by_ft["systemd"] = { "systemd-analyze" }
+                end
+            end)
 
             ev.on(
                 { ev.BufReadPost, ev.BufWritePost, ev.InsertLeave },
-                debounce(100, function(args)
+                require("helpers.debounce").debounce(100, function(args)
                     --
                     -- Ignore buffer types and empty file types.
                     if vim.tbl_contains(defaults.ignored.buffer_types, vim.bo.buftype) then
@@ -42,6 +43,8 @@ return {
                     if args.file:match("/(node_modules|__pypackages__|site_packages|cargo/registry)/") then
                         return
                     end
+
+                    local lint = require("lint")
 
                     lint.try_lint()
                     lint.try_lint("typos")
