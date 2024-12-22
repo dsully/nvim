@@ -114,20 +114,36 @@ return {
         ---@param client vim.lsp.Client
         ---@param buffer number
         lsp.on_supports_method(methods.textDocument_documentHighlight, function(client, buffer)
+            --
+            local debounce = require("helpers.debounce").debounce
+
             local group = string.format("%s/highlight/%s", client.name, buffer)
             local id = ev.group(group)
 
-            ev.on({ ev.CursorHold, ev.CursorHoldI, ev.InsertLeave }, function()
-                if vim.api.nvim_buf_is_valid(buffer) then
-                    vim.lsp.buf.document_highlight()
-                end
-            end, {
-                group = id,
-                buffer = buffer,
-                desc = group .. "/highlight",
-            })
+            ev.on(
+                { ev.BufEnter, ev.CursorMoved, ev.FocusGained, ev.WinEnter },
+                debounce(200, function()
+                    vim.lsp.buf.clear_references()
 
-            ev.on({ ev.BufLeave, ev.CursorMoved, ev.InsertEnter }, function()
+                    local enc = client.offset_encoding
+                    local win = vim.api.nvim_get_current_win()
+
+                    client:request(methods.textDocument_documentHighlight, vim.lsp.util.make_position_params(0, enc), function(_, result, ctx)
+                        if not result or win ~= vim.api.nvim_get_current_win() then
+                            return
+                        end
+
+                        vim.lsp.util.buf_highlight_references(ctx.bufnr, result, enc)
+                    end, buffer)
+                end),
+                {
+                    group = id,
+                    buffer = buffer,
+                    desc = group .. "/highlight",
+                }
+            )
+
+            ev.on({ ev.BufLeave, ev.FocusLost, ev.WinLeave }, function()
                 if vim.api.nvim_buf_is_valid(buffer) then
                     vim.lsp.buf.clear_references()
                 end
