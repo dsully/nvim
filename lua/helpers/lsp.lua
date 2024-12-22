@@ -231,6 +231,47 @@ M.apply_quickfix = function()
     })
 end
 
+M.capabilities = function()
+    return vim.tbl_deep_extend("force", vim.lsp.protocol.make_client_capabilities(), {
+        textDocument = {
+            completion = {
+                completionItem = {
+                    -- Disable snippet support.
+                    snippetSupport = false,
+                    commitCharactersSupport = false,
+                    documentationFormat = { "markdown", "plaintext" },
+                    deprecatedSupport = true,
+                    preselectSupport = false,
+                    tagSupport = { valueSet = { 1 } },
+                    insertReplaceSupport = true,
+                    resolveSupport = {
+                        properties = {
+                            "documentation",
+                            "detail",
+                            "additionalTextEdits",
+                        },
+                    },
+                    insertTextModeSupport = {
+                        valueSet = { 1 }, -- asIs
+                    },
+                    labelDetailsSupport = true,
+                },
+                completionList = {
+                    itemDefaults = {
+                        "commitCharacters",
+                        "editRange",
+                        "insertTextFormat",
+                        "insertTextMode",
+                        "data",
+                    },
+                },
+                contextSupport = true,
+                insertTextMode = 1,
+            },
+        },
+    })
+end
+
 M.commands = function()
     vim.api.nvim_create_user_command("LspCapabilities", function()
         --
@@ -322,6 +363,16 @@ M.commands = function()
 
         vim.cmd.edit()
     end, { desc = "Restart Language Server for Buffer" })
+end
+
+---@param f fun(cfg: table):any
+---@param cfg table
+M.with = function(f, cfg)
+    --
+    ---@param c table
+    return function(c)
+        return f(vim.tbl_deep_extend("force", cfg, c or {}))
+    end
 end
 
 return M
