@@ -27,6 +27,10 @@ return {
         "mrcjkb/rustaceanvim",
         config = function()
             vim.g.rustaceanvim = {
+                dap = {
+                    adapter = false,
+                    configuration = false,
+                },
                 -- Plugin configuration
                 tools = {
                     code_actions = {
