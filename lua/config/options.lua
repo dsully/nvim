@@ -94,6 +94,8 @@ vim.g.os = vim.uv.os_uname().sysname
 --
 vim.g.colorscheme = "nordish"
 
+vim.g.ts_path = vim.fs.joinpath(tostring(vim.fn.stdpath("data")), "ts-install")
+
 -- Load clipboard.vim faster. Neovim 0.10+ includes OSC52 support.
 if vim.env.SSH_CONNECTION or vim.env.ZELLIJ then
     local osc52 = require("vim.ui.clipboard.osc52")

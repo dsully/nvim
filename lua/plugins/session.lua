@@ -9,8 +9,6 @@ return {
         end
 
         vim.api.nvim_create_user_command("SessionLoad", function()
-            -- Work around nougat and mini.icons not being loaded.
-            require("mini.icons")
             require("resession").load(session_name(), { silence_errors = false })
         end, { desc = "Session Load" })
 

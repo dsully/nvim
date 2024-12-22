@@ -1,4 +1,6 @@
-local M = {}
+local M = {
+    data = tostring(vim.fn.stdpath("data")),
+}
 
 function M.lazy_file()
     -- This autocmd will only trigger when a file was loaded from the cmdline.
@@ -33,6 +35,7 @@ end
 
 function M.lazy_notify()
     local notifs = {}
+
     local function temp(...)
         table.insert(notifs, vim.F.pack_len(...))
     end
@@ -49,9 +52,11 @@ function M.lazy_notify()
         end
 
         check:stop()
+
         if vim.notify == temp then
-            vim.notify = orig -- put back the original notify if needed
+            vim.notify = orig -- Put back the original notify if needed
         end
+
         vim.schedule(function()
             for _, notif in ipairs(notifs) do
                 vim.notify(vim.F.unpack_len(notif))
@@ -73,7 +78,7 @@ function M.lazy_notify()
 end
 
 function M.bootstrap()
-    local lazypath = vim.fn.stdpath("data") .. "/lazy/lazy.nvim"
+    local lazypath = vim.fs.joinpath(M.data, "lazy/lazy.nvim")
 
     if not vim.uv.fs_stat(lazypath) then
         vim.system({ "git", "clone", "--filter=blob:none", "https://github.com/folke/lazy.nvim.git", lazypath }):wait()
@@ -88,9 +93,8 @@ function M.setup()
     M.lazy_notify()
     M.lazy_file()
 
-    local lazy = require("lazy")
-
-    lazy.setup({
+    ---@type LazyConfig
+    local opts = {
         spec = {
             { import = "plugins" },
             { import = "plugins.languages" },
@@ -144,6 +148,9 @@ function M.setup()
                     "zip",
                     "zipPlugin",
                 },
+                paths = {
+                    vim.fs.joinpath(M.data, "ts-install"),
+                },
             },
         },
         pkg = {
@@ -166,7 +173,11 @@ function M.setup()
             backdrop = 90,
             border = defaults.ui.border.name,
         },
-    })
+    }
+
+    local lazy = require("lazy")
+
+    lazy.setup(opts)
 
     hl.apply({
         { LazyCommit = { fg = colors.white.bright } },

@@ -201,15 +201,13 @@ return {
                 { MiniIconsPurple = { fg = colors.magenta.base } },
                 { MiniIconsRed = { fg = colors.red.base } },
                 { MiniIconsYellow = { fg = colors.yellow.base } },
-            })
+            }, false)
 
             package.preload["nvim-web-devicons"] = function()
                 require("mini.icons").mock_nvim_web_devicons()
                 return package.loaded["nvim-web-devicons"]
             end
         end,
-        -- Can't be lazy so the nvim-web-devicons run time patching can happen early.
-        lazy = false,
         opts = {
             style = "glyph",
             default = {
@@ -424,7 +422,6 @@ return {
 
             return vim.tbl_deep_extend("keep", mappings, keys)
         end,
-        lazy = false,
         opts = {
             custom_surroundings = {
                 -- ["("] = { input = { "%b()", "^.().*().$" }, output = { left = "(", right = ")" } },

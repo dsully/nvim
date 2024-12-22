@@ -716,15 +716,25 @@ M.set = function(name, opts)
     vim.api.nvim_set_hl(0, name, opts)
 end
 
+---@param highlights {[string]: vim.api.keyset.highlight}[]
+M._apply = function(highlights)
+    vim.iter(highlights):each(function(hl)
+        M.set(next(hl))
+    end)
+end
+
 ---Apply a list of highlights
 ---@param highlights {[string]: vim.api.keyset.highlight}[]
-M.apply = function(highlights)
+---@param schedule boolean?
+M.apply = function(highlights, schedule)
     --
-    vim.schedule(function()
-        vim.iter(highlights):each(function(hl)
-            M.set(next(hl))
-        end)
-    end)
+    if schedule then
+        vim.defer_fn(function()
+            M._apply(highlights)
+        end, 1000)
+    else
+        M._apply(highlights)
+    end
 end
 
 return M
