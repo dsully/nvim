@@ -31,25 +31,19 @@ return {
             require("nvim-treesitter-textobjects")
             require("nvim-treesitter").setup(opts)
         end,
-        lazy = false,
         init = function()
             -- ts-install handles commands and installs.
             vim.g.loaded_nvim_treesitter = 1
         end,
+        lazy = false,
         keys = {
-            { "<bs>", desc = "Decrement Selection", mode = "x" },
-            { "<c-space>", desc = "Increment Selection" },
-            { "<leader>i", vim.show_pos, desc = "Inspect Position" },
+            { "<leader>i", vim.cmd.Inspect, desc = "Inspect Position" },
         },
+        ---@type TSConfig
         opts = {
-            matchup = {
-                enable = true,
-            },
-            query_linter = {
-                enable = true,
-                use_virtual_text = true,
-                lint_events = { ev.BufWrite, ev.CursorHold },
-            },
+            ensure_install = {},
+            ignore_install = { "unsupported" },
+            install_dir = vim.g.ts_path,
         },
     },
     {
@@ -61,14 +55,8 @@ return {
         "lewis6991/ts-install.nvim",
         build = ":TS update",
         cmd = "TS",
-        init = function()
-            ev.on(ev.FileType, function(args)
-                pcall(vim.treesitter.start, args.buf)
-            end, {
-                desc = "Start treesitter highlighting",
-            })
-        end,
-        lazy = false,
+        event = ev.VeryLazy,
+        dependencies = { "nvim-treesitter" },
         opts = {
             auto_install = true,
             ensure_install = defaults.treesitter.install,
@@ -76,6 +64,7 @@ return {
     },
     {
         "dsully/treesitter-jump.nvim",
+        dev = true,
         keys = {
             -- stylua: ignore
             { "%", function() require("treesitter-jump").jump() end },

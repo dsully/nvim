@@ -1,5 +1,5 @@
 ev.on({ ev.FocusGained, ev.TermClose, ev.TermLeave }, function()
-    if vim.o.buftype ~= "nofile" then
+    if vim.o.buftype ~= defaults.ignored.buffer_types then
         vim.cmd.checktime()
     end
 end, {
@@ -39,6 +39,12 @@ end, {
         "sh",
         "zsh",
     },
+})
+
+ev.on(ev.FileType, function()
+    pcall(vim.treesitter.start)
+end, {
+    desc = "Start treesitter highlighting",
 })
 
 ev.on(ev.FileType, function()
@@ -126,7 +132,13 @@ ev.on(ev.BufWritePre, function()
     vim.opt_local.undofile = false
 end, {
     desc = "Disable the undo file for temporary files.",
-    pattern = { "COMMIT_EDITMSG", "MERGE_MSG", "gitcommit", "*.tmp", "*.log" },
+    pattern = {
+        "COMMIT_EDITMSG",
+        "MERGE_MSG",
+        "gitcommit",
+        "*.tmp",
+        "*.log",
+    },
 })
 
 ev.on(ev.BufWritePre, function(args)
