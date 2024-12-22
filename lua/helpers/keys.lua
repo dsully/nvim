@@ -97,4 +97,11 @@ M.feed = function(keymap, mode)
     vim.api.nvim_feedkeys(vim.api.nvim_replace_termcodes(keymap, true, false, true), mode, false)
 end
 
+--- Create an undo point in insert mode.
+M.create_undo = function()
+    if vim.api.nvim_get_mode().mode == "i" then
+        M.feed("<c-G>u", "n")
+    end
+end
+
 return M
