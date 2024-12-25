@@ -2,21 +2,9 @@ return {
     {
         "nvim-treesitter/nvim-treesitter",
         branch = "main",
-        config = function(_, opts)
-            local parsers = require("nvim-treesitter.parsers")
-
-            ---@diagnostic disable-next-line: inject-field
-            parsers.caddy = {
-                install_info = {
-                    url = "https://github.com/Samonitari/tree-sitter-caddy",
-                    files = { "src/parser.c", "src/scanner.c" },
-                    branch = "master",
-                    revision = "65b60437983933d00809c8927e7d8a29ca26dfa3",
-                },
-                filetype = "caddyfile",
-                maintainers = {},
-                tier = 3,
-            }
+        init = function()
+            -- ts-install handles commands and installs.
+            vim.g.loaded_nvim_treesitter = 1
 
             -- Map languages to my created file types.
             vim.treesitter.language.register("bash", "direnv")
@@ -27,13 +15,6 @@ return {
 
             vim.highlight.priorities.semantic_tokens = 100
             vim.highlight.priorities.treesitter = 125
-
-            require("nvim-treesitter-textobjects")
-            require("nvim-treesitter").setup(opts)
-        end,
-        init = function()
-            -- ts-install handles commands and installs.
-            vim.g.loaded_nvim_treesitter = 1
         end,
         lazy = false,
         keys = {
@@ -60,6 +41,19 @@ return {
         opts = {
             auto_install = true,
             ensure_install = defaults.treesitter.install,
+            parsers = {
+                caddy = {
+                    install_info = {
+                        url = "https://github.com/Samonitari/tree-sitter-caddy",
+                        files = { "src/parser.c", "src/scanner.c" },
+                        branch = "master",
+                        revision = "65b60437983933d00809c8927e7d8a29ca26dfa3",
+                    },
+                    filetype = "caddyfile",
+                    maintainers = {},
+                    tier = 3,
+                },
+            },
         },
     },
     {
