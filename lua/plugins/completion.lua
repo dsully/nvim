@@ -9,6 +9,11 @@
 
 ---@alias RustData RustCompletionResolveData | nil
 
+local function has_words_before()
+    local line, col = unpack(vim.api.nvim_win_get_cursor(0))
+    return col ~= 0 and vim.api.nvim_buf_get_lines(0, line - 1, line, true)[1]:sub(col, col):match("%s") == nil
+end
+
 return {
     { "giuxtaposition/blink-cmp-copilot" },
     {
@@ -79,39 +84,26 @@ return {
                 { BlinkCmpKindValue = { fg = colors.blue.base } },
                 { BlinkCmpKindVariable = { fg = colors.blue.base } },
             })
-
-            -- Clear search and stop snippet on escape
-            keys.map("<esc>", function()
-                vim.cmd.nohlsearch()
-
-                if vim.snippet then
-                    vim.snippet.stop()
-                end
-
-                return "<esc>"
-            end, "Escape and Clear hlsearch", { "i", "n", "s" }, { expr = true })
         end,
-        lazy = false,
         keys = {
+            -- Clear search and stop snippet on escape
+            {
+                "<esc>",
+                function()
+                    vim.cmd.nohlsearch()
+
+                    if vim.snippet then
+                        vim.snippet.stop()
+                    end
+
+                    return "<esc>"
+                end,
+                desc = "Escape and Clear hlsearch",
+                expr = true,
+                mode = { "c", "i", "n", "s" },
+            },
             -- Inside a snippet, use backspace to remove the placeholder.
             { "<bs>", "<C-O>s", desc = "Remove Snippet Placeholder", mode = "s" },
-            {
-                "<C-e>",
-                function()
-                    local cmp = require("blink.cmp")
-                    local copilot = require("copilot")
-
-                    if vim.snippet.active() then
-                        vim.snippet.stop()
-                    elseif cmp.is_visible() then
-                        cmp.hide()
-                    elseif copilot.is_visible() then
-                        copilot.dismiss()
-                    end
-                end,
-                desc = "Hide Completion",
-                mode = { "i", "c" },
-            },
         },
         ---@type blink.cmp.Config
         opts = {
@@ -134,16 +126,22 @@ return {
                     enabled = true,
                 },
                 list = {
-                    selection = "manual",
+                    selection = function(ctx)
+                        return ctx.mode == "cmdline" and "auto_insert" or "manual"
+                    end,
                 },
                 menu = {
+                    -- Don't auto-show the completion menu in commandline mode.
+                    auto_show = function(ctx)
+                        return ctx.mode ~= "cmdline" or not vim.tbl_contains({ "/", "?" }, vim.fn.getcmdtype())
+                    end,
                     --- @type blink.cmp.Draw
                     draw = {
                         treesitter = { "lsp" },
                         columns = {
-                            { "kind_icon", gap = 1 },
-                            { "label", "label_description", gap = 2 },
-                            { "kind" },
+                            { "kind_icon", gap = 2 },
+                            { "label", gap = 2 },
+                            { "kind", gap = 2 },
                         },
                         --
                         -- Definitions for possible components to render. Each component defines:
@@ -153,20 +151,12 @@ return {
                         --   highlight function: will be called only when the line appears on screen
                         components = {
                             kind_icon = {
-                                ellipsis = false,
+                                ellipsis = true,
                                 text = function(ctx)
-                                    --
-                                    if ctx.item.source_name == "Copilot" then
-                                        return defaults.icons.misc.copilot
-                                    end
-
-                                    local kind_icon, _, _ = require("mini.icons").get("lsp", ctx.kind)
-                                    return kind_icon
+                                    return select(1, require("mini.icons").get("lsp", ctx.kind))
                                 end,
                                 highlight = function(ctx)
-                                    --
-                                    local _, hl, _ = require("mini.icons").get("lsp", ctx.kind)
-                                    return hl
+                                    return select(2, require("mini.icons").get("lsp", ctx.kind))
                                 end,
                                 width = {
                                     fill = true,
@@ -174,40 +164,34 @@ return {
                             },
                             kind = {
                                 ellipsis = false,
-                                width = { fill = true },
+                                width = {
+                                    fill = true,
+                                },
                                 text = function(ctx)
-                                    if ctx.item.source_name == "Copilot" then
-                                        return "Code"
-                                    end
-
-                                    return ctx.kind
+                                    return is_ai_source(ctx.item.source_name) and "Code" or ctx.kind
                                 end,
                                 highlight = function(ctx)
-                                    if ctx.item.source_name == "Copilot" then
-                                        return "BlinkCmpKindSnippet"
-                                    end
-
-                                    return "BlinkCmpKind" .. ctx.kind
+                                    return is_ai_source(ctx.item.source_name) and "BlinkCmpKindSnippet" or "BlinkCmpKind" .. ctx.kind
                                 end,
                             },
                             label = {
                                 width = {
                                     fill = true,
-                                    max = 60,
+                                    max = 90,
                                 },
+                                --- @param ctx blink.cmp.DrawItemContext
                                 text = function(ctx)
-                                    -- Strip the `pub fn` prefix from Rust functions.
-                                    -- Strip method & function parameters.
-                                    -- if ctx.item.detail ~= nil then
-                                    --     ctx.item.detail = ctx.item.detail:gsub("pub fn (.+)", "%1"):gsub("(.+)%(.+%)~", "%1()")
-                                    --     ctx.item.detail = ctx.item.detail:gsub("pub async fn (.+)", "%1"):gsub("(.+)%(.+%)~", "%1()")
-                                    --     ctx.item.detail = ctx.item.detail:gsub("pub unsafe fn (.+)", "%1"):gsub("(.+)%(.+%)~", "%1()")
-                                    -- end
+                                    --
+                                    local ft = vim.bo.filetype
+
+                                    if ft == "rust" then
+                                        return require("helpers.completion").rust_format(ctx)
+                                    end
 
                                     return ctx.label .. ctx.label_detail
                                 end,
                                 highlight = function(ctx)
-                                    -- label and label details
+                                    -- Label and label details
                                     local highlights = {
                                         { 0, #ctx.label, group = ctx.deprecated and "BlinkCmpLabelDeprecated" or "BlinkCmpLabel" },
                                     }
@@ -224,15 +208,6 @@ return {
                                     return highlights
                                 end,
                             },
-                            label_description = {
-                                width = {
-                                    max = 30,
-                                },
-                                text = function(ctx)
-                                    return ctx.label_description
-                                end,
-                                highlight = "BlinkCmpLabelDescription",
-                            },
                             source_name = {
                                 width = {
                                     max = 30,
@@ -246,16 +221,30 @@ return {
                     },
                 },
             },
+            enabled = function()
+                return not vim.tbl_contains(defaults.ignored.file_types, vim.bo.filetype) and vim.bo.buftype ~= "prompt" and vim.b.completion ~= false
+            end,
+            ---@type blink.cmp.KeymapConfig
             keymap = {
                 preset = "enter",
                 ["<Tab>"] = {
-                    "select_next",
                     "snippet_forward",
+                    "select_next",
+                    function(cmp)
+                        if has_words_before() then
+                            return cmp.show()
+                        end
+                    end,
                     "fallback",
                 },
-                ["<S-Tab>"] = { "select_prev", "fallback" },
+                ["<S-Tab>"] = {
+                    "snippet_backward",
+                    "select_prev",
+                    "fallback",
+                },
                 ["<C-j>"] = { "select_next", "fallback" },
                 ["<C-k>"] = { "select_prev", "fallback" },
+                ["<C-y>"] = { "select_and_accept" },
             },
             sources = {
                 -- Disable cmdline for now.
@@ -287,15 +276,45 @@ return {
                 min_keyword_length = function()
                     return vim.bo.filetype == "markdown" and 2 or 0
                 end,
+                -- Ignore
+                per_filetype = {
+                    gitcommit = {},
+                    snacks_input = {},
+                },
                 providers = {
+                    buffer = {
+                        max_items = 4,
+                        min_keyword_length = 4,
+                        opts = {
+                            -- Show completions from all buffers used within the last x minutes
+                            get_bufnrs = function()
+                                local mins = 15
+                                local open_buffers = vim.fn.getbufinfo({ buflisted = 1, bufloaded = 1 })
+
+                                local recent_buffers = vim.iter(open_buffers)
+                                    :filter(function(buf)
+                                        local recently_used = os.time() - buf.lastused < (60 * mins)
+                                        return recently_used and vim.bo[buf.bufnr].buftype == ""
+                                    end)
+                                    :map(function(buf)
+                                        return buf.bufnr
+                                    end)
+                                    :totable()
+
+                                return recent_buffers
+                            end,
+                        },
+                        score_offset = -3,
+                    },
                     codecompanion = {
                         name = "CodeCompanion",
+                        async = true,
                         module = "codecompanion.providers.completion.blink",
                         score_offset = 100,
-                        async = true,
                     },
                     copilot = {
                         name = "Copilot",
+                        async = true,
                         module = "blink-cmp-copilot",
                         score_offset = 100,
                         async = true,
@@ -308,6 +327,8 @@ return {
                     },
                     lsp = {
                         name = "LSP",
+                        -- Do not use `buffer` as fallback
+                        fallbacks = {},
                         timeout_ms = 400,
                         ---@param ctx blink.cmp.Context
                         ---@param items blink.cmp.CompletionItem[]
@@ -319,7 +340,7 @@ return {
 
                             -- Sort snippets lower.
                             for _, item in ipairs(items) do
-                                if item.kind == require("blink.cmp.types").CompletionItemKind.Snippet then
+                                if item.kind == types.Snippet then
                                     item.score_offset = item.score_offset - 3
                                 end
                             end
@@ -327,7 +348,7 @@ return {
                             ---@param item blink.cmp.CompletionItem
                             return vim.tbl_filter(function(item)
                                 --
-                                if item.kind == types.Text or item.deprecated then
+                                if item.kind == types.Text or item.kind == types.Snippet or item.deprecated then
                                     return false
                                 end
 
@@ -361,6 +382,8 @@ return {
                     },
                     path = {
                         name = "Path",
+                        -- Do not use `buffer` as fallback
+                        fallbacks = {},
                         opts = {
                             get_cwd = vim.uv.cwd,
                         },
@@ -368,8 +391,9 @@ return {
                     snippets = {
                         name = "Snippets",
                         --- Disable the snippet provider after pressing trigger characters (i.e. ".")
-                        enabled = function(ctx)
-                            return ctx ~= nil and ctx.trigger.kind == vim.lsp.protocol.CompletionTriggerKind.TriggerCharacter
+                        ---@param ctx blink.cmp.Context
+                        should_show_items = function(ctx)
+                            return ctx.trigger.initial_kind ~= "trigger_character"
                         end,
                         opts = {
                             ignored_filetypes = defaults.ignored.file_types,
