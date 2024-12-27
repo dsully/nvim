@@ -2,7 +2,7 @@
 _G.defaults = require("config.defaults")
 _G.colors = require("config.highlights").colors
 _G.ev = require("helpers.event")
-_G.hl = require("config.highlights")
+_G.hl = require("helpers.highlights")
 _G.keys = require("helpers.keys")
 
 --- Create a namespace.

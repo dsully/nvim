@@ -1,3 +1,5 @@
+local hl = require("helpers.highlights")
+
 --
 -- Nord palette : https://www.nordtheme.com/docs/colors-and-palettes
 local colors = {
@@ -23,7 +25,7 @@ local colors = {
     -- Nordic: gray, grayish, dark_black_alt
     gray = { base = "#4c566a", bright = "#667084", dim = "#2b303b" },
 
-    none = "NONE",
+    none = hl.NONE,
 }
 
 -- Aliases
@@ -100,45 +102,29 @@ local M = {
 ---@type table<HighlightName, Highlight>
 M.ui = {
     core = {
-        Added = { link = "DiffAdd" },
+        Added = { link = hl.DiffAdd },
         Bold = { bold = true },
-        Changed = { link = "DiffChange" },
-        ColorColumn = { bg = colors.black.dim },
+        Changed = { link = hl.DiffChange },
+        ColorColumn = {},
         Conceal = { fg = colors.black.bright },
         CurSearch = { bg = colors.blue.bright, fg = colors.black.dim },
         Cursor = { bg = colors.white.dim, fg = colors.black.dim },
         CursorColumn = { bg = colors.gray.base },
-        CursorLine = { bg = "None" },
+        CursorLine = { bg = hl.NONE },
         CursorLineNr = { bold = true, fg = colors.yellow.base },
-        DiffAdd = {
-            fg = colors.green.base,
-            bg = colors.black.dim,
-            -- bg = colors.blend.green,
-        },
-        DiffChange = {
-            fg = colors.yellow.base,
-            bg = colors.black.dim,
-            -- bg = colors.blend.yellow,
-        },
-        DiffDelete = {
-            fg = colors.red.base,
-            bg = colors.black.dim,
-            -- bg = colors.blend.red,
-        },
-        DiffText = {
-            fg = colors.blue.base,
-            bg = colors.black.dim,
-            -- bg = colors.bg,
-        },
+        DiffAdd = { fg = colors.green.base },
+        DiffChange = { fg = colors.yellow.base },
+        DiffDelete = { fg = colors.red.base },
+        DiffText = { fg = colors.blue.base },
         Directory = { fg = colors.white.bright },
-        EndOfBuffer = { fg = colors.black.dim },
+        EndOfBuffer = { fg = colors.bg },
         ErrorMsg = { fg = colors.red.base },
         FloatBorder = { fg = colors.gray.base },
         FloatShadow = { bg = colors.gray.base, blend = 80 },
         FloatShadowThrough = { bg = colors.gray.base, blend = 100 },
         FloatTitle = { fg = colors.white.bright },
         FoldColumn = { fg = colors.gray.base },
-        Folded = { bg = colors.black.dim, fg = colors.gray.base },
+        Folded = { fg = colors.gray.base },
         LineNr = { fg = colors.gray.base },
         ModeMsg = { bold = true, fg = colors.white.dim },
         ModesCopy = { bg = colors.yellow.base },
@@ -147,12 +133,12 @@ M.ui = {
         ModesVisual = { bg = colors.magenta.base },
         MoreMsg = { bold = true, fg = colors.cyan.bright },
         MsgArea = {},
-        NonText = { fg = colors.white.base },
-        Normal = { bg = colors.black.dim, fg = colors.white.dim },
+        NonText = { bg = colors.gray.base, fg = colors.fg },
+        Normal = { fg = colors.fg },
         NormalFloat = { bg = colors.black.base, fg = colors.white.dim },
-        NormalNC = { bg = colors.black.dim, fg = colors.white.dim },
-        Pmenu = { bg = colors.gray.base, fg = colors.white.dim },
-        PmenuSbar = { link = "PmenuSel" },
+        NormalNC = { fg = colors.fg },
+        Pmenu = { bg = colors.gray.base, fg = colors.fg },
+        PmenuSbar = { link = hl.PmenuSel },
         -- https://www.reddit.com/r/neovim/comments/1f439w8/psa_for_color_scheme_authors_you_might_want_to/
         -- Matched text in normal item
         ---@diagnostic disable-next-line: assign-type-mismatch
@@ -161,12 +147,12 @@ M.ui = {
         ---@diagnostic disable-next-line: assign-type-mismatch
         PmenuMatchSel = { fg = colors.blue.base, bg = colors.gray.base, bold = true, reverse = true, cterm = { reverse = true } },
         PmenuThumb = { bg = colors.gray.base },
-        Question = { link = "MoreMsg" },
-        QuickFixLine = { link = "CursorLine" },
-        Removed = { link = "DiffDelete" },
+        Question = { link = hl.MoreMsg },
+        QuickFixLine = { link = hl.CursorLine },
+        Removed = { link = hl.DiffDelete },
         Search = { bg = colors.gray.base, fg = colors.white.dim },
         SignColumn = { fg = colors.gray.base },
-        SpecialKey = { link = "NonText" },
+        SpecialKey = { link = hl.NonText },
         StatusLine = { bg = colors.gray.base, fg = colors.cyan.bright },
         StatusLineNC = { bg = colors.black.base, fg = colors.gray.base },
         Substitute = { bg = colors.red.base, fg = colors.black.dim },
@@ -175,119 +161,119 @@ M.ui = {
         TabLineSel = { bg = colors.gray.base, fg = colors.white.base },
         TermCursor = { reverse = true },
         TermCursorNC = {},
-        Terminal = { bg = colors.black.dim, fg = colors.white.dim },
+        Terminal = { fg = colors.fg },
         Title = { bold = true, fg = colors.white.bright },
         UnderlinedTitle = { bold = true, underline = true },
         Visual = { bg = colors.gray.base },
         Whitespace = { fg = colors.gray.base },
-        WildMenu = { link = "Pmenu" },
-        WinBar = { link = "StatusLine" },
-        WinBarNC = { link = "StatusLineNC" },
+        WildMenu = { link = hl.Pmenu },
+        WinBar = { link = hl.StatusLine },
+        WinBarNC = { link = hl.StatusLineNC },
         WinSeparator = { fg = colors.black.base },
     },
 
     syntax = {
-        Boolean = { link = "Number" },
-        Character = { link = "String" },
+        Boolean = { link = hl.Number },
+        Character = { link = hl.String },
         Comment = { fg = colors.gray.bright },
         Conditional = { fg = colors.blue.bright, italic = true },
         Constant = { fg = colors.white.dim },
-        Debug = { link = "Special" },
-        Define = { link = "PreProc" },
-        Delimiter = { link = "Special" },
+        Debug = { link = hl.Special },
+        Define = { link = hl.PreProc },
+        Delimiter = { link = hl.Special },
         Directory = { fg = colors.white.bright },
         Error = { fg = colors.red.base },
-        Exception = { link = "Keyword" },
-        Float = { link = "Number" },
+        Exception = { link = hl.Keyword },
+        Float = { link = hl.Number },
         Function = { fg = colors.white.bright, italic = true },
         Identifier = { fg = colors.white.base },
-        Ignore = { link = "Normal" },
-        Include = { link = "PreProc" },
+        Ignore = { link = hl.Normal },
+        Include = { link = hl.PreProc },
         Keyword = { fg = colors.blue.base, italic = true },
-        Label = { link = "Conditional" },
-        Macro = { link = "PreProc" },
+        Label = { link = hl.Conditional },
+        Macro = { link = hl.PreProc },
         Number = { fg = colors.magenta.base },
         Operator = { fg = colors.blue.base },
-        PreCondit = { link = "PreProc" },
+        PreCondit = { link = hl.PreProc },
         PreProc = { fg = colors.blue.bright },
-        Repeat = { link = "Conditional" },
+        Repeat = { link = hl.Conditional },
         Special = { fg = colors.white.bright },
-        SpecialChar = { link = "Special" },
-        SpecialComment = { link = "Special" },
+        SpecialChar = { link = hl.Special },
+        SpecialComment = { link = hl.Special },
         Statement = { fg = colors.blue.base, italic = true },
-        StorageClass = { link = "Type" },
+        StorageClass = { link = hl.Type },
         String = { fg = colors.green.base },
-        Structure = { link = "Type" },
-        Tag = { link = "Special" },
+        Structure = { link = hl.Type },
+        Tag = { link = hl.Special },
         Todo = { bg = colors.blue.base, fg = colors.black.dim },
         Type = { fg = colors.cyan.base, italic = true },
-        Typedef = { link = "Type" },
+        Typedef = { link = hl.Type },
         Underlined = { underline = true },
         WinSeparator = { fg = colors.black.base },
     },
 
     treesitter = {
         ["@attribute"] = { fg = colors.blue.base }, -- attribute annotations (e.g. Python decorators, Rust lifetimes)
-        ["@attribute.builtin"] = { link = "Special" }, -- builtin annotations (e.g. `@property` in Python)
-        ["@boolean"] = { link = "Boolean" }, -- boolean literals
-        ["@character"] = { link = "Character" }, -- character literals
-        ["@character.special"] = { link = "SpecialChar" }, -- special characters (e.g. wildcards)
-        ["@comment"] = { link = "Comment" }, -- line and block comments
+        ["@attribute.builtin"] = { link = hl.Special }, -- builtin annotations (e.g. `@property` in Python)
+        ["@boolean"] = { link = hl.Boolean }, -- boolean literals
+        ["@character"] = { link = hl.Character }, -- character literals
+        ["@character.special"] = { link = hl.SpecialChar }, -- special characters (e.g. wildcards)
+        ["@comment"] = { link = hl.Comment }, -- line and block comments
         ["@comment.error"] = { fg = colors.red.base }, -- error-type comments (e.g. `ERROR`, `FIXME`, `DEPRECATED`)
         ["@comment.note"] = { fg = colors.blue.base }, -- note-type comments (e.g. `NOTE`, `INFO`, `XXX`)
         ["@comment.todo"] = { fg = colors.orange.base }, -- todo-type comments (e.g. `TODO`, `WIP`)
         ["@comment.warning"] = { fg = colors.yellow.base }, -- warning-type comments (e.g. `WARNING`, `FIX`, `HACK`)
-        ["@conditional"] = { link = "Conditional" },
-        ["@constant"] = { link = "Constant" }, -- constant identifiers
+        ["@conditional"] = { link = hl.Conditional },
+        ["@constant"] = { link = hl.Constant }, -- constant identifiers
         ["@constant.builtin"] = { fg = colors.blue.base, italic = true }, -- built-in constant values
         ["@constant.git_rebase"] = { fg = colors.cyan.base },
-        ["@constant.macro"] = { link = "Macro" }, -- constants defined by the preprocessor
+        ["@constant.macro"] = { link = hl.Macro }, -- constants defined by the preprocessor
         ["@constructor"] = { fg = colors.white.base, italic = true }, -- constructor calls and definitions
-        ["@diff.delta"] = { link = "DiffChange" }, -- changed text (for diff files)
-        ["@diff.minus"] = { link = "DiffDelete" }, -- deleted text (for diff files)
-        ["@diff.plus"] = { link = "DiffAdd" }, -- added text (for diff files)
-        ["@exception"] = { link = "Exception" }, -- keywords related to exceptions (e.g. `throw`, `catch`)
-        ["@float"] = { link = "Float" }, -- floating-point number literals
-        ["@function"] = { link = "Function" }, -- function definitions
+        ["@diff.delta"] = { link = hl.DiffChange }, -- changed text (for diff files)
+        ["@diff.minus"] = { link = hl.DiffDelete }, -- deleted text (for diff files)
+        ["@diff.plus"] = { link = hl.DiffAdd }, -- added text (for diff files)
+        ["@exception"] = { link = hl.Exception }, -- keywords related to exceptions (e.g. `throw`, `catch`)
+        ["@float"] = { link = hl.Float }, -- floating-point number literals
+        ["@function"] = { link = hl.Function }, -- function definitions
         ["@function.builtin"] = { fg = colors.blue.base, italic = true }, -- built-in functions
         ["@function.call"] = { fg = colors.blue.base, italic = true }, -- function calls
         ["@function.macro"] = { fg = colors.blue.base, italic = true }, -- preprocessor macros
         ["@function.method"] = { fg = colors.white.base }, -- method definitions
         ["@function.method.call"] = { fg = colors.white.bright }, -- method calls
-        ["@include"] = { link = "Include" }, -- keywords for including or exporting modules (e.g. `import`, `from` in Python)
-        ["@keyword"] = { link = "Keyword" }, -- keywords not fitting into specific categories
-        ["@keyword.conditional"] = { link = "Conditional" }, -- keywords related to conditionals (e.g. `if`, `else`)
-        ["@keyword.conditional.ternary"] = { link = "Conditional" }, -- ternary operator (e.g. `?`, `:`)
+        ["@include"] = { link = hl.Include }, -- keywords for including or exporting modules (e.g. `import`, `from` in Python)
+        ["@keyword"] = { link = hl.Keyword }, -- keywords not fitting into specific categories
+        ["@keyword.conditional"] = { link = hl.Conditional }, -- keywords related to conditionals (e.g. `if`, `else`)
+        ["@keyword.conditional.ternary"] = { link = hl.Conditional }, -- ternary operator (e.g. `?`, `:`)
         ["@keyword.exception"] = { fg = colors.blue.base }, -- keywords related to exceptions (e.g. `throw`, `catch`)
         ["@keyword.function"] = { fg = colors.blue.base, italic = true }, -- keywords that define a function (e.g. `func` in Go, `def` in Python)
-        ["@keyword.import"] = { link = "Include" }, -- keywords for including or exporting modules (e.g. `import`, `from` in Python)
+        ["@keyword.import"] = { link = hl.Include }, -- keywords for including or exporting modules (e.g. `import`, `from` in Python)
         ["@keyword.operator"] = { fg = colors.blue.base }, -- operators that are English words (e.g. `and`, `or`)
         ["@keyword.repeat"] = { fg = colors.blue.base, italic = true }, -- keywords related to loops (e.g. `for`, `while`)
         ["@keyword.return"] = { fg = colors.blue.base, italic = true }, -- keywords like `return` and `yield`
-        ["@keyword.storage"] = { link = "StorageClass" }, -- keywords describing namespaces and composite types (e.g. `struct`, `enum`)
-        ["@label"] = { link = "Label" }, -- `GOTO` and other labels (e.g. `label:` in C), including heredoc labels
+        ["@keyword.storage"] = { link = hl.StorageClass }, -- keywords describing namespaces and composite types (e.g. `struct`, `enum`)
+        ["@label"] = { link = hl.Label }, -- `GOTO` and other labels (e.g. `label:` in C), including heredoc labels
         ["@module"] = { fg = colors.cyan.base, italic = true }, -- modules or namespaces
-        ["@module.builtin"] = { link = "Special" }, -- built-in modules or namespaces
+        ["@module.builtin"] = { link = hl.Special }, -- built-in modules or namespaces
         ["@namespace"] = { fg = colors.cyan.base },
-        ["@number"] = { link = "Number" }, -- numeric literals
-        ["@number.float"] = { link = "Float" }, -- floating-point number literals
-        ["@operator"] = { link = "Operator" }, -- symbolic operators (e.g. `+`, `*`)
+        ["@number"] = { link = hl.Number }, -- numeric literals
+        ["@number.float"] = { link = hl.Float }, -- floating-point number literals
+        ["@operator"] = { link = hl.Operator }, -- symbolic operators (e.g. `+`, `*`)
         ["@property"] = { fg = colors.blue.base }, -- the key in key/value pairs
-        ["@punctuation"] = { link = "Delimiter" },
+        ["@punctuation"] = { link = hl.Delimiter },
         ["@punctuation.bracket"] = { fg = colors.blue.base }, -- brackets (e.g. `()`, `{}`, `[]`)
         ["@punctuation.delimiter"] = { fg = colors.blue.base }, -- delimiters (e.g. `;`, `.`, `,`)
         ["@punctuation.special"] = { fg = colors.cyan.base }, -- special symbols (e.g. `{}` in string interpolation)
-        ["@repeat"] = { link = "Repeat" }, -- keywords related to loops (e.g. `for`, `while`)
-        ["@storageclass"] = { link = "StorageClass" }, -- keywords describing namespaces and composite types (e.g. `struct`, `enum`)
-        ["@string"] = { link = "String" }, -- string literals
+        ["@repeat"] = { link = hl.Repeat }, -- keywords related to loops (e.g. `for`, `while`)
+        ["@storageclass"] = { link = hl.StorageClass }, -- keywords describing namespaces and composite types (e.g. `struct`, `enum`)
+        ["@string"] = { link = hl.String }, -- string literals
         ["@string.escape"] = { bold = true, fg = colors.gray.bright }, -- escape sequences
         ["@string.regex"] = { fg = colors.gray.bright }, -- regular expressions
         ["@string.regexp"] = { fg = colors.gray.bright }, -- regular expressions
-        ["@string.special"] = { link = "Special" }, -- other special strings (e.g. dates)
+        ["@string.special"] = { link = hl.Special }, -- other special strings (e.g. dates)
         ["@string.special.url"] = { fg = colors.white.dim }, -- URIs (e.g. hyperlinks)
         ["@tag"] = { fg = colors.blue.base }, -- XML-style tag names (e.g. in XML, HTML, etc.)
         ["@tag.attribute"] = { fg = colors.white.bright, italic = true }, -- XML-style tag attributes
-        ["@tag.builtin"] = { link = "Special" }, -- builtin tag names (e.g. HTML5 tags)
+        ["@tag.builtin"] = { link = hl.Special }, -- builtin tag names (e.g. HTML5 tags)
         ["@tag.delimiter"] = { fg = colors.cyan.base }, -- XML-style tag delimiters
         ["@text"] = { fg = colors.white.dim },
         ["@text.danger"] = { bg = colors.red.base, fg = colors.black.dim },
@@ -300,36 +286,36 @@ M.ui = {
         ["@text.reference"] = { bold = true, fg = colors.blue.base },
         ["@text.strike"] = { fg = colors.white.dim, strikethrough = true },
         ["@text.strong"] = { bold = true, fg = colors.red.base },
-        ["@text.title"] = { link = "Title" },
+        ["@text.title"] = { link = hl.Title },
         ["@text.todo"] = { bg = colors.blue.bright, fg = colors.black.dim },
         ["@text.todo.checked"] = { fg = colors.green.base },
         ["@text.todo.unchecked"] = { fg = colors.yellow.base },
         ["@text.underline"] = {},
         ["@text.warning"] = { bg = colors.yellow.base, fg = colors.black.dim },
-        ["@type"] = { link = "Type" }, -- type or class definitions and annotations
+        ["@type"] = { link = hl.Type }, -- type or class definitions and annotations
         ["@type.builtin"] = { fg = colors.cyan.base, italic = true }, -- built-in types
         ["@type.qualifier"] = { fg = colors.cyan.base }, -- type qualifiers (e.g. `const`)
         ["@variable"] = { fg = colors.white.dim }, -- various variable names
         ["@variable.builtin"] = { fg = colors.blue.base }, -- built-in variable names (e.g. `this`, `self`)
         ["@variable.member"] = { fg = colors.blue.base }, -- object and struct fields
         ["@variable.parameter"] = { fg = colors.yellow.base, italic = true }, -- parameters of a function
-        ["@variable.parameter.builtin"] = { link = "Special" }, -- special parameters (e.g. `_`, `it`)
+        ["@variable.parameter.builtin"] = { link = hl.Special }, -- special parameters (e.g. `_`, `it`)
     },
 
     diff = {
-        Added = { link = "DiffAdd" },
-        Changed = { link = "DiffChange" },
+        Added = { link = hl.DiffAdd },
+        Changed = { link = hl.DiffChange },
         DiffAdd = { fg = colors.green.base },
         DiffChange = { fg = colors.yellow.base },
         DiffDelete = { fg = colors.red.base },
         DiffText = { fg = colors.red.base },
-        Removed = { link = "DiffDelete" },
-        diffAdded = { link = "DiffAdd" },
-        diffChanged = { link = "DiffChange" },
+        Removed = { link = hl.DiffDelete },
+        diffAdded = { link = hl.DiffAdd },
+        diffChanged = { link = hl.DiffChange },
         diffFile = { fg = colors.cyan.bright, bg = colors.none },
-        diffIndexLine = { link = "Comment" },
+        diffIndexLine = { link = hl.Comment },
         diffLine = { fg = colors.yellow.base, bg = colors.none },
-        diffRemoved = { link = "DiffDelete" },
+        diffRemoved = { link = hl.DiffDelete },
     },
 
     diagnostics = {
@@ -464,8 +450,8 @@ M.languages = {
     },
 
     git_ignore = {
-        ["@punctuation.delimiter.gitignore"] = { link = "Comment" },
-        ["@string.special.path.gitignore"] = { link = "Comment" },
+        ["@punctuation.delimiter.gitignore"] = { link = hl.Comment },
+        ["@string.special.path.gitignore"] = { link = hl.Comment },
     },
 
     go = {
@@ -575,7 +561,7 @@ M.languages = {
         ["@_url.markdown_inline"] = { fg = colors.green.base, bg = colors.none },
         ["@conceal.markdown_inline"] = { fg = colors.yellow.base, bg = colors.none },
         ["@label.markdown"] = { fg = colors.cyan.base, bg = colors.none, bold = true },
-        ["@lsp.type.class.markdown"] = { fg = colors.cyan.bright, bg = colors.bg, bold = true },
+        ["@lsp.type.class.markdown"] = { fg = colors.cyan.bright, bold = true },
         ["@markup"] = { fg = colors.white.dim },
         ["@markup.emphasis"] = { fg = colors.white.dim, italic = true },
         ["@markup.heading"] = { fg = colors.cyan.bright, bg = colors.none, sp = colors.blue.base, bold = true },
@@ -586,7 +572,7 @@ M.languages = {
         ["@markup.link.label.markdown_inline"] = { fg = colors.cyan.bright, bg = colors.none },
         ["@markup.link.markdown_inline"] = { fg = colors.fg, bg = colors.none },
         ["@markup.link.url"] = { link = "@string.special.url" },
-        ["@markup.link.url.markdown_inline"] = { link = "Underlined" },
+        ["@markup.link.url.markdown_inline"] = { link = hl.Underlined },
         ["@markup.list"] = { fg = colors.blue.base },
         ["@markup.list.checked"] = { fg = colors.green.base },
         ["@markup.list.markdown"] = { fg = colors.yellow.base, bg = colors.none },
@@ -619,8 +605,8 @@ M.languages = {
         ["@text.title.markdown"] = { fg = colors.fg, bg = colors.none },
         ["@text.todo.checked.markdown"] = { fg = colors.green.base, bg = colors.none },
         ["@text.todo.unchecked.markdown"] = { fg = colors.yellow.base, bg = colors.none },
-        ["@text.uri.markdown_inline"] = { link = "Underlined" },
-        ["markdownUrl"] = { link = "Underlined" },
+        ["@text.uri.markdown_inline"] = { link = hl.Underlined },
+        ["markdownUrl"] = { link = hl.Underlined },
     },
 
     rust = {
@@ -631,7 +617,7 @@ M.languages = {
 
     sql = {
         ["@attribute.sql"] = { fg = colors.magenta.base, bg = colors.none },
-        ["@comment.sql"] = { link = "Comment" },
+        ["@comment.sql"] = { link = hl.Comment },
         ["@field.sql"] = { fg = colors.magenta.base, bg = colors.none },
         ["@keyword.operator.sql"] = { fg = colors.blue.base, bg = colors.none },
         ["@keyword.sql"] = { fg = colors.blue.base, bg = colors.none },
@@ -642,7 +628,7 @@ M.languages = {
     },
 
     toml = {
-        ["@comment.toml"] = { link = "Comment" },
+        ["@comment.toml"] = { link = hl.Comment },
         ["@number.toml"] = { fg = colors.magenta.base, bg = colors.none },
         ["@operator.toml"] = { fg = colors.yellow.base, bg = colors.none },
         ["@property.toml"] = { link = "@property" },
@@ -672,7 +658,7 @@ M.languages = {
         ["@tag.xml"] = { fg = colors.green.base, bg = colors.none },
         ["@tag.attribute"] = { fg = colors.white.bright, italic = true },
         ["@tag.attribute.xml"] = { fg = colors.yellow.base, bg = colors.none },
-        ["@tag.builtin"] = { link = "Special" },
+        ["@tag.builtin"] = { link = hl.Special },
         ["@tag.delimiter"] = { fg = colors.cyan.base },
     },
 
@@ -697,44 +683,5 @@ M.languages = {
         ["yamlTSString"] = { fg = colors.green.base, bg = colors.none },
     },
 }
-
-function M.blend_bg(hex, amount)
-    return require("snacks.util").blend(hex, colors.bg, amount)
-end
-
-function M.darken(hex, amount, bg)
-    return require("snacks.util").blend(hex, bg or colors.bg, amount)
-end
-
-function M.lighten(hex, amount, fg)
-    return require("snacks.util").blend(hex, fg or colors.fg, amount)
-end
-
----@param name string
----@param opts vim.api.keyset.highlight
-M.set = function(name, opts)
-    vim.api.nvim_set_hl(0, name, opts)
-end
-
----@param highlights {[string]: vim.api.keyset.highlight}[]
-M._apply = function(highlights)
-    vim.iter(highlights):each(function(hl)
-        M.set(next(hl))
-    end)
-end
-
----Apply a list of highlights
----@param highlights {[string]: vim.api.keyset.highlight}[]
----@param schedule boolean?
-M.apply = function(highlights, schedule)
-    --
-    if schedule then
-        vim.defer_fn(function()
-            M._apply(highlights)
-        end, 1000)
-    else
-        M._apply(highlights)
-    end
-end
 
 return M
