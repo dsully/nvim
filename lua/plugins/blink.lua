@@ -14,6 +14,11 @@ local function has_words_before()
     return col ~= 0 and vim.api.nvim_buf_get_lines(0, line - 1, line, true)[1]:sub(col, col):match("%s") == nil
 end
 
+---@param source string
+---@return boolean
+local is_ai_source = function(source)
+    return vim.tbl_contains({ "copilot", "supermaven" }, source:lower())
+end
 return {
     { "giuxtaposition/blink-cmp-copilot" },
     {
