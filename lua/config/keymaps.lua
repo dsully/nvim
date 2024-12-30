@@ -48,14 +48,12 @@ if vim.g.os == "Darwin" then
     end, "Open in App")
 
     vim.api.nvim_create_user_command("Tower", function()
-        local stdout = vim.system({ "git", "rev-parse", "--show-toplevel" }):wait().stdout
+        --
+        local root = require("helpers.file").git_root()
 
-        if not stdout then
-            notify.error("Not in a Git repository!", { icon = "󰏋" })
-            return
+        if root then
+            vim.system({ "/usr/bin/open", "-g", "-a", "Tower", root }):wait()
         end
-
-        vim.system({ "/usr/bin/open", "-g", "-a", "Tower", vim.uv.cwd() }):wait()
     end, { desc = "Open Tower", nargs = 0 })
 
     map("<space>T", vim.cmd.Tower, "Open in Tower")
