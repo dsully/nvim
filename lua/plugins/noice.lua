@@ -16,6 +16,7 @@ return {
         keys = {
             { "<leader>fN", function() vim.cmd.Noice("pick") end, desc = "Noice" },
         },
+    ---@type NoiceConfig
     opts = {
         cmdline = {
             format = {
@@ -27,6 +28,17 @@ return {
             },
         },
         lsp = {
+            hover = {
+                enabled = true,
+                silent = false, -- set to true to not show a message if hover is not available
+                ---@type NoiceViewOptions
+                opts = {
+                    border = {
+                        style = defaults.ui.border.name,
+                    },
+                    position = { row = 2, col = 2 },
+                },
+            },
             override = {
                 ["vim.lsp.util.convert_input_to_markdown_lines"] = true,
                 ["vim.lsp.util.stylize_markdown"] = true,
@@ -46,6 +58,7 @@ return {
             backend = "nui",
             kind_icons = true,
         },
+        ---@type NoicePresets
         presets = {
             bottom_search = true, -- use a classic bottom cmdline for search
             command_palette = false, -- position the cmdline and popupmenu together
@@ -203,7 +216,6 @@ return {
             },
         },
         ---@type NoiceConfigViews
-        ---@diagnostic disable-next-line: missing-fields
         views = {
             mini = {
                 format = { "{title} ", "{message}" }, -- leave out "{level}"
