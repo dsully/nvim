@@ -60,6 +60,31 @@ M.write = function(path, data)
     end
 end
 
+---@return string?
+M.git_root = function()
+    local obj = vim.system({ "git", "rev-parse", "--show-toplevel" }, { text = true }):wait()
+
+    if obj.code ~= 0 then
+        notify.error("Not in a Git repository!", { icon = "󰏋" })
+        return
+    end
+
+    return vim.trim(obj.stdout)
+end
+
+--- Escape special pattern matching characters in a string
+---@param input string
+---@return string
+M.escape_pattern = function(input)
+    local magic_chars = { "%", "(", ")", ".", "+", "-", "*", "?", "[", "^", "$" }
+
+    for _, char in ipairs(magic_chars) do
+        input = input:gsub("%" .. char, "%%" .. char)
+    end
+
+    return input
+end
+
 ---@param filetype string
 ---@param subdirectory string?
 M.symlink_queries = function(filetype, subdirectory)
