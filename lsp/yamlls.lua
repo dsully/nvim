@@ -1,4 +1,4 @@
-return require("schema-companion").setup_client({
+return {
     cmd = { "yaml-language-server", "--stdio" },
     commands = {
         YAMLSchema = {
@@ -13,6 +13,21 @@ return require("schema-companion").setup_client({
         },
     },
     filetypes = { "yaml" },
+    handlers = {
+        ["yaml/schema/store/initialized"] = function()
+            require("schema-companion.lsp").store_initialized()
+        end,
+    },
+    --- @param client vim.lsp.Client
+    --- @param bufnr integer
+    on_attach = function(client, bufnr)
+        require("schema-companion.context").setup(bufnr, client)
+    end,
+    --- @param client vim.lsp.Client
+    on_init = function(client)
+        client:notify("yaml/supportSchemaSelection", { {} })
+        return true
+    end,
     on_new_config = function(config)
         config.settings = vim.tbl_deep_extend("force", config.settings, {
             yaml = { schemas = require("schemastore").yaml.schemas() },
@@ -35,4 +50,4 @@ return require("schema-companion").setup_client({
             hover = true,
         },
     },
-})
+}
