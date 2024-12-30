@@ -19,6 +19,7 @@ return {
             notify = false,
         },
         ---@type snacks.indent.Config
+        ---@diagnostic disable-next-line: missing-fields
         indent = {
             animate = {
                 enabled = false,
@@ -63,13 +64,20 @@ return {
             git = { patterns = { "GitSign" } },
         },
         styles = {
+            ---@diagnostic disable-next-line: missing-fields
             input = {
                 border = defaults.ui.border.name,
             },
+            ---@diagnostic disable-next-line: missing-fields
             notification = {
+                bo = {
+                    filetype = "markdown",
+                },
                 border = defaults.ui.border.name,
+                ft = "markdown",
                 wo = { wrap = true },
             },
+            ---@diagnostic disable-next-line: missing-fields
             scratch = {
                 border = defaults.ui.border.name,
                 height = 0.8,
