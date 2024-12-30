@@ -60,4 +60,37 @@ M.write = function(path, data)
     end
 end
 
+---@param filetype string
+---@param subdirectory string?
+M.symlink_queries = function(filetype, subdirectory)
+    --
+    local src = vim.fs.joinpath(tostring(vim.fn.stdpath("data")), "lazy", "tree-sitter-" .. filetype, "queries")
+    local dst = vim.fs.joinpath(tostring(vim.fn.stdpath("config")), "queries", subdirectory or filetype)
+
+    if subdirectory then
+        src = vim.fs.joinpath(src, subdirectory)
+    end
+
+    local src_stat = vim.uv.fs_stat(src)
+    local dst_stat = vim.uv.fs_stat(dst)
+
+    -- Check if source directory exists
+    if not src_stat then
+        vim.notify("Source directory does not exist: " .. src, vim.log.levels.ERROR)
+        return
+    end
+
+    if dst_stat and src_stat.ino == dst_stat.ino then
+        return
+    end
+
+    vim.uv.fs_unlink(dst)
+
+    local success, err = vim.uv.fs_symlink(src, dst)
+
+    if not success then
+        vim.notify("Failed to create symlink: " .. err, vim.log.levels.ERROR)
+    end
+end
+
 return M

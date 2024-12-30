@@ -65,8 +65,12 @@ vim.filetype.add({
     },
     pattern = {
         ["*.dockerignore"] = "gitignore",
+        [".*%.html%.j2"] = "htmljinja",
+        [".*%.html%.jinja"] = "htmljinja",
+        [".*%.html%.jinja2"] = "htmljinja",
         [".*/%.github/workflows/.*%.[ya]ml"] = "yaml.ghaction",
-        [".*/.config/ghostty/.*"] = "ghostty",
+        [".*/.config/ghostty/config"] = "ghostty",
+        [".*/jinja2/.*%.html"] = "htmljinja",
         [".*/themes?/.*%.theme"] = "fish",
         ["Brewfile.*"] = "brewfile",
         ["Dockerfile.*"] = function(path)
