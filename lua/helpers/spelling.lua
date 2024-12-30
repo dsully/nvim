@@ -1,10 +1,5 @@
 local M = {}
 
-local fs = require("helpers.file")
-
--- This comes from vhyrro/luarocks.nvim / the toml-edit rock.
-local toml = require("toml_edit")
-
 local function uppercase_first(str)
     return string.upper(string.sub(str, 1, 1)) .. string.sub(str, 2)
 end
@@ -12,6 +7,12 @@ end
 ---Add a word to the ~/.typos.toml file.
 ---@param word string
 M.add_word_to_typos = function(word)
+    --
+    local fs = require("helpers.file")
+
+    -- This comes from vhyrro/luarocks.nvim / the toml-edit rock.
+    local toml = require("toml_edit")
+
     local path = vim.g.home .. "/.typos.toml"
     local config = toml.parse(fs.read(path))
 
