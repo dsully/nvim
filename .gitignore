@@ -1,2 +1,6 @@
 lazy-lock.json
 unused
+queries/caddyfile
+queries/ghostty
+queries/htmljinja
+queries/jinja2
