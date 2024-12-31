@@ -8,14 +8,14 @@ local M = {}
 ---@param mode table<string>
 ---@param opts table?
 function M.safe_set(lhs, rhs, mode, opts)
-    local keys = require("lazy.core.handler").handlers.keys
+    local lazy_keys = require("lazy.core.handler").handlers.keys or {}
 
-    ---@cast keys LazyKeysHandler
+    ---@cast lazy_keys LazyKeysHandler
     local modes = type(mode) == "string" and { mode } or mode
 
     ---@param m string
     modes = vim.tbl_filter(function(m)
-        return not (keys.have and keys:have(lhs, m))
+        return not (lazy_keys.have and lazy_keys:have(lhs, m))
     end, modes)
 
     opts = opts or {}
