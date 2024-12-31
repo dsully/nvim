@@ -197,20 +197,6 @@ M.notifications = function()
     })
 end
 
----@param command string
----@param cwd function|string|nil
----@param opts table<string, any>?
-M.pick = function(command, cwd, opts)
-    return function()
-        --
-        if type(cwd) == "function" then
-            cwd = cwd()
-        end
-
-        pcall(require("fzf-lua")[command], vim.tbl_deep_extend("force", opts or {}, { cwd = cwd }))
-    end
-end
-
 -- Grep the current buffer for the cword.
 -- Match on partial words.
 M.grep_curbuf_cword = function(opts)
