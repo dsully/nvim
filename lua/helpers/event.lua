@@ -248,11 +248,20 @@ local M = {
     --- after scrolling a window
     WinScrolled = "WinScrolled",
 
-    --- lazy.nvim triggered event
-    VeryLazy = "VeryLazy",
+    --- When lazy has finished starting up and loaded your config
+    LazyDone = "LazyDone",
 
     --- Startup event after a file is loaded
     LazyFile = "LazyFile",
+
+    --- After loading a plugin. The `data` attribute will contain the plugin name.
+    LazyLoad = "LazyLoad",
+
+    --- Triggered after `UIEnter` when `require("lazy").stats().startuptime` has been calculated.
+    LazyVimStarted = "LazyVimStarted",
+
+    --- Triggered after `LazyDone` and processing `VimEnter` auto commands
+    VeryLazy = "VeryLazy",
 
     -- For dynamic registration: User pattern
     LspDynamicCapability = "LspDynamicCapability",
@@ -320,7 +329,6 @@ M.on_load = function(name, fn)
         M.on(M.User, function(event)
             if event.data == name then
                 fn(name)
-                -- return true
             end
         end, { pattern = "LazyLoad" })
     end
