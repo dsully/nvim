@@ -1,48 +1,98 @@
-local pickers = require("helpers.picker")
-local pick = pickers.pick
-
 return {
     {
         "ibhagwan/fzf-lua",
         cmd = "FzfLua",
-        keys = {
-            { "<c-j>", "<c-j>", ft = "fzf", mode = "t", nowait = true },
-            { "<c-k>", "<c-k>", ft = "fzf", mode = "t", nowait = true },
+        keys = function()
+            --
+            ---@param command string
+            ---@param root boolean?
+            ---@param opts table<string, any>?
+            local pick = function(command, root, opts)
+                return function()
+                    --
+                    local cwd = root and require("helpers.lsp").find_root() or nil
 
-            { "<leader>f/", pickers.grep_curbuf_cword, desc = "Current Buffer <cword>" },
-            { "<leader>f;", pick("resume"), desc = "Resume Picker" },
-            { "<leader>fb", pick("buffers"), desc = "Buffer Picker" },
-            { "<leader>fC", pick("git_bcommits", require("helpers.lsp").find_root), desc = "Buffer Commits" },
-            { "<leader>fD", pick("diagnostics_document"), desc = "Diagnostics: Document" },
-            { "<leader>fG", pick("git_files", require("helpers.lsp").find_root), desc = "Git Files" },
-            -- { "<leader>fS", pick("lsp_dynamic_workspace_symbols"), desc = "Symbols: Workspace" },
-            { "<leader>fc", pick("git_commits", require("helpers.lsp").find_root), desc = "Git Commits" },
-            { "<leader>fd", pick("diagnostics_workspace"), desc = "Diagnostics: Workspace" },
-            { "<leader>ff", pick("files", require("helpers.lsp").find_root), desc = "Files" },
-            { "<leader>fg", pick("live_grep", require("helpers.lsp").find_root), desc = "Live Grep" },
-            { "<leader>fk", pick("keymaps"), desc = "Key Maps" },
-            { "<leader>fo", pick("oldfiles"), desc = "Recently Opened" },
-            { "<leader>fq", pick("quickfix"), desc = "Quickfix List" },
-            { "<leader>fw", pick("grep_cword"), desc = "Words" },
+                    pcall(require("fzf-lua")[command], vim.tbl_deep_extend("force", opts or {}, { cwd = cwd }))
+                end
+            end
 
-            { "<leader>fn", pickers.notifications, desc = "Notifications" },
+            return {
 
-            { "<leader>fP", pickers.parents, desc = "Parent dirs" },
-            { "<leader>fR", pickers.repositories, desc = "Repositories" },
-            { "<leader>fS", pickers.subdirectory, desc = "Subdirectories" },
+                { "<c-j>", "<c-j>", ft = "fzf", mode = "t", nowait = true },
+                { "<c-k>", "<c-k>", ft = "fzf", mode = "t", nowait = true },
+                {
+                    "<leader>f/",
+                    function()
+                        require("helpers.picker").grep_curbuf_cword()
+                    end,
+                    desc = "Current Buffer <cword>",
+                },
+                { "<leader>f;", pick("resume"), desc = "Resume Picker" },
+                { "<leader>fb", pick("buffers"), desc = "Buffer Picker" },
+                { "<leader>fC", pick("git_bcommits", true), desc = "Buffer Commits" },
+                { "<leader>fD", pick("diagnostics_document"), desc = "Diagnostics: Document" },
+                { "<leader>fG", pick("git_files", true), desc = "Git Files" },
+                -- { "<leader>fS", pick("lsp_dynamic_workspace_symbols"), desc = "Symbols: Workspace" },
+                { "<leader>fc", pick("git_commits", true), desc = "Git Commits" },
+                { "<leader>fd", pick("diagnostics_workspace"), desc = "Diagnostics: Workspace" },
+                { "<leader>ff", pick("files", true), desc = "Files" },
+                { "<leader>fg", pick("live_grep", true), desc = "Live Grep" },
+                { "<leader>fk", pick("keymaps"), desc = "Key Maps" },
+                { "<leader>fo", pick("oldfiles"), desc = "Recently Opened" },
+                { "<leader>fq", pick("quickfix"), desc = "Quickfix List" },
+                { "<leader>fw", pick("grep_cword"), desc = "Words" },
+                {
+                    "<leader>fn",
+                    function()
+                        require("helpers.picker").notifications()
+                    end,
+                    desc = "Notifications",
+                },
+                {
+                    "<leader>fP",
+                    function()
+                        require("helpers.picker").parents()
+                    end,
+                    desc = "Parent dirs",
+                },
+                {
+                    "<leader>fR",
+                    function()
+                        require("helpers.picker").repositories()
+                    end,
+                    desc = "Repositories",
+                },
+                {
+                    "<leader>fS",
+                    function()
+                        require("helpers.picker").subdirectory()
+                    end,
+                    desc = "Subdirectories",
+                },
 
-            { "<leader>f.", pick("files", vim.env.XDG_CONFIG_HOME), desc = "dotfiles" },
-            { "<leader>fp", pick("files", require("lazy.core.config").options.root), desc = "Plugins" },
-
-            { "gD", pick("lsp_typedefs"), desc = "Goto Type Definition" },
-            { "gd", pick("lsp_definitions", nil, { unique_line_items = true }), desc = "Goto Definition" },
-            { "gi", pick("lsp_implementations"), desc = "Goto Implementation" },
-            { "gi", pick("lsp_implementations"), desc = "Goto Implementation" },
-            { "grr", pick("lsp_references"), desc = "References", nowait = true },
-            { "gO", pick("lsp_document_symbols"), desc = "Symbols: Document" },
-            { "z=", pick("spell_suggest"), desc = "Suggest Spelling" },
-        },
+                { "gD", pick("lsp_typedefs"), desc = "Goto Type Definition" },
+                { "gd", pick("lsp_definitions", nil, { unique_line_items = true }), desc = "Goto Definition" },
+                { "gi", pick("lsp_implementations"), desc = "Goto Implementation" },
+                { "gi", pick("lsp_implementations"), desc = "Goto Implementation" },
+                { "grr", pick("lsp_references"), desc = "References", nowait = true },
+                { "gO", pick("lsp_document_symbols"), desc = "Symbols: Document" },
+                { "z=", pick("spell_suggest"), desc = "Suggest Spelling" },
+            }
+        end,
         config = function(_, opts)
+            hl.apply({
+                { FzfLuaPathColNr = { fg = colors.gray.base } },
+                { FzfLuaPathLineNr = { fg = colors.gray.base } },
+                { FzfLuaBorder = { link = "FloatBorder" } },
+                { FzfLuaBackdrop = { fg = colors.none, bg = colors.black.dim } },
+                { FzfLuaBufName = { fg = colors.cyan.bright, bg = colors.black.dim } },
+                { FzfLuaBufNr = { fg = colors.cyan.base, bg = colors.black.dim } },
+                { FzfLuaFzfGutter = { fg = colors.black.base, bg = colors.black.dim } },
+                { FzfLuaHeaderBind = { fg = colors.green.base, bg = colors.black.dim } },
+                { FzfLuaHeaderText = { fg = colors.cyan.bright, bg = colors.black.dim } },
+                { FzfLuaTabMarker = { fg = colors.yellow.base, bg = colors.black.dim } },
+            })
+
             local config = require("fzf-lua.config")
             local fzf = require("fzf-lua")
 
@@ -80,9 +130,6 @@ return {
 
                 return t
             end
-
-            -- Require markview.nvim for previewer rendering.
-            pcall(require, "markview")
 
             fzf.setup(vim.tbl_deep_extend("force", add_prompt(require("fzf-lua.profiles.default-title")), opts))
 
@@ -131,20 +178,6 @@ return {
 
                 return { winopts = winopts }
             end)
-        end,
-        init = function()
-            hl.apply({
-                { FzfLuaPathColNr = { fg = colors.gray.base } },
-                { FzfLuaPathLineNr = { fg = colors.gray.base } },
-                { FzfLuaBorder = { link = "FloatBorder" } },
-                { FzfLuaBackdrop = { fg = colors.none, bg = colors.black.dim } },
-                { FzfLuaBufName = { fg = colors.cyan.bright, bg = colors.black.dim } },
-                { FzfLuaBufNr = { fg = colors.cyan.base, bg = colors.black.dim } },
-                { FzfLuaFzfGutter = { fg = colors.black.base, bg = colors.black.dim } },
-                { FzfLuaHeaderBind = { fg = colors.green.base, bg = colors.black.dim } },
-                { FzfLuaHeaderText = { fg = colors.cyan.bright, bg = colors.black.dim } },
-                { FzfLuaTabMarker = { fg = colors.yellow.base, bg = colors.black.dim } },
-            })
         end,
         opts = {
             defaults = {
