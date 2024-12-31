@@ -53,10 +53,10 @@ return {
                 { "<leader>ls", vim.cmd.LspStop, desc = "LSP Stop", icon = " " },
                 { "<leader>xr", vim.diagnostic.reset, desc = "Reset", icon = " " },
                 { "<leader>xs", vim.diagnostic.open_float, desc = "Show", icon = "󰙨" },
-                { "gra", require("helpers.lsp").code_action, desc = "Actions", icon = "󰅯 " },
+                { "gra", lsp.code_action, desc = "Actions", icon = "󰅯 " },
                 { "grf", function() require("snacks").rename.rename_file() end, desc = "Rename File", icon = " ", },
                 { "grn", vim.lsp.buf.rename, desc = "Rename", icon = " " },
-                { "grq", require("helpers.lsp").apply_quickfix, desc = "Apply Quick Fix", icon = "󱖑 " },
+                { "grq", lsp.apply_quickfix, desc = "Apply Quick Fix", icon = "󱖑 " },
             }, { notify = false })
             end)
         end)
