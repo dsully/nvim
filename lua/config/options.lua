@@ -55,6 +55,19 @@ if vim.env.USER == "root" then
     vim.opt.undofile = false
     vim.opt.shada = ""
 else
+    -- Loading shada is SLOW, load it manually, after UI-enter so it doesn't block startup.
+    local shada = vim.o.shada
+
+    vim.o.shada = ""
+
+    vim.api.nvim_create_autocmd("User", {
+        callback = function()
+            vim.o.shada = shada
+            pcall(vim.cmd.rshada, { bang = true })
+        end,
+        pattern = "LazyDone",
+    })
+
     vim.opt.undofile = true
 end
 
@@ -83,10 +96,6 @@ vim.g.loaded_python_provider = 0
 vim.g.loaded_python3_provider = 0
 vim.g.loaded_perl_provider = 0
 vim.g.loaded_ruby_provider = 0
-
--- Disable Neovide VFX.
-vim.g.neovide_cursor_trail_length = 0
-vim.g.neovide_cursor_animation_length = 0
 
 vim.g.home = vim.uv.os_homedir()
 vim.g.os = vim.uv.os_uname().sysname
@@ -125,3 +134,9 @@ elseif vim.g.os == "Darwin" then
         cache_enabled = false,
     }
 end
+
+-- Work around: https://github.com/neovim/neovim/issues/31675
+vim.hl = vim.highlight
+
+---@diagnostic disable-next-line: duplicate-set-field
+vim.deprecate = function() end
