@@ -6,25 +6,29 @@ return {
             -- ts-install handles commands and installs.
             vim.g.loaded_nvim_treesitter = 1
 
-            -- Map languages to my created file types.
-            vim.treesitter.language.register("bash", "direnv")
-            vim.treesitter.language.register("ruby", "brewfile")
+            ev.on_load("nvim-treesitter", function()
+                vim.schedule(function()
+                    -- Map languages to my created file types.
+                    vim.treesitter.language.register("bash", "direnv")
+                    vim.treesitter.language.register("ruby", "brewfile")
 
-            -- https://github.com/MeanderingProgrammer/render-markdown.nvim#vimwiki
-            vim.treesitter.language.register("markdown", "vimwiki")
+                    -- https://github.com/MeanderingProgrammer/render-markdown.nvim#vimwiki
+                    vim.treesitter.language.register("markdown", "vimwiki")
 
-            vim.highlight.priorities.semantic_tokens = 100
-            vim.highlight.priorities.treesitter = 125
+                    vim.highlight.priorities.semantic_tokens = 100
+                    vim.highlight.priorities.treesitter = 125
 
-            vim.treesitter.language.add("htmljinja", {
-                path = vim.api.nvim_get_runtime_file("parser/jinja2.so", false)[1],
-                symbol_name = "jinja2",
-            })
+                    vim.treesitter.language.add("htmljinja", {
+                        path = vim.api.nvim_get_runtime_file("parser/jinja2.so", false)[1],
+                        symbol_name = "jinja2",
+                    })
 
-            require("helpers.file").symlink_queries("caddyfile")
-            require("helpers.file").symlink_queries("ghostty")
-            require("helpers.file").symlink_queries("jinja2", "jinja2")
-            require("helpers.file").symlink_queries("jinja2", "htmljinja")
+                    require("helpers.file").symlink_queries("caddyfile")
+                    require("helpers.file").symlink_queries("ghostty", "ghostty")
+                    require("helpers.file").symlink_queries("jinja2", "jinja2")
+                    require("helpers.file").symlink_queries("jinja2", "htmljinja")
+                end)
+            end)
         end,
         lazy = false,
         keys = {
@@ -46,6 +50,7 @@ return {
         "lewis6991/ts-install.nvim",
         build = ":TS update!",
         cmd = "TS",
+        commit = "b5b7d602",
         event = ev.VeryLazy,
         opts = {
             auto_install = true,
@@ -66,6 +71,7 @@ return {
                         url = "https://github.com/bezhermoso/tree-sitter-ghostty",
                         files = { "src/parser.c" },
                         branch = "main",
+                        generate_from_json = true,
                     },
                     filetype = "ghostty",
                     maintainers = {},
@@ -100,6 +106,6 @@ return {
     },
     -- Needed for queries. Right now both ghostty and jinja2 use the old .get_parsers() call to nvim-treesitter.
     { "matthewpi/tree-sitter-caddyfile" },
-    { "bezhermoso/tree-sitter-ghostty", cond = false },
+    { "bezhermoso/tree-sitter-ghostty", ft = "ghostty" },
     { "geigerzaehler/tree-sitter-jinja2", cond = false },
 }
