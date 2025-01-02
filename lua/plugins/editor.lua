@@ -1,8 +1,8 @@
 return {
     {
         "SmiteshP/nvim-navic",
-        event = ev.LazyFile,
-        init = function()
+        highlights = {},
+        config = function(_, opts)
             hl.apply({
                 { NavicIconsArray = { bg = colors.gray.base, fg = colors.yellow.base } },
                 { NavicIconsBoolean = { bg = colors.gray.base, fg = colors.orange.base } },
@@ -35,7 +35,12 @@ return {
             })
 
             vim.g.navic_silence = true
+
+            vim.schedule(function()
+                require("nvim-navic").setup(opts)
+            end)
         end,
+        event = ev.LazyFile,
         opts = {
             highlight = true,
             lazy_update_context = true,
