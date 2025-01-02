@@ -187,3 +187,5 @@ end, {
     desc = "Copy and highlight yanked text to system clipboard",
     group = ev.group("SmartYank", true),
 })
+
+return {}

@@ -1,4 +1,4 @@
-vim.g.colors_name = "nordish"
+vim.g.colors_name = vim.g.colorscheme
 vim.o.background = "dark"
 
 vim.cmd.highlight("clear")
