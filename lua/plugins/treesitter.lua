@@ -104,8 +104,8 @@ return {
         event = ev.LazyFile,
         opts = {},
     },
-    -- Needed for queries. Right now both ghostty and jinja2 use the old .get_parsers() call to nvim-treesitter.
     { "matthewpi/tree-sitter-caddyfile" },
     { "bezhermoso/tree-sitter-ghostty", ft = "ghostty" },
+    -- Right now jinja2 uses the old .get_parsers() call to nvim-treesitter.
     { "geigerzaehler/tree-sitter-jinja2", cond = false },
 }
