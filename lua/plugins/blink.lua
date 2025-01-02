@@ -23,26 +23,7 @@ return {
     { "giuxtaposition/blink-cmp-copilot" },
     {
         "Saghen/blink.cmp",
-        build = "cargo build --release",
-        config = function(_, opts)
-            require("blink.cmp").setup(opts)
-
-            -- Remove Copilot ghost text when the cmp menu is opened.
-            ev.on_load("copilot", function()
-                vim.schedule(function()
-                    local cmp = require("blink.cmp")
-
-                    cmp.on_open(function()
-                        require("copilot.suggestion").dismiss()
-                        vim.api.nvim_buf_set_var(0, "copilot_suggestion_hidden", true)
-                    end)
-
-                    cmp.on_close(function()
-                        vim.api.nvim_buf_set_var(0, "copilot_suggestion_hidden", false)
-                    end)
-                end)
-            end)
-        end,
+        event = ev.InsertEnter,
         init = function()
             hl.apply({
                 { BlinkCmpGhostText = { link = "Comment" } },
@@ -117,11 +98,6 @@ return {
                 nerd_font_variant = "mono",
             },
             completion = {
-                accept = {
-                    auto_brackets = {
-                        enabled = false,
-                    },
-                },
                 documentation = {
                     window = {
                         border = defaults.ui.border.name,
@@ -140,9 +116,10 @@ return {
                     auto_show = function(ctx)
                         return ctx.mode ~= "cmdline" or not vim.tbl_contains({ "/", "?" }, vim.fn.getcmdtype())
                     end,
+                    -- Which directions to show the window, falling back to the next direction when there's not enough space
+                    direction_priority = { "n" },
                     --- @type blink.cmp.Draw
                     draw = {
-                        treesitter = { "lsp" },
                         columns = {
                             { "kind_icon", gap = 2 },
                             { "label", gap = 2 },
@@ -224,6 +201,8 @@ return {
                             },
                         },
                     },
+                    -- Keep the cursor X lines away from the top/bottom of the window
+                    scrolloff = 4,
                 },
             },
             enabled = function()
@@ -252,19 +231,25 @@ return {
                 ["<C-y>"] = { "select_and_accept" },
             },
             sources = {
-                -- Disable cmdline for now.
-                cmdline = {},
+                cmdline = function()
+                    local type = vim.fn.getcmdtype()
+
+                    -- Search forward and backward
+                    if type == "/" or type == "?" then
+                        return { "buffer" }
+                    end
+
+                    -- Commands
+                    if type == ":" then
+                        return { "cmdline" }
+                    end
+
+                    return {}
+                end,
                 default = function()
                     local success, node = pcall(vim.treesitter.get_node)
 
                     if success and node and vim.tbl_contains({ "comment", "line_comment", "block_comment" }, node:type()) then
-                        return {}
-                    end
-
-                    local copilot = package.loaded["copilot.suggestion"]
-                    local is_visible = copilot and copilot.is_visible()
-
-                    if vim.b.copilot_suggestion_auto_trigger or is_visible then
                         return {}
                     end
 
@@ -407,10 +392,6 @@ return {
                 },
             },
         },
-    },
-    {
-        "rafamadriz/friendly-snippets",
-        lazy = false,
     },
     {
         "chrisgrieser/nvim-scissors",
