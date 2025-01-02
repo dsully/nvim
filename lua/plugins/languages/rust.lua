@@ -1,7 +1,7 @@
 return {
     {
         "Saecki/crates.nvim",
-        event = { "BufReadPost Cargo.toml" },
+        event = "BufReadPost Cargo.toml",
         opts = {
             completion = {
                 cmp = {
@@ -174,7 +174,7 @@ return {
                 },
             }
         end,
-        lazy = false,
+        ft = "rust",
         version = "^5", -- Recommended
     },
 }

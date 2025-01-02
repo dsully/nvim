@@ -6,18 +6,21 @@ end, {
     desc = "Check if we need to reload the file when it changed.",
 })
 
-ev.on({ ev.BufEnter, ev.FileType }, function(event)
+ev.on(ev.FileType, function(event)
     --
-    keys.bmap("q", function()
-        vim.api.nvim_buf_delete(event.buf, { force = true })
-        vim.cmd.close({ mods = { emsg_silent = true, silent = true } })
-    end, "Close Buffer", event.buf)
+    local is_unmapped = vim.fn.hasmapto("q", "n") == 0
+
+    if is_unmapped then
+        keys.bmap("q", function()
+            vim.api.nvim_buf_delete(event.buf, { force = true })
+            vim.cmd.close({ mods = { emsg_silent = true, silent = true } })
+        end, "Close Buffer", event.buf)
+    end
 end, {
     desc = "Map 'q' to close the buffer.",
     pattern = {
         "checkhealth",
         "grug-far",
-        "lspinfo",
         "man",
         "nofile",
         "qf",
@@ -42,16 +45,11 @@ end, {
 })
 
 ev.on(ev.FileType, function()
-    pcall(vim.treesitter.start)
-end, {
-    desc = "Start treesitter highlighting",
-})
-
-ev.on(ev.FileType, function()
     vim.opt_local.formatoptions:remove({ "a", "o", "t" })
     vim.api.nvim_set_option_value("foldenable", false, { scope = "local", win = 0 })
 end, {
     desc = "Update format options and folding.",
+    once = true,
 })
 
 ev.on(ev.BufReadCmd, function(args)

@@ -72,12 +72,3 @@ keys.bmap("<leader>ri", function()
         end
     end
 end, "Insert Clippy Allow", bufnr)
-
--- do
---     -- Start bacon in clippy mode if it exists.
---     vim.schedule(function()
---         if vim.uv.fs_access("bacon.toml", "R") then
---             vim.cmd.OverseerRun("bacon")
---         end
---     end)
--- end

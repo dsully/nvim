@@ -24,7 +24,7 @@ function M.edit()
             return
         end
 
-        vim.cmd.edit(vim.fs.normalize(vim.fs.joinpath(root, newfile)))
+        vim.cmd.edit(vim.fs.normalize(newfile))
     end)
 end
 
