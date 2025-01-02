@@ -74,7 +74,10 @@ return {
     {
         -- Use [ and ] to move between various things.
         "echasnovski/mini.bracketed",
-        event = ev.LazyFile,
+        keys = {
+            "[",
+            "]",
+        },
         opts = {
             file = { suffix = "" },
             indent = { suffix = "" },
