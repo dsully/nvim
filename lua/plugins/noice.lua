@@ -221,10 +221,6 @@ return {
                 format = { "{title} ", "{message}" }, -- leave out "{level}"
                 zindex = 10,
             },
-            notify = {
-                -- https://github.com/folke/noice.nvim/discussions/490
-                replace = true,
-            },
             popupmenu = {
                 relative = "editor",
                 position = {
