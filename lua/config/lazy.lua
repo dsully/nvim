@@ -93,6 +93,22 @@ function M.setup()
                 event = "BufReadPre *.plist",
                 virtual = true,
             },
+            {
+                "treesitter",
+                config = function()
+                    --
+                    ev.on(ev.FileType, function(event)
+                        --
+                        if pcall(vim.treesitter.start, event.buf) then
+                            ev.emit(ev.User, { pattern = "ts_attach" })
+                        end
+                    end, {
+                        desc = "Start treesitter highlighting",
+                    })
+                end,
+                event = ev.LazyFile,
+                virtual = true,
+            },
             { import = "plugins" },
             { import = "plugins.languages" },
         },
