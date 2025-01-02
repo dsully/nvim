@@ -124,3 +124,5 @@ M.detect_format = function(filename)
 
     return "json.plist"
 end
+
+return {}
