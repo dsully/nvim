@@ -233,14 +233,5 @@ return {
 
         require("nougat").set_statusline(statusline)
     end,
-    event = ev.LazyFile,
-    init = function()
-        if vim.fn.argc(-1) > 0 then
-            -- Set an empty statusline until nougat loads
-            vim.o.statusline = " "
-        else
-            -- Hide the statusline on the starter page
-            vim.o.laststatus = 0
-        end
-    end,
+    event = ev.VeryLazy,
 }
