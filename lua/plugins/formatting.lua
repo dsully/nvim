@@ -2,7 +2,6 @@ return {
     {
         "stevearc/conform.nvim",
         cmd = "ConformInfo",
-        event = { ev.BufWritePre, ev.LspAttach },
         keys = {
             {
                 "<space>f",
