@@ -4,7 +4,23 @@ local mode = { "n", "x" }
 return {
     {
         "zbirenbaum/copilot.lua",
-        event = ev.LazyFile,
+        init = function()
+            --
+            ev.on_load("blink.cmp", function()
+                ev.on(ev.User, function()
+                    require("copilot.suggestion").dismiss()
+                    vim.b.copilot_suggestion_hidden = true
+                end, {
+                    pattern = "BlinkCmpMenuOpen",
+                })
+
+                ev.on(ev.User, function()
+                    vim.b.copilot_suggestion_hidden = false
+                end, {
+                    pattern = "BlinkCmpMenuClose",
+                })
+            end)
+        end,
         opts = {
             filetypes = {
                 ["*"] = false, -- Disable for all other filetypes and ignore default `filetypes`
