@@ -221,48 +221,6 @@ return {
         },
     },
     {
-        "Zeioth/compiler.nvim",
-        cmd = {
-            "CompilerOpen",
-            "CompilerToggleResults",
-            "CompilerRedo",
-        },
-        opts = {},
-    },
-    {
-        "stevearc/overseer.nvim",
-        cmd = {
-            "CompilerOpen",
-            "CompilerToggleResults",
-            "CompilerRedo",
-            "OverseerRun",
-            "OverseerToggle",
-        },
-        opts = {
-            confirm = {
-                border = defaults.ui.border.name,
-            },
-            form = {
-                border = defaults.ui.border.name,
-            },
-            help_win = {
-                border = defaults.ui.border.name,
-            },
-            task_list = {
-                bindings = {
-                    ["q"] = vim.cmd.OverseerClose,
-                },
-                default_detail = 1,
-                direction = "bottom",
-                min_height = 25,
-                max_height = 25,
-            },
-            task_win = {
-                border = defaults.ui.border.name,
-            },
-        },
-    },
-    {
         "chrisgrieser/nvim-chainsaw",
         init = function()
             ev.on_load("which-key.nvim", function()
