@@ -1,4 +1,4 @@
-local map = keys.map
+local map = require("helpers.keys").map
 local mode = { "n", "x" }
 
 map("Y", "y$", "Yank to clipboard", mode)
@@ -79,3 +79,5 @@ vim.api.nvim_create_user_command("CopyCodeBlock", function(opts)
 end, { range = true })
 
 map("<leader>cc", vim.cmd.CopyCodeBlock, "Copy Code Block", { "n", "x" })
+
+return {}

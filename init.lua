@@ -1,29 +1,19 @@
 -- https://github.com/neovim/neovim/pull/24044
 vim.loader.enable()
 
--- Loading shada is SLOW, so we're going to load it manually, after UI-enter so it doesn't block startup.
-local shada = vim.o.shada
+-- stylua: ignore
+do
+    _G.dd = function(...) require("snacks.debug").inspect(...) end
+    _G.bt = function(...) require("snacks.debug").backtrace(...) end
+    _G.p = function(...) require("snacks.debug").profile(...) end
 
-vim.o.shada = ""
-
-vim.api.nvim_create_autocmd("User", {
-    callback = function()
-        vim.o.shada = shada
-        pcall(vim.cmd.rshada, { bang = true })
-    end,
-    pattern = "VeryLazy",
-})
-
--- Work around: https://github.com/neovim/neovim/issues/31675
-vim.hl = vim.highlight
-
----@diagnostic disable-next-line: duplicate-set-field
-vim.deprecate = function() end
+    vim.print = _G.dd
+end
 
 if vim.env.PROF or vim.env.PROFILE or vim.env.NVIM_PROFILE then
-    local snacks = vim.fn.stdpath("data") .. "/lazy/snacks.nvim"
+    local snacks = vim.fs.joinpath(tostring(vim.fn.stdpath("data")), "lazy/snacks.nvim")
 
-    vim.opt.rtp:append(snacks)
+    vim.opt.runtimepath:append(snacks)
 
     ---@diagnostic disable-next-line: missing-fields
     require("snacks.profiler").startup({
@@ -33,4 +23,6 @@ if vim.env.PROF or vim.env.PROFILE or vim.env.NVIM_PROFILE then
     })
 end
 
-require("config")
+require("config.options")
+require("config.globals")
+require("config.lazy").setup()
