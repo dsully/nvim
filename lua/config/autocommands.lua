@@ -28,6 +28,23 @@ end, {
     },
 })
 
+ev.on(ev.BufEnter, function()
+    if vim.fn.winnr("$") == 1 and vim.bo.buftype == "quickfix" then
+        vim.api.nvim_buf_delete(0, { force = true })
+    end
+end, {
+    desc = "Close quick fix window if the file containing it was closed.",
+})
+
+ev.on(ev.QuitPre, function()
+    if vim.bo.filetype ~= "qf" then
+        vim.cmd.lclose({ mods = { silent = true } })
+    end
+end, {
+    desc = "Automatically close corresponding loclist when quitting a window.",
+    nested = true,
+})
+
 ev.on(ev.FileType, function()
     keys.map("J", function()
         --
