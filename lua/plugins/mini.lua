@@ -10,6 +10,12 @@ return {
         --
         -- https://www.reddit.com/r/neovim/comments/10qmicv/help_understanding_miniai_custom_textobjects/
         "echasnovski/mini.ai",
+        config = function(_, opts)
+            --
+            vim.defer_fn(function()
+                require("mini.ai").setup(opts)
+            end, 500)
+        end,
         event = ev.VeryLazy,
         opts = function()
             local ai = require("mini.ai")
@@ -90,6 +96,12 @@ return {
     },
     {
         "echasnovski/mini.hipatterns",
+        config = function(_, opts)
+            --
+            vim.defer_fn(function()
+                require("mini.hipatterns").setup(opts)
+            end, 500)
+        end,
         event = ev.LazyFile,
         opts = function()
             local hp = require("mini.hipatterns")
@@ -269,7 +281,6 @@ return {
         },
         virtual = true,
     },
-
     {
         "echasnovski/mini.pairs",
         config = function(_, opts)
@@ -398,15 +409,18 @@ return {
         "echasnovski/mini.surround",
         -- stylua: ignore
         init = function()
-            keys.xmap('"', function() keys.feed('ma"', "t") end, "Surround Add Double Quote")
-            keys.xmap("[", function() keys.feed("ma[<left>", "t") vim.schedule(function() keys.feed("%", "m") end) end, "Surround Add Square Bracket")
-            keys.xmap("{", function() keys.feed("ma{<left>", "t") vim.schedule(function() keys.feed("%", "m") end) end, "Surround Add Curly Bracket")
-            keys.xmap("(", function() keys.feed("ma(<left>", "t") vim.schedule(function() keys.feed("%", "m") end) end, "Surround Add Parenthesis")
-            keys.xmap("`", function() keys.feed("ma`", "t") end, "Surround Add Backtick")
 
-            -- vim.defer_fn(function() keys.xmap("<", function() keys.feed("ma<", "t") end, "Surround Add Angle Bracket") end, 2000)
+            ev.on_load("mini.surround", function()
+                keys.xmap('"', function() keys.feed('ma"', "t") end, "Surround Add Double Quote")
+                keys.xmap("[", function() keys.feed("ma[<left>", "t") vim.schedule(function() keys.feed("%", "m") end) end, "Surround Add Square Bracket")
+                keys.xmap("{", function() keys.feed("ma{<left>", "t") vim.schedule(function() keys.feed("%", "m") end) end, "Surround Add Curly Bracket")
+                keys.xmap("(", function() keys.feed("ma(<left>", "t") vim.schedule(function() keys.feed("%", "m") end) end, "Surround Add Parenthesis")
+                keys.xmap("`", function() keys.feed("ma`", "t") end, "Surround Add Backtick")
 
-            keys.map("of", function() keys.feed("<esc>m6", "n") keys.feed("daf", "m") keys.feed("`6", "n") end, "Surround Delete Function Call", "o")
+                -- vim.defer_fn(function() keys.xmap("<", function() keys.feed("ma<", "t") end, "Surround Add Angle Bracket") end, 2000)
+
+                keys.map("of", function() keys.feed("<esc>m6", "n") keys.feed("daf", "m") keys.feed("`6", "n") end, "Surround Delete Function Call", "o")
+            end)
         end,
         keys = function(plugin, keys)
             local opts = require("lazy.core.plugin").values(plugin, "opts", false)
