@@ -5,25 +5,6 @@ return {
     { "b0o/schemastore.nvim", version = false },
     { "cenk1cenk2/schema-companion.nvim", opts = {} },
 
-    {
-        "folke/lazydev.nvim",
-        cmd = "LazyDev",
-        ft = "lua",
-        opts = {
-            integrations = {
-                cmp = false,
-                lspconfig = false,
-            },
-            library = {
-                { path = "${3rd}/luv/library", words = { "vim%.uv" } },
-                { path = "${3rd}/busted/library", words = { "describe" } },
-                { path = "${3rd}/luassert/library", words = { "assert" } },
-                { path = "lazy.nvim", words = { "LazyVim", "package" } },
-                { path = "snacks.nvim", words = { "Snacks" } },
-            },
-        },
-    },
-
     -- Pretty screen shots.
     {
         "mistricky/codesnap.nvim",
@@ -32,6 +13,9 @@ return {
             "CodeSnap",
             "CodeSnapSave",
         },
+        enabled = function()
+            return vim.env.HOSTNAME ~= "zap"
+        end,
         keys = {
             { "<leader>cS", "", desc = "󰹑 Screen Shots", mode = { "x" } },
             { "<leader>cSs", "<cmd>CodeSnap<cr>", mode = "x", desc = "Save selected code snapshot into clipboard" },
