@@ -6,29 +6,15 @@ return {
             -- ts-install handles commands and installs.
             vim.g.loaded_nvim_treesitter = 1
 
-            ev.on_load("nvim-treesitter", function()
-                vim.schedule(function()
-                    -- Map languages to my created file types.
-                    vim.treesitter.language.register("bash", "direnv")
-                    vim.treesitter.language.register("ruby", "brewfile")
+            -- Map languages to my created file types.
+            vim.treesitter.language.register("bash", "direnv")
+            vim.treesitter.language.register("ruby", "brewfile")
 
-                    -- https://github.com/MeanderingProgrammer/render-markdown.nvim#vimwiki
-                    vim.treesitter.language.register("markdown", "vimwiki")
+            -- https://github.com/MeanderingProgrammer/render-markdown.nvim#vimwiki
+            vim.treesitter.language.register("markdown", "vimwiki")
 
-                    vim.highlight.priorities.semantic_tokens = 100
-                    vim.highlight.priorities.treesitter = 125
-
-                    vim.treesitter.language.add("htmljinja", {
-                        path = vim.api.nvim_get_runtime_file("parser/jinja2.so", false)[1],
-                        symbol_name = "jinja2",
-                    })
-
-                    require("helpers.file").symlink_queries("caddyfile")
-                    require("helpers.file").symlink_queries("ghostty", "ghostty")
-                    require("helpers.file").symlink_queries("jinja2", "jinja2")
-                    require("helpers.file").symlink_queries("jinja2", "htmljinja")
-                end)
-            end)
+            vim.highlight.priorities.semantic_tokens = 100
+            vim.highlight.priorities.treesitter = 125
         end,
         lazy = false,
         keys = {
@@ -52,43 +38,51 @@ return {
         cmd = "TS",
         commit = "b5b7d602",
         event = ev.VeryLazy,
-        opts = {
-            auto_install = true,
-            ensure_install = defaults.treesitter.install,
-            parsers = {
-                caddyfile = {
-                    install_info = {
-                        url = "https://github.com/matthewpi/tree-sitter-caddyfile",
-                        files = { "src/parser.c" },
-                        branch = "master",
+        opts = function()
+            local root = require("lazy.core.config").options.root
+
+            return {
+                auto_install = true,
+                ensure_install = defaults.treesitter.install,
+                parsers = {
+                    caddyfile = {
+                        install_info = {
+                            url = "https://github.com/matthewpi/tree-sitter-caddyfile",
+                            files = { "src/parser.c" },
+                            branch = "master",
+                            queries_dir = vim.fs.joinpath(root, "tree-sitter-caddyfile", "queries"),
+                        },
+                        filetype = "caddyfile",
+                        maintainers = {},
+                        tier = "community",
                     },
-                    filetype = "caddyfile",
-                    maintainers = {},
-                    tier = 3,
-                },
-                ghostty = {
-                    install_info = {
-                        url = "https://github.com/bezhermoso/tree-sitter-ghostty",
-                        files = { "src/parser.c" },
-                        branch = "main",
-                        generate_from_json = true,
+                    ghostty = {
+                        install_info = {
+                            url = "https://github.com/bezhermoso/tree-sitter-ghostty",
+                            files = { "src/parser.c" },
+                            branch = "main",
+                            generate_from_json = true,
+                            queries_dir = vim.fs.joinpath(root, "tree-sitter-ghostty", "queries", "ghostty"),
+                        },
+                        filetype = "ghostty",
+                        maintainers = {},
+                        tier = "community",
                     },
-                    filetype = "ghostty",
-                    maintainers = {},
-                    tier = 3,
-                },
-                jinja2 = {
-                    install_info = {
-                        url = "https://github.com/geigerzaehler/tree-sitter-jinja2",
-                        files = { "src/parser.c" },
-                        branch = "main",
+                    jinja2 = {
+                        install_info = {
+                            url = "https://github.com/dsully/tree-sitter-jinja2",
+                            files = { "src/parser.c" },
+                            branch = "dsully/nvim-treesitter-1.x",
+                            -- branch = "main",
+                            queries_dir = vim.fs.joinpath(root, "tree-sitter-jinja2", "queries", "jinja2"),
+                        },
+                        filetype = "jinja2",
+                        maintainers = {},
+                        tier = "community",
                     },
-                    filetype = "jinja2",
-                    maintainers = {},
-                    tier = 3,
                 },
-            },
-        },
+            }
+        end,
     },
     {
         "dsully/treesitter-jump.nvim",
@@ -106,6 +100,5 @@ return {
     },
     { "matthewpi/tree-sitter-caddyfile" },
     { "bezhermoso/tree-sitter-ghostty", ft = "ghostty" },
-    -- Right now jinja2 uses the old .get_parsers() call to nvim-treesitter.
-    { "geigerzaehler/tree-sitter-jinja2", cond = false },
+    { "dsully/tree-sitter-jinja2", branch = "dsully/nvim-treesitter-1.x" },
 }
