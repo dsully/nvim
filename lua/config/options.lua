@@ -105,35 +105,17 @@ vim.g.colorscheme = "nordish"
 
 vim.g.ts_path = vim.fs.joinpath(tostring(vim.fn.stdpath("data")), "ts-install")
 
--- Load clipboard.vim faster. Neovim 0.10+ includes OSC52 support.
-if vim.env.SSH_CONNECTION or vim.env.ZELLIJ then
-    local osc52 = require("vim.ui.clipboard.osc52")
-
-    vim.g.clipboard = {
-        name = "OSC 52",
-        copy = {
-            ["+"] = osc52.copy("+"),
-            ["*"] = osc52.copy("*"),
-        },
-        paste = {
-            ["+"] = osc52.paste("+"),
-            ["*"] = osc52.paste("*"),
-        },
-    }
-elseif vim.g.os == "Darwin" then
-    vim.g.clipboard = {
-        name = "pbcopy",
-        copy = {
-            ["+"] = "pbcopy",
-            ["*"] = "pbcopy",
-        },
-        paste = {
-            ["+"] = "pbpaste",
-            ["*"] = "pbpaste",
-        },
-        cache_enabled = false,
-    }
-end
+vim.g.clipboard = {
+    name = "OSC 52",
+    copy = {
+        ["+"] = require("vim.ui.clipboard.osc52").copy("+"),
+        ["*"] = require("vim.ui.clipboard.osc52").copy("*"),
+    },
+    paste = {
+        ["+"] = require("vim.ui.clipboard.osc52").paste("+"),
+        ["*"] = require("vim.ui.clipboard.osc52").paste("*"),
+    },
+}
 
 -- Work around: https://github.com/neovim/neovim/issues/31675
 vim.hl = vim.highlight
