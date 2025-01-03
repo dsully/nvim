@@ -183,4 +183,23 @@ return {
             },
         },
     },
+    {
+        "juansalvatore/git-dashboard-nvim",
+        opts = {
+            basepoints = { "master", "main" },
+            branch = { "master", "main" },
+            centered = false,
+            colors = {
+                branch_highlight = colors.yellow.base,
+                dashboard_title = colors.cyan.bright,
+                days_and_months_labels = colors.cyan.bright,
+                empty_square_highlight = colors.cyan.bright,
+                filled_square_highlights = { "#002c39", "#094d5b", "#387180", "#6098a7", colors.cyan.bright, "#c0faff" },
+            },
+            day_label_gap = "  ",
+            hide_cursor = true,
+            show_current_branch = true,
+            use_git_username_as_author = true,
+        },
+    },
 }
