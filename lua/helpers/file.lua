@@ -89,7 +89,7 @@ end
 ---@param subdirectory string?
 M.symlink_queries = function(filetype, subdirectory)
     --
-    local src = vim.fs.joinpath(tostring(vim.fn.stdpath("data")), "lazy", "tree-sitter-" .. filetype, "queries")
+    local src = vim.fs.joinpath(require("lazy.core.config").options.root, "tree-sitter-" .. filetype, "queries")
     local dst = vim.fs.joinpath(tostring(vim.fn.stdpath("config")), "queries", subdirectory or filetype)
 
     if subdirectory then

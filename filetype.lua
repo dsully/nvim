@@ -17,9 +17,6 @@ vim.filetype.add({
     extension = {
         conf = "conf",
         ivy = "xml",
-        j2 = "jinja2",
-        jinja = "jinja2",
-        jinja2 = "jinja2",
         pdl = "pdl",
         plist = "xml.plist", -- macOS PropertyList files
         -- We always want LaTeX, avoid slow detection logic
@@ -65,12 +62,8 @@ vim.filetype.add({
     },
     pattern = {
         ["*.dockerignore"] = "gitignore",
-        [".*%.html%.j2"] = "htmljinja",
-        [".*%.html%.jinja"] = "htmljinja",
-        [".*%.html%.jinja2"] = "htmljinja",
         [".*/%.github/workflows/.*%.[ya]ml"] = "yaml.ghaction",
         [".*/.config/ghostty/config"] = "ghostty",
-        [".*/jinja2/.*%.html"] = "htmljinja",
         [".*/themes?/.*%.theme"] = "fish",
         ["Brewfile.*"] = "brewfile",
         ["Dockerfile.*"] = function(path)
