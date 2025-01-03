@@ -23,6 +23,7 @@ return {
     { "giuxtaposition/blink-cmp-copilot" },
     {
         "Saghen/blink.cmp",
+        build = "cargo build --release",
         event = ev.InsertEnter,
         init = function()
             hl.apply({
