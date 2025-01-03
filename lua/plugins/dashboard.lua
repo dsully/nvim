@@ -21,6 +21,11 @@ return {
     {
         "goolord/alpha-nvim",
         config = function(_, dashboard)
+            hl.apply({
+                { AlphaHeader = { fg = colors.blue.bright } },
+                { AlphaFooter = { fg = colors.blue.base } },
+            })
+
             -- Close Lazy and re-open when the dashboard is ready
             if vim.o.filetype == "lazy" then
                 vim.cmd.close()
@@ -66,12 +71,6 @@ return {
             return vim.fn.argc() == 0
         end,
         event = ev.VimEnter,
-        init = function()
-            hl.apply({
-                { AlphaHeader = { fg = colors.blue.bright } },
-                { AlphaFooter = { fg = colors.blue.base } },
-            })
-        end,
         opts = function()
             ---@param c string
             local cmd = function(c)
