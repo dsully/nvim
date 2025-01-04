@@ -134,9 +134,9 @@ M.ui = {
         MoreMsg = { bold = true, fg = colors.cyan.bright },
         MsgArea = {},
         NonText = { bg = colors.gray.base, fg = colors.fg },
-        Normal = { fg = colors.fg },
+        Normal = { fg = colors.fg, bg = colors.none },
         NormalFloat = { bg = colors.black.base, fg = colors.white.dim },
-        NormalNC = { fg = colors.fg },
+        NormalNC = { fg = colors.fg, bg = colors.none },
         Pmenu = { bg = colors.gray.base, fg = colors.fg },
         PmenuSbar = { link = hl.PmenuSel },
         -- https://www.reddit.com/r/neovim/comments/1f439w8/psa_for_color_scheme_authors_you_might_want_to/

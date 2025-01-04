@@ -60,7 +60,6 @@ return {
             notify = false,
         },
         ---@type snacks.indent.Config
-        ---@diagnostic disable-next-line: missing-fields
         indent = {
             animate = {
                 enabled = false,
@@ -92,16 +91,13 @@ return {
             git = { patterns = { "GitSign" } },
         },
         styles = {
-            ---@diagnostic disable-next-line: missing-fields
             input = {
                 border = defaults.ui.border.name,
             },
-            ---@diagnostic disable-next-line: missing-fields
             notification = {
                 border = defaults.ui.border.name,
                 wo = { wrap = true },
             },
-            ---@diagnostic disable-next-line: missing-fields
             scratch = {
                 border = defaults.ui.border.name,
                 height = 0.8,
@@ -124,7 +120,6 @@ return {
         -- Git helpers.
         { "<leader>go", function() Snacks.gitbrowse.open() end, desc = "Open Git URL", mode = { "n", "x" } },
         { "<leader>gC", function()
-            ---@diagnostic disable-next-line: missing-fields
             Snacks.gitbrowse({ open = function(url) vim.fn.setreg("+", url) end, notify = false })
         end, desc = "Copy Git URL", mode = { "n", "x" } },
 
