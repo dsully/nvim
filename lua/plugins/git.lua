@@ -95,22 +95,6 @@ return {
             },
         },
     },
-    -- TODO: Replace with snacks terminal
-    {
-        "aspeddro/gitui.nvim",
-        -- stylua: ignore
-        keys = { { "<space>g", function() require("gitui").open() end, desc = "Git UI" } },
-        opts = {
-            command = {
-                enable = false,
-            },
-            window = {
-                options = {
-                    border = defaults.ui.border.name,
-                },
-            },
-        },
-    },
     {
         "aaronhallaert/advanced-git-search.nvim",
         cmd = "AdvancedGitSearch",
