@@ -110,6 +110,7 @@ function M.setup()
                 virtual = true,
             },
             { import = "plugins" },
+            { import = "plugins.ai" },
             { import = "plugins.languages" },
         },
         change_detection = {
