@@ -133,6 +133,10 @@ return {
                                 return vim.bo[vim.api.nvim_get_current_buf()].filetype == "python" and skipped[content] or false
                             end,
                         },
+
+                        -- Skip supermaven messages.
+                        { find = "Starting Supermaven", event = "msg_show" },
+                        { find = "Supermaven Free Tier", event = "msg_show" },
                     },
                 },
                 opts = { skip = true },
