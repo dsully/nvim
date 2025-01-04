@@ -258,9 +258,10 @@ return {
                         "lazydev",
                         "lsp",
                         "path",
-                        "snippets",
+                        "markdown",
                         "copilot",
                         "codecompanion",
+                        "snippets",
                     }
                 end,
                 -- Disable completion for markdown.
@@ -370,6 +371,11 @@ return {
                                 return true
                             end, items)
                         end,
+                    },
+                    markdown = {
+                        name = "RenderMarkdown",
+                        module = "render-markdown.integ.blink",
+                        fallbacks = { "lsp" },
                     },
                     path = {
                         name = "Path",
