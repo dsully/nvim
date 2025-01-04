@@ -202,7 +202,6 @@ local M = {
             clock = " ",
             code = " ",
             comment = "󰅺 ",
-            copilot = copilot,
             dashboard = " ",
             datetime = "󱛡 ",
             double_chevron_right = "»",
@@ -270,9 +269,11 @@ local M = {
         },
         lsp = {
             Class = "",
+            Code = " ",
             Color = "",
             Constant = "󰏿",
             Constructor = "",
+            Copilot = copilot,
             Enum = "",
             EnumMember = "",
             Event = "",
@@ -301,6 +302,7 @@ local M = {
             Value = "",
             Variable = "󰀫",
             Version = "󱘗", -- crates.nvim lsp completion type.
+            supermaven = " ",
         },
     },
 
