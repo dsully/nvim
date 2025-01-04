@@ -5,4 +5,4 @@ vim.keymap.set("n", "o", function()
     end
 
     return "o"
-end, { buffer = true, expr = true }) ---@diagnostic disable-line: missing-fields
+end, { buffer = true, expr = true })

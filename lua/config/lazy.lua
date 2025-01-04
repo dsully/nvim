@@ -124,7 +124,6 @@ function M.setup()
             lazy = true,
             version = false, -- always use the latest git commit
         },
-        ---@diagnostic disable-next-line: assign-type-mismatch
         dev = {
             fallback = true,
             path = vim.env.HOME .. "/dev/home/neovim",

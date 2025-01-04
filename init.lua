@@ -15,7 +15,6 @@ if vim.env.PROF or vim.env.PROFILE or vim.env.NVIM_PROFILE then
 
     vim.opt.runtimepath:append(snacks)
 
-    ---@diagnostic disable-next-line: missing-fields
     require("snacks.profiler").startup({
         startup = {
             event = "VeryLazy", -- Stop profiler on this event. Defaults to `VimEnter`

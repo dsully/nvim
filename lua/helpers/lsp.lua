@@ -317,7 +317,7 @@ M.commands = function()
             local name = client and client.name or ""
 
             local params = vim.lsp.util.make_range_params(0, client.offset_encoding)
-            params.context = { diagnostics = vim.lsp.diagnostic.get_line_diagnostics() } ---@diagnostic disable-line: inject-field
+            params.context = { diagnostics = vim.lsp.diagnostic.get_line_diagnostics() }
 
             client:request(methods.textDocument_codeAction, params, function(_, result)
                 if not vim.tbl_contains(defaults.ignored.lsp, name) and result.result then

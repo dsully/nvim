@@ -26,7 +26,6 @@ return {
                 local gs = package.loaded.gitsigns
 
                 local function bmap(l, r, desc, mode)
-                    ---@diagnostic disable-next-line: missing-fields
                     vim.keymap.set(mode or "n", l, r, { buffer = buffer, desc = desc })
                 end
 
