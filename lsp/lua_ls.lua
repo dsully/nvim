@@ -21,6 +21,11 @@ return {
                 workspaceWord = true,
             },
             diagnostics = {
+                disable = {
+                    "inject-field",
+                    "missing-fields",
+                    "missing-parameter",
+                },
                 globals = {
                     "LazyVim",
                     "Snacks",
