@@ -128,5 +128,10 @@ return {
 
         -- Scratch
         { "<leader>.",  function() Snacks.scratch() end, desc = "Toggle Scratch Buffer" },
+
+        {"<space>g", function()
+            Snacks.terminal({ "gitui" }, { cwd = require("helpers.file").git_root() or vim.uv.cwd() })
+        end, desc = "Git UI"}
+
     },
 }
