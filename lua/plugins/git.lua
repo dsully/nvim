@@ -95,10 +95,11 @@ return {
             },
         },
     },
+    -- TODO: Replace with snacks terminal
     {
         "aspeddro/gitui.nvim",
         -- stylua: ignore
-        keys = { { "<space>G", function() require("gitui").open() end, desc = "Git UI" } },
+        keys = { { "<space>g", function() require("gitui").open() end, desc = "Git UI" } },
         opts = {
             command = {
                 enable = false,
@@ -109,38 +110,6 @@ return {
                 },
             },
         },
-    },
-    {
-        -- For Github PR view
-        "chrisgrieser/nvim-tinygit",
-        opts = {
-            commitMsg = {
-                conventionalCommits = {
-                    enforce = true,
-                },
-            },
-        },
-    },
-    {
-        "SuperBo/fugit2.nvim",
-        build = "rockspec",
-        cmd = { "Fugit2", "Fugit2Blame", "Fugit2Graph" },
-        keys = {
-            { "<space>g", vim.cmd.Fugit2, desc = "Git UI (FuGit)" },
-        },
-        opts = function()
-            local lib = "/lib/libgit2.dylib"
-
-            if vim.g.os == "Linux" then
-                lib = "/lib/libgit2.so"
-            end
-
-            return {
-                width = 0.8,
-                height = 0.8,
-                libgit2_path = vim.env.HOMEBREW_PREFIX .. lib,
-            }
-        end,
     },
     {
         "aaronhallaert/advanced-git-search.nvim",
