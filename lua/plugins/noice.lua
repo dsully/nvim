@@ -184,36 +184,6 @@ return {
                 },
                 view = "mini",
             },
-
-            -- Warnings & Errors
-            {
-                filter = {
-                    any = {
-                        { warning = true },
-                        { event = "msg_show", find = "^Warn" },
-                        { event = "msg_show", find = "^W%d+:" },
-                        { event = "msg_show", find = "^No hunks$" },
-                    },
-                },
-                opts = { title = "Warning", level = vim.log.levels.WARN, merge = false, replace = false },
-                view = "notify",
-            },
-            {
-                opts = { title = "" },
-                filter = { kind = { "emsg", "echo", "echomsg" } },
-                view = "notify",
-            },
-            {
-                filter = {
-                    any = {
-                        { error = true },
-                        { event = "msg_show", find = "^Error" },
-                        { event = "msg_show", find = "^E%d+:" },
-                    },
-                },
-                opts = { title = "Error", replace = true, merge = true, level = vim.log.levels.ERROR },
-                view = "notify",
-            },
         },
         ---@type NoiceConfigViews
         views = {
@@ -237,5 +207,8 @@ return {
                 },
             },
         },
+    },
+    opts_extend = {
+        "routes",
     },
 }
