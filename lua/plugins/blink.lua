@@ -282,12 +282,6 @@ return {
                         },
                         score_offset = -3,
                     },
-                    lazydev = {
-                        name = "LazyDev",
-                        module = "lazydev.integrations.blink",
-                        -- Make lazydev completions top priority
-                        score_offset = 100,
-                    },
                     lsp = {
                         name = "LSP",
                         -- Do not use `buffer` as fallback
