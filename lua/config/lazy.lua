@@ -72,8 +72,8 @@ function M.setup()
 
     vim.cmd.colorscheme(vim.g.colorscheme)
 
+    ---@type LazyConfig
     require("lazy").setup({
-        ---@type LazyConfig
         spec = {
             {
                 "autocmds",

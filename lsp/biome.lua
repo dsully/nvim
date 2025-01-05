@@ -1,0 +1,20 @@
+return {
+    cmd = { "biome", "lsp-proxy", "--config-path=" .. vim.fs.joinpath(vim.env.XDG_CONFIG_HOME, "biome.json") },
+    filetypes = {
+        "astro",
+        "caddyfile",
+        "css",
+        "graphql",
+        "javascript",
+        "javascriptreact",
+        "json",
+        "json5",
+        "jsonc",
+        "svelte",
+        "typescript",
+        "typescript.tsx",
+        "typescriptreact",
+        "vue",
+    },
+    single_file_support = true,
+}
