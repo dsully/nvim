@@ -23,7 +23,7 @@ return {
         icons = {
             rules = {
                 { pattern = "copy", icon = " " },
-                { pattern = "emojii", icon = "󰞅 " },
+                { pattern = "emoji", icon = "󰞅 " },
                 { pattern = "grep", icon = "󰈞 " },
                 { pattern = "icon", icon = " " },
                 { pattern = "inspect", icon = " " },
@@ -134,4 +134,5 @@ return {
             no_overlap = true,
         },
     },
+    opts_extend = { "spec" },
 }
