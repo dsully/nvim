@@ -90,6 +90,7 @@ local M = {
             "biome",
             "dockerls",
             "fish_lsp",
+            "ghostty",
             "gopls",
             "harper",
             "html",
@@ -113,7 +114,6 @@ local M = {
         "rstcheck",
         "xmlformatter",
         "yamllint",
-        "zls",
     },
 
     icons = {
