@@ -76,6 +76,22 @@ return {
         },
     },
     {
+        "Saghen/blink.cmp",
+        optional = true,
+        opts = {
+            sources = {
+                default = { "markdown" },
+                providers = {
+                    markdown = {
+                        name = "RenderMarkdown",
+                        module = "render-markdown.integ.blink",
+                        fallbacks = { "lsp" },
+                    },
+                },
+            },
+        },
+    },
+    {
         "dsully/markview.nvim",
         cond = false,
         branch = "treesitter-compat",
