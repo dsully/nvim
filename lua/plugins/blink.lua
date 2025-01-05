@@ -162,47 +162,18 @@ return {
                                 end,
                             },
                             label = {
+                                ---@param ctx blink.cmp.DrawItemContext
+                                highlight = function(ctx)
+                                    return require("colorful-menu").blink_components_highlight(ctx)
+                                end,
+                                ---@param ctx blink.cmp.DrawItemContext
+                                text = function(ctx)
+                                    return require("colorful-menu").blink_components_text(ctx)
+                                end,
                                 width = {
                                     fill = true,
                                     max = 90,
                                 },
-                                --- @param ctx blink.cmp.DrawItemContext
-                                text = function(ctx)
-                                    --
-                                    local ft = vim.bo.filetype
-
-                                    if ft == "rust" then
-                                        return require("helpers.completion").rust_format(ctx)
-                                    end
-
-                                    return ctx.label .. ctx.label_detail
-                                end,
-                                highlight = function(ctx)
-                                    -- Label and label details
-                                    local highlights = {
-                                        { 0, #ctx.label, group = ctx.deprecated and "BlinkCmpLabelDeprecated" or "BlinkCmpLabel" },
-                                    }
-
-                                    if ctx.label_detail then
-                                        table.insert(highlights, { #ctx.label, #ctx.label + #ctx.label_detail, group = "BlinkCmpLabelDetail" })
-                                    end
-
-                                    -- characters matched on the label by the fuzzy matcher
-                                    for _, idx in ipairs(ctx.label_matched_indices) do
-                                        table.insert(highlights, { idx, idx + 1, group = "BlinkCmpLabelMatch" })
-                                    end
-
-                                    return highlights
-                                end,
-                            },
-                            source_name = {
-                                width = {
-                                    max = 30,
-                                },
-                                text = function(ctx)
-                                    return ctx.source_name
-                                end,
-                                highlight = "BlinkCmpSource",
                             },
                         },
                     },
@@ -365,6 +336,11 @@ return {
         version = "*",
     },
     { "saghen/blink.compat" },
+    {
+        "xzbdmw/colorful-menu.nvim",
+        opts = {
+            max_width = 90,
+        },
     },
     {
         "chrisgrieser/nvim-scissors",
