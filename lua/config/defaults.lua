@@ -107,6 +107,7 @@ local M = {
 
     tools = {
         "curlylint",
+        "ghostty-ls",
         "goimports",
         "html-lsp",
         "lemminx",

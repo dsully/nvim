@@ -48,6 +48,7 @@ return {
         registries = {
             "github:nvim-java/mason-registry",
             "github:mason-org/mason-registry",
+            "github:mkindberg/ghostty-ls",
         },
         ui = {
             border = defaults.ui.border.name,
