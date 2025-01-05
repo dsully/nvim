@@ -8,18 +8,25 @@ end, {
 
 ev.on(ev.FileType, function(event)
     --
-    local is_unmapped = vim.fn.hasmapto("q", "n") == 0
-
-    if is_unmapped then
-        keys.bmap("q", function()
+    if vim.fn.hasmapto("q", "n") == 0 then
+        --
+        local close = function()
             vim.api.nvim_buf_delete(event.buf, { force = true })
             vim.cmd.close({ mods = { emsg_silent = true, silent = true } })
-        end, "Close Buffer", event.buf)
+        end
+
+        if vim.bo[event.buf].filetype == "DiffviewFiles" then
+            close = function()
+                vim.cmd.DiffviewClose()
+            end
+        end
+
+        keys.bmap("q", close, "Close Buffer", event.buf)
     end
 end, {
     desc = "Map 'q' to close the buffer.",
     pattern = {
-        "checkhealth",
+        "DiffviewFiles",
         "grug-far",
         "man",
         "nofile",
