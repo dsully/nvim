@@ -18,4 +18,21 @@ return {
             },
         },
     },
+    {
+        "Saghen/blink.cmp",
+        optional = true,
+        opts = {
+            sources = {
+                default = { "lazydev" },
+                providers = {
+                    lazydev = {
+                        name = "LazyDev",
+                        module = "lazydev.integrations.blink",
+                        -- Make lazydev completions top priority
+                        score_offset = 100,
+                    },
+                },
+            },
+        },
+    },
 }
