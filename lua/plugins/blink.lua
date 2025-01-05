@@ -343,11 +343,6 @@ return {
                             end, items)
                         end,
                     },
-                    markdown = {
-                        name = "RenderMarkdown",
-                        module = "render-markdown.integ.blink",
-                        fallbacks = { "lsp" },
-                    },
                     path = {
                         name = "Path",
                         -- Do not use `buffer` as fallback
