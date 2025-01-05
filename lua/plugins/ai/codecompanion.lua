@@ -20,16 +20,40 @@ return {
     -- ]] - Move to the next header
     -- [[ - Move to the previous header
     "olimorris/codecompanion.nvim",
-    cmd = { "CodeCompanion", "CodeCompanionChat", "CodeCompanionActions" },
+    cmd = {
+        "CodeCompanion",
+        "CodeCompanionAdd",
+        "CodeCompanionChat",
+        "CodeCompanionActions",
+    },
+    keys = {
         --stylua: ignore start
-        keys = {
-            { "<leader>aa", vim.cmd.CodeCompanionActions, mode = mode, desc = "Code Companion Actions" },
-            { "<leader>ac", function() vim.cmd.CodeCompanionChat("Toggle") end, mode = mode, desc = "Code Companion Chat" },
-            { "<leader>ad", function() require("codecompanion").prompt("lsp") end, mode = mode, desc = "Debug Diagnostics" },
-            { "<leader>af", function() require("codecompanion").prompt("fix") end, mode = mode, desc = "Fix Code" },
-            { "<leader>ao", function() require("codecompanion").prompt("optimize") end, mode = mode, desc = "Optimize" },
+        { "<leader>aa", vim.cmd.CodeCompanionActions, mode = mode, desc = "Code Companion Actions" },
+        { "<leader>ac", function() vim.cmd.CodeCompanionChat("Toggle") end, mode = mode, desc = "Code Companion Chat" },
+        { "<leader>ad", function() require("codecompanion").prompt("lsp") end, mode = mode, desc = "Debug Diagnostics" },
+        { "<leader>af", function() require("codecompanion").prompt("fix") end, mode = mode, desc = "Fix Code" },
+        { "<leader>ao", function() require("codecompanion").prompt("optimize") end, mode = mode, desc = "Optimize" },
+        --stylua: ignore end
+        {
+            "<leader>aq",
+            function()
+                if vim.fn.mode() == "v" or vim.fn.mode() == "V" or vim.fn.mode() == "x" then
+                    vim.ui.input({ prompt = "CodeCompanion: " }, function(input)
+                        if input then
+                            vim.cmd("'<,'>CodeCompanion " .. input)
+                        end
+                    end)
+                else
+                    vim.ui.input({ prompt = "CodeCompanion: " }, function(input)
+                        if input then
+                            vim.cmd.CodeCompanion(input)
+                        end
+                    end)
+                end
+            end,
+            desc = "Prompt (CodeCompanion)",
+            mode = mode,
         },
-    --stylua: ignore end
     opts = function()
         local prompts = require("codecompanion.config").prompt_library
 
