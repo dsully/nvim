@@ -213,6 +213,37 @@ function M.setup()
         vim.cmd.checkhealth()
     end, { desc = "Load all plugins and run :checkhealth" })
 
+    vim.api.nvim_create_user_command("LazyPlugin", function(opts)
+        local cmd = unpack(opts.fargs)
+
+        if cmd then
+            dd(require("lazy.core.config").plugins[cmd]._.cache.opts)
+        end
+    end, {
+        complete = function(_, line)
+            local words = vim.split(line, "%s+")
+
+            if #words <= 2 then
+                local prefix = words[2] or ""
+
+                ---@type table<string>
+                local matches = {}
+
+                for _, plugin in ipairs(require("lazy").plugins()) do
+                    if vim.startswith(plugin.name, prefix) then
+                        matches[#matches + 1] = plugin.name
+                    end
+                end
+
+                table.sort(matches)
+
+                return matches
+            end
+        end,
+        desc = "Show the merged configuration for a given plugin.",
+        nargs = "*",
+    })
+
     ev.on_load("which-key.nvim", function()
         vim.schedule(function()
             local lazy = require("lazy")
