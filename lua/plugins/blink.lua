@@ -233,22 +233,16 @@ return {
                         max_items = 4,
                         min_keyword_length = 4,
                         opts = {
-                            -- Show completions from all buffers used within the last x minutes
+                            -- default to all visible buffers
                             get_bufnrs = function()
-                                local mins = 15
-                                local open_buffers = vim.fn.getbufinfo({ buflisted = 1, bufloaded = 1 })
-
-                                local recent_buffers = vim.iter(open_buffers)
-                                    :filter(function(buf)
-                                        local recently_used = os.time() - buf.lastused < (60 * mins)
-                                        return recently_used and vim.bo[buf.bufnr].buftype == ""
+                                return vim.iter(vim.api.nvim_list_wins())
+                                    :map(function(win)
+                                        return vim.api.nvim_win_get_buf(win)
                                     end)
-                                    :map(function(buf)
-                                        return buf.bufnr
+                                    :filter(function(buf)
+                                        return vim.bo[buf].buftype ~= defaults.ignored.buf_types
                                     end)
                                     :totable()
-
-                                return recent_buffers
                             end,
                         },
                         score_offset = -3,
