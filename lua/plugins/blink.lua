@@ -247,28 +247,7 @@ return {
 
                     return {}
                 end,
-                default = function()
-                    local success, node = pcall(vim.treesitter.get_node)
-
-                    if success and node and vim.tbl_contains({ "comment", "line_comment", "block_comment" }, node:type()) then
-                        return {}
-                    end
-
-                    return {
-                        "lazydev",
-                        "lsp",
-                        "path",
-                        "markdown",
-                        "supermaven",
-                        "copilot",
-                        "codecompanion",
-                        "snippets",
-                    }
-                end,
-                -- Disable completion for markdown.
-                min_keyword_length = function()
-                    return vim.bo.filetype == "markdown" and 2 or 0
-                end,
+                default = { "lsp", "path", "snippets", "buffer" },
                 -- Ignore
                 per_filetype = {
                     gitcommit = {},
@@ -408,27 +387,15 @@ return {
                             ignored_filetypes = defaults.ignored.file_types,
                         },
                     },
-                    supermaven = {
-                        name = "supermaven",
-                        async = true,
-                        module = "blink.compat.source",
-                        score_offset = 100,
-                        transform_items = function(_, items)
-                            local kind = require("blink.cmp.types").CompletionItemKind
-                            local kind_idx = #kind + 1
-
-                            kind[kind_idx] = "Supermaven"
-
-                            for _, item in ipairs(items) do
-                                item.kind = kind_idx
-                            end
-
-                            return items
-                        end,
-                    },
                 },
             },
         },
+        opts_extend = {
+            "sources.default",
+        },
+        version = "*",
+    },
+    { "saghen/blink.compat" },
     },
     {
         "chrisgrieser/nvim-scissors",
