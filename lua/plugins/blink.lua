@@ -20,7 +20,6 @@ local is_ai_source = function(source)
     return vim.tbl_contains({ "copilot", "supermaven" }, source:lower())
 end
 return {
-    { "giuxtaposition/blink-cmp-copilot" },
     {
         "Saghen/blink.cmp",
         build = "cargo build --release",
@@ -114,6 +113,7 @@ return {
                 },
                 menu = {
                     -- Don't auto-show the completion menu in commandline mode.
+                    ---@param ctx blink.cmp.Context
                     auto_show = function(ctx)
                         return ctx.mode ~= "cmdline" or not vim.tbl_contains({ "/", "?" }, vim.fn.getcmdtype())
                     end,
@@ -135,9 +135,11 @@ return {
                         components = {
                             kind_icon = {
                                 ellipsis = true,
+                                ---@param ctx blink.cmp.DrawItemContext
                                 text = function(ctx)
                                     return is_ai_source(ctx.item.source_name) and defaults.icons.lsp[ctx.item.source_name] or defaults.icons.lsp[ctx.kind]
                                 end,
+                                ---@param ctx blink.cmp.DrawItemContext
                                 highlight = function(ctx)
                                     return is_ai_source(ctx.item.source_name) and "MiniIconsBlue" or select(2, require("mini.icons").get("lsp", ctx.kind))
                                 end,
@@ -150,9 +152,11 @@ return {
                                 width = {
                                     fill = true,
                                 },
+                                ---@param ctx blink.cmp.DrawItemContext
                                 text = function(ctx)
                                     return is_ai_source(ctx.item.source_name) and "Code" or ctx.kind
                                 end,
+                                ---@param ctx blink.cmp.DrawItemContext
                                 highlight = function(ctx)
                                     return is_ai_source(ctx.item.source_name) and "BlinkCmpKindSnippet" or "BlinkCmpKind" .. ctx.kind
                                 end,
@@ -277,30 +281,6 @@ return {
                             end,
                         },
                         score_offset = -3,
-                    },
-                    codecompanion = {
-                        name = "CodeCompanion",
-                        async = true,
-                        module = "codecompanion.providers.completion.blink",
-                        score_offset = 100,
-                    },
-                    copilot = {
-                        name = "Copilot",
-                        async = true,
-                        module = "blink-cmp-copilot",
-                        score_offset = 100,
-                        transform_items = function(_, items)
-                            local kind = require("blink.cmp.types").CompletionItemKind
-                            local kind_idx = #kind + 1
-
-                            kind[kind_idx] = "Copilot"
-
-                            for _, item in ipairs(items) do
-                                item.kind = kind_idx
-                            end
-
-                            return items
-                        end,
                     },
                     lazydev = {
                         name = "LazyDev",
