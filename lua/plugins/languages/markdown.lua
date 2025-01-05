@@ -26,7 +26,7 @@ return {
                 })
                 :map("<space>tm")
         end,
-        ft = { "markdown", "snacks_notif", "vimwiki" },
+        ft = { "codecompanion", "markdown", "snacks_notif", "vimwiki" },
         keys = {
             {
                 "<space>tc",
