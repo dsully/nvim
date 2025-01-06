@@ -85,6 +85,11 @@ return {
         end,
     },
     {
+        "maxbol/treesorter.nvim",
+        cmd = "TSort",
+        opts = {},
+    },
+    {
         "dsully/treesitter-jump.nvim",
         dev = true,
         keys = {
