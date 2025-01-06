@@ -47,6 +47,23 @@ M.read = function(path)
     return content
 end
 
+---Read the content of a TOML file.
+---@param path string
+---@return table
+M.read_toml = function(path)
+    --
+    -- This comes from vhyrro/luarocks.nvim / the toml-edit rock.
+    local toml = require("toml_edit")
+    local parsed = toml.parse(M.read(path))
+
+    if not parsed then
+        notify.error("Couldn't read " .. path)
+        return {}
+    end
+
+    return parsed
+end
+
 ---Write data to a file.
 ---@param path string
 ---@param data string|string[]

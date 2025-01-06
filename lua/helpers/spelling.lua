@@ -10,14 +10,10 @@ M.add_word_to_typos = function(word)
     --
     local fs = require("helpers.file")
 
-    -- This comes from vhyrro/luarocks.nvim / the toml-edit rock.
-    local toml = require("toml_edit")
-
     local path = vim.g.home .. "/.typos.toml"
-    local config = toml.parse(fs.read(path))
+    local config = fs.read_toml(path)
 
     if not config then
-        notify.error("~/.typos.toml file not found!")
         return
     end
 
