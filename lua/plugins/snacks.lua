@@ -1,3 +1,4 @@
+---@type LazySpec
 return {
     "folke/snacks.nvim",
     config = function(_, opts)

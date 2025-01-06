@@ -1,5 +1,6 @@
 local icons = defaults.icons
 
+---@type LazySpec
 return {
     "folke/which-key.nvim",
     event = ev.VeryLazy,

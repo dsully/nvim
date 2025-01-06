@@ -1,3 +1,4 @@
+---@type LazySpec
 return {
     "willothy/nvim-cokeline",
     config = function()

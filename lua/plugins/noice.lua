@@ -1,6 +1,10 @@
+---@type LazySpec
 return {
     "folke/noice.nvim",
-    cmd = { "Noice", "NoiceDismiss" },
+    cmd = {
+        "Noice",
+        "NoiceDismiss",
+    },
     event = ev.VeryLazy,
     init = function()
         hl.apply({

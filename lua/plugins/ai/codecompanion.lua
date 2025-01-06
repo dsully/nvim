@@ -1,5 +1,6 @@
 local mode = { "n", "x" }
 
+---@type LazySpec
 return {
     -- TODO: Add to WhichKey?
     --
