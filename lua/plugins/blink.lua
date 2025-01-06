@@ -199,21 +199,6 @@ return {
                 ["<C-y>"] = { "select_and_accept" },
             },
             sources = {
-                cmdline = function()
-                    local type = vim.fn.getcmdtype()
-
-                    -- Search forward and backward
-                    if type == "/" or type == "?" then
-                        return { "buffer" }
-                    end
-
-                    -- Commands
-                    if type == ":" then
-                        return { "cmdline" }
-                    end
-
-                    return {}
-                end,
                 default = { "lsp", "path", "snippets", "buffer" },
                 -- Ignore
                 per_filetype = {
@@ -224,19 +209,6 @@ return {
                     buffer = {
                         max_items = 4,
                         min_keyword_length = 4,
-                        opts = {
-                            -- default to all visible buffers
-                            get_bufnrs = function()
-                                return vim.iter(vim.api.nvim_list_wins())
-                                    :map(function(win)
-                                        return vim.api.nvim_win_get_buf(win)
-                                    end)
-                                    :filter(function(buf)
-                                        return vim.bo[buf].buftype ~= defaults.ignored.buf_types
-                                    end)
-                                    :totable()
-                            end,
-                        },
                         score_offset = -3,
                     },
                     lsp = {
@@ -319,7 +291,6 @@ return {
         opts_extend = {
             "sources.default",
         },
-        version = "*",
     },
     { "saghen/blink.compat" },
     {
@@ -330,7 +301,10 @@ return {
     },
     {
         "chrisgrieser/nvim-scissors",
-        cmd = { "ScissorsAddNewSnippet", "ScissorsEditSnippet" },
+        cmd = {
+            "ScissorsAddNewSnippet",
+            "ScissorsEditSnippet",
+        },
         keys = {
             { "<leader>Sa", vim.cmd.ScissorsAddNewSnippet, desc = "Add new snippet" },
             { "<leader>Se", vim.cmd.ScissorsEditSnippet, desc = "Add edit snippet" },
