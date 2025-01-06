@@ -1,3 +1,4 @@
+---@type LazySpec
 return {
     "williamboman/mason.nvim",
     cmd = {
@@ -5,8 +6,6 @@ return {
         "MasonInstall",
         "MasonUninstall",
         "MasonUpdate",
-        "MasonToolsInstall",
-        "MasonToolsUpdate",
     },
     config = function(_, opts)
         require("mason").setup(opts)

@@ -1,3 +1,4 @@
+---@type LazySpec
 return {
     "lsp",
     event = ev.LazyFile,

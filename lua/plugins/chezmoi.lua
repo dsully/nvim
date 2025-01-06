@@ -1,3 +1,4 @@
+---@type LazySpec
 return {
     "xvzc/chezmoi.nvim",
     cmd = {

@@ -75,6 +75,7 @@ M.detect_format = function(filename)
     return "json.plist"
 end
 
+---@type LazySpec
 return {
     "plist",
     cond = function()

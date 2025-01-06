@@ -19,6 +19,8 @@ end
 local is_ai_source = function(source)
     return vim.tbl_contains({ "copilot", "supermaven" }, source:lower())
 end
+
+---@type LazySpec[]
 return {
     {
         "Saghen/blink.cmp",

@@ -1,3 +1,4 @@
+---@type LazySpec[]
 return {
     {
         "Davidyz/inlayhint-filler.nvim",

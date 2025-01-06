@@ -1,3 +1,4 @@
+---@type LazySpec
 return {
     "stevearc/resession.nvim",
     init = function()
