@@ -5,56 +5,6 @@ local M = {
     pattern = "*.plist",
 }
 
-if vim.g.os == "Darwin" then
-    local ev = require("helpers.event")
-
-    ev.on(ev.BufReadCmd, function(args)
-        vim.cmd.doautocmd(ev.BufReadPre)
-        --
-        M.read_command(args)
-
-        local levels = vim.o.undolevels
-        vim.o.undolevels = -1
-
-        vim.cmd.delete({
-            mods = { emsg_silent = true, silent = true },
-            range = { 1 },
-        })
-
-        vim.o.undolevels = levels
-
-        vim.cmd.doautocmd(ev.BufReadPost)
-    end, {
-        pattern = M.pattern,
-    })
-
-    ev.on(ev.FileReadCmd, function(args)
-        vim.cmd.doautocmd(ev.FileReadPre)
-        --
-        M.read_command(args)
-        vim.cmd.doautocmd(ev.FileReadPost .. " " .. args.file)
-    end, {
-        nested = true,
-        pattern = M.pattern,
-    })
-
-    ev.on(ev.BufWriteCmd, function(args)
-        vim.cmd.doautocmd(ev.BufWritePre)
-        M.write_command(args)
-    end, {
-        nested = true,
-        pattern = M.pattern,
-    })
-
-    ev.on(ev.FileWriteCmd, function(args)
-        vim.cmd.doautocmd(ev.FileWritePre)
-        M.write_command(args)
-    end, {
-        nested = true,
-        pattern = M.pattern,
-    })
-end
-
 M.read_command = function(args)
     --
     local bufnr = args.buf
@@ -125,4 +75,51 @@ M.detect_format = function(filename)
     return "json.plist"
 end
 
-return {}
+return {
+    "plist",
+    cond = function()
+        return vim.g.os == "Darwin"
+    end,
+    init = function()
+        local ev = require("helpers.event")
+
+        ev.on(ev.BufReadCmd, function(args)
+            vim.cmd.doautocmd(ev.BufReadPre)
+            --
+            M.read_command(args)
+
+            local levels = vim.o.undolevels
+            vim.o.undolevels = -1
+
+            vim.cmd.delete({
+                mods = { emsg_silent = true, silent = true },
+                range = { 1 },
+            })
+
+            vim.o.undolevels = levels
+
+            vim.cmd.doautocmd(ev.BufReadPost)
+        end, {
+            pattern = M.pattern,
+        })
+
+        ev.on(ev.FileReadCmd, function(args)
+            vim.cmd.doautocmd(ev.FileReadPre)
+            --
+            M.read_command(args)
+            vim.cmd.doautocmd(ev.FileReadPost .. " " .. args.file)
+        end, {
+            nested = true,
+            pattern = M.pattern,
+        })
+
+        ev.on({ ev.BufWriteCmd, ev.FileWriteCmd }, function(args)
+            vim.cmd.doautocmd(args.event)
+            M.write_command(args)
+        end, {
+            nested = true,
+            pattern = M.pattern,
+        })
+    end,
+    virtual = true,
+}

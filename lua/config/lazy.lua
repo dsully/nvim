@@ -88,14 +88,9 @@ function M.setup()
                 virtual = true,
             },
             {
-                "plist",
-                import = "helpers.plist",
-                event = "BufReadPre *.plist",
-                virtual = true,
-            },
-            {
                 "treesitter",
-                config = function()
+                event = ev.LazyFile,
+                init = function()
                     --
                     ev.on(ev.FileType, function(event)
                         --
@@ -106,11 +101,11 @@ function M.setup()
                         desc = "Start treesitter highlighting",
                     })
                 end,
-                event = ev.LazyFile,
                 virtual = true,
             },
             { import = "plugins" },
             { import = "plugins.ai" },
+            { import = "plugins.filetypes" },
             { import = "plugins.languages" },
         },
         change_detection = {

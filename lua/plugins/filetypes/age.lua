@@ -1,6 +1,5 @@
 return {
     "age",
-    event = ev.LazyFile,
     config = function()
         local fs = require("helpers.file")
 
