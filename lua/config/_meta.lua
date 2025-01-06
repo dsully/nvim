@@ -83,3 +83,14 @@ error("Cannot require a meta file")
 ---@field doc.protectedName string[]?
 ---@field doc.packageName string[]?
 ---@field doc.regengine "glob"|"lua"? # Default: "glob"
+
+---CompletionItem.data that rust-analyzer returns.
+---@class RustCompletionImport
+---@field full_import_path string
+---@field imported_name string
+
+---@class RustCompletionResolveData
+---@field imports RustCompletionImport[]
+---@field position lsp.TextDocumentPositionParams
+
+---@alias RustData RustCompletionResolveData | nil
