@@ -1,5 +1,17 @@
+local function get_biome_config_path()
+    local conf = "biome.json"
+    local path = vim.fs.joinpath(vim.uv.cwd(), conf)
+
+    if vim.loop.fs_stat(path) then
+        return path
+    end
+
+    return vim.fs.joinpath(vim.env.XDG_CONFIG_HOME, conf)
+end
+
+---@type vim.lsp.Config
 return {
-    cmd = { "biome", "lsp-proxy", "--config-path=" .. vim.fs.joinpath(vim.env.XDG_CONFIG_HOME, "biome.json") },
+    cmd = { "biome", "lsp-proxy", "--config-path=" .. get_biome_config_path() },
     filetypes = {
         "astro",
         "caddyfile",
@@ -16,5 +28,6 @@ return {
         "typescriptreact",
         "vue",
     },
+    root_markers = { "biome.json", "biome.jsonc" },
     single_file_support = true,
 }
