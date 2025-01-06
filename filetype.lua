@@ -15,6 +15,7 @@ vim.filetype.add({
         ["uv.lock"] = "toml",
     },
     extension = {
+        age = "age",
         conf = "conf",
         ivy = "xml",
         pdl = "pdl",
