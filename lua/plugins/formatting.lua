@@ -12,11 +12,12 @@ return {
             },
         },
         opts = function()
+            ---@type conform.setupOpts
             return {
                 format_on_save = function(bufnr)
                     --
                     if not vim.tbl_contains(defaults.formatting.on_save, vim.bo[bufnr].filetype) then
-                        return false
+                        return nil
                     end
 
                     -- Disable autoformat for files in a certain path
@@ -30,9 +31,10 @@ return {
                         or bufname:find("product-spec.json")
                         or bufname:find("Cargo.lock")
                     then
-                        return false
+                        return nil
                     end
 
+                    ---@type conform.FormatOpts
                     return { timeout_ms = 500, lsp_format = "fallback" }
                 end,
                 formatters = {
@@ -40,18 +42,21 @@ return {
                         command = "caddy",
                         args = { "fmt" },
                         stdin = true,
+                        ---@param ctx conform.Context
                         condition = function(ctx)
                             return vim.fs.basename(ctx.filename) ~= "Caddyfile"
                         end,
                     },
                     -- Use dprint if there is a dprint.json file in the project root.
                     dprint = {
+                        ---@param ctx conform.Context
                         condition = function(ctx)
-                            return vim.fs.find({ "dprint.json" }, { path = ctx.filename, upward = true })[1]
+                            return vim.fs.find({ "dprint.json" }, { path = ctx.filename, upward = true })[1] and true or false
                         end,
                     },
                     injected = { options = { ignore_errors = true } },
                     ["markdownlint-cli2"] = {
+                        ---@param ctx conform.Context
                         condition = function(_, ctx)
                             local diag = vim.tbl_filter(function(d)
                                 return d.source == "markdownlint"
