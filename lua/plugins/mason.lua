@@ -9,9 +9,9 @@ return {
         "MasonToolsUpdate",
     },
     config = function(_, opts)
-        vim.defer_fn(function()
-            require("mason").setup(opts)
+        require("mason").setup(opts)
 
+        vim.defer_fn(function()
             local mr = require("mason-registry")
 
             vim.iter(opts.ensure_installed):each(function(tool)
