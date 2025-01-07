@@ -29,6 +29,13 @@ return {
                 read = { pattern = "^:%s*r!", icon = "$", lang = "bash" },
                 session = { pattern = { "^:Session%s+" }, icon = " ", lang = "vim", title = " session " },
                 substitute = { pattern = "^:%%?s/", icon = " ", ft = "regex", title = "" },
+                error = {
+                    conceal = false,
+                    pattern = "^:vim%.",
+                    icon = "",
+                    icon_hl_group = "Error",
+                    lang = "",
+                },
             },
         },
         lsp = {
@@ -148,6 +155,8 @@ return {
                     any = {
                         { min_height = 10 },
                         { find = "Treesitter" },
+                        -- Show cmdline output for :nmap <key> and similar.
+                        { cmdline = true, event = "msg_show", kind = { "list_cmd", "echo" } },
                     },
                 },
                 view = "popup",
