@@ -15,6 +15,7 @@ return {
             { WhichKeyValue = { link = "Comment" } },
         })
     end,
+    ---@type wk.Config
     opts = {
         delay = 1000,
         disable = {
