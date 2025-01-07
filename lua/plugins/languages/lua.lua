@@ -16,6 +16,7 @@ return {
                 { path = "lazy.nvim", words = { "LazySpec", "package" } },
                 { path = "noice.nvim" },
                 { path = "snacks.nvim", words = { "Snacks" } },
+                { path = "which-key.nvim", words = { "wk." } },
             },
         },
     },

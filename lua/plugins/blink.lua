@@ -163,10 +163,11 @@ return {
                 ["<C-y>"] = { "select_and_accept" },
             },
             sources = {
-                default = { "lsp", "path", "snippets", "buffer" },
+                default = { "lsp", "path", "snippets" },
                 -- Ignore
                 per_filetype = {
-                    gitcommit = {},
+                    gitcommit = { "buffer" },
+                    markdown = { "buffer" },
                     snacks_input = {},
                 },
                 providers = {
