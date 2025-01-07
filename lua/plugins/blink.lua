@@ -18,49 +18,7 @@ return {
         event = ev.InsertEnter,
         init = function()
             hl.apply({
-                { BlinkCmpGhostText = { link = "Comment" } },
-                { BlinkCmpMenu = { link = "Pmenu" } },
-                { BlinkCmpMenuBorder = { link = "Pmenu" } },
-                { BlinkCmpMenuSelection = { link = "PmenuSel" } },
-
-                { BlinkCmpDoc = { bg = colors.black.dim, fg = colors.white.base } },
-                { BlinkCmpDocBorder = { bg = colors.black.dim, fg = colors.gray.bright } },
-                { BlinkCmpDocCursorLine = { link = "Visual" } },
-
-                { BlinkCmpSignatureHelp = { bg = colors.black.base, fg = colors.white.base } },
-                { BlinkCmpSignatureHelpBorder = { bg = colors.black.base, fg = colors.gray.bright } },
-                { BlinkCmpSignatureHelpActiveParameter = { link = "LspSignatureActiveParameter" } },
-
-                { BlinkCmpLabel = { fg = colors.white.bright } },
-                { BlinkCmpLabelDeprecated = { fg = colors.gray.base, strikethrough = true } },
-                { BlinkCmpLabelMatch = { bold = true, fg = colors.blue.base } },
-
-                { BlinkCmpKind = { fg = colors.white.bright } },
-                { BlinkCmpKindClass = { fg = colors.yellow.base } },
-                { BlinkCmpKindColor = { link = "BlinkCmpKind" } },
-                { BlinkCmpKindConstant = { fg = colors.orange.base } },
-                { BlinkCmpKindConstructor = { fg = colors.yellow.base } },
-                { BlinkCmpKindEnum = { fg = colors.yellow.base } },
-                { BlinkCmpKindEnumMember = { fg = colors.cyan.base } },
-                { BlinkCmpKindEvent = { fg = colors.magenta.base } },
-                { BlinkCmpKindField = { fg = colors.blue.base } },
-                { BlinkCmpKindFile = { link = "BlinkCmpKind" } },
-                { BlinkCmpKindFolder = { link = "BlinkCmpKind" } },
-                { BlinkCmpKindFunction = { fg = colors.magenta.base } },
-                { BlinkCmpKindInterface = { fg = colors.yellow.base } },
-                { BlinkCmpKindKeyword = { fg = colors.magenta.base } },
-                { BlinkCmpKindMethod = { fg = colors.magenta.base } },
-                { BlinkCmpKindModule = { fg = colors.blue.base } },
-                { BlinkCmpKindOperator = { fg = colors.magenta.base } },
-                { BlinkCmpKindProperty = { fg = colors.blue.base } },
-                { BlinkCmpKindReference = { fg = colors.magenta.base } },
-                { BlinkCmpKindSnippet = { fg = colors.white.base } },
-                { BlinkCmpKindStruct = { fg = colors.yellow.base } },
-                { BlinkCmpKindText = { link = "BlinkCmpKind" } },
-                { BlinkCmpKindTypeParameter = { fg = colors.yellow.base } },
-                { BlinkCmpKindUnit = { fg = colors.magenta.base } },
-                { BlinkCmpKindValue = { fg = colors.blue.base } },
-                { BlinkCmpKindVariable = { fg = colors.blue.base } },
+                { BlinkCmpGhostText = { link = hl.Comment } },
             })
         end,
         keys = {
@@ -99,9 +57,16 @@ return {
                     enabled = true,
                 },
                 list = {
-                    selection = function(ctx)
-                        return ctx.mode == "cmdline" and "auto_insert" or "manual"
-                    end,
+                    selection = {
+                        ---@param ctx blink.cmp.Context
+                        auto_insert = function(ctx)
+                            return ctx.mode ~= "cmdline"
+                        end,
+                        ---@param ctx blink.cmp.Context
+                        preselect = function(ctx)
+                            return ctx.mode ~= "cmdline" and not require("blink.cmp").snippet_active({ direction = 1 })
+                        end,
+                    },
                 },
                 menu = {
                     -- Don't auto-show the completion menu in commandline mode.
