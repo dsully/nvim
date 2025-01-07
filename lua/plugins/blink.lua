@@ -74,7 +74,7 @@ return {
                         vim.snippet.stop()
                     end
 
-                    return "<esc>"
+                    return "<esc>" ---@diagnostic disable-line: redundant-return-value
                 end,
                 desc = "Escape and Clear hlsearch",
                 expr = true,
@@ -86,7 +86,7 @@ return {
         ---@type blink.cmp.Config
         opts = {
             appearance = {
-                kind_icons = defaults.icons.lsp,
+                kind_icons = defaults.icons.completion_items,
                 nerd_font_variant = "mono",
             },
             completion = {
@@ -114,11 +114,9 @@ return {
                     --- @type blink.cmp.Draw
                     draw = {
                         columns = {
-                            { "kind_icon", gap = 2 },
-                            { "label", gap = 2 },
-                            { "kind", gap = 2 },
+                            { "kind_icon" },
+                            { "label", "kind", gap = 1 },
                         },
-                        --
                         -- Definitions for possible components to render. Each component defines:
                         --   ellipsis: whether to add an ellipsis when truncating the text
                         --   width: control the min, max and fill behavior of the component
@@ -129,7 +127,8 @@ return {
                                 ellipsis = true,
                                 ---@param ctx blink.cmp.DrawItemContext
                                 text = function(ctx)
-                                    return is_ai_source(ctx.item.source_name) and defaults.icons.lsp[ctx.item.source_name] or defaults.icons.lsp[ctx.kind]
+                                    return is_ai_source(ctx.item.source_name) and defaults.icons.completion_items[ctx.item.source_name]
+                                        or defaults.icons.completion_items[ctx.kind]
                                 end,
                                 ---@param ctx blink.cmp.DrawItemContext
                                 highlight = function(ctx)
