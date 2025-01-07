@@ -39,7 +39,13 @@ return {
             root_markers = { ".git" },
         })
 
-        vim.lsp.enable(defaults.lsp.servers)
+        vim.iter(vim.api.nvim_get_runtime_file("lsp/*.lua", true))
+            :map(function(config_path)
+                return vim.fs.basename(config_path):match("^(.*)%.lua$")
+            end)
+            :each(function(server_name)
+                vim.lsp.enable(server_name)
+            end)
 
         ev.on_load("which-key.nvim", function()
             vim.schedule(function()
