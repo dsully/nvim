@@ -230,29 +230,56 @@ return {
         },
     },
     {
-        "chrisgrieser/nvim-chainsaw",
-        init = function()
-            ev.on_load("which-key.nvim", function()
-                vim.schedule(function()
-                    -- stylua: ignore
-                    local cs = function(fn) return function() require("chainsaw")[fn]() end end
-
-                    require("which-key").add({
-                        { "<leader>dl", group = "Log" },
-                        { "<leader>dlc", cs("clearLogs"), desc = "Clear" },
-                        { "<leader>dla", cs("allLogs"), desc = "All" },
-                        { "<leader>dlm", cs("messageLog"), desc = "Message" },
-                        { "<leader>dlv", cs("variableLog"), mode = { "n", "v" }, desc = "Variable" },
-                        { "<leader>dlo", cs("objectLog"), desc = "Object" },
-                        { "<leader>dlt", cs("timeLog"), desc = "Time" },
-                        { "<leader>dld", cs("debugLog"), desc = "Debug" },
-                        { "<leader>dlr", cs("removeLogs"), desc = "Remove" },
-                        { "<leader>dlb", cs("beepLog"), desc = "Beep" },
-                    }, { notify = false })
-                end)
-            end)
-        end,
-        opts = {},
+        "Goose97/timber.nvim",
+        keys = {
+            -- stylua: ignore start
+            { "<leader>dlj", desc = "Insert Below" },
+            { "<leader>dlk", desc = "Insert Above" },
+            { "<leader>dlc", function() require("timber.actions").clear_log_statements({ global = false }) end, desc = "Clear" },
+            { "<leader>dlf", function() return require("timber.buffers").open_float({ sort = "newest_first" }) end, desc = "Open Float" },
+            { "<leader>dlS", function() require("timber.summary").open({ focus = true }) end, desc = "Summary" },
+            { "<leader>dlt", function() require("timber.actions").toggle_comment_log_statements({ global = false }) end, desc = "Toggle" },
+            { "<leader>dlT", function() require("timber.actions").toggle_comment_log_statements({ global = true }) end, desc = "Toggle: Global" },
+            -- stylua: ignore end
+            {
+                "<leader>dls",
+                function()
+                    require("timber.actions").insert_log({
+                        templates = { before = "default", after = "default" },
+                        position = "surround",
+                    })
+                end,
+                desc = "Log Surround",
+            },
+        },
+        ---@type Timber.Config
+        opts = {
+            default_keymaps_enabled = false,
+            highlight = {
+                on_insert = true,
+                duration = 100,
+            },
+            keymaps = {
+                insert_log_below = "<leader>dlj",
+                insert_log_above = "<leader>dlk",
+            },
+            log_templates = {
+                default = {
+                    bash = [[echo "%log_marker: %log_target: ${%log_target}"]],
+                    c = [[printf("%log_marker: %log_target: %s\n", %log_target);]],
+                    cpp = [[std::cout << "%log_marker: %log_target: " << %log_target << std::endl;]],
+                    go = [[log.Printf("%log_marker: %log_target: %v\n", %log_target)]],
+                    java = [[System.out.println("%log_marker: %log_target: " + %log_target);]],
+                    javascript = [[console.log("%log_marker: %log_target", %log_target)]],
+                    jsx = [[console.log("%log_marker: %log_target", %log_target)]],
+                    lua = [[print("%log_marker: %log_target", %log_target)]],
+                    python = [[print("%log_marker: %log_target", %log_target)]],
+                    rust = [[println!("%log_marker: %log_target: {:#?}", %log_target);]],
+                    tsx = [[console.log("%log_marker: %log_target", %log_target)]],
+                    typescript = [[console.log("%log_marker: %log_target", %log_target)]],
+                },
+            },
+        },
     },
     {
         "chrisgrieser/nvim-rulebook",
