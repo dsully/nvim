@@ -76,14 +76,22 @@ return {
         -- Use [ and ] to move between various things.
         "echasnovski/mini.bracketed",
         keys = {
-            "[",
-            "]",
+            { "[c", desc = "comment previous " },
+            { "]c", desc = "comment next" },
+            { "[w", desc = "window previous" },
+            { "]w", desc = "window next" },
+            { "[x", desc = "conflict marker previous" },
+            { "]x", desc = "conflict marker next" },
         },
         opts = {
+            buffer = { suffix = "" },
             file = { suffix = "" },
+            diagnostic = { suffix = "" }, -- Built in.
             indent = { suffix = "" },
             jump = { suffix = "" },
+            location = { suffix = "" },
             oldfile = { suffix = "" },
+            quickfix = { suffix = "" },
             treesitter = { suffix = "" },
             undo = { suffix = "" },
             yank = { suffix = "" },
