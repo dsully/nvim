@@ -110,26 +110,6 @@ local M = {
         rust = {
             bacon = os.getenv("BACON") or false,
         },
-
-        servers = {
-            "basedpyright",
-            "bashls",
-            "biome",
-            "dockerls",
-            "fish_lsp",
-            "ghostty",
-            "gopls",
-            "harper",
-            "html",
-            "lemminx",
-            "lua_ls",
-            "marksman",
-            "red_knot",
-            "ruff",
-            "vtsls",
-            "yamlls",
-            "zls",
-        },
     },
 
     tools = {
