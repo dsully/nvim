@@ -5,7 +5,7 @@ return {
         ft = "python",
         keys = {
             {
-                "<leader>i",
+                "<leader>I",
                 function()
                     require("inlayhint-filler").fill()
                 end,

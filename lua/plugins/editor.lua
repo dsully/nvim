@@ -222,7 +222,10 @@ return {
         end,
         -- stylua: ignore
         keys = {
+            ---@diagnostic disable-next-line: redundant-return-value
             { "<C-Up>", function() return require("dial.map").inc_normal() end, desc = "Increment Pattern", expr = true },
+
+            ---@diagnostic disable-next-line: redundant-return-value
             { "<C-Down>", function() return require("dial.map").dec_normal() end, desc = "Decrement Pattern", expr = true },
         },
     },
