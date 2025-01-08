@@ -70,7 +70,12 @@ return {
             },
         },
         input = {
-            enable = true,
+            enabled = true,
+            win = {
+                keys = { i_cw = { "<c-w>", "delete_word", mode = "i" } },
+                -- stylua: ignore
+                actions = { delete_word = function() vim.cmd("normal! diw<cr>") end },
+            },
         },
         notifier = {
             enabled = true,
@@ -92,6 +97,9 @@ return {
             git = { patterns = { "GitSign" } },
         },
         styles = {
+            dashboard = {
+                bo = { filetype = "dashboard" },
+            },
             input = {
                 border = defaults.ui.border.name,
             },
