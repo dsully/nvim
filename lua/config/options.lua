@@ -100,6 +100,9 @@ vim.g.loaded_ruby_provider = 0
 vim.g.home = vim.uv.os_homedir()
 vim.g.os = vim.uv.os_uname().sysname
 
+-- Health check in a floating window.
+vim.g.health = { style = "float" }
+
 --
 vim.g.colorscheme = "nordish"
 
