@@ -54,7 +54,7 @@ return {
                 { "<C-S>", vim.lsp.buf.signature_help, desc = "Signature Help", mode = "i", icon = "󰠗 " },
                 { "<leader>l", group = "LSP", icon = " " },
                 { "<leader>lc", vim.cmd.LspCapabilities, desc = "LSP Capabilities", icon = " " },
-                -- { "<leader>li", vim.cmd.LspInfo, desc = "LSP Info", icon = " " },
+                { "<leader>li", lsp.info, desc = "LSP Info", icon = " " },
                 { "<leader>ll", vim.cmd.LspLog, desc = "LSP Log", icon = " " },
                 { "<leader>lr", vim.cmd.LspRestartBuffer, desc = "LSP Restart", icon = " " },
                 { "<leader>ls", vim.cmd.LspStop, desc = "LSP Stop", icon = " " },
