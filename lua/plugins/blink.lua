@@ -20,6 +20,24 @@ return {
             hl.apply({
                 { BlinkCmpGhostText = { link = hl.Comment } },
             })
+
+            -- HACK: Workaround for the non-configurable snippet navigation mappings.
+            -- From https://github.com/neovim/neovim/issues/30198#issuecomment-2326075321.
+            -- (And yeah this is my fault).
+            local snippet_expand = vim.snippet.expand
+
+            ---@diagnostic disable-next-line: duplicate-set-field
+            vim.snippet.expand = function(...)
+                local tab_map = vim.fn.maparg("<Tab>", "i", false, true)
+                local stab_map = vim.fn.maparg("<S-Tab>", "i", false, true)
+                snippet_expand(...)
+
+                vim.schedule(function()
+                    tab_map.buffer, stab_map.buffer = 1, 1
+                    vim.fn.mapset("i", false, tab_map)
+                    vim.fn.mapset("i", false, stab_map)
+                end)
+            end
         end,
         keys = {
             -- Clear search and stop snippet on escape
@@ -161,6 +179,9 @@ return {
                 ["<C-j>"] = { "select_next", "fallback" },
                 ["<C-k>"] = { "select_prev", "fallback" },
                 ["<C-y>"] = { "select_and_accept" },
+            },
+            snippets = {
+                preset = "default",
             },
             sources = {
                 default = { "lsp", "path", "snippets" },
