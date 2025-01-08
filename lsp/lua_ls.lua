@@ -62,7 +62,7 @@ return {
                 setType = true,
             },
             hover = {
-                expandAlias = true,
+                expandAlias = false,
             },
             telemetry = {
                 enable = false,
