@@ -28,26 +28,6 @@ return {
                 :map("<space>tm")
         end,
         ft = { "codecompanion", "markdown", "snacks_notif", "vimwiki" },
-        keys = {
-            {
-                "<space>tc",
-                function()
-                    local char = defaults.icons.misc.check
-                    local current_line = vim.api.nvim_get_current_line()
-
-                    local _, _, current_state = string.find(current_line, "%[([ " .. char .. string.upper(char) .. "])%]")
-
-                    if current_state then
-                        local new_state = current_state == " " and char or " "
-                        local new_line = string.gsub(current_line, "%[.-%]", "[" .. new_state .. "]")
-
-                        vim.api.nvim_set_current_line(new_line)
-                    end
-                end,
-                desc = "Checkbox",
-                { noremap = true, silent = true },
-            },
-        },
         ---@module 'render-markdown'
         ---@type render.md.UserConfig
         opts = {
