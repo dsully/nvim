@@ -64,6 +64,9 @@ return {
             hover = {
                 expandAlias = false,
             },
+            runtime = {
+                version = "LuaJIT",
+            },
             telemetry = {
                 enable = false,
             },
