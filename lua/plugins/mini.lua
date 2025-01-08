@@ -1,6 +1,6 @@
 ---@type LazySpec[]
 return {
-    { "echasnovski/mini.nvim", lazy = false },
+    { "echasnovski/mini.nvim" },
     {
         -- Better Around/Inside text-objects
         --
@@ -95,14 +95,6 @@ return {
             treesitter = { suffix = "" },
             undo = { suffix = "" },
             yank = { suffix = "" },
-        },
-        virtual = true,
-    },
-    {
-        "echasnovski/mini.bufremove",
-        event = ev.LazyFile,
-        opts = {
-            silent = true,
         },
         virtual = true,
     },
