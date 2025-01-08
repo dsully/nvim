@@ -48,10 +48,8 @@ return {
                 parsers = {
                     caddyfile = {
                         install_info = {
-                            url = "https://github.com/matthewpi/tree-sitter-caddyfile",
+                            path = vim.fs.joinpath(root, "tree-sitter-caddyfile"),
                             files = { "src/parser.c" },
-                            branch = "master",
-                            queries_dir = vim.fs.joinpath(root, "tree-sitter-caddyfile", "queries"),
                         },
                         filetype = "caddyfile",
                         maintainers = {},
@@ -59,9 +57,8 @@ return {
                     },
                     ghostty = {
                         install_info = {
-                            url = "https://github.com/bezhermoso/tree-sitter-ghostty",
+                            path = vim.fs.joinpath(root, "tree-sitter-ghostty"),
                             files = { "src/parser.c" },
-                            branch = "main",
                             generate_from_json = true,
                             queries_dir = vim.fs.joinpath(root, "tree-sitter-ghostty", "queries", "ghostty"),
                         },
@@ -71,10 +68,8 @@ return {
                     },
                     jinja2 = {
                         install_info = {
-                            url = "https://github.com/dsully/tree-sitter-jinja2",
+                            path = vim.fs.joinpath(root, "tree-sitter-jinja2"),
                             files = { "src/parser.c" },
-                            branch = "dsully/nvim-treesitter-1.x",
-                            -- branch = "main",
                             queries_dir = vim.fs.joinpath(root, "tree-sitter-jinja2", "queries", "jinja2"),
                         },
                         filetype = "jinja2",
@@ -104,7 +99,7 @@ return {
         event = ev.LazyFile,
         opts = {},
     },
-    { "matthewpi/tree-sitter-caddyfile" },
     { "bezhermoso/tree-sitter-ghostty", ft = "ghostty" },
-    { "dsully/tree-sitter-jinja2", branch = "dsully/nvim-treesitter-1.x" },
+    { "geigerzaehler/tree-sitter-jinja2" },
+    { "matthewpi/tree-sitter-caddyfile" },
 }
