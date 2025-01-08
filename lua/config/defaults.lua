@@ -525,6 +525,7 @@ local M = {
             style = "minimal",
             height = 0.75,
             width = 0.8,
+            wo = { wrap = true },
         },
     },
 }
