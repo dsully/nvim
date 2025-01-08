@@ -62,8 +62,15 @@ return {
                 auto_open = { enabled = false },
             },
         },
-        messages = { enabled = true, view = "mini", view_warn = "mini" },
-        notify = { enabled = true },
+        messages = {
+            enabled = true,
+        },
+        notify = {
+            enabled = true,
+            view = "notify",
+            view_warn = "notify",
+            view_error = "notify",
+        },
         popupmenu = {
             enabled = true,
             backend = "nui",
@@ -187,16 +194,15 @@ return {
                         { find = "No more valid diagnostics to move to", event = "msg_show" },
                         { find = "No code actions available" },
 
-                        -- Route nvim-treesitter to the mini view.
-                        { find = "^%[nvim%-treesitter%]", event = "msg_show" },
-                        { find = "All parsers are up%-to%-date", event = "msg_show" },
-
                         -- Route chezmoi updates
                         { find = "chezmoi:", event = "notify" },
                     },
                 },
                 view = "mini",
             },
+        },
+        signature = {
+            enabled = false,
         },
         ---@type NoiceConfigViews
         views = {
