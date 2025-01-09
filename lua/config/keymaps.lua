@@ -40,6 +40,11 @@ map("<space>n", require("helpers.file").edit, "New File", "n", { expr = false })
 -- Open in the filetype default application (macOS)
 if vim.g.os == "Darwin" then
     map("<leader>o", function()
+
+        if vim.bo.buftype ~= "markdown" then
+            return
+        end
+
         local filename = vim.api.nvim_buf_get_name(0)
 
         notify.info("Opening " .. vim.fs.basename(filename), { icon = "󰏋" })
