@@ -226,6 +226,8 @@ local M = {
             hamburger_open = "󰮫 ",
         },
         misc = {
+            ai = "󱚦 ",
+            actions = " ",
             arrow_right = "",
             block = "▌",
             bookmark = " ",
@@ -273,6 +275,7 @@ local M = {
             search = "󰍉 ",
             shaded_lock = " ",
             sign_in = " ",
+            surround = "󰗅 ",
             tab = "⇥",
             table = " ",
             telescope = " ",

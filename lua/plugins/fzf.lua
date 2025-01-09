@@ -309,14 +309,25 @@ return {
                     vertical = "up:50%",
                 },
             },
+    {
+        "folke/todo-comments.nvim",
+        optional = true,
+        -- stylua: ignore
+        keys = {
+            { "<leader>ft", function () require("todo-comments.fzf").todo() end, desc = "TODOs" },
+            { "<leader>fT", function () require("todo-comments.fzf").todo({ keywords = { "TODO", "FIX", "FIXME" } }) end, desc = "TODO/Fix/Fixme" },
         },
     },
     {
         "ziontee113/icon-picker.nvim",
-        cmd = { "IconPickerNormal", "IconPickerYank", "IconPickerInsert" },
+        cmd = {
+            "IconPickerNormal",
+            "IconPickerYank",
+            "IconPickerInsert",
+        },
         keys = {
-            { "<leader>fe", "<cmd>IconPickerInsert emoji<cr>", desc = "Emoji" },
-            { "<leader>fi", "<cmd>IconPickerInsert nerd_font_v3<cr>", desc = "Nerd Font Icons" },
+            { "<leader>fe", ":IconPickerInsert emoji", desc = "Emoji" },
+            { "<leader>fi", ":IconPickerInsert nerd_font_v3", desc = "Nerd Font Icons" },
         },
         opts = {
             disable_legacy_commands = true,
