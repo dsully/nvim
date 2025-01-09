@@ -164,8 +164,10 @@ M.notifications = function()
             end
 
             self:set_preview_buf(buf)
-            self.win:update_title(" Notifications ")
-            self.win:update_scrollbar()
+
+            -- Disabled as this broken in a recent update.
+            -- self.win:update_title(" Notifications ")
+            -- self.win:update_scrollbar()
         end
 
         -- Disable line numbering and word wrap
