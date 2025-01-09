@@ -163,7 +163,7 @@ return {
                         { min_height = 10 },
                         { find = "Treesitter" },
                         -- Show cmdline output for :nmap <key> and similar.
-                        { cmdline = true, event = "msg_show", kind = { "list_cmd", "echo" } },
+                        { cmdline = true, find = "nmap", event = "msg_show", kind = { "list_cmd", "echo" } },
                     },
                 },
                 view = "popup",
@@ -173,6 +173,11 @@ return {
             {
                 filter = {
                     any = {
+                        { event = "notify", max_height = 1 },
+
+                        -- Send Ctrl-G to the mini view.
+                        { find = "\" %d+ lines --", event = "msg_show" },
+
                         -- "Not an editor command"
                         { find = "^E492:", event = "msg_show" },
 
