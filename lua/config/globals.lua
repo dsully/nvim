@@ -5,9 +5,38 @@ _G.ev = require("helpers.event")
 _G.hl = require("helpers.highlights")
 _G.keys = require("helpers.keys")
 
+_G.lazy = {
+    ---@param name string
+    ---@return table
+    opts = function(name)
+        local plugin = require("lazy.core.config").spec.plugins[name]
+
+        if not plugin then
+            return {}
+        end
+
+        return require("lazy.core.plugin").values(plugin, "opts", false)
+    end,
+}
+
+_G.nvim = {}
+
+--- @class CommandArgs
+--- @field args string
+--- @field fargs table
+--- @field bang boolean,
+
+---Create a Neovim command
+---@param name string
+---@param rhs string | fun(args: CommandArgs)
+---@param opts table?
+_G.nvim.command = function(name, rhs, opts)
+    vim.api.nvim_create_user_command(name, rhs, opts or {})
+end
+
 --- Create a namespace.
 --- @param name string The name of the namespace.
-_G.ns = function(name)
+_G.nvim.ns = function(name)
     return vim.api.nvim_create_namespace("dsully/" .. name)
 end
 

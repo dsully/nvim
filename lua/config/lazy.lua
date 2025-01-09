@@ -209,11 +209,8 @@ function M.setup()
     end, { desc = "Load all plugins and run :checkhealth" })
 
     vim.api.nvim_create_user_command("LazyPlugin", function(opts)
-        local cmd = unpack(opts.fargs)
-
-        if cmd then
-            dd(require("lazy.core.config").plugins[cmd]._.cache.opts)
-        end
+        --
+        dd(lazy.opts(unpack(opts.fargs)))
     end, {
         complete = function(_, line)
             local words = vim.split(line, "%s+")
