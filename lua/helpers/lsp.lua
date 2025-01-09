@@ -205,9 +205,6 @@ M.find_root = function(bufnr)
 end
 
 M.code_action = function()
-    -- Load for vim.ui.select()
-    require("fzf-lua")
-
     ---@type vim.lsp.buf.code_action.Opts
     vim.lsp.buf.code_action({
         context = {
