@@ -261,7 +261,9 @@ M.config = function()
 end
 
 ---@param command string
-M.command = function(command)
+---@param handler lsp.Handler?
+---@param bufnr integer?
+M.command = function(command, handler, bufnr)
     --
     return function()
         for _, client in ipairs(vim.lsp.get_clients({ name = "ruff" })) do
@@ -273,7 +275,7 @@ M.command = function(command)
                         version = vim.lsp.util.buf_versions[vim.api.nvim_get_current_buf()],
                     },
                 },
-            })
+            }, handler, bufnr)
         end
     end
 end
