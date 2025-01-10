@@ -75,13 +75,31 @@ map("zg", function()
     require("helpers.spelling").add_word_to_typos(vim.fn.expand("<cword>"))
 end, "Add word to spell list")
 
--- Copy text to clipboard using codeblock format ```{ft}{content}```
-vim.api.nvim_create_user_command("CopyCodeBlock", function(opts)
+---Copy text to clipboard using codeblock format ```{ft}{content}```
+nvim.command("CopyCodeBlock", function(opts)
     local lines = vim.api.nvim_buf_get_lines(0, opts.line1 - 1, opts.line2, true)
+
+    -- Find minimum indentation
+    local min_indent = math.huge
+
+    for _, line in ipairs(lines) do
+        if line:match("%S") then -- Skip empty lines
+            local indent = line:match("^%s*"):len()
+
+            min_indent = math.min(min_indent, indent)
+        end
+    end
+
+    -- Dedent lines
+    for i, line in ipairs(lines) do
+        if line:match("%S") then
+            lines[i] = line:sub(min_indent + 1)
+        end
+    end
 
     vim.fn.setreg("+", string.format("```%s\n%s\n```", vim.bo.filetype, table.concat(lines, "\n")))
 end, { range = true })
 
-map("<leader>cc", vim.cmd.CopyCodeBlock, "Copy Code Block", { "n", "v" })
+map("<leader>cc", ":CopyCodeBlock<cr>", "Copy Code Block", "v")
 
 return {}

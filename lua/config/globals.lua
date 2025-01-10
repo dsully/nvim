@@ -21,15 +21,10 @@ _G.lazy = {
 
 _G.nvim = {}
 
---- @class CommandArgs
---- @field args string
---- @field fargs table
---- @field bang boolean,
-
 ---Create a Neovim command
 ---@param name string
----@param rhs string | fun(args: CommandArgs)
----@param opts table?
+---@param rhs string|fun(args: vim.api.keyset.create_user_command.command_args)
+---@param opts vim.api.keyset.user_command
 _G.nvim.command = function(name, rhs, opts)
     vim.api.nvim_create_user_command(name, rhs, opts or {})
 end
