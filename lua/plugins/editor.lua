@@ -2,14 +2,6 @@
 return {
     {
         "SmiteshP/nvim-navic",
-        config = function(_, opts)
-            vim.g.navic_silence = true
-
-            vim.schedule(function()
-                require("nvim-navic").setup(opts)
-            end)
-        end,
-        event = ev.LazyFile,
         highlights = {
             NavicIconsArray = { bg = colors.gray.base, fg = colors.yellow.base },
             NavicIconsBoolean = { bg = colors.gray.base, fg = colors.orange.base },
@@ -40,6 +32,17 @@ return {
             NavicSeparator = { bg = colors.gray.base, fg = colors.cyan.base },
             NavicText = { bg = colors.gray.base, fg = colors.white.base },
         },
+        init = function()
+            vim.g.navic_silence = true
+
+            vim.schedule(function()
+                ---@param client vim.lsp.Client
+                ---@param buffer number
+                require("helpers.lsp").on_supports_method(vim.lsp.protocol.Methods.textDocument_documentSymbol, function(client, buffer)
+                    require("nvim-navic").attach(client, buffer)
+                end)
+            end)
+        end,
         opts = {
             click = true,
             highlight = true,

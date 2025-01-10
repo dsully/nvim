@@ -13,16 +13,19 @@ return {
         "echasnovski/mini.ai",
         config = function(_, opts)
             --
-            vim.defer_fn(function()
+            vim.schedule(function()
                 require("mini.ai").setup(opts)
-            end, 500)
+
+                ev.on_load("which-key.nvim", function()
+                    require("helpers.mini").ai_whichkey(opts)
+                end)
+            end)
         end,
-        event = ev.VeryLazy,
+        event = ev.LazyFile,
         opts = function()
             local ai = require("mini.ai")
-            local mini = require("helpers.mini")
 
-            local opts = {
+            return {
                 n_lines = 2000,
                 custom_textobjects = {
                     o = ai.gen_spec.treesitter({ -- code block
@@ -41,20 +44,12 @@ return {
                         { "%u[%l%d]+%f[^%l%d]", "%f[%S][%l%d]+%f[^%l%d]", "%f[%P][%l%d]+%f[^%l%d]", "^[%l%d]+%f[^%l%d]" },
                         "^().*()$",
                     },
-                    g = mini.ai_buffer, -- buffer
+                    g = require("helpers.mini").ai_buffer, -- buffer
 
                     u = ai.gen_spec.function_call(), -- u for "Usage"
                     U = ai.gen_spec.function_call({ name_pattern = "[%w_]" }), -- without dot in function name
                 },
             }
-
-            ev.on_load("which-key.nvim", function()
-                vim.schedule(function()
-                    mini.ai_whichkey(opts)
-                end)
-            end)
-
-            return opts
         end,
         virtual = true,
     },
