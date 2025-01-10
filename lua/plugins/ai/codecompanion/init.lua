@@ -28,6 +28,20 @@ return {
                 group = group,
                 pattern = "CodeCompanionInline*",
             })
+
+            local status = require("plugins.ai.codecompanion.status")
+
+            ev.on(ev.User, function(event)
+                --
+                if event.match == "CodeCompanionRequestStarted" then
+                    status.processing = true
+                elseif event.match == "CodeCompanionRequestFinished" then
+                    status.processing = false
+                end
+            end, {
+                group = group,
+                pattern = "CodeCompanionRequest*",
+            })
         end,
         keys = {
             --stylua: ignore start
