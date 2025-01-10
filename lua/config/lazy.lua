@@ -78,7 +78,7 @@ function M.setup()
             {
                 "autocmds",
                 import = "config.autocommands",
-                event = "User VeryLazy",
+                event = "User LazyDone",
                 virtual = true,
             },
             {
@@ -198,10 +198,10 @@ function M.setup()
     })
 
     hl.apply({
-        { LazyCommit = { fg = colors.white.bright } },
-        { LazyDimmed = { link = "Comment" } },
-        { LazyProp = { fg = colors.white.bright } },
-    }, false)
+        LazyCommit = { fg = colors.white.bright },
+        LazyDimmed = { link = "Comment" },
+        LazyProp = { fg = colors.white.bright },
+    })
 
     vim.api.nvim_create_user_command("LazyHealth", function()
         vim.cmd.Lazy({ "load all", bang = true })
@@ -234,6 +234,19 @@ function M.setup()
         end,
         desc = "Show the merged configuration for a given plugin.",
         nargs = "*",
+    })
+
+    ev.on(ev.User, function(args)
+        --
+        local pl = require("lazy.core.config").plugins[args.data.plugin] or {}
+
+        ---@diagnostic disable: undefined-field
+        if pl.highlights then
+            hl.apply(pl.highlights)
+        end
+    end, {
+        desc = "Apply plugin highlights",
+        pattern = "LazyPlugin*",
     })
 
     ev.on_load("which-key.nvim", function()

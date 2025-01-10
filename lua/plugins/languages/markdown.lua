@@ -6,10 +6,6 @@ return {
             --
             require("render-markdown").setup(opts)
 
-            hl.apply({
-                { RenderMarkdownCode = { bg = colors.black.base } },
-            })
-
             require("snacks")
                 .toggle({
                     name = "Markdown",
@@ -28,6 +24,9 @@ return {
                 :map("<space>tm")
         end,
         ft = { "codecompanion", "markdown", "snacks_notif", "vimwiki" },
+        highlights = {
+            RenderMarkdownCode = { bg = colors.black.base },
+        },
         ---@module 'render-markdown'
         ---@type render.md.UserConfig
         opts = {

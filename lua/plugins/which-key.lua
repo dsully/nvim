@@ -2,17 +2,15 @@
 return {
     "folke/which-key.nvim",
     event = ev.VeryLazy,
-    init = function()
-        hl.apply({
-            { WhichKey = { link = "Identifier" } },
-            { WhichKeyBorder = { default = true, link = "FloatBorder" } },
-            { WhichKeyDesc = { link = "Keyword" } },
-            { WhichKeyFloat = { link = "NormalFloat" } },
-            { WhichKeyGroup = { link = "Function" } },
-            { WhichKeySeparator = { link = "Comment" } },
-            { WhichKeyValue = { link = "Comment" } },
-        })
-    end,
+    highlights = {
+        WhichKey = { link = "Identifier" },
+        WhichKeyBorder = { default = true, link = "FloatBorder" },
+        WhichKeyDesc = { link = "Keyword" },
+        WhichKeyFloat = { link = "NormalFloat" },
+        WhichKeyGroup = { link = "Function" },
+        WhichKeySeparator = { link = "Comment" },
+        WhichKeyValue = { link = "Comment" },
+    },
     ---@type wk.Config
     opts = {
         delay = 1000,

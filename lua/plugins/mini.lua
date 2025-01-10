@@ -208,16 +208,16 @@ return {
         "echasnovski/mini.icons",
         init = function()
             hl.apply({
-                { MiniIconsAzure = { fg = colors.blue.bright } },
-                { MiniIconsBlue = { fg = colors.blue.base } },
-                { MiniIconsCyan = { fg = colors.cyan.base } },
-                { MiniIconsGreen = { fg = colors.green.base } },
-                { MiniIconsGrey = { fg = colors.gray.bright } },
-                { MiniIconsOrange = { fg = colors.orange.base } },
-                { MiniIconsPurple = { fg = colors.magenta.base } },
-                { MiniIconsRed = { fg = colors.red.base } },
-                { MiniIconsYellow = { fg = colors.yellow.base } },
-            }, false)
+                MiniIconsAzure = { fg = colors.blue.bright },
+                MiniIconsBlue = { fg = colors.blue.base },
+                MiniIconsCyan = { fg = colors.cyan.base },
+                MiniIconsGreen = { fg = colors.green.base },
+                MiniIconsGrey = { fg = colors.gray.bright },
+                MiniIconsOrange = { fg = colors.orange.base },
+                MiniIconsPurple = { fg = colors.magenta.base },
+                MiniIconsRed = { fg = colors.red.base },
+                MiniIconsYellow = { fg = colors.yellow.base },
+            })
 
             package.preload["nvim-web-devicons"] = function()
                 require("mini.icons").mock_nvim_web_devicons()
