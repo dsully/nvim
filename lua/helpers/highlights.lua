@@ -149,31 +149,15 @@ function M.lighten(hex, amount, fg)
     return require("snacks.util").blend(hex, fg or colors.fg, amount)
 end
 
----@param name string
----@param opts vim.api.keyset.highlight
-M.set = function(name, opts)
-    vim.api.nvim_set_hl(0, name, opts)
-end
-
----@param highlights {[string]: vim.api.keyset.highlight}[]
-M._apply = function(highlights)
-    vim.iter(highlights):each(function(hl)
-        M.set(next(hl))
-    end)
-end
-
 ---Apply a list of highlights
----@param highlights {[string]: vim.api.keyset.highlight}[]
----@param schedule boolean?
-M.apply = function(highlights, schedule)
+---@param highlights table<string, vim.api.keyset.highlight>
+M.apply = function(highlights)
     --
-    if schedule then
-        vim.defer_fn(function()
-            M._apply(highlights)
-        end, 1000)
-    else
-        M._apply(highlights)
-    end
+    ---@param name string
+    ---@param opts vim.api.keyset.highlight
+    vim.iter(highlights):each(function(name, opts)
+        vim.api.nvim_set_hl(0, name, opts)
+    end)
 end
 
 return M

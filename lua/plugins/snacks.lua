@@ -12,6 +12,7 @@ return {
         vim.notify = notify
 
         _G.notify = snacks.notify
+
         ev.on(ev.User, function()
             -- Toggle mappings
             snacks.toggle.diagnostics():map("<space>td")
@@ -27,31 +28,24 @@ return {
             once = true,
             pattern = ev.VeryLazy,
         })
-
-        hl.apply({
-            { SnacksNormal = { link = "Normal" } },
-            { SnacksBackdrop = { link = "Normal" } },
-
-            { SnacksIndentScope = { fg = colors.blue.bright } },
-
-            { SnacksNotifierIconTrace = { fg = colors.gray.base } },
-            { SnacksNotifierBorderTrace = { fg = colors.white.bright } },
-
-            { SnacksNotifierIconDebug = { fg = colors.white.base } },
-            { SnacksNotifierBorderDebug = { fg = colors.white.bright } },
-
-            { SnacksNotifierIconInfo = { fg = colors.cyan.base } },
-            { SnacksNotifierBorderInfo = { fg = colors.white.bright } },
-
-            { SnacksNotifierIconWarn = { fg = colors.yellow.base } },
-            { SnacksNotifierBorderWarn = { fg = colors.white.bright } },
-
-            { SnacksNotifierIconError = { fg = colors.red.base } },
-            { SnacksNotifierBorderError = { fg = colors.white.bright } },
-        })
     end,
-    priority = 1000,
+    highlights = {
+        SnacksNormal = { link = "Normal" },
+        SnacksBackdrop = { link = "Normal" },
+        SnacksIndentScope = { fg = colors.blue.bright },
+        SnacksNotifierIconTrace = { fg = colors.gray.base },
+        SnacksNotifierBorderTrace = { fg = colors.white.bright },
+        SnacksNotifierIconDebug = { fg = colors.white.base },
+        SnacksNotifierBorderDebug = { fg = colors.white.bright },
+        SnacksNotifierIconInfo = { fg = colors.cyan.base },
+        SnacksNotifierBorderInfo = { fg = colors.white.bright },
+        SnacksNotifierIconWarn = { fg = colors.yellow.base },
+        SnacksNotifierBorderWarn = { fg = colors.white.bright },
+        SnacksNotifierIconError = { fg = colors.red.base },
+        SnacksNotifierBorderError = { fg = colors.white.bright },
+    },
     lazy = false,
+    priority = 1000,
     ---@type snacks.Config
     opts = {
         bigfile = {

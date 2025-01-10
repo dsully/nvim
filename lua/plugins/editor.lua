@@ -2,39 +2,7 @@
 return {
     {
         "SmiteshP/nvim-navic",
-        highlights = {},
         config = function(_, opts)
-            hl.apply({
-                { NavicIconsArray = { bg = colors.gray.base, fg = colors.yellow.base } },
-                { NavicIconsBoolean = { bg = colors.gray.base, fg = colors.orange.base } },
-                { NavicIconsClass = { bg = colors.gray.base, fg = colors.yellow.base } },
-                { NavicIconsConstant = { bg = colors.gray.base, fg = colors.orange.base } },
-                { NavicIconsConstructor = { bg = colors.gray.base, fg = colors.yellow.base } },
-                { NavicIconsEnum = { bg = colors.gray.base, fg = colors.yellow.base } },
-                { NavicIconsEnumMember = { bg = colors.gray.base, fg = colors.cyan.base } },
-                { NavicIconsEvent = { bg = colors.gray.base, fg = colors.magenta.base } },
-                { NavicIconsField = { bg = colors.gray.base, fg = colors.blue.base } },
-                { NavicIconsFile = { bg = colors.gray.base, fg = colors.blue.base } },
-                { NavicIconsFunction = { bg = colors.gray.base, fg = colors.magenta.base } },
-                { NavicIconsInterface = { bg = colors.gray.base, fg = colors.yellow.base } },
-                { NavicIconsKey = { bg = colors.gray.base, fg = colors.magenta.base } },
-                { NavicIconsMethod = { bg = colors.gray.base, fg = colors.magenta.base } },
-                { NavicIconsModule = { bg = colors.gray.base, fg = colors.blue.base } },
-                { NavicIconsNamespace = { bg = colors.gray.base, fg = colors.yellow.base } },
-                { NavicIconsNull = { bg = colors.gray.base, fg = colors.red.base } },
-                { NavicIconsNumber = { bg = colors.gray.base, fg = colors.orange.base } },
-                { NavicIconsObject = { bg = colors.gray.base, fg = colors.orange.base } },
-                { NavicIconsOperator = { bg = colors.gray.base, fg = colors.magenta.base } },
-                { NavicIconsPackage = { bg = colors.gray.base, fg = colors.orange.base } },
-                { NavicIconsProperty = { bg = colors.gray.base, fg = colors.blue.base } },
-                { NavicIconsString = { bg = colors.gray.base, fg = colors.green.base } },
-                { NavicIconsStruct = { bg = colors.gray.base, fg = colors.yellow.base } },
-                { NavicIconsTypeParameter = { bg = colors.gray.base, fg = colors.yellow.base } },
-                { NavicIconsVariable = { bg = colors.gray.base, fg = colors.blue.base } },
-                { NavicSeparator = { bg = colors.gray.base, fg = colors.cyan.base } },
-                { NavicText = { bg = colors.gray.base, fg = colors.white.base } },
-            })
-
             vim.g.navic_silence = true
 
             vim.schedule(function()
@@ -42,7 +10,38 @@ return {
             end)
         end,
         event = ev.LazyFile,
+        highlights = {
+            NavicIconsArray = { bg = colors.gray.base, fg = colors.yellow.base },
+            NavicIconsBoolean = { bg = colors.gray.base, fg = colors.orange.base },
+            NavicIconsClass = { bg = colors.gray.base, fg = colors.yellow.base },
+            NavicIconsConstant = { bg = colors.gray.base, fg = colors.orange.base },
+            NavicIconsConstructor = { bg = colors.gray.base, fg = colors.yellow.base },
+            NavicIconsEnum = { bg = colors.gray.base, fg = colors.yellow.base },
+            NavicIconsEnumMember = { bg = colors.gray.base, fg = colors.cyan.base },
+            NavicIconsEvent = { bg = colors.gray.base, fg = colors.magenta.base },
+            NavicIconsField = { bg = colors.gray.base, fg = colors.blue.base },
+            NavicIconsFile = { bg = colors.gray.base, fg = colors.blue.base },
+            NavicIconsFunction = { bg = colors.gray.base, fg = colors.magenta.base },
+            NavicIconsInterface = { bg = colors.gray.base, fg = colors.yellow.base },
+            NavicIconsKey = { bg = colors.gray.base, fg = colors.magenta.base },
+            NavicIconsMethod = { bg = colors.gray.base, fg = colors.magenta.base },
+            NavicIconsModule = { bg = colors.gray.base, fg = colors.blue.base },
+            NavicIconsNamespace = { bg = colors.gray.base, fg = colors.yellow.base },
+            NavicIconsNull = { bg = colors.gray.base, fg = colors.red.base },
+            NavicIconsNumber = { bg = colors.gray.base, fg = colors.orange.base },
+            NavicIconsObject = { bg = colors.gray.base, fg = colors.orange.base },
+            NavicIconsOperator = { bg = colors.gray.base, fg = colors.magenta.base },
+            NavicIconsPackage = { bg = colors.gray.base, fg = colors.orange.base },
+            NavicIconsProperty = { bg = colors.gray.base, fg = colors.blue.base },
+            NavicIconsString = { bg = colors.gray.base, fg = colors.green.base },
+            NavicIconsStruct = { bg = colors.gray.base, fg = colors.yellow.base },
+            NavicIconsTypeParameter = { bg = colors.gray.base, fg = colors.yellow.base },
+            NavicIconsVariable = { bg = colors.gray.base, fg = colors.blue.base },
+            NavicSeparator = { bg = colors.gray.base, fg = colors.cyan.base },
+            NavicText = { bg = colors.gray.base, fg = colors.white.base },
+        },
         opts = {
+            click = true,
             highlight = true,
             lazy_update_context = true,
             lsp = {

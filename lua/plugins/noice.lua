@@ -6,20 +6,18 @@ return {
         "NoiceDismiss",
     },
     event = ev.VeryLazy,
-    init = function()
-        hl.apply({
-            { NoiceFormatProgressDone = { bg = colors.black.dim, fg = colors.white.bright } },
-            { NoiceFormatProgressTodo = { bg = colors.black.dim, fg = colors.white.bright } },
-            { NoiceLspProgressClient = { fg = colors.blue.base } },
-            { NoiceLspProgressSpinner = { fg = colors.cyan.bright } },
-            { NoiceLspProgressTitle = { fg = colors.white.bright } },
-            { NoiceVirtualText = { fg = colors.blue.base } },
-        })
-    end,
-        -- stylua: ignore
-        keys = {
-            { "<leader>fN", function() vim.cmd.Noice("pick") end, desc = "Noice" },
-        },
+    highlights = {
+        NoiceFormatProgressDone = { bg = colors.black.dim, fg = colors.white.bright },
+        NoiceFormatProgressTodo = { bg = colors.black.dim, fg = colors.white.bright },
+        NoiceLspProgressClient = { fg = colors.blue.base },
+        NoiceLspProgressSpinner = { fg = colors.cyan.bright },
+        NoiceLspProgressTitle = { fg = colors.white.bright },
+        NoiceVirtualText = { fg = colors.blue.base },
+    },
+    -- stylua: ignore
+    keys = {
+        { "<leader>fN", function() vim.cmd.Noice("pick") end, desc = "Noice" },
+    },
     ---@type NoiceConfig
     opts = {
         cmdline = {
@@ -176,7 +174,7 @@ return {
                         { event = "notify", max_height = 1 },
 
                         -- Send Ctrl-G to the mini view.
-                        { find = "\" %d+ lines --", event = "msg_show" },
+                        { find = '" %d+ lines --', event = "msg_show" },
 
                         -- "Not an editor command"
                         { find = "^E492:", event = "msg_show" },

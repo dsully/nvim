@@ -2,23 +2,21 @@
 return {
     {
         "nvim-neotest/neotest",
-        init = function()
-            hl.apply({
-                { NeotestAdapterName = { bold = true, fg = colors.magenta.base } },
-                { NeotestDir = { fg = colors.cyan.base } },
-                { NeotestExpandMarker = { link = "Conceal" } },
-                { NeotestFailed = { fg = colors.red.base } },
-                { NeotestFile = { fg = colors.blue.base } },
-                { NeotestFocused = { underline = true } },
-                { NeotestIndent = { link = "Conceal" } },
-                { NeotestMarked = { bold = true, fg = colors.white.dim } },
-                { NeotestNamespace = { fg = colors.cyan.base } },
-                { NeotestPassed = { fg = colors.green.base } },
-                { NeotestRunning = { fg = colors.orange.base } },
-                { NeotestSkipped = { fg = colors.yellow.base } },
-                { NeotestTest = { link = "Normal" } },
-            })
-        end,
+        highlights = {
+            NeotestAdapterName = { bold = true, fg = colors.magenta.base },
+            NeotestDir = { fg = colors.cyan.base },
+            NeotestExpandMarker = { link = "Conceal" },
+            NeotestFailed = { fg = colors.red.base },
+            NeotestFile = { fg = colors.blue.base },
+            NeotestFocused = { underline = true },
+            NeotestIndent = { link = "Conceal" },
+            NeotestMarked = { bold = true, fg = colors.white.dim },
+            NeotestNamespace = { fg = colors.cyan.base },
+            NeotestPassed = { fg = colors.green.base },
+            NeotestRunning = { fg = colors.orange.base },
+            NeotestSkipped = { fg = colors.yellow.base },
+            NeotestTest = { link = "Normal" },
+        },
         --stylua: ignore
         keys = {
             { "<leader>tf", function() require("neotest").run.run(vim.fn.expand("%s")) end, desc = "Run all tests in this file." },

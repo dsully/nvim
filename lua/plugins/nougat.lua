@@ -180,7 +180,7 @@ return {
             hidden = function()
                 return not ai.processing
             end,
-            prefix = defaults.icons.misc.ai .. " ",
+            prefix = " " .. defaults.icons.misc.ai .. " ",
             suffix = " ",
             hl = {
                 bg = colors.black.base,
@@ -252,5 +252,5 @@ return {
 
         require("nougat").set_statusline(statusline)
     end,
-    event = ev.VeryLazy,
+    event = ev.UIEnter,
 }

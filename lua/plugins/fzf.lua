@@ -16,6 +16,18 @@ return {
     {
         "ibhagwan/fzf-lua",
         cmd = "FzfLua",
+        highlights = {
+            FzfLuaPathColNr = { fg = colors.gray.base },
+            FzfLuaPathLineNr = { fg = colors.gray.base },
+            FzfLuaBorder = { link = "FloatBorder" },
+            FzfLuaBackdrop = { fg = colors.none, bg = colors.black.dim },
+            FzfLuaBufName = { fg = colors.cyan.bright, bg = colors.black.dim },
+            FzfLuaBufNr = { fg = colors.cyan.base, bg = colors.black.dim },
+            FzfLuaFzfGutter = { fg = colors.black.base, bg = colors.black.dim },
+            FzfLuaHeaderBind = { fg = colors.green.base, bg = colors.black.dim },
+            FzfLuaHeaderText = { fg = colors.cyan.bright, bg = colors.black.dim },
+            FzfLuaTabMarker = { fg = colors.yellow.base, bg = colors.black.dim },
+        },
         init = function()
             --
             ---@diagnostic disable-next-line: duplicate-set-field
@@ -27,19 +39,6 @@ return {
 
                 return vim.ui.select(...)
             end
-
-            hl.apply({
-                { FzfLuaPathColNr = { fg = colors.gray.base } },
-                { FzfLuaPathLineNr = { fg = colors.gray.base } },
-                { FzfLuaBorder = { link = "FloatBorder" } },
-                { FzfLuaBackdrop = { fg = colors.none, bg = colors.black.dim } },
-                { FzfLuaBufName = { fg = colors.cyan.bright, bg = colors.black.dim } },
-                { FzfLuaBufNr = { fg = colors.cyan.base, bg = colors.black.dim } },
-                { FzfLuaFzfGutter = { fg = colors.black.base, bg = colors.black.dim } },
-                { FzfLuaHeaderBind = { fg = colors.green.base, bg = colors.black.dim } },
-                { FzfLuaHeaderText = { fg = colors.cyan.bright, bg = colors.black.dim } },
-                { FzfLuaTabMarker = { fg = colors.yellow.base, bg = colors.black.dim } },
-            })
         end,
         keys = function()
             --

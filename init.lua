@@ -17,7 +17,9 @@ if vim.env.PROF or vim.env.PROFILE or vim.env.NVIM_PROFILE then
 
     require("snacks.profiler").startup({
         startup = {
-            event = "VeryLazy", -- Stop profiler on this event. Defaults to `VimEnter`
+            -- Stop profiler on this event. Defaults to `VimEnter`
+            event = "User",
+            pattern = "VeryLazy",
         },
     })
 end

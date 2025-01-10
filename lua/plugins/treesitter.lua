@@ -38,7 +38,7 @@ return {
         build = ":TS update!",
         cmd = "TS",
         commit = "b5b7d602",
-        event = ev.VeryLazy,
+        event = ev.LazyFile,
         opts = function()
             local root = require("lazy.core.config").options.root
 

@@ -16,11 +16,10 @@ return {
         "Saghen/blink.cmp",
         build = "cargo build --release",
         event = ev.InsertEnter,
+        highlights = {
+            BlinkCmpGhostText = { link = hl.Comment },
+        },
         init = function()
-            hl.apply({
-                { BlinkCmpGhostText = { link = hl.Comment } },
-            })
-
             -- HACK: Workaround for the non-configurable snippet navigation mappings.
             -- From https://github.com/neovim/neovim/issues/30198#issuecomment-2326075321.
             -- (And yeah this is my fault).

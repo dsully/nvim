@@ -140,7 +140,7 @@ return {
             },
         })
     end,
-    event = ev.LazyFile,
+    event = ev.UIEnter,
     keys = {
         {
             "<leader>bd",
