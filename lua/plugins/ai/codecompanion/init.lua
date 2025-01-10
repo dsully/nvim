@@ -1,55 +1,6 @@
-local mode = { "n", "v" }
-
-local model_list = function()
-    local curl = require("plenary.curl")
-    local response = curl.get(vim.env.OLLAMA_URL .. "/v1/models", {
-        sync = true,
-        headers = {
-            ["content-type"] = "application/json",
-            --["Authorization"] = "Bearer " .. api_key,
-        },
-    })
-
-    if not response then
-        return {}
-    end
-
-    local ok, json = pcall(vim.json.decode, response.body)
-
-    if not ok then
-        return {}
-    end
-
-    local models = {}
-
-    for _, model in ipairs(json.data) do
-        table.insert(models, model.id)
-    end
-
-    return models
-end
-
 ---@type LazySpec[]
 return {
     {
-        -- TODO: Add to WhichKey?
-        --
-        -- When in the chat buffer, there are number of keymaps available to you:
-        --
-        -- ? - Bring up the menu that lists the keymaps and commands
-        -- <CR>|<C-s> - Send the buffer to the LLM
-        -- <C-c> - Close the buffer
-        -- q - Cancel the request from the LLM
-        -- gr - Regenerate the last response from the LLM
-        -- ga - Change the adapter
-        -- gx - Clear the buffer's contents
-        -- gx - Add a codeblock
-        -- gf - To refresh the code folds in the buffer
-        -- gd - Debug the chat buffer
-        -- } - Move to the next chat
-        -- { - Move to the previous chat
-        -- ]] - Move to the next header
-        -- [[ - Move to the previous header
         "olimorris/codecompanion.nvim",
         cmd = {
             "CodeCompanion",
@@ -67,11 +18,11 @@ return {
 
             local group = ev.group("CodeCompanionHooks")
 
-            ev.on(ev.User, function(request)
+            ev.on(ev.User, function(event)
                 --
                 -- Format the buffer after the inline request has completed
-                if request.match == "CodeCompanionInlineFinished" then
-                    require("conform").format({ bufnr = request.buf })
+                if event.match == "CodeCompanionInlineFinished" then
+                    require("conform").format({ bufnr = event.buf })
                 end
             end, {
                 group = group,
@@ -83,7 +34,7 @@ return {
             { "<leader>a+", function() vim.cmd.CodeCompanionChat("Add") end, mode = "v", desc = "Add" },
             { "<leader>aD", function() require("codecompanion").prompt("docstring") end, mode = "v", desc = "Docstring" },
             { "<leader>aa", function() vim.cmd.CodeCompanionActions() end, mode = { "n", "v" }, desc = "Actions" },
-            { "<leader>ac", function() vim.cmd.CodeCompanionChat("Toggle") end, desc = "Chat" },
+            { "<leader>ac", function() vim.cmd.CodeCompanionChat("Toggle") end, mode = { "n", "v" }, desc = "Chat" },
             { "<leader>ad", function() require("codecompanion").prompt("doc") end, mode = "v", desc = "Documentation" },
             { "<leader>af", function() require("codecompanion").prompt("fix") end, mode = "v", desc = "Fix Code" },
             { "<leader>al", function() require("codecompanion").prompt("lsp") end, mode = "v", desc = "LSP Diagnostics" },
@@ -121,6 +72,7 @@ return {
                 deepseek = require("plugins.ai.codecompanion.adapters.deepseek"),
                 gemini = require("plugins.ai.codecompanion.adapters.gemini"),
                 openai = require("plugins.ai.codecompanion.adapters.openai"),
+                ollama = require("plugins.ai.codecompanion.adapters.ollama"),
                 openrouter = require("plugins.ai.codecompanion.adapters.openrouter"),
                 qwen25 = require("plugins.ai.codecompanion.adapters.qwen"),
             },
@@ -159,7 +111,7 @@ return {
                 ["Spelling"] = require("plugins.ai.codecompanion.prompts.spelling"),
             },
             strategies = {
-                -- agent = { adapter = "ollama" },
+                agent = { adapter = "anthropic" },
                 chat = {
                     adapter = "anthropic",
                     slash_commands = {
