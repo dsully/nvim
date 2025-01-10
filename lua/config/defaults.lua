@@ -97,8 +97,6 @@ local M = {
         ghaction = { "actionlint" },
         gitcommit = { "commitlint", "write_good" },
         go = { "revive" },
-        htmldjango = { "curlylint" },
-        jinja = { "curlylint" },
         markdown = { "markdownlint-cli2", "write_good" },
         protobuf = { "protolint" },
         rst = { "rstcheck", "write_good" },
@@ -113,7 +111,6 @@ local M = {
     },
 
     tools = {
-        "curlylint",
         "ghostty-ls",
         "goimports",
         "html-lsp",
