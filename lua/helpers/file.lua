@@ -134,4 +134,41 @@ M.symlink_queries = function(filetype, subdirectory)
     end
 end
 
+---Create a combined file type for template languages.
+---@param filename string
+---@param extension string The extension to strip from the filename for detection.
+---@param combined string The combined file type. eg: "jinja2"
+---@return string?
+M.template_type = function(filename, extension, combined)
+    --
+    -- Remove the chezmoi 'dot_' if it exists.
+    filename = filename:gsub("." .. extension, ""):gsub("dot_", ".")
+
+    -- Attempt with buffer content and filename
+    --- @type string?
+    local filetype = vim.filetype.match({ filename = filename }) or ""
+
+    if not filetype then
+        local lines = vim.api.nvim_buf_get_lines(0, 0, -1, false)
+
+        for index, line in ipairs(lines) do
+            if string.match(line, "{{") then
+                table.remove(lines, index) -- remove template lines
+            end
+        end
+
+        if not filetype then
+            filetype = vim.filetype.match({ filename = filename, contents = lines }) -- attempt without template lines
+
+            if not filetype then
+                filetype = vim.filetype.match({ contents = lines }) -- attempt without filename
+            end
+        end
+    end
+
+    if filetype then
+        return filetype .. "." .. combined
+    end
+end
+
 return M
