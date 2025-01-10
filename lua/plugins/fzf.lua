@@ -1,3 +1,16 @@
+local actions = {
+    ["alt-i"] = {
+        fn = function(...)
+            require("fzf-lua.actions").toggle_ignore(...)
+        end,
+    },
+    ["alt-h"] = {
+        fn = function(...)
+            require("fzf-lua.actions").toggle_hidden(...)
+        end,
+    },
+}
+
 ---@type LazySpec[]
 return {
     {
@@ -110,6 +123,7 @@ return {
             file_icon_padding = " ",
             file_ignore_patterns = defaults.files.ignored_patterns,
             files = {
+                actions = actions,
                 cwd_prompt = false,
                 resume = true,
             },
@@ -152,6 +166,7 @@ return {
             },
             live_grep = {
                 RIPGREP_CONFIG_PATH = vim.env.RIPGREP_CONFIG_PATH,
+                actions = actions,
                 fzf_opts = { ["--keep-right"] = "" },
                 glob_separator = "  ",
                 resume = true,
