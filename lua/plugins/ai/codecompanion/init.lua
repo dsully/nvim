@@ -64,6 +64,19 @@ return {
             require("codecompanion.config").prompt_library["Custom Prompt"] = nil
             require("codecompanion.config").prompt_library["Explain"] = nil
             require("codecompanion.config").prompt_library["Buffer selection"] = nil
+
+            local group = ev.group("CodeCompanionHooks")
+
+            ev.on(ev.User, function(request)
+                --
+                -- Format the buffer after the inline request has completed
+                if request.match == "CodeCompanionInlineFinished" then
+                    require("conform").format({ bufnr = request.buf })
+                end
+            end, {
+                group = group,
+                pattern = "CodeCompanionInline*",
+            })
         end,
         keys = {
             --stylua: ignore start
@@ -78,6 +91,7 @@ return {
             { "<leader>ap", function() require("codecompanion").prompt("pr") end, desc = "Pull Request" },
             { "<leader>ar", function() require("codecompanion").prompt("refactor") end, mode = "v", desc = "Refactor" },
             { "<leader>at", function() require("codecompanion").prompt("tests") end, desc = "Generate Tests" },
+            { "<leader>aw", function() require("codecompanion").prompt("workflow") end, desc = "Code Workflow" },
             --stylua: ignore end
             {
                 "<leader>aq",
@@ -156,7 +170,7 @@ return {
                     },
                 },
                 inline = {
-                    adapter = "copilot",
+                    adapter = "anthropic",
                 },
             },
         },
