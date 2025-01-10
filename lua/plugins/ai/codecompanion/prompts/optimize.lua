@@ -1,12 +1,12 @@
 return {
-    strategy = "inline",
+    strategy = "chat",
     description = "Optimize the selected code",
     opts = {
         modes = { "v" },
         short_name = "optimize",
-        index = 14,
         auto_submit = true,
         stop_context_insertion = true,
+        is_slash_cmd = true,
         user_prompt = false,
     },
     prompts = {
