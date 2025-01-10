@@ -10,6 +10,8 @@ return {
 
         local icons = defaults.icons
 
+        local ai = require("plugins.ai.codecompanion.status")
+
         local word_filetypes = {
             markdown = true,
             text = true,
@@ -132,7 +134,7 @@ return {
         local git_status = require("nougat.nut.git.branch").create({
             config = { provider = "gitsigns" },
             hidden = function()
-                return not vim.g.gitsigns_head
+                return not vim.g.gitsigns_head or ai:open()
             end,
             hl = {
                 bg = colors.black.base,
@@ -145,10 +147,6 @@ return {
 
         local hl_search = item({
             content = function()
-                if not package.loaded["noice"] then
-                    return ""
-                end
-
                 ---@diagnostic disable-next-line: undefined-field
                 local text = require("noice").api.status.search.get()
                 local query = vim.F.if_nil(text:match("%/(.-)%s"), text:match("%?(.-)%s"))
@@ -175,12 +173,28 @@ return {
             prefix = " ",
         })
 
+        local codecompanion = item({
+            content = function()
+                return ai:update()
+            end,
+            hidden = function()
+                return not ai.processing
+            end,
+            prefix = defaults.icons.misc.ai .. " ",
+            suffix = " ",
+            hl = {
+                bg = colors.black.base,
+                fg = colors.white.base,
+            },
+        })
+
         local wordcount = require("nougat.nut.buf.wordcount").create({
             config = {
                 format = function(count)
                     return string.format("%d Word%s", count, count > 1 and "s" or "")
                 end,
             },
+            ---@param ctx nougat_bar_ctx
             hidden = function(_, ctx)
                 return not word_filetypes[vim.api.nvim_get_option_value("filetype", { buf = ctx.bufnr })]
             end,
@@ -198,6 +212,9 @@ return {
                 bg = colors.black.base,
                 fg = colors.white.base,
             },
+            hidden = function()
+                return ai:open()
+            end,
             prefix = " ",
             sep_left = sep.left_lower_triangle_solid(true),
             content = table.concat({
@@ -221,6 +238,7 @@ return {
             { white_right_triangle(navic), navic },
             { require("nougat.nut.spacer").create() },
             { require("nougat.nut.truncation_point").create() },
+            { white_left_triangle(codecompanion), codecompanion },
             { white_left_triangle(git_status), git_status },
             { white_left_triangle(wordcount), wordcount },
             { white_left_triangle(counts), counts },
