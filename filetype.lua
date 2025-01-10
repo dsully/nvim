@@ -30,35 +30,11 @@ vim.filetype.add({
             end
             return "c"
         end,
+        j2 = function(filename, _)
+            return require("helpers.file").template_type(filename, "j2", "jinja2")
+        end,
         tmpl = function(filename, _)
-            -- Handle chezmoi dot_
-            filename = filename:gsub(".tmpl", ""):gsub("dot_", ".")
-
-            -- Attempt with buffer content and filename
-            --- @type string?
-            local filetype = vim.filetype.match({ filename = filename }) or ""
-
-            if not filetype then
-                local lines = vim.api.nvim_buf_get_lines(0, 0, -1, false)
-
-                for index, line in ipairs(lines) do
-                    if string.match(line, "{{") then
-                        table.remove(lines, index) -- remove tmpl lines
-                    end
-                end
-
-                if not filetype then
-                    filetype = vim.filetype.match({ filename = filename, contents = lines }) -- attempt without tmpl lines
-
-                    if not filetype then
-                        filetype = vim.filetype.match({ contents = lines }) -- attempt without filename
-                    end
-                end
-            end
-
-            if filetype then
-                return filetype .. ".gotexttmpl"
-            end
+            return require("helpers.file").template_type(filename, "tmpl", "gotexttmpl")
         end,
     },
     pattern = {
