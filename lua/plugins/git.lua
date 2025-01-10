@@ -66,11 +66,11 @@ return {
 
                 bmap("<leader>gs", function()
                     gs.stage_hunk({ vim.fn.line("."), vim.fn.line("v") })
-                end, "Stage Lines(s)", { "n", "x" })
+                end, "Stage Lines(s)", { "n", "v" })
 
                 bmap("<leader>gr", function()
                     gs.reset_hunk({ vim.fn.line("."), vim.fn.line("v") })
-                end, "Reset Stage Lines(s)", { "n", "x" })
+                end, "Reset Stage Lines(s)", { "n", "v" })
             end,
             signs = {
                 add = { text = "▎" },

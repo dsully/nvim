@@ -61,7 +61,7 @@ return {
     {
         "echasnovski/mini.align",
         keys = {
-            { "g=", desc = "mini.align: align", mode = { "n", "x" } },
+            { "g=", desc = "mini.align: align", mode = { "n", "v" } },
             { "g+", desc = "mini.align: align with preview", mode = { "n", "" } },
         },
         opts = {
@@ -409,7 +409,7 @@ return {
         -- sff`  - Surround Find part of surrounding function call (`f`).
         -- sh}   - Surround Highlight [}]
         --
-        -- vim.keymap.set({ "n", "x" }, "s", "<Nop>")
+        -- vim.keymap.set({ "n", "v" }, "s", "<Nop>")
         "echasnovski/mini.surround",
         -- stylua: ignore
         init = function()
@@ -430,7 +430,7 @@ return {
             local opts = require("lazy.core.plugin").values(plugin, "opts", false)
 
             local mappings = {
-                { opts.mappings.add, desc = "Add surrounding", mode = { "n", "x" } },
+                { opts.mappings.add, desc = "Add surrounding", mode = { "n", "v" } },
                 { opts.mappings.delete, desc = "Delete surrounding" },
                 { opts.mappings.find, desc = "Find right surrounding" },
                 { opts.mappings.find_left, desc = "Find left surrounding" },

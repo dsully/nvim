@@ -10,7 +10,7 @@ return {
                     require("inlayhint-filler").fill()
                 end,
                 desc = "Insert the inlay-hint under cursor into the buffer.",
-                mode = { "n", "x" },
+                mode = { "n", "v" },
             },
         },
     },

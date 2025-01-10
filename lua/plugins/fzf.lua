@@ -74,7 +74,7 @@ return {
                 { "<leader>fk", pick("keymaps"), desc = "Key Maps" },
                 { "<leader>fo", pick("oldfiles"), desc = "Recently Opened" },
                 { "<leader>fq", pick("quickfix"), desc = "Quickfix List" },
-                { "<leader>fw", pick("grep_cword"), desc = "Words" },
+                { "<leader>fw", pick("grep_cword", true), desc = "Words" },
                 { "<leader>fn", function() require("helpers.picker").notifications() end, desc = "Notifications" },
                 { "<leader>fP", function() require("helpers.picker").parents() end, desc = "Parent dirs" },
                 { "<leader>fR", function() require("helpers.picker").repositories() end, desc = "Repositories" },

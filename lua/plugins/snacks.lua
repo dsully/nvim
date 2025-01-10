@@ -127,10 +127,10 @@ return {
         { [[<C-\>]], function() Snacks.terminal.toggle(vim.env.SHELL) end, mode = { "n", "t" }, desc = "Terminal" },
 
         -- Git helpers.
-        { "<leader>go", function() Snacks.gitbrowse.open() end, desc = "Open Git URL", mode = { "n", "x" } },
+        { "<leader>go", function() Snacks.gitbrowse.open() end, desc = "Open Git URL", mode = { "n", "v" } },
         { "<leader>gC", function()
             Snacks.gitbrowse({ open = function(url) vim.fn.setreg("+", url) end, notify = false })
-        end, desc = "Copy Git URL", mode = { "n", "x" } },
+        end, desc = "Copy Git URL", mode = { "n", "v" } },
 
         -- Profiler
         { "<leader>dps", function() Snacks.profiler.scratch() end, desc = "Profiler Scratch Buffer" },

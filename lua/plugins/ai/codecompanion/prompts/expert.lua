@@ -2,7 +2,6 @@ return {
     strategy = "chat",
     description = "Get some special advice from an LLM",
     opts = {
-        mapping = "<leader>ae",
         modes = { "v" },
         short_name = "expert",
         auto_submit = true,
