@@ -18,9 +18,9 @@ return {
             return vim.env.HOSTNAME ~= "zap"
         end,
         keys = {
-            { "<leader>cS", "", desc = "󰹑 Screen Shots", mode = { "x" } },
-            { "<leader>cSs", "<cmd>CodeSnap<cr>", mode = "x", desc = "Save selected code snapshot into clipboard" },
-            { "<leader>cSS", "<cmd>CodeSnapSave<cr>", mode = "x", desc = "Save selected code snapshot in ~/Pictures" },
+            { "<leader>cS", "", desc = "󰹑 Screen Shots", mode = { "v" } },
+            { "<leader>cSs", "<cmd>CodeSnap<cr>", mode = "v", desc = "Save selected code snapshot into clipboard" },
+            { "<leader>cSS", "<cmd>CodeSnapSave<cr>", mode = "v", desc = "Save selected code snapshot in ~/Pictures" },
         },
         opts = {
             bg_theme = "dusk",

@@ -1,5 +1,5 @@
 local map = require("helpers.keys").map
-local mode = { "n", "x" }
+local mode = { "n", "v" }
 
 map("Y", "y$", "Yank to clipboard", mode)
 map("gY", '"*y$', "Yank until end of line to system clipboard", mode)
@@ -25,8 +25,8 @@ map("<A-j>", ":m .+1<cr>==", "Move line down")
 map("<A-k>", ":m .-2<cr>==", "Move line up")
 map("<A-j>", "<Esc>:m .+1<cr>==gi", "Move line down (insert mode)", "i")
 map("<A-k>", "<Esc>:m .-2<cr>==gi", "Move line up (insert mode)", "i")
-map("<A-j>", ":m '>+1<cr>gv=gv", "Move block down", "x")
-map("<A-k>", ":m '<-2<cr>gv=gv", "Move block up", "x")
+map("<A-j>", ":m '>+1<cr>gv=gv", "Move block down", "v")
+map("<A-k>", ":m '<-2<cr>gv=gv", "Move block up", "v")
 
 -- Search for ^[<>=] ??
 -- map("<leader>fc", "/<<<<CR>", "[F]ind [C]onflicts")
@@ -40,7 +40,6 @@ map("<space>n", require("helpers.file").edit, "New File", "n", { expr = false })
 -- Open in the filetype default application (macOS)
 if vim.g.os == "Darwin" then
     map("<leader>o", function()
-
         if vim.bo.buftype ~= "markdown" then
             return
         end
@@ -83,6 +82,6 @@ vim.api.nvim_create_user_command("CopyCodeBlock", function(opts)
     vim.fn.setreg("+", string.format("```%s\n%s\n```", vim.bo.filetype, table.concat(lines, "\n")))
 end, { range = true })
 
-map("<leader>cc", vim.cmd.CopyCodeBlock, "Copy Code Block", { "n", "x" })
+map("<leader>cc", vim.cmd.CopyCodeBlock, "Copy Code Block", { "n", "v" })
 
 return {}

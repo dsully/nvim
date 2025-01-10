@@ -54,7 +54,7 @@ function M.ai_whichkey(opts)
     }
 
     ---@type wk.Spec[]
-    local ret = { mode = { "o", "x" } }
+    local ret = { mode = { "o", "v" } }
 
     ---@type table<string, string>
     local mappings = vim.tbl_extend("force", {}, {

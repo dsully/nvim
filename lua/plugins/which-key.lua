@@ -1,5 +1,3 @@
-local icons = defaults.icons
-
 ---@type LazySpec
 return {
     "folke/which-key.nvim",
@@ -34,7 +32,7 @@ return {
                 { pattern = "pattern", icon = "󰛪 " },
                 { pattern = "log", icon = "󰦪 " },
                 { pattern = "open", icon = "󰏋 " },
-                { pattern = "refactor", icon = icons.misc.gear },
+                { pattern = "refactor", icon = defaults.icons.misc.gear },
                 { pattern = "word", icon = " " },
                 { pattern = "url", icon = "󰖟 " },
                 { pattern = "yank", icon = " " },
@@ -68,15 +66,15 @@ return {
         show_keys = false, -- show the currently pressed key and its label as a message in the command line
         spec = {
             { "<c-w>", group = "windows" },
-            { "<leader>", group = "actions", icon = icons.misc.actions },
+            { "<leader>", group = "actions", icon = defaults.icons.misc.actions },
             { "<leader>b", group = "Buffers" },
             { "<leader>c", group = "Code", mode = { "n", "v" } },
             { "<leader>d", group = "Debug" },
             { "<leader>dl", group = "Log" },
             { "<leader>dp", group = "Profiler" },
             { "<leader>f", group = "Find" },
-            { "<leader>g", group = "Git", mode = { "n", "x" } },
-            { "<leader>gh", group = "GitHub", mode = { "n", "x" } },
+            { "<leader>g", group = "Git", mode = { "n", "v" } },
+            { "<leader>gh", group = "GitHub", mode = { "n", "v" } },
             { "<leader>n", group = "Notifications" },
             { "<leader>q", group = "Quit" },
             { "<leader>r", group = "Rules" },
@@ -84,13 +82,13 @@ return {
             { "<leader>S", group = "Snippets" },
             { "<leader>t", group = "Test" },
             { "<leader>x", group = "Diagnostics" },
-            { "<space>", group = "actions", icon = icons.misc.actions },
+            { "<space>", group = "actions", icon = defaults.icons.misc.actions },
             { "<space>t", group = "Toggle" },
             { "K", desc = "Documentation" },
             { "[", group = "previous", icon = "󰒮" },
             { "]", group = "next", icon = "󰒭" },
-            { "g", group = "go to", icon = icons.misc.exit },
-            { "s", group = "surround", icon = icons.misc.surround },
+            { "g", group = "go to", icon = defaults.icons.misc.exit },
+            { "s", group = "surround", icon = defaults.icons.misc.surround },
             { "z", group = "spelling & folds", icon = "󰀬 " },
 
             -- {
@@ -103,7 +101,7 @@ return {
             -- },
 
             -- Don't delete into the system clipboard.
-            { "dw", '"_dw', hidden = true, mode = { "n", "x" }, noremap = true },
+            { "dw", '"_dw', hidden = true, mode = { "n", "v" }, noremap = true },
 
             -- Ignore junk
             { "<2-LeftMouse>", hidden = true },

@@ -61,7 +61,7 @@ return {
 
                         keys.bmap("gx", function()
                             vim.cmd.RustLsp("openDocs")
-                        end, "Open external documentation", bufnr, { "n", "x" })
+                        end, "Open external documentation", bufnr, { "n", "v" })
 
                         -- keys.bmap("gra", function()
                         --     vim.cmd.RustLsp("codeAction")
