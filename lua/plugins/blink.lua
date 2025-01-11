@@ -15,6 +15,9 @@ return {
     {
         "Saghen/blink.cmp",
         build = "cargo build --release",
+        cmd = {
+            "BlinkCmp",
+        },
         event = ev.InsertEnter,
         highlights = {
             BlinkCmpGhostText = { link = hl.Comment },
