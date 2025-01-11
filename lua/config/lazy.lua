@@ -238,11 +238,13 @@ function M.setup()
 
     ev.on(ev.User, function(args)
         --
-        local pl = require("lazy.core.config").plugins[args.data.plugin] or {}
+        if args.data and args.data.plugin then
+            local pl = require("lazy.core.config").plugins[args.data.plugin] or {}
 
-        ---@diagnostic disable: undefined-field
-        if pl.highlights then
-            hl.apply(pl.highlights)
+            ---@diagnostic disable: undefined-field
+            if pl.highlights then
+                hl.apply(pl.highlights)
+            end
         end
     end, {
         desc = "Apply plugin highlights",
