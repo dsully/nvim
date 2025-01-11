@@ -2,9 +2,7 @@
 return {
     { "nvim-lua/plenary.nvim" },
     { "MunifTanjim/nui.nvim" },
-
-    { "b0o/schemastore.nvim", version = false },
-    { "cenk1cenk2/schema-companion.nvim", opts = {} },
+    { "b0o/schemastore.nvim" },
 
     -- Pretty screen shots.
     {

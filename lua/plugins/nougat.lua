@@ -188,6 +188,28 @@ return {
             },
         })
 
+        local schema = item({
+            ---@param ctx nougat_bar_ctx
+            content = function(_, ctx)
+                return ("%s%s"):format(defaults.icons.misc.table, require("schema-companion.context").get_buffer_schema(ctx.bufnr).name):sub(0, 128)
+            end,
+            ---@param ctx nougat_bar_ctx
+            hidden = function(_, ctx)
+                if vim.tbl_contains({ "yaml", "helm" }, vim.api.nvim_get_option_value("filetype", { buf = ctx.bufnr })) then
+                    return require("schema-companion.context").get_buffer_schema(ctx.bufnr).name == "none"
+                end
+
+                return true
+            end,
+            prefix = " ",
+            suffix = " ",
+            hl = {
+                bg = colors.black.base,
+                fg = colors.white.base,
+            },
+            sep_left = sep.left_lower_triangle_solid(true),
+        })
+
         local wordcount = require("nougat.nut.buf.wordcount").create({
             config = {
                 format = function(count)
@@ -238,6 +260,7 @@ return {
             { white_right_triangle(navic), navic },
             { require("nougat.nut.spacer").create() },
             { require("nougat.nut.truncation_point").create() },
+            { white_left_triangle(schema), schema },
             { white_left_triangle(codecompanion), codecompanion },
             { white_left_triangle(git_status), git_status },
             { white_left_triangle(wordcount), wordcount },
