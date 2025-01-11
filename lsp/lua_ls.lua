@@ -73,6 +73,7 @@ return {
             type = {
                 castNumberToInteger = true,
                 inferParamType = true,
+                checkTableShape = true,
             },
         },
     },
