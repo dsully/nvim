@@ -16,6 +16,14 @@ return {
 
             vim.highlight.priorities.semantic_tokens = 100
             vim.highlight.priorities.treesitter = 125
+
+            nvim.command("TSInstall", function(opts)
+                vim.cmd(string.format("TS install%s %s", opts.bang and "!" or "", opts.args))
+            end, {
+                bang = true,
+                desc = "Wrapper to redirect TSInstall to ts-install's 'TS install'",
+                nargs = 1,
+            })
         end,
         lazy = false,
         keys = {
