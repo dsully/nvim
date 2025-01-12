@@ -10,7 +10,7 @@ return {
     { "vhyrro/toml-edit.lua", build = "rockspec", priority = 1000 },
 
     -- Better vim help.
-    { "dsully/helpview.nvim", branch = "treesitter-compat", lazy = false },
+    { "dsully/helpview.nvim", branch = "treesitter-compat", ft = { "help", "vimdoc" } },
 
     {
         "vuki656/package-info.nvim",
