@@ -2,28 +2,12 @@
 return {
     {
         "MeanderingProgrammer/render-markdown.nvim",
-        config = function(_, opts)
-            --
-            require("render-markdown").setup(opts)
-
-            require("snacks")
-                .toggle({
-                    name = "Markdown",
-                    get = function()
-                        return require("render-markdown.state").enabled
-                    end,
-                    set = function(enabled)
-                        local m = require("render-markdown")
-                        if enabled then
-                            m.enable()
-                        else
-                            m.disable()
-                        end
-                    end,
-                })
-                :map("<space>tm")
-        end,
-        ft = { "codecompanion", "markdown", "snacks_notif", "vimwiki" },
+        ft = {
+            "codecompanion",
+            "markdown",
+            "snacks_notif",
+            "vimwiki",
+        },
         highlights = {
             RenderMarkdownCode = { bg = colors.black.base },
         },
@@ -31,8 +15,12 @@ return {
         ---@type render.md.UserConfig
         opts = {
             checkbox = {
-                checked = {
+                checked = { -- Replaces '[x]' of 'task_list_marker_checked'
+                    icon = "󰄵 ",
                     scope_highlight = "@markup.strikethrough",
+                },
+                unchecked = { -- Replaces '[ ]' of 'task_list_marker_unchecked'
+                    icon = "󰄱 ",
                 },
             },
             code = {
@@ -51,6 +39,36 @@ return {
             link = {
                 custom = {
                     python = { pattern = "%.py$", icon = "󰌠 " },
+                },
+            },
+            on = {
+                attach = function()
+                    require("snacks")
+                        .toggle({
+                            name = "Markdown",
+                            get = function()
+                                return require("render-markdown.state").enabled
+                            end,
+                            set = function(enabled)
+                                local m = require("render-markdown")
+                                if enabled then
+                                    m.enable()
+                                else
+                                    m.disable()
+                                end
+                            end,
+                        })
+                        :map("<space>tm")
+                end,
+            },
+            overrides = {
+                filetype = {
+                    codecompanion = {
+                        anti_conceal = {
+                            enabled = false,
+                        },
+                        render_modes = true,
+                    },
                 },
             },
         },

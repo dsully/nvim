@@ -1,0 +1,11 @@
+{
+  "Conventional Commit Message": {
+    "prefix": "commit-msg",
+    "body": [
+      "${1|fix,feat,build,chore,ci,docs,style,refactor,test,perf|}${2|,(${3:scope})|}: ${4:short-description}",
+      "",
+      "${5:# longer description}"
+    ],
+    "description": "Create a conventional commit message"
+  }
+}
