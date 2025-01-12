@@ -149,6 +149,30 @@ function M.lighten(hex, amount, fg)
     return require("snacks.util").blend(hex, fg or colors.fg, amount)
 end
 
+---@type table<string,boolean>
+M.groups = {}
+
+M.group = function(hl)
+    local group = vim.inspect(hl):gsub("%W+", "_")
+
+    if not M.groups[group] then
+        hl = type(hl) == "string" and { link = hl } or hl
+        hl = vim.deepcopy(hl, true)
+
+        hl.fg = hl.fg or colors.gray.base
+
+        if hl.fg == hl.bg then
+            hl.fg = nil
+        end
+
+        vim.api.nvim_set_hl(0, group, hl)
+
+        M.groups[group] = true
+    end
+
+    return group
+end
+
 ---Apply a list of highlights
 ---@param highlights table<string, vim.api.keyset.highlight>
 M.apply = function(highlights)
