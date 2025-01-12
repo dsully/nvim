@@ -98,7 +98,7 @@ return {
                         width = 0.4,
                     },
                     render_headers = false,
-                    show_settings = true,
+                    show_settings = false,
                 },
                 diff = {
                     layout = "vertical", ---@type "horizontal"|"vertical"
