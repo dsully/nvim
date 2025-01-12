@@ -189,8 +189,8 @@ return {
                 default = { "lsp", "path", "snippets" },
                 -- Ignore
                 per_filetype = {
-                    gitcommit = { "buffer" },
-                    markdown = { "buffer" },
+                    codecompanion = { "codecompanion" },
+                    gitcommit = { "snippets", "buffer" },
                     snacks_input = {},
                 },
                 providers = {
