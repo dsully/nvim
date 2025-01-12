@@ -95,41 +95,9 @@ return {
     },
     {
         "echasnovski/mini.hipatterns",
-        config = function(_, opts)
-            --
-            vim.defer_fn(function()
-                require("mini.hipatterns").setup(opts)
-            end, 500)
-        end,
         event = ev.LazyFile,
         opts = function()
-            local hp = require("mini.hipatterns")
-
             local vtext = defaults.icons.misc.circle_filled_large
-            -- local cache = {} ---@type table<string,table<string,string>>
-            local hl_groups = {} ---@type table<string,boolean>
-
-            local get_hl_group = function(hl)
-                local group = vim.inspect(hl):gsub("%W+", "_")
-
-                if not hl_groups[group] then
-                    hl = type(hl) == "string" and { link = hl } or hl
-                    hl = vim.deepcopy(hl, true)
-
-                    hl.fg = hl.fg or colors.gray.base
-
-                    if hl.fg == hl.bg then
-                        hl.fg = nil
-                    end
-
-                    vim.api.nvim_set_hl(0, group, hl)
-
-                    hl_groups[group] = true
-                end
-
-                return group
-            end
-
             local extmark_opts = { priority = 2000 }
 
             local extmark_vtext = function(_, _, data)
@@ -138,15 +106,16 @@ return {
 
             return {
                 highlighters = {
-                    -- Match against hex colors with no leading `#`.
-                    bare_hex = {
-                        pattern = "[ =:'\"]()%x%x%x%x%x%x%f[%X]",
+                    -- Match against hex colors with no leading `#` as well.
+                    hex = {
+                        pattern = "[ =:'\"]()#?%x%x%x%x%x%x%f[%X]",
                         group = function(_, match, _)
-                            return hp.compute_hex_color_group("#" .. match, "bg")
+                            local color = vim.startswith(match, "#") and match or "#" .. match
+
+                            return require("mini.hipatterns").compute_hex_color_group(color, "bg")
                         end,
                         extmark_opts = extmark_opts,
                     },
-                    hex_color = hp.gen_highlighter.hex_color({ priority = 2000 }),
                     nvim_hl_colors = {
                         pattern = {
                             "%f[%w]()M.colors%.[%w_%.]+()%f[%W]",
@@ -167,7 +136,7 @@ return {
 
                             local color = vim.tbl_get(colors, unpack(parts))
 
-                            return type(color) == "string" and get_hl_group({ fg = color })
+                            return type(color) == "string" and require("helpers.highlights").group({ fg = color })
                         end,
                         extmark_opts = extmark_vtext,
                     },
@@ -179,7 +148,7 @@ return {
                             local r, g, b = match:sub(2, 2), match:sub(3, 3), match:sub(4, 4)
                             local hex_color = "#" .. r .. r .. g .. g .. b .. b
 
-                            return hp.compute_hex_color_group(hex_color, "bg")
+                            return require("mini.hipatterns").compute_hex_color_group(hex_color, "bg")
                         end,
                         extmark_opts = extmark_opts,
                     },
@@ -190,7 +159,7 @@ return {
                             local r, g, b = matched:match("(%d+),%s*(%d+),%s*(%d+)")
                             local hex_color = matched.format("#%02X%02X%02X", r, g, b)
 
-                            return hp.compute_hex_color_group(hex_color, "fg")
+                            return require("mini.hipatterns").compute_hex_color_group(hex_color, "fg")
                         end,
                         extmark_opts = extmark_vtext,
                     },
