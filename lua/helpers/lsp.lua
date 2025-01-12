@@ -2,9 +2,7 @@ local M = {}
 
 local methods = vim.lsp.protocol.Methods
 
----@class LspClientBuffers
----@field client vim.lsp.Client
----@field buffers integer[]
+---@alias LspClientBuffers table<vim.lsp.Client, integer[]>
 
 ---Return false if the buffer or client is ignored.
 ---@param client vim.lsp.Client?
@@ -24,10 +22,10 @@ M.should_ignore = function(client)
 end
 
 ---@param filter? vim.lsp.get_clients.Filter
----@return LspClientBuffers[]
+---@return LspClientBuffers
 M.buffers_for_client = function(filter)
     --
-    ---@type LspClientBuffers[]
+    ---@type LspClientBuffers
     local mapping = {}
 
     for _, client in ipairs(vim.lsp.get_clients(filter)) do
