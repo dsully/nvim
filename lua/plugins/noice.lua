@@ -171,8 +171,6 @@ return {
             {
                 filter = {
                     any = {
-                        { event = "notify", max_height = 1 },
-
                         -- Send Ctrl-G to the mini view.
                         { find = '" %d+ lines --', event = "msg_show" },
 
