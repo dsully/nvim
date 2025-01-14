@@ -1,6 +1,9 @@
 ---@type LazySpec
 return {
     "mfussenegger/nvim-lint",
+    cond = function()
+        return require("helpers.file").is_local_dev()
+    end,
     config = function()
         vim.schedule(function()
             local lint = require("lint")
