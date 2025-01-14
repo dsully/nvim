@@ -1,9 +1,3 @@
----@return boolean
-local function has_words_before()
-    local line, col = unpack(vim.api.nvim_win_get_cursor(0))
-    return col ~= 0 and vim.api.nvim_buf_get_lines(0, line - 1, line, true)[1]:sub(col, col):match("%s") == nil
-end
-
 ---@param source string
 ---@return boolean
 local is_ai_source = function(source)
@@ -22,25 +16,6 @@ return {
         highlights = {
             BlinkCmpGhostText = { link = hl.Comment },
         },
-        init = function()
-            -- HACK: Workaround for the non-configurable snippet navigation mappings.
-            -- From https://github.com/neovim/neovim/issues/30198#issuecomment-2326075321.
-            -- (And yeah this is my fault).
-            local snippet_expand = vim.snippet.expand
-
-            ---@diagnostic disable-next-line: duplicate-set-field
-            vim.snippet.expand = function(...)
-                local tab_map = vim.fn.maparg("<Tab>", "i", false, true)
-                local stab_map = vim.fn.maparg("<S-Tab>", "i", false, true)
-                snippet_expand(...)
-
-                vim.schedule(function()
-                    tab_map.buffer, stab_map.buffer = 1, 1
-                    vim.fn.mapset("i", false, tab_map)
-                    vim.fn.mapset("i", false, stab_map)
-                end)
-            end
-        end,
         keys = {
             -- Clear search and stop snippet on escape
             {
@@ -68,24 +43,18 @@ return {
                 nerd_font_variant = "mono",
             },
             completion = {
+                ---@type blink.cmp.CompletionDocumentationConfig
                 documentation = {
-                    window = {
-                        border = defaults.ui.border.name,
-                    },
+                    auto_show = true,
+                    auto_show_delay_ms = 100,
                 },
                 ghost_text = {
                     enabled = true,
                 },
                 list = {
                     selection = {
-                        ---@param ctx blink.cmp.Context
-                        auto_insert = function(ctx)
-                            return ctx.mode ~= "cmdline"
-                        end,
-                        ---@param ctx blink.cmp.Context
-                        preselect = function(ctx)
-                            return ctx.mode ~= "cmdline" and not require("blink.cmp").snippet_active({ direction = 1 })
-                        end,
+                        auto_insert = false,
+                        preselect = false,
                     },
                 },
                 menu = {
@@ -95,12 +64,13 @@ return {
                         return ctx.mode ~= "cmdline" or not vim.tbl_contains({ "/", "?" }, vim.fn.getcmdtype())
                     end,
                     -- Which directions to show the window, falling back to the next direction when there's not enough space
-                    direction_priority = { "n" },
+                    direction_priority = { "n", "s" },
                     --- @type blink.cmp.Draw
                     draw = {
+                        align_to = "cursor",
                         columns = {
                             { "kind_icon" },
-                            { "label", "kind", gap = 1 },
+                            { "label", gap = 1 },
                         },
                         -- Definitions for possible components to render. Each component defines:
                         --   ellipsis: whether to add an ellipsis when truncating the text
@@ -109,32 +79,23 @@ return {
                         --   highlight function: will be called only when the line appears on screen
                         components = {
                             kind_icon = {
-                                ellipsis = true,
                                 ---@param ctx blink.cmp.DrawItemContext
                                 text = function(ctx)
-                                    return is_ai_source(ctx.item.source_name) and defaults.icons.completion_items[ctx.item.source_name]
-                                        or defaults.icons.completion_items[ctx.kind]
+                                    return defaults.icons.completion_items[ctx.item.source_name] or defaults.icons.completion_items[ctx.kind]
                                 end,
                                 ---@param ctx blink.cmp.DrawItemContext
                                 highlight = function(ctx)
                                     return is_ai_source(ctx.item.source_name) and "MiniIconsBlue" or select(2, require("mini.icons").get("lsp", ctx.kind))
                                 end,
-                                width = {
-                                    fill = true,
-                                },
                             },
                             kind = {
-                                ellipsis = false,
-                                width = {
-                                    fill = true,
-                                },
-                                ---@param ctx blink.cmp.DrawItemContext
-                                text = function(ctx)
-                                    return is_ai_source(ctx.item.source_name) and "Code" or ctx.kind
-                                end,
                                 ---@param ctx blink.cmp.DrawItemContext
                                 highlight = function(ctx)
                                     return is_ai_source(ctx.item.source_name) and "BlinkCmpKindSnippet" or "BlinkCmpKind" .. ctx.kind
+                                end,
+                                ---@param ctx blink.cmp.DrawItemContext
+                                text = function(ctx)
+                                    return is_ai_source(ctx.item.source_name) and ctx.item.source_name or ctx.kind
                                 end,
                             },
                             label = {
@@ -147,11 +108,11 @@ return {
                                     return require("colorful-menu").blink_components_text(ctx)
                                 end,
                                 width = {
-                                    fill = true,
-                                    max = 90,
+                                    fill = false,
                                 },
                             },
                         },
+                        treesitter = { "lsp", "copilot" },
                     },
                     -- Keep the cursor X lines away from the top/bottom of the window
                     scrolloff = 4,
@@ -164,24 +125,20 @@ return {
             keymap = {
                 preset = "enter",
                 ["<Tab>"] = {
-                    "snippet_forward",
                     "select_next",
-                    function(cmp)
-                        if has_words_before() then
-                            return cmp.show()
-                        end
-                    end,
+                    "snippet_forward",
                     "fallback",
                 },
                 ["<S-Tab>"] = {
-                    "snippet_backward",
                     "select_prev",
+                    "snippet_backward",
                     "fallback",
                 },
                 ["<C-j>"] = { "select_next", "fallback" },
                 ["<C-k>"] = { "select_prev", "fallback" },
                 ["<C-y>"] = { "select_and_accept" },
             },
+            --- @type blink.cmp.SnippetsConfig
             snippets = {
                 preset = "default",
             },
@@ -280,13 +237,8 @@ return {
             "sources.default",
         },
     },
-    { "saghen/blink.compat" },
-    {
-        "xzbdmw/colorful-menu.nvim",
-        opts = {
-            max_width = 90,
-        },
-    },
+    { "saghen/blink.compat", opts = { impersonate_nvim_cmp = true } },
+    { "xzbdmw/colorful-menu.nvim" },
     {
         "chrisgrieser/nvim-scissors",
         cmd = {

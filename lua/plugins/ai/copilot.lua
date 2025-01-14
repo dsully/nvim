@@ -39,8 +39,6 @@ return {
                 zsh = true,
             },
             -- Per: https://github.com/zbirenbaum/copilot-cmp#install
-            -- panel = { enabled = false },
-            -- suggestion = { enabled = false },
             panel = {
                 enabled = false,
                 auto_refresh = true,
@@ -72,18 +70,6 @@ return {
                         async = true,
                         module = "blink-cmp-copilot",
                         score_offset = 100,
-                        transform_items = function(_, items)
-                            local kind = require("blink.cmp.types").CompletionItemKind
-                            local kind_idx = #kind + 1
-
-                            kind[kind_idx] = "Copilot"
-
-                            for _, item in ipairs(items) do
-                                item.kind = kind_idx
-                            end
-
-                            return items
-                        end,
                     },
                 },
             },
