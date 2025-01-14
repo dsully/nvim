@@ -66,9 +66,15 @@ return {
         input = {
             enabled = true,
             win = {
-                keys = { i_cw = { "<c-w>", "delete_word", mode = "i" } },
-                -- stylua: ignore
-                actions = { delete_word = function() vim.cmd("normal! diw<cr>") end },
+                actions = {
+                    delete_word = function()
+                        vim.cmd.normal({ "diw", bang = true })
+                    end,
+                },
+                keys = {
+                    i_cw = { "<c-w>", "delete_word", mode = "i" },
+                    i_jk = { "jk", { "cmp_close", "cancel" }, mode = "i" },
+                },
             },
         },
         notifier = {
