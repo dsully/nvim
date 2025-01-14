@@ -2,7 +2,7 @@
 return {
     "stevearc/oil.nvim",
     keys = {
-        { "<space>o", vim.cmd.Oil, desc = "Oil: Open" },
+        { "<leader>o", vim.cmd.Oil, desc = "Oil: Open" },
     },
     opts = function()
         -- Helper function to parse output
@@ -69,6 +69,9 @@ return {
             },
             float = {
                 border = defaults.ui.border.name,
+            },
+            keymaps = {
+                ["q"] = { "actions.close", mode = "n" },
             },
             keymaps_help = {
                 border = defaults.ui.border.name,

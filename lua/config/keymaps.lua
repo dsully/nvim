@@ -39,7 +39,7 @@ map("<space>n", require("helpers.file").edit, "New File", "n", { expr = false })
 
 -- Open in the filetype default application (macOS)
 if vim.g.os == "Darwin" then
-    map("<leader>o", function()
+    map("<space>o", function()
         if vim.bo.buftype ~= "markdown" then
             return
         end
