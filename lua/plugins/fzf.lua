@@ -163,26 +163,36 @@ return {
                     ["ctrl-b"] = "preview-page-up",
                 },
             },
-            live_grep = {
+            grep = {
                 RIPGREP_CONFIG_PATH = vim.env.RIPGREP_CONFIG_PATH,
                 actions = actions,
                 fzf_opts = { ["--keep-right"] = "" },
-                glob_separator = "  ",
+                git_icons = true,
                 resume = true,
+
+                -- Search with globs and the ability to pass extra arguments to 'rg' like: "gitco -- --type json"
                 rg_glob = true,
+                --
                 --- @param query string First returned string is the new search query
                 --- @param opts table Second returned string are (optional) additional rg flags
                 --- @return string, string?
                 rg_glob_fn = function(query, opts)
-                    ---@type string, string
-                    local search_query, glob_args = query:match(("(.*)%s(.*)"):format(opts.glob_separator))
+                    local utils = require("fzf-lua.utils")
+                    local libuv = require("fzf-lua.libuv")
+                    local regex, flags = query:match("(.-)" .. opts.glob_separator .. "%s(.*)")
 
-                    -- Uncomment to debug print into fzf
-                    -- if glob_args then
-                    --     io.write(("q: %s -> flags: %s, query: %s\n"):format(query, glob_args, search_query))
-                    -- end
+                    if flags then
+                        return (regex or query), flags
+                    end
 
-                    return search_query, glob_args
+                    local glob_args = ""
+                    regex, flags = query:match("(.*)" .. opts.glob_separator .. "(.*)")
+
+                    for _, s in ipairs(utils.strsplit(flags, "%s")) do
+                        glob_args = glob_args .. ("%s %s "):format(opts.glob_flag, libuv.shellescape(s))
+                    end
+
+                    return regex, glob_args
                 end,
             },
             lsp = {
@@ -303,12 +313,12 @@ return {
     },
     {
         "folke/todo-comments.nvim",
-        optional = true,
         -- stylua: ignore
         keys = {
             { "<leader>ft", function () require("todo-comments.fzf").todo() end, desc = "TODOs" },
             { "<leader>fT", function () require("todo-comments.fzf").todo({ keywords = { "TODO", "FIX", "FIXME" } }) end, desc = "TODO/Fix/Fixme" },
         },
+        optional = true,
     },
     {
         "ziontee113/icon-picker.nvim",
