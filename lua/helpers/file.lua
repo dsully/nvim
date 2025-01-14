@@ -76,6 +76,12 @@ M.write = function(path, data)
     end
 end
 
+---Return true if the current working directory is in my local source directory.
+---@return boolean
+M.is_local_dev = function()
+    return vim.startswith(tostring(vim.uv.cwd()), vim.fs.joinpath(vim.env.HOME, "dev", "home"))
+end
+
 ---@return string?
 M.git_root = function()
     local obj = vim.system({ "git", "rev-parse", "--show-toplevel" }, { text = true }):wait()
@@ -86,6 +92,12 @@ M.git_root = function()
     end
 
     return vim.trim(obj.stdout)
+end
+
+--- Return true if the current working directory is in a Git repository and has at least 1 commit.
+---@return boolean
+M.is_git = function()
+    return vim.system({ "git", "rev-parse", "HEAD" }, { stderr = false, stdout = false }):wait().code == 0
 end
 
 --- Escape special pattern matching characters in a string
