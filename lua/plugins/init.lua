@@ -4,6 +4,23 @@ return {
     { "MunifTanjim/nui.nvim" },
     { "b0o/schemastore.nvim" },
 
+    {
+        "rachartier/tiny-glimmer.nvim",
+        event = "TextYankPost",
+        opts = {
+            enabled = true,
+            default_animation = "fade",
+            refresh_interval_ms = 6,
+            transparency_color = colors.bg,
+            animations = {
+                fade = {
+                    max_duration = 250,
+                    chars_for_max_duration = 10,
+                },
+            },
+        },
+    },
+
     -- Pretty screen shots.
     {
         "mistricky/codesnap.nvim",
