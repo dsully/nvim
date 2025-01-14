@@ -1,3 +1,4 @@
+---@type vim.lsp.Config
 return {
     cmd = {
         vim.env.HOME .. "/src/rust/ruff/target/release/red_knot",

@@ -1,3 +1,4 @@
+---@type vim.lsp.Config
 return {
     cmd = { "gopls" },
     filetypes = { "go", "gomod", "gowork" }, -- Don't attach for gotmpl.
