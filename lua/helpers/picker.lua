@@ -104,94 +104,104 @@ M.parents = function(opts)
     require("fzf-lua").fzf_exec(parent_directories, opts)
 end
 
----@class Notification
----@field contents string[]
----@field preview string
----@field data snacks.notifier.Notif
-
 M.notifications = function()
     local fzf = require("fzf-lua")
 
-    local white = fzf.utils.ansi_codes.white
-    local strip = fzf.utils.strip_ansi_coloring
+    ---@type snacks.notifier.Notif[]
+    local entries = Snacks.notifier.get_history({ reverse = true })
 
-    ---@type table<integer, snacks.notifier.Notif>
-    local mapping = {}
-
-    ---@param notification snacks.notifier.Notif
-    ---@type Notification[]
-    local notifications = vim.tbl_map(function(notification)
-        local icon_color = notification.level == "error" and "red" or notification.level == "warn" and "yellow" or "green"
-
-        local icon = fzf.utils.ansi_codes[icon_color](notification.icon)
-        local level = fzf.utils.ansi_codes[icon_color](notification.level)
-        local timestamp = white(tostring(os.date("%R", notification.added)))
-        local title = notification.title ~= "" and notification.title or "[No title]"
-        local prefix = table.concat({ timestamp, icon, level:upper(), title }, " ")
-
-        mapping[strip(prefix)] = notification
-
-        return {
-            contents = { prefix },
-            preview = notification.msg,
-            data = notification,
-        }
-    end, Snacks.notifier.get_history({ reverse = true }))
-
-    if #notifications == 0 then
+    if #entries == 0 then
         notify.info("No notifications.", { title = "Notification history", icon = "󰎟" })
         return
     end
 
-    function M.previewer()
-        local previewer = require("fzf-lua.previewer.builtin").base:extend()
-
-        function previewer:new(o, opts, fzf_win)
-            previewer.super.new(self, o, opts, fzf_win)
-            self.title = "Notifications"
-            setmetatable(self, previewer)
-            return self
-        end
-
-        ---@param selected string
-        function previewer:populate_preview_buf(selected)
-            local buf = self:get_tmp_buffer()
-            local notification = mapping[strip(selected)]
-
-            if notification ~= nil then
-                vim.api.nvim_buf_set_lines(buf, 0, -1, false, vim.split(notification.msg, "\n", { plain = true }))
-                vim.bo[buf].filetype = "lua"
-            end
-
-            self:set_preview_buf(buf)
-
-            -- Disabled as this broken in a recent update.
-            -- self.win:update_title(" Notifications ")
-            -- self.win:update_scrollbar()
-        end
-
-        -- Disable line numbering and word wrap
-        function previewer:gen_winopts()
-            local new_winopts = {
-                cursorline = false,
-                number = false,
-                wrap = true,
-            }
-
-            return vim.tbl_extend("force", self.winopts, new_winopts)
-        end
-
-        return previewer
+    ---@param str string
+    ---@return string
+    local function cap(str)
+        return str:sub(1, 1):upper() .. str:sub(2):lower()
     end
 
-    fzf.fzf_exec(notifications, {
-        previewer = M.previewer(),
-        actions = {
-            ["default"] = function(selected)
-                local id = strip(selected[1])
-                local entry = mapping[id]
+    ---@param name string
+    ---@param level? snacks.notifier.level
+    ---@return string
+    local function hl(name, level)
+        return "SnacksNotifier" .. name .. (level and cap(level) or "")
+    end
 
-                if entry ~= nil then
+    ---@param entry string
+    ---@return snacks.notifier.Notif?
+    local find_entry = function(entry)
+        return entries[tonumber(entry:match("^%s*(%d+)") or "0")]
+    end
+
+    local builtin = require("fzf-lua.previewer.builtin")
+    local previewer = builtin.buffer_or_file:extend()
+
+    function previewer:new(o, fzf_opts, fzf_win)
+        previewer.super.new(self, o, fzf_opts, fzf_win)
+        self.title = "Notifications"
+        setmetatable(self, previewer)
+        return self
+    end
+
+    ---@param entry_str string
+    ---@return snacks.notifier.Notif?
+    function previewer:parse_entry(entry_str)
+        return find_entry(entry_str)
+    end
+
+    ---@param selected string
+    function previewer:populate_preview_buf(selected)
+        local buf = self:get_tmp_buffer()
+
+        local notification = find_entry(selected)
+
+        if notification ~= nil then
+            vim.api.nvim_buf_set_lines(buf, 0, -1, false, vim.split(notification.msg, "\n", { plain = true }))
+            vim.bo[buf].filetype = notification.ft or "lua"
+        end
+
+        self:set_preview_buf(buf)
+    end
+
+    -- Disable line numbering and word wrap
+    function previewer:gen_winopts()
+        return vim.tbl_extend("force", self.winopts, {
+            cursorline = false,
+            number = false,
+            wrap = true,
+        })
+    end
+
+    ---@type string[]
+    local contents = {}
+
+    for e, entry in ipairs(entries) do
+        --
+        ---@type string[]
+        local display = { string.format("%2d: ", e) }
+
+        for _, t in ipairs({
+            { tostring(os.date("%R", entry.added)), hl("HistoryDateTime") },
+            { " ", "Normal" },
+            { entry.icon, hl("Icon", entry.level) },
+            { " ", "Normal" },
+            { entry.msg, "Normal" },
+        }) do
+            display[#display + 1] = t[2] and fzf.utils.ansi_from_hl(t[2], t[1]) or t[1]
+        end
+
+        contents[#contents + 1] = table.concat(display)
+    end
+
+    fzf.fzf_exec(contents, {
+        previewer = previewer,
+        actions = {
+            ---@param selected string
+            ["default"] = function(selected)
+                local entry = find_entry(selected)
+
+                if entry then
                     vim.fn.setreg("+", entry.msg)
                 end
             end,
