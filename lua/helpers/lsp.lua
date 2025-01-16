@@ -4,6 +4,20 @@ local methods = vim.lsp.protocol.Methods
 
 ---@alias LspClientBuffers table<vim.lsp.Client, integer[]>
 
+---Return false if the server should be disabled.
+--
+---@param server_name string
+---@return boolean
+M.should_enable = function(server_name)
+    local is_local = require("helpers.file").is_local_dev()
+
+    if server_name == "harper" and not is_local then
+        return false
+    end
+
+    return true
+end
+
 ---Return false if the buffer or client is ignored.
 ---@param client vim.lsp.Client?
 ---@return boolean
@@ -68,7 +82,7 @@ M.action = setmetatable({}, {
 M.supports_method = {}
 
 ---@param client vim.lsp.Client
-function M.validate_client(client, buffer)
+M.validate_client = function(client, buffer)
     if buffer == nil or not vim.api.nvim_buf_is_valid(buffer) then
         return
     end
