@@ -216,8 +216,9 @@ return {
                     -- Markdown headers & check boxes.
                     augend.misc.alias.markdown_header,
                     augend.constant.new({
-                        elements = { "- [ ]", "- [x]" },
+                        elements = { "[ ]", "[x]" },
                         word = false,
+                        cyclic = true,
                     }),
                 },
             })
