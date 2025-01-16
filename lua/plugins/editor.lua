@@ -277,7 +277,7 @@ return {
                     jsx = [[console.log("%log_marker: %log_target", %log_target)]],
                     lua = [[print("%log_marker: %log_target", %log_target)]],
                     python = [[print("%log_marker: %log_target", %log_target)]],
-                    rust = [[println!("%log_marker: %log_target: {:#?}", %log_target);]],
+                    rust = [[println!("%log_marker: %log_target: {%log_target:#?}");]],
                     tsx = [[console.log("%log_marker: %log_target", %log_target)]],
                     typescript = [[console.log("%log_marker: %log_target", %log_target)]],
                 },

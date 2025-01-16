@@ -6,6 +6,7 @@ vim.filetype.add({
         [".rgignore"] = "gitignore",
         ["Brewfile"] = "brewfile",
         ["Caddyfile"] = "caddyfile",
+        ["Cargo.toml"] = "toml.cargo",
         ["config.custom"] = "sshconfig",
         ["direnvrc"] = "direnv",
         ["fish_history"] = "yaml",
@@ -39,7 +40,7 @@ vim.filetype.add({
     },
     pattern = {
         ["*.dockerignore"] = "gitignore",
-        [".*/%.github/workflows/.*%.[ya]ml"] = "yaml.ghaction",
+        [".*/%.github[%w/]+workflows[%w/]+.*%.ya?ml"] = "yaml.github",
         [".*/.config/ghostty/config"] = "ghostty",
         [".*/themes?/.*%.theme"] = "fish",
         ["Brewfile.*"] = "brewfile",
@@ -49,5 +50,6 @@ vim.filetype.add({
         [".yml$"] = function(path)
             return path:find("compose") and "yaml.docker-compose" or "yaml"
         end,
+        ["requirements[%w_.-]+%.txt"] = "requirements",
     },
 })
