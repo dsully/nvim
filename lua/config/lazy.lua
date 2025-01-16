@@ -147,7 +147,6 @@ function M.setup()
                     "gzip",
                     "health",
                     "logipat",
-                    "man",
                     "matchit",
                     "matchparen",
                     "netrw",

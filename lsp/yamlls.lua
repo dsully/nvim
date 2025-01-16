@@ -36,12 +36,19 @@ return {
             },
         },
         yaml = {
-            validate = true,
             format = {
                 enable = true,
                 singleQuote = false,
             },
+            editor = {
+                formatOnType = false,
+            },
             hover = true,
+            schemas = {
+                -- GitHub CI workflows
+                ["https://json.schemastore.org/github-workflow.json"] = "/.github/workflows/*",
+            },
+            validate = true,
         },
     },
 }

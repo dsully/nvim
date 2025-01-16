@@ -20,6 +20,8 @@ return {
             end, 500)
         end,
         event = ev.LazyFile,
+        ---@module 'gitsigns.config'
+        ---@type Gitsigns.Config
         opts = {
             attach_to_untracked = true,
             --- @param buffer integer
