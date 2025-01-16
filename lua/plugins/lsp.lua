@@ -35,16 +35,17 @@ return {
 
         -- Set defaults
         vim.lsp.config("*", {
-            capabilities = lsp.capabilities(),
             root_markers = { ".git" },
         })
+
+        local should_enable = require("helpers.lsp").should_enable
 
         vim.iter(vim.api.nvim_get_runtime_file("lsp/*.lua", true))
             :map(function(config_path)
                 return vim.fs.basename(config_path):match("^(.*)%.lua$")
             end)
             :each(function(server_name)
-                vim.lsp.enable(server_name)
+                vim.lsp.enable(server_name, should_enable(server_name))
             end)
 
         ev.on_load("which-key.nvim", function()
