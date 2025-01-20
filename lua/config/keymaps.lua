@@ -11,9 +11,6 @@ map("gcO", "O<esc>Vcx<esc><cmd>normal gcc<cr>fxa<bs>", "Add Comment Above")
 
 map("<leader>Y", "<cmd>%y<cr>", "Yank All Lines")
 
--- Set Ctrl-W to delete a word in insert mode
-map("<C-w>", "<C-o>diw", "Delete Word", "i")
-
 map("<C-a>", "gg<S-v>G", "Select All")
 map("<C-c>", "ciw", "Change In Word")
 
