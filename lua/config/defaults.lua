@@ -113,7 +113,6 @@ local M = {
     tools = {
         "ghostty-ls",
         "goimports",
-        "html-lsp",
         "lemminx",
         "marksman",
         "rstcheck",
