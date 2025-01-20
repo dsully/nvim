@@ -223,7 +223,7 @@ M.capabilities = function()
 end
 
 M.commands = function()
-    vim.api.nvim_create_user_command("LspCapabilities", function()
+    nvim.command("LspCapabilities", function()
         --
         ---@type vim.lsp.Client[]
         local clients = vim.lsp.get_clients({ bufnr = vim.api.nvim_get_current_buf() })
@@ -258,7 +258,7 @@ M.commands = function()
         vim.ui.float({ ft = "lua", relative = "editor" }, lines):show()
     end, { desc = "Show LSP Capabilities" })
 
-    vim.api.nvim_create_user_command("LspCodeActions", function()
+    nvim.command("LspCodeActions", function()
         --
         local bufnr = vim.api.nvim_get_current_buf()
         local lines = {}
@@ -296,15 +296,15 @@ M.commands = function()
         vim.ui.float({ ft = "lua", relative = "editor" }, lines):show()
     end, { desc = "Show LSP Code Actions" })
 
-    vim.api.nvim_create_user_command("LspLog", function()
+    nvim.command("LspLog", function()
         vim.cmd.tabnew(vim.lsp.get_log_path())
     end, {
         desc = "Opens the Nvim LSP client log.",
     })
 
-    vim.api.nvim_create_user_command("LspRestartBuffer", function()
+    nvim.command("LspRestartBuffer", function()
         --
-        require("helpers.lsp").apply_to_buffers(function(bufnr, client)
+        M.apply_to_buffers(function(bufnr, client)
             --
             vim.lsp.stop_client(client.id, true)
 
