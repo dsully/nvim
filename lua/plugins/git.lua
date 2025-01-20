@@ -99,24 +99,6 @@ return {
         },
     },
     {
-        "aaronhallaert/advanced-git-search.nvim",
-        cmd = "AdvancedGitSearch",
-        config = function()
-            require("advanced_git_search.fzf").setup({
-                diff_plugin = "diffview",
-                keymaps = {
-                    -- following keymaps can be overridden
-                    toggle_date_author = "<C-w>",
-                    open_commit_in_browser = "<C-o>",
-                    copy_commit_hash = "<C-y>",
-                    show_entire_commit = "<C-e>",
-                },
-                show_builtin_git_pickers = true,
-            })
-        end,
-        keys = { { "<leader>gS", vim.cmd.AdvancedGitSearch, desc = "Search" } },
-    },
-    {
         "sindrets/diffview.nvim",
         cmd = {
             "DiffviewOpen",

@@ -129,10 +129,11 @@ return {
                 chat = {
                     adapter = "anthropic",
                     slash_commands = {
-                        buffer = { opts = { provider = "fzf_lua" } },
-                        file = { opts = { provider = "fzf_lua" } },
-                        help = { opts = { provider = "fzf_lua" } },
-                        symbols = { opts = { provider = "fzf_lua" } },
+                        -- Change to default until I can add a Snacks picker.
+                        buffer = { opts = { provider = "default" } },
+                        file = { opts = { provider = "default" } },
+                        help = { opts = { provider = "default" } },
+                        symbols = { opts = { provider = "default" } },
                     },
                 },
                 inline = {

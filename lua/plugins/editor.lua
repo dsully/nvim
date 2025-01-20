@@ -290,12 +290,20 @@ return {
         },
     },
     {
-        "chrisgrieser/nvim-rulebook",
-        -- stylua: ignore
+        "ziontee113/icon-picker.nvim",
+        cmd = {
+            "IconPickerNormal",
+            "IconPickerYank",
+            "IconPickerInsert",
+        },
         keys = {
-            { "<leader>ri", function() require("rulebook").ignoreRule() end, desc = "Ignore" },
-            { "<leader>rl", function() require("rulebook").lookupRule() end, desc = "Look Up" },
-            { "<leader>ry", function() require("rulebook").yankDiagnosticCode() end, desc = "Yank Diagnostic" },
+            { "<leader>fe", "<cmd>IconPickerInsert emoji<cr>", desc = "Emoji" },
+            { "<leader>fi", "<cmd>IconPickerInsert nerd_font_v3<cr>", desc = "Nerd Font Icons" },
+        },
+        opts = {
+            disable_legacy_commands = true,
+        },
+    },
         },
     },
 }
