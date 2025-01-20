@@ -251,10 +251,6 @@ return {
                 ["package.json"] = { glyph = " ", hl = "MiniIconsGreen" },
                 ["tsconfig.build.json"] = { glyph = " ", hl = "MiniIconsAzure" },
                 ["tsconfig.json"] = { glyph = " ", hl = "MiniIconsAzure" },
-                [".chezmoiignore"] = { glyph = " ", hl = "MiniIconsGrey" },
-                [".chezmoiremove"] = { glyph = " ", hl = "MiniIconsGrey" },
-                [".chezmoiroot"] = { glyph = " ", hl = "MiniIconsGrey" },
-                [".chezmoiversion"] = { glyph = " ", hl = "MiniIconsGrey" },
 
                 [".pre-commit-config.yaml"] = { glyph = "󰜘", color = "#eda73d" },
                 [".pre-commit-hooks.yaml"] = { glyph = "󰜘", color = "#eda73d" },
@@ -291,7 +287,6 @@ return {
                 makefile = { glyph = " ", color = "#F54842" },
                 out = { glyph = " " },
                 properties = { glyph = " ", color = "#3970B4" },
-                tmpl = { glyph = "󰈙 ", color = "#3970E4" },
             },
             lsp = defaults.icons.lsp,
         },
