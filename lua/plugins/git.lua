@@ -99,28 +99,6 @@ return {
         },
     },
     {
-        "sindrets/diffview.nvim",
-        cmd = {
-            "DiffviewOpen",
-            "DiffviewClose",
-            "DiffviewRefresh",
-            "DiffviewLog",
-            "DiffviewFileHistory",
-            "DiffviewToggleFiles",
-            "DiffviewFocusFiles",
-        },
-        opts = {
-            enhanced_diff_hl = true,
-            view = {
-                file_panel = {
-                    win_config = {
-                        position = "right",
-                    },
-                },
-            },
-        },
-    },
-    {
         "juansalvatore/git-dashboard-nvim",
         opts = {
             basepoints = { "master", "main" },
