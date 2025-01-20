@@ -53,7 +53,7 @@ return {
         function()
             -- In an initialized but empty / no commits repo,
             -- there will be an error thrown to stderr from git-dashboard-nvim.
-            if not Snacks.git.get_root() then
+            if not require("helpers.file").is_git() then
                 return {}
             end
 

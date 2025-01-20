@@ -19,7 +19,9 @@ _G.lazy = {
     end,
 }
 
-_G.nvim = {}
+_G.nvim = {
+    root = require("helpers.root")
+}
 
 ---Create a Neovim command
 ---@param name string

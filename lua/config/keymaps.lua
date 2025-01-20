@@ -48,9 +48,9 @@ if vim.g.os == "Darwin" then
         vim.system({ "open", filename }):wait()
     end, "Open in App")
 
-    vim.api.nvim_create_user_command("Tower", function()
+    nvim.command("Tower", function()
         --
-        local root = require("helpers.file").git_root()
+        local root = Snacks.git.get_root()
 
         if root then
             vim.system({ "/usr/bin/open", "-g", "-a", "Tower", root }):wait()
