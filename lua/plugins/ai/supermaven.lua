@@ -46,8 +46,14 @@ return {
         "Saghen/blink.cmp",
         optional = true,
         opts = {
+            completion = { menu = { draw = { treesitter = { "supermaven" } } } },
             sources = {
                 default = { "supermaven" },
+                per_filetype = {
+                    lua = {
+                        "supermaven",
+                    },
+                },
                 providers = {
                     supermaven = {
                         name = "supermaven",
