@@ -181,47 +181,6 @@ M.apply_quickfix = function()
     })
 end
 
-M.capabilities = function()
-    return vim.tbl_deep_extend("force", vim.lsp.protocol.make_client_capabilities(), {
-        textDocument = {
-            completion = {
-                completionItem = {
-                    -- Disable snippet support.
-                    snippetSupport = false,
-                    commitCharactersSupport = false,
-                    documentationFormat = { "markdown", "plaintext" },
-                    deprecatedSupport = true,
-                    preselectSupport = false,
-                    tagSupport = { valueSet = { 1 } },
-                    insertReplaceSupport = true,
-                    resolveSupport = {
-                        properties = {
-                            "documentation",
-                            "detail",
-                            "additionalTextEdits",
-                        },
-                    },
-                    insertTextModeSupport = {
-                        valueSet = { 1 }, -- asIs
-                    },
-                    labelDetailsSupport = true,
-                },
-                completionList = {
-                    itemDefaults = {
-                        "commitCharacters",
-                        "editRange",
-                        "insertTextFormat",
-                        "insertTextMode",
-                        "data",
-                    },
-                },
-                contextSupport = true,
-                insertTextMode = 1,
-            },
-        },
-    })
-end
-
 M.commands = function()
     nvim.command("LspCapabilities", function()
         --
