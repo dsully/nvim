@@ -2,7 +2,7 @@
 return {
     "stevearc/oil.nvim",
     keys = {
-        { "<leader>o", vim.cmd.Oil, desc = "Oil: Open" },
+        { "<leader>o", function() require("oil").toggle_float() end, desc = "Oil: Open" },
     },
     opts = function()
         -- Helper function to parse output
@@ -69,6 +69,10 @@ return {
             },
             float = {
                 border = defaults.ui.border.name,
+                win_options = {
+                    height = 0.6,
+                    width = 0.6,
+                }
             },
             keymaps = {
                 ["q"] = { "actions.close", mode = "n" },
