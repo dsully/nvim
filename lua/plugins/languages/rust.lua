@@ -27,6 +27,28 @@ return {
     {
         "mrcjkb/rustaceanvim",
         config = function()
+            --
+            local clippy_args = {
+                "--",
+                "--no-deps", -- run Clippy only on the given crate
+            }
+
+            if require("helpers.file").is_local_dev() then
+                vim.list_extend(clippy_args, {
+                    -- Deny, Warn, Allow, Forbid
+                    "-Wclippy::correctness", -- code that is outright wrong or useless
+                    "-Wclippy::complexity", -- code that does something simple but in a complex way
+                    "-Wclippy::suspicious", -- code that is most likely wrong or useless
+                    "-Wclippy::style", -- code that should be written in a more idiomatic way
+                    "-Wclippy::perf", -- code that can be written to run faster
+                    "-Wclippy::pedantic", -- lints which are rather strict or have occasional false positives
+                    -- Allow overly pedantic lints
+                    "-Aclippy::doc_markdown",
+                    "-Aclippy::missing_errors_doc",
+                    "-Aclippy::missing_panics_doc",
+                })
+            end
+
             vim.g.rustaceanvim = {
                 dap = {
                     adapter = false,
@@ -83,25 +105,11 @@ return {
                                 },
                             },
                             checkOnSave = not defaults.lsp.rust.bacon,
-                            -- check = {
-                            --     command = "clippy",
-                            --     enable = not defaults.lsp.rust.bacon,
-                            --     extraArgs = {
-                            --         "--",
-                            --         "--no-deps", -- run Clippy only on the given crate
-                            --         -- Deny, Warn, Allow, Forbid
-                            --         -- "-Wclippy::correctness", -- code that is outright wrong or useless
-                            --         -- "-Wclippy::complexity", -- code that does something simple but in a complex way
-                            --         -- "-Wclippy::suspicious", -- code that is most likely wrong or useless
-                            --         -- "-Wclippy::style", -- code that should be written in a more idiomatic way
-                            --         -- "-Wclippy::perf", -- code that can be written to run faster
-                            --         -- "-Wclippy::pedantic", -- lints which are rather strict or have occasional false positives
-                            --         -- -- Allow overly pedantic lints
-                            --         -- "-Aclippy::doc_markdown",
-                            --         -- "-Aclippy::missing_errors_doc",
-                            --         -- "-Aclippy::missing_panics_doc",
-                            --     },
-                            -- },
+                            check = {
+                                command = "clippy",
+                                enable = not defaults.lsp.rust.bacon,
+                                extraArgs = clippy_args,
+                            },
                             -- checkOnSave = {
                             --     enable = not defaults.lsp.rust.bacon,
                             -- },
@@ -162,9 +170,9 @@ return {
                             rust = {
                                 analyzerTargetDir = true,
                             },
-                            -- rustfmt = {
-                            --     extraArgs = { "+nightly" },
-                            -- },
+                            rustfmt = {
+                                extraArgs = { "+nightly" },
+                            },
                             semanticHighlighting = {
                                 operator = {
                                     specialization = { enable = true },
