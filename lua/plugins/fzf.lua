@@ -28,66 +28,67 @@ return {
             FzfLuaHeaderText = { fg = colors.cyan.bright, bg = colors.black.dim },
             FzfLuaTabMarker = { fg = colors.yellow.base, bg = colors.black.dim },
         },
-        init = function()
-            --
-            ---@diagnostic disable-next-line: duplicate-set-field
-            vim.ui.select = function(...)
-                --
-                -- register fzf-lua as vim.ui.select interface
-                require("lazy").load({ plugins = { "fzf-lua" } })
-                require("fzf-lua").register_ui_select(lazy.opts("fzf-lua").ui_select or nil)
-
-                return vim.ui.select(...)
-            end
-        end,
-        keys = function()
-            --
-            ---@param command string
-            ---@param root boolean?
-            ---@param opts table<string, any>?
-            local pick = function(command, root, opts)
-                return function()
-                    --
-                    local cwd = root and require("helpers.lsp").find_root() or nil
-
-                    pcall(require("fzf-lua")[command], vim.tbl_deep_extend("force", opts or {}, { cwd = cwd }))
-                end
-            end
-
-            -- stylua: ignore
-            return {
-                { "<c-j>", "<c-j>", ft = "fzf", mode = "t", nowait = true },
-                { "<c-k>", "<c-k>", ft = "fzf", mode = "t", nowait = true },
-
-                { "<leader>f/", function() require("helpers.picker").grep_curbuf_cword() end, desc = "Current Buffer <cword>" },
-                { "<leader>f;", pick("resume"), desc = "Resume Picker" },
-                { "<leader>fb", pick("buffers"), desc = "Buffer Picker" },
-                { "<leader>fC", pick("git_bcommits", true), desc = "Buffer Commits" },
-                { "<leader>fD", pick("diagnostics_document"), desc = "Diagnostics: Document" },
-                { "<leader>fG", pick("git_files", true), desc = "Git Files" },
-                -- { "<leader>fS", pick("lsp_dynamic_workspace_symbols"), desc = "Symbols: Workspace" },
-                { "<leader>fc", pick("git_commits", true), desc = "Git Commits" },
-                { "<leader>fd", pick("diagnostics_workspace"), desc = "Diagnostics: Workspace" },
-                { "<leader>ff", pick("files", true), desc = "Files" },
-                { "<leader>fg", pick("live_grep", true), desc = "Live Grep" },
-                { "<leader>fk", pick("keymaps"), desc = "Key Maps" },
-                { "<leader>fo", pick("oldfiles"), desc = "Recently Opened" },
-                { "<leader>fq", pick("quickfix"), desc = "Quickfix List" },
-                { "<leader>fw", pick("grep_cword", true), desc = "Words" },
-                { "<leader>fn", function() require("helpers.picker").notifications() end, desc = "Notifications" },
-                { "<leader>fP", function() require("helpers.picker").parents() end, desc = "Parent dirs" },
-                { "<leader>fR", function() require("helpers.picker").repositories() end, desc = "Repositories" },
-                { "<leader>fS", function() require("helpers.picker").subdirectory() end, desc = "Subdirectories" },
-
-                { "gD", pick("lsp_typedefs"), desc = "Goto Type Definition" },
-                { "gd", pick("lsp_definitions", nil, { unique_line_items = true }), desc = "Goto Definition" },
-                { "gi", pick("lsp_implementations"), desc = "Goto Implementation" },
-                { "gi", pick("lsp_implementations"), desc = "Goto Implementation" },
-                { "grr", pick("lsp_references"), desc = "References", nowait = true },
-                { "gO", pick("lsp_document_symbols"), desc = "Symbols: Document" },
-                { "z=", pick("spell_suggest"), desc = "Suggest Spelling" },
-            }
-        end,
+        -- init = function()
+        --     --
+        --     ---@diagnostic disable-next-line: duplicate-set-field
+        --     vim.ui.select = function(...)
+        --         --
+        --         -- register fzf-lua as vim.ui.select interface
+        --         require("lazy").load({ plugins = { "fzf-lua" } })
+        --         require("fzf-lua").register_ui_select(lazy.opts("fzf-lua").ui_select or nil)
+        --
+        --         return vim.ui.select(...)
+        --     end
+        -- end,
+        -- keys = function()
+        --     --
+        --     ---@param command string
+        --     ---@param root boolean?
+        --     ---@param opts table<string, any>?
+        --     local pick = function(command, root, opts)
+        --         return function()
+        --             --
+        --             local cwd = root and require("helpers.lsp").find_root() or nil
+        --
+        --             pcall(require("fzf-lua")[command], vim.tbl_deep_extend("force", opts or {}, { cwd = cwd }))
+        --         end
+        --     end
+        --
+        --     -- stylua: ignore
+        --     return {
+        --         { "<c-j>", "<c-j>", ft = "fzf", mode = "t", nowait = true },
+        --         { "<c-k>", "<c-k>", ft = "fzf", mode = "t", nowait = true },
+        --
+        --         { "<leader>f/", function() require("helpers.picker").grep_curbuf_cword() end, desc = "Current Buffer <cword>" },
+        --         { "<leader>f;", pick("resume"), desc = "Resume Picker" },
+        --         { "<leader>fb", pick("buffers"), desc = "Buffer Picker" },
+        --         { "<leader>fC", pick("git_bcommits", true), desc = "Buffer Commits" },
+        --         { "<leader>fD", pick("diagnostics_document"), desc = "Diagnostics: Document" },
+        --         { "<leader>fG", pick("git_files", true), desc = "Git Files" },
+        --         -- { "<leader>fS", pick("lsp_dynamic_workspace_symbols"), desc = "Symbols: Workspace" },
+        --         { "<leader>fc", pick("git_commits", true), desc = "Git Commits" },
+        --         { "<leader>fd", pick("diagnostics_workspace"), desc = "Diagnostics: Workspace" },
+        --         -- { "<leader>ff", pick("files", true), desc = "Files" },
+        --         { "<leader>ff", function() Snacks.picker.git_files({ untracked = true }) end, desc = "Find Git Files" },
+        --         { "<leader>fg", pick("live_grep", true), desc = "Live Grep" },
+        --         { "<leader>fk", pick("keymaps"), desc = "Key Maps" },
+        --         { "<leader>fo", pick("oldfiles"), desc = "Recently Opened" },
+        --         { "<leader>fq", pick("quickfix"), desc = "Quickfix List" },
+        --         { "<leader>fw", pick("grep_cword", true), desc = "Words" },
+        --         { "<leader>fn", function() require("helpers.picker").notifications() end, desc = "Notifications" },
+        --         { "<leader>fP", function() require("helpers.picker").parents() end, desc = "Parent dirs" },
+        --         { "<leader>fR", function() require("helpers.picker").repositories() end, desc = "Repositories" },
+        --         { "<leader>fS", function() require("helpers.picker").subdirectory() end, desc = "Subdirectories" },
+        --
+        --         { "gD", pick("lsp_typedefs"), desc = "Goto Type Definition" },
+        --         { "gd", pick("lsp_definitions", nil, { unique_line_items = true }), desc = "Goto Definition" },
+        --         { "gi", pick("lsp_implementations"), desc = "Goto Implementation" },
+        --         { "gi", pick("lsp_implementations"), desc = "Goto Implementation" },
+        --         { "grr", pick("lsp_references"), desc = "References", nowait = true },
+        --         { "gO", pick("lsp_document_symbols"), desc = "Symbols: Document" },
+        --         { "z=", pick("spell_suggest"), desc = "Suggest Spelling" },
+        --     }
+        -- end,
         opts = {
             actions = {
                 files = {
@@ -312,15 +313,6 @@ return {
         },
     },
     {
-        "folke/todo-comments.nvim",
-        -- stylua: ignore
-        keys = {
-            { "<leader>ft", function () require("todo-comments.fzf").todo() end, desc = "TODOs" },
-            { "<leader>fT", function () require("todo-comments.fzf").todo({ keywords = { "TODO", "FIX", "FIXME" } }) end, desc = "TODO/Fix/Fixme" },
-        },
-        optional = true,
-    },
-    {
         "ziontee113/icon-picker.nvim",
         cmd = {
             "IconPickerNormal",
@@ -328,8 +320,8 @@ return {
             "IconPickerInsert",
         },
         keys = {
-            { "<leader>fe", ":IconPickerInsert emoji", desc = "Emoji" },
-            { "<leader>fi", ":IconPickerInsert nerd_font_v3", desc = "Nerd Font Icons" },
+            { "<leader>fe", "<cmd>IconPickerInsert emoji<cr>", desc = "Emoji" },
+            { "<leader>fi", "<cmd>IconPickerInsert nerd_font_v3<cr>", desc = "Nerd Font Icons" },
         },
         opts = {
             disable_legacy_commands = true,
