@@ -10,6 +10,7 @@ return {
             -- Map languages to my created file types.
             vim.treesitter.language.register("bash", "direnv")
             vim.treesitter.language.register("ruby", "brewfile")
+            vim.treesitter.language.register("gotmpl", "gotexttmpl")
 
             -- https://github.com/MeanderingProgrammer/render-markdown.nvim#vimwiki
             vim.treesitter.language.register("markdown", "vimwiki")
