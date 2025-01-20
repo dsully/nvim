@@ -27,7 +27,9 @@ end, {
     desc = "Map 'q' to close the buffer.",
     pattern = {
         "DiffviewFiles",
+        "checkhealth",
         "grug-far",
+        "help",
         "man",
         "nofile",
         "qf",
@@ -69,11 +71,17 @@ end, {
 })
 
 ev.on(ev.FileType, function()
-    vim.opt_local.formatoptions:remove({ "a", "o", "t" })
+    vim.opt.formatoptions = {
+        c = true, -- Auto-wrap comments using 'textwidth', inserting the current comment leader automatically.
+        j = true, -- Where it makes sense, remove a comment leader when joining lines.
+        l = true, -- Long lines are not broken in insert mode.
+        n = true, -- When formatting text, recognize numbered lists.
+        q = true, -- Allow formatting of comments with "gq".
+    }
+
     vim.api.nvim_set_option_value("foldenable", false, { scope = "local", win = 0 })
 end, {
     desc = "Update format options and folding.",
-    once = true,
 })
 
 ev.on(ev.BufReadCmd, function(args)

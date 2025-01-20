@@ -328,6 +328,7 @@ local M = {
             "git",
             "gitrebase",
             "health",
+            "help",
             "lazy",
             "log",
             "mason",

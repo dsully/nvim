@@ -18,8 +18,7 @@ vim.filetype.add({
     extension = {
         age = "age",
         conf = "conf",
-        ivy = "xml",
-        pdl = "pdl",
+        gotmpl = "gotmpl",
         plist = "xml.plist", -- macOS PropertyList files
         -- We always want LaTeX, avoid slow detection logic
         tex = "latex",
@@ -35,7 +34,7 @@ vim.filetype.add({
             return require("helpers.file").template_type(filename, "j2", "jinja2")
         end,
         tmpl = function(filename, _)
-            return require("helpers.file").template_type(filename, "tmpl", "gotexttmpl")
+            return require("helpers.file").template_type(filename, "tmpl", "gotmpl")
         end,
     },
     pattern = {
