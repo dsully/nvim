@@ -10,23 +10,13 @@ ev.on(ev.FileType, function(event)
     --
     if vim.fn.hasmapto("q", "n") == 0 then
         --
-        local close = function()
-            vim.api.nvim_buf_delete(event.buf, { force = true })
-            vim.cmd.close({ mods = { emsg_silent = true, silent = true } })
-        end
-
-        if vim.bo[event.buf].filetype == "DiffviewFiles" then
-            close = function()
-                vim.cmd.DiffviewClose()
-            end
-        end
-
-        keys.bmap("q", close, "Close Buffer", event.buf)
+        keys.bmap("q", function()
+            Snacks.bufdelete({ buf = event.buf, force = true, wipe = true })
+        end, "Close Buffer", event.buf)
     end
 end, {
     desc = "Map 'q' to close the buffer.",
     pattern = {
-        "DiffviewFiles",
         "checkhealth",
         "grug-far",
         "help",
@@ -37,9 +27,9 @@ end, {
     },
 })
 
-ev.on(ev.BufEnter, function()
+ev.on(ev.BufEnter, function(event)
     if vim.fn.winnr("$") == 1 and vim.bo.buftype == "quickfix" then
-        vim.api.nvim_buf_delete(0, { force = true })
+        Snacks.bufdelete({ buf = event.buf, force = true })
     end
 end, {
     desc = "Close quick fix window if the file containing it was closed.",
