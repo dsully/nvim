@@ -2,12 +2,12 @@
 return {
     "stevearc/resession.nvim",
     init = function()
-        vim.api.nvim_create_user_command("SessionLoad", function()
-            require("resession").load(require("helpers.file").git_root(), { silence_errors = false })
+        nvim.command("SessionLoad", function()
+            require("resession").load(Snacks.git.get_root(), { silence_errors = false })
         end, { desc = "Session Load" })
 
         ev.on(ev.VimLeavePre, function()
-            require("resession").save(require("helpers.file").git_root(), { notify = false })
+            require("resession").save(Snacks.git.get_root(), { notify = false })
         end, {
             desc = "Save session on exit.",
         })

@@ -344,8 +344,7 @@ local M = {
         },
         lsp = {
             "copilot",
-            "llm-ls",
-            "sonarlint.nvim",
+            "harper-ls",
             "typos_lsp",
         },
         paths = {
