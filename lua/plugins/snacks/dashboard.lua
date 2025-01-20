@@ -47,7 +47,7 @@ return {
             { icon = " ", key = "u", desc = "Update Plugins", action = ":Lazy sync", enabled = package.loaded.lazy ~= nil, label = "[u]" },
             { icon = " ", key = "q", desc = "Quit", action = ":qa!", label = "[q]" },
         },
-        pick = "fzf-lua",
+        pick = "snacks",
     },
     sections = {
         function()
