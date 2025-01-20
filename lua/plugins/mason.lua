@@ -1,6 +1,7 @@
 ---@type LazySpec
 return {
     "williamboman/mason.nvim",
+    build = ":MasonUpdate",
     cmd = {
         "Mason",
         "MasonInstall",
@@ -27,12 +28,7 @@ return {
                         notify.info(("Successfully installed %s"):format(p.name), { title = "Mason", render = "compact" })
 
                         -- Trigger FileType event to possibly load this newly installed LSP server
-                        vim.defer_fn(function()
-                            require("lazy.core.handler.event").trigger({
-                                buf = vim.api.nvim_get_current_buf(),
-                                event = ev.FileType,
-                            })
-                        end, 100)
+                        ev.emit(ev.FileType, { buffer = vim.api.nvim_get_current_buf(), modeline = false })
                     end
                 end)
 
@@ -45,7 +41,6 @@ return {
         ---@type string[]
         ensure_installed = defaults.tools,
         registries = {
-            "github:nvim-java/mason-registry",
             "github:mason-org/mason-registry",
             "github:mkindberg/ghostty-ls",
         },
