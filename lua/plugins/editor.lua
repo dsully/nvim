@@ -60,6 +60,11 @@ return {
             -- stylua: ignore start
             { "]t", function() require("todo-comments").jump_next() end, desc = "Next todo comment" },
             { "[t", function() require("todo-comments").jump_prev() end, desc = "Previous todo comment" },
+
+            ---@diagnostic disable-next-line: undefined-field
+            { "<leader>ft", function() Snacks.picker.todo_comments() end, desc = "TODOs" },
+            ---@diagnostic disable-next-line: undefined-field
+            { "<leader>fT", function() Snacks.picker.todo_comments({ keywords = { "TODO", "FIX", "FIXME" } }) end, desc = "Todo/Fix/Fixme" },
             -- stylua: ignore end
         },
         opts = {
