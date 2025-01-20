@@ -62,8 +62,14 @@ return {
         "Saghen/blink.cmp",
         optional = true,
         opts = {
+            completion = { menu = { draw = { treesitter = { "copilot" } } } },
             sources = {
                 default = { "copilot" },
+                per_filetype = {
+                    lua = {
+                        "copilot",
+                    },
+                },
                 providers = {
                     copilot = {
                         name = "Copilot",

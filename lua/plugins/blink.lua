@@ -12,27 +12,11 @@ return {
         cmd = {
             "BlinkCmp",
         },
-        event = ev.InsertEnter,
+        event = { ev.CmdlineEnter, ev.InsertEnter },
         highlights = {
             BlinkCmpGhostText = { link = hl.Comment },
         },
         keys = {
-            -- Clear search and stop snippet on escape
-            {
-                "<esc>",
-                function()
-                    vim.cmd.nohlsearch()
-
-                    if vim.snippet then
-                        vim.snippet.stop()
-                    end
-
-                    return "<esc>" ---@diagnostic disable-line: redundant-return-value
-                end,
-                desc = "Escape and Clear hlsearch",
-                expr = true,
-                mode = { "c", "i", "n", "s" },
-            },
             -- Inside a snippet, use backspace to remove the placeholder.
             { "<bs>", "<C-O>s", desc = "Remove Snippet Placeholder", mode = "s" },
         },
@@ -43,6 +27,11 @@ return {
                 nerd_font_variant = "mono",
             },
             completion = {
+                accept = {
+                    auto_brackets = {
+                        enabled = true,
+                    },
+                },
                 ---@type blink.cmp.CompletionDocumentationConfig
                 documentation = {
                     auto_show = true,
@@ -58,11 +47,6 @@ return {
                     },
                 },
                 menu = {
-                    -- Don't auto-show the completion menu in commandline mode.
-                    ---@param ctx blink.cmp.Context
-                    auto_show = function(ctx)
-                        return ctx.mode ~= "cmdline" or not vim.tbl_contains({ "/", "?" }, vim.fn.getcmdtype())
-                    end,
                     -- Which directions to show the window, falling back to the next direction when there's not enough space
                     direction_priority = { "n", "s" },
                     --- @type blink.cmp.Draw
@@ -80,12 +64,17 @@ return {
                         components = {
                             kind_icon = {
                                 ---@param ctx blink.cmp.DrawItemContext
-                                text = function(ctx)
-                                    return defaults.icons.completion_items[ctx.item.source_name] or defaults.icons.completion_items[ctx.kind]
-                                end,
-                                ---@param ctx blink.cmp.DrawItemContext
                                 highlight = function(ctx)
                                     return is_ai_source(ctx.item.source_name) and "MiniIconsBlue" or select(2, require("mini.icons").get("lsp", ctx.kind))
+                                end,
+                                ---@param ctx blink.cmp.DrawItemContext
+                                text = function(ctx)
+                                    -- Don't display an icon for cmdline.
+                                    if vim.api.nvim_get_mode().mode == "c" then
+                                        return ""
+                                    end
+
+                                    return defaults.icons.completion_items[ctx.item.source_name] or defaults.icons.completion_items[ctx.kind]
                                 end,
                             },
                             kind = {
@@ -112,15 +101,12 @@ return {
                                 },
                             },
                         },
-                        treesitter = { "lsp", "copilot" },
+                        treesitter = { "lsp" },
                     },
                     -- Keep the cursor X lines away from the top/bottom of the window
                     scrolloff = 4,
                 },
             },
-            enabled = function()
-                return not vim.tbl_contains(defaults.ignored.file_types, vim.bo.filetype) and vim.bo.buftype ~= "prompt" and vim.b.completion ~= false
-            end,
             ---@type blink.cmp.KeymapConfig
             keymap = {
                 preset = "enter",
@@ -137,18 +123,52 @@ return {
                 ["<C-j>"] = { "select_next", "fallback" },
                 ["<C-k>"] = { "select_prev", "fallback" },
                 ["<C-y>"] = { "select_and_accept" },
+                cmdline = {
+                    preset = "enter",
+                    -- TODO: Get this behaviour for <tab>:
+                    -- 1. If no menu then open it.
+                    -- 2. If menu:
+                    --   1. If there are multiple options: select the next one.
+                    --   2. If there is only one entry: select it and confirm the selection
+                    ["<Tab>"] = { "show", "select_next", "select_and_accept" },
+                },
             },
-            --- @type blink.cmp.SnippetsConfig
+            ---@type blink.cmp.SnippetsConfig
             snippets = {
                 preset = "default",
             },
+            ---@type blink.cmp.SourceConfig
             sources = {
                 default = { "lsp", "path", "snippets" },
+                min_keyword_length = function(ctx)
+                    if ctx.trigger.kind == "trigger_character" then
+                        return 0
+                    elseif ctx.trigger.kind == "manual" then
+                        return 0
+                    elseif ctx.mode == "cmdline" and string.find(ctx.line, " ") == nil then
+                        return 3
+                    else
+                        return 2
+                    end
+                end,
                 -- Ignore
                 per_filetype = {
-                    codecompanion = { "codecompanion" },
-                    gitcommit = { "snippets", "buffer" },
+                    codecompanion = {
+                        "codecompanion",
+                    },
+                    gitcommit = {},
                     snacks_input = {},
+                    toml = {
+                        "crates",
+                        "lsp",
+                        "path",
+                    },
+                    lua = {
+                        "lazydev",
+                        "lsp",
+                        "path",
+                        -- "snippets",
+                    },
                 },
                 providers = {
                     buffer = {
@@ -234,7 +254,9 @@ return {
             },
         },
         opts_extend = {
+            "completion.menu.draw.treesitter",
             "sources.default",
+            "sources.per_filetype",
         },
     },
     { "saghen/blink.compat", opts = { impersonate_nvim_cmp = true } },
