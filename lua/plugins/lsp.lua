@@ -62,9 +62,16 @@ return {
                 { "<leader>xr", vim.diagnostic.reset, desc = "Reset", icon = " " },
                 { "<leader>xs", vim.diagnostic.open_float, desc = "Show", icon = "󰙨" },
                 { "gra", lsp.code_action, desc = "Actions", icon = "󰅯 " },
-                { "grf", function() require("snacks").rename.rename_file() end, desc = "Rename File", icon = " ", },
                 { "grn", vim.lsp.buf.rename, desc = "Rename", icon = " " },
                 { "grq", lsp.apply_quickfix, desc = "Apply Quick Fix", icon = "󱖑 " },
+
+                -- Snacks pickers
+                { "gD", function() Snacks.picker.lsp_type_definitions() end, desc = "Goto Type Definition" },
+                { "gO", function() Snacks.picker.lsp_symbols() end, desc = "References" },
+                { "gd", function() Snacks.picker.lsp_definitions({ unique_lines = true }) end, desc = "Goto Definition" },
+                { "gi", function() Snacks.picker.lsp_implementations() end, desc = "Goto Implementation" },
+                { "grf", function() Snacks.rename.rename_file() end, desc = "Rename File", icon = " ", },
+                { "grr", function() Snacks.picker.lsp_references({ nowait = true }) end, desc = "References" },
             }, { notify = false })
             end)
         end)
