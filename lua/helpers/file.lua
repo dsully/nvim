@@ -79,7 +79,19 @@ end
 ---Return true if the current working directory is in my local source directory.
 ---@return boolean
 M.is_local_dev = function()
-    return vim.startswith(tostring(vim.uv.cwd()), vim.fs.joinpath(vim.env.HOME, "dev", "home"))
+    local cwd = tostring(vim.uv.cwd())
+
+    for _, path in ipairs({
+        vim.env.XDG_CONFIG_HOME,
+        vim.env.XDG_DATA_HOME .. "/chezmoi",
+        vim.fs.joinpath(vim.env.HOME, "dev", "home"),
+    }) do
+        if vim.startswith(cwd, path) then
+            return true
+        end
+    end
+
+    return false
 end
 
 ---@return string?
