@@ -73,6 +73,7 @@ local M = {
             just = { "just" },
             lua = { "stylua" },
             markdown = { "markdownlint-cli2" },
+            pyproject = { "pyproject-fmt" },
             python = { "ruff_organize_imports", "ruff_format", "ruff_fix" },
             sh = { "shellharden", "shfmt" },
             toml = { "taplo" },
@@ -115,10 +116,8 @@ local M = {
         "goimports",
         "lemminx",
         "marksman",
-        "rstcheck",
         "vtsls",
         "xmlformatter",
-        "yamllint",
     },
 
     icons = {
