@@ -41,7 +41,7 @@ return {
             registers = true,
             spelling = {
                 enabled = true, -- enabling this will show WhichKey when pressing z= to select spelling suggestions
-                suggestions = 10
+                suggestions = 10,
             },
             presets = {
                 operators = true, -- adds help for operators like d, y, ...

@@ -42,19 +42,12 @@ return {
                     command = "caddy",
                     args = { "fmt" },
                     stdin = true,
-                    ---@param ctx conform.Context
-                    condition = function(ctx)
-                        return vim.fs.basename(ctx.filename) ~= "Caddyfile"
-                    end,
                 },
-                -- Use dprint if there is a dprint.json file in the project root.
-                dprint = {
-                    ---@param ctx conform.Context
-                    condition = function(ctx)
-                        return vim.fs.find({ "dprint.json" }, { path = ctx.filename, upward = true })[1] and true or false
-                    end,
+                injected = {
+                    options = {
+                        ignore_errors = true,
+                    },
                 },
-                injected = { options = { ignore_errors = true } },
                 ["markdownlint-cli2"] = {
                     ---@param ctx conform.Context
                     condition = function(_, ctx)

@@ -107,6 +107,7 @@ function M.setup()
             { import = "plugins.ai" },
             { import = "plugins.filetypes" },
             { import = "plugins.languages" },
+            { import = "plugins.snacks" },
         },
         change_detection = {
             enabled = false,
@@ -147,6 +148,7 @@ function M.setup()
                     "gzip",
                     "health",
                     "logipat",
+                    "man",
                     "matchit",
                     "matchparen",
                     "netrw",
