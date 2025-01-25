@@ -289,21 +289,4 @@ return {
             },
         },
     },
-    {
-        "ziontee113/icon-picker.nvim",
-        cmd = {
-            "IconPickerNormal",
-            "IconPickerYank",
-            "IconPickerInsert",
-        },
-        keys = {
-            { "<leader>fe", "<cmd>IconPickerInsert emoji<cr>", desc = "Emoji" },
-            { "<leader>fi", "<cmd>IconPickerInsert nerd_font_v3<cr>", desc = "Nerd Font Icons" },
-        },
-        opts = {
-            disable_legacy_commands = true,
-        },
-    },
-        },
-    },
 }
