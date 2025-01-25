@@ -57,7 +57,8 @@ return {
             },
         },
     },
-    { "giuxtaposition/blink-cmp-copilot" },
+    -- { "giuxtaposition/blink-cmp-copilot" },
+    { "fang2hou/blink-copilot" },
     {
         "Saghen/blink.cmp",
         optional = true,
@@ -74,7 +75,7 @@ return {
                     copilot = {
                         name = "Copilot",
                         async = true,
-                        module = "blink-cmp-copilot",
+                        module = "blink-copilot",
                         score_offset = 100,
                     },
                 },
