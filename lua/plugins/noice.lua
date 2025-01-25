@@ -65,9 +65,6 @@ return {
         },
         notify = {
             enabled = true,
-            view = "notify",
-            view_warn = "notify",
-            view_error = "notify",
         },
         popupmenu = {
             enabled = true,
