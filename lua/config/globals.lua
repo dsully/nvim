@@ -20,7 +20,7 @@ _G.lazy = {
 }
 
 _G.nvim = {
-    root = require("helpers.root")
+    root = require("helpers.root"),
 }
 
 ---Create a Neovim command
