@@ -2,6 +2,12 @@
 return {
     cmd = { "basedpyright-langserver", "--stdio" },
     filetypes = { "python" },
+    ---@param client vim.lsp.Client
+    on_attach = function(client)
+        --
+        -- Use treesitter highlighting, as it supports injections.
+        client.server_capabilities.semanticTokensProvider = nil
+    end,
     root_markers = {
         "Pipfile",
         "pyproject.toml",
