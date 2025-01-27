@@ -6,7 +6,7 @@ local M = {}
 ---@param lhs string
 ---@param rhs function|string
 ---@param mode table<string>
----@param opts table?
+---@param opts vim.keymap.set.Opts?
 function M.safe_set(lhs, rhs, mode, opts)
     local lazy_keys = require("lazy.core.handler").handlers.keys or {}
 
@@ -40,7 +40,7 @@ end
 ---@param rhs function|string
 ---@param desc string?
 ---@param mode string|table<string>|nil
----@param opts table?
+---@param opts vim.keymap.set.Opts?
 function M.map(lhs, rhs, desc, mode, opts)
     --
     if type(mode) == "string" then
@@ -65,7 +65,7 @@ end
 ---@param desc string?
 ---@param buffer integer?
 ---@param mode string|table<string>|nil
----@param opts table?
+---@param opts vim.keymap.set.Opts?
 function M.bmap(lhs, rhs, desc, buffer, mode, opts)
     --
     M.map(lhs, rhs, desc, mode, vim.tbl_deep_extend("force", opts or {}, { buffer = buffer or true }))
@@ -76,7 +76,7 @@ end
 ---@param rhs function|string
 ---@param desc string?
 ---@param buffer integer?
----@param opts table?
+---@param opts vim.keymap.set.Opts?
 function M.xmap(lhs, rhs, desc, buffer, opts)
     --
     M.safe_set(
