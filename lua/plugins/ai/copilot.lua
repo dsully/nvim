@@ -2,6 +2,7 @@
 return {
     {
         "zbirenbaum/copilot.lua",
+        cond = defaults.ai.copilot,
         init = function()
             --
             ev.on_load("blink.cmp", function()
@@ -57,7 +58,6 @@ return {
             },
         },
     },
-    -- { "giuxtaposition/blink-cmp-copilot" },
     { "fang2hou/blink-copilot" },
     {
         "Saghen/blink.cmp",

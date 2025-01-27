@@ -8,6 +8,7 @@ return {
             "CodeCompanionChat",
             "CodeCompanionActions",
         },
+        cond = defaults.ai.codecompanion,
         config = function(_, opts)
             require("codecompanion").setup(opts)
 
@@ -148,7 +149,6 @@ return {
         opts = {
             spec = {
                 { "<leader>a", group = "AI", mode = { "n", "v" } },
-                { "<localleader>a", group = "AI", mode = { "n", "v" } },
             },
         },
     },

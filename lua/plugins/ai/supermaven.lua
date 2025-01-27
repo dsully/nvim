@@ -2,6 +2,7 @@
 return {
     {
         "supermaven-inc/supermaven-nvim",
+        cond = defaults.ai.supermaven,
         init = function()
             --
             local ns = nvim.ns("supermaven")
