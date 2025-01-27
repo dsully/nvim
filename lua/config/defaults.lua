@@ -112,12 +112,6 @@ local M = {
         yaml = { "yamllint" },
     },
 
-    lsp = {
-        rust = {
-            bacon = os.getenv("BACON") or false,
-        },
-    },
-
     tools = {
         "ghostty-ls",
         "goimports",
