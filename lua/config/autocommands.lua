@@ -6,27 +6,6 @@ end, {
     desc = "Check if we need to reload the file when it changed.",
 })
 
-ev.on(ev.FileType, function(event)
-    --
-    if vim.fn.hasmapto("q", "n") == 0 then
-        --
-        keys.bmap("q", function()
-            Snacks.bufdelete({ buf = event.buf, force = true, wipe = true })
-        end, "Close Buffer", event.buf)
-    end
-end, {
-    desc = "Map 'q' to close the buffer.",
-    pattern = {
-        "checkhealth",
-        "grug-far",
-        "help",
-        "man",
-        "nofile",
-        "qf",
-        "scratch",
-    },
-})
-
 ev.on(ev.BufEnter, function(event)
     if vim.fn.winnr("$") == 1 and vim.bo.buftype == "quickfix" then
         Snacks.bufdelete({ buf = event.buf, force = true })
