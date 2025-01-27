@@ -28,6 +28,13 @@ local lsp = {
 }
 
 local M = {
+
+    ai = {
+        copilot = true,
+        codecompanion = true,
+        supermaven = false,
+    },
+
     code_actions = {
         "",
         "quickfix",
