@@ -97,6 +97,7 @@ return {
                 },
             },
         },
+        _new_sign_calc = true,
     },
     {
         "juansalvatore/git-dashboard-nvim",
