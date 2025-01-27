@@ -1,3 +1,24 @@
+local M = {
+    targets = {},
+}
+
+-- Collect the list of targets that can be applied.
+---@param callback function(string[])?
+---@return vim.SystemObj
+M.collect = function(callback)
+    --
+    return vim.system({ "chezmoi", "list", "--include", "files", "--path-style", "absolute", "--exclude", "externals" }, { text = true }, function(obj)
+        --
+        M.targets = vim.split(obj.stdout, "\n")
+
+        if callback then
+            vim.schedule(function()
+                callback(M.targets)
+            end)
+        end
+    end)
+end
+
 ---@type LazySpec
 return {
     {
@@ -8,58 +29,38 @@ return {
         },
         config = function()
             --
-            vim.schedule(function()
+            --
+            -- Watch chezmoi files for changes in the source-path, and apply them.
+            ev.on(ev.BufWritePost, function()
+                vim.schedule(require("chezmoi.commands.__edit").watch)
+            end, {
+                pattern = { vim.fs.joinpath(vim.env.XDG_DATA_HOME .. "/chezmoi/home/*") },
+            })
+
+            M.collect(function(targets)
                 --
-                -- Watch chezmoi files for changes in the source-path, and apply them.
                 ev.on(ev.BufWritePost, function(args)
-                    if args.file and args.file:match(".tmpl") then
-                        return
-                    end
+                    notify.info("Adding changes to: " .. args.file, { title = "chezmoi" })
 
-                    vim.schedule(require("chezmoi.commands.__edit").watch)
+                    vim.system({ "chezmoi", "add", args.file }, { detach = true })
                 end, {
-                    pattern = { vim.env.XDG_DATA_HOME .. "/chezmoi/home/*" },
-                })
-
-                -- Watch chezmoi files for changes in the target-path, and add them.
-                ev.on(ev.BufReadPost, function()
-                    vim.defer_fn(function()
-                        local ok, targets = pcall(require("chezmoi.commands").list, { args = { "--include", "files", "--path-style", "absolute" } })
-
-                        if ok then
-                            ev.on(ev.BufWritePost, function(args)
-                                notify.info("chezmoi: Adding changes to: " .. args.file)
-
-                                vim.system({ "chezmoi", "add", args.file }, { text = true }):wait()
-                            end, {
-                                desc = "Apply chezmoi changes via 'chezmoi edit'",
-                                pattern = targets,
-                            })
-                        end
-                    end, 2000)
-                end, {
-                    once = true,
+                    desc = "Apply chezmoi changes via 'chezmoi edit'",
+                    pattern = targets,
                 })
             end)
         end,
+        event = ev.LazyFile,
         keys = {
             {
-                "<leader>fz",
+                "<leader>fx",
                 function()
-                    local results = require("chezmoi.commands").list({
-                        args = {
-                            "--path-style",
-                            "absolute",
-                            "--include",
-                            "files",
-                            "--exclude",
-                            "externals",
-                        },
-                    })
-
                     local items = {}
 
-                    for _, file in ipairs(results) do
+                    if vim.tbl_isempty(M.targets) then
+                        M.targets = vim.split(M.collect():wait().stdout, "\n")
+                    end
+
+                    for _, file in ipairs(M.targets) do
                         table.insert(items, {
                             text = file,
                             file = file,
