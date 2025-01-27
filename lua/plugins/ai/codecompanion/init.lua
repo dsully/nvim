@@ -130,11 +130,10 @@ return {
                 chat = {
                     adapter = "anthropic",
                     slash_commands = {
-                        -- Change to default until I can add a Snacks picker.
-                        buffer = { opts = { provider = "default" } },
-                        file = { opts = { provider = "default" } },
-                        help = { opts = { provider = "default" } },
-                        symbols = { opts = { provider = "default" } },
+                        buffer = { opts = { provider = "snacks" } },
+                        file = { opts = { provider = "snacks" } },
+                        help = { opts = { provider = "snacks" } },
+                        symbols = { opts = { provider = "snacks" } },
                     },
                 },
                 inline = {
