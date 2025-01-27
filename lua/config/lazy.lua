@@ -75,34 +75,8 @@ function M.setup()
     ---@type LazyConfig
     require("lazy").setup({
         spec = {
-            {
-                "autocmds",
-                import = "config.autocommands",
-                event = "User LazyDone",
-                virtual = true,
-            },
-            {
-                "keymaps",
-                import = "config.keymaps",
-                event = "User LazyDone",
-                virtual = true,
-            },
-            {
-                "treesitter",
-                event = ev.LazyFile,
-                init = function()
-                    --
-                    ev.on(ev.FileType, function(event)
-                        --
-                        if pcall(vim.treesitter.start, event.buf) then
-                            ev.emit(ev.User, { pattern = "ts_attach" })
-                        end
-                    end, {
-                        desc = "Start treesitter highlighting",
-                    })
-                end,
-                virtual = true,
-            },
+            { import = "config.autocommands" },
+            { import = "config.keymaps" },
             { import = "plugins" },
             { import = "plugins.ai" },
             { import = "plugins.filetypes" },
