@@ -49,6 +49,8 @@ return {
                 })
             end
 
+            ---@module "rustaceanvim"
+            ---@type rustaceanvim.Opts
             vim.g.rustaceanvim = {
                 dap = {
                     adapter = false,
@@ -104,21 +106,17 @@ return {
                                     enable = true,
                                 },
                             },
-                            checkOnSave = not defaults.lsp.rust.bacon,
                             check = {
                                 command = "clippy",
-                                enable = not defaults.lsp.rust.bacon,
+                                enable = true,
                                 extraArgs = clippy_args,
                             },
-                            -- checkOnSave = {
-                            --     enable = not defaults.lsp.rust.bacon,
-                            -- },
                             completion = {
                                 fullFunctionSignatures = { enable = true },
                             },
                             diagnostics = {
                                 disabled = { "inactive-code", "macro-error", "unresolved-macro-call" },
-                                enable = not defaults.lsp.rust.bacon,
+                                enable = true,
                                 experimental = { enable = true },
                                 styleLints = { enable = true },
                             },
