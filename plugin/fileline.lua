@@ -31,10 +31,8 @@ local jump = function()
 
         -- Close the original buffer to prevent extra buffers
         if current_buf ~= vim.api.nvim_get_current_buf() then
-            vim.api.nvim_buf_delete(current_buf, { force = true })
+            vim.cmd.bwipeout({ current_buf, bang = true })
         end
-
-        vim.cmd.filetype("detect")
 
         return filename
     end
@@ -68,10 +66,6 @@ do
 
                 -- Return to the original argument
                 vim.cmd.argument({ range = { original + 1 } })
-
-                -- Manually call autocommands, ignored by `:argdo`
-                vim.cmd.doautocmd("Syntax")
-                vim.cmd.doautocmd("FileType")
             end
         end,
         nested = true,
