@@ -125,10 +125,18 @@ M.escape_pattern = function(input)
     return input
 end
 
+-- Return a normalized filename, with characters escaped.
 ---@param input string
 ---@return string
 M.normalize = function(input)
     return vim.fs.normalize(vim.fn.fnameescape(input))
+end
+
+-- Return the current filename.
+---@param bufnr integer
+---@return string
+M.filename = function(bufnr)
+    return M.normalize(vim.api.nvim_buf_get_name(bufnr or 0))
 end
 
 ---@param filetype string
