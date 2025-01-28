@@ -295,7 +295,7 @@ return {
     {
         "echasnovski/mini.pairs",
         config = function(_, opts)
-            local pairs = require("mini.pairs")
+            require("mini.pairs").setup(opts)
 
             require("snacks").toggle
                 .new({
@@ -308,80 +308,26 @@ return {
                     end,
                 })
                 :map("<space>tp")
-
-            pairs.setup(opts)
-
-            local open = pairs.open
-
-            ---@diagnostic disable-next-line: duplicate-set-field
-            pairs.open = function(pair, neigh_pattern)
-                if vim.fn.getcmdline() ~= "" then
-                    return open(pair, neigh_pattern)
-                end
-
-                local o, c = pair:sub(1, 1), pair:sub(2, 2)
-                local line = vim.api.nvim_get_current_line()
-                local cursor = vim.api.nvim_win_get_cursor(0)
-                local next = line:sub(cursor[2] + 1, cursor[2] + 1)
-                local before = line:sub(1, cursor[2])
-
-                if opts.markdown and o == "`" and vim.bo.filetype == "markdown" and before:match("^%s*``") then
-                    return "`\n```" .. Snacks.util.keycode("<up>")
-                end
-
-                if opts.skip_next and next ~= "" and next:match(opts.skip_next) then
-                    return o
-                end
-
-                if opts.skip_ts and #opts.skip_ts > 0 then
-                    local ok, captures = pcall(vim.treesitter.get_captures_at_pos, 0, cursor[1] - 1, math.max(cursor[2] - 1, 0))
-
-                    for _, capture in ipairs(ok and captures or {}) do
-                        if vim.tbl_contains(opts.skip_ts, capture.capture) then
-                            return o
-                        end
-                    end
-                end
-
-                if opts.skip_unbalanced and next == c and c ~= o then
-                    local _, count_open = line:gsub(vim.pesc(pair:sub(1, 1)), "")
-                    local _, count_close = line:gsub(vim.pesc(pair:sub(2, 2)), "")
-
-                    if count_close > count_open then
-                        return o
-                    end
-                end
-
-                return open(pair, neigh_pattern)
-            end
         end,
         event = ev.InsertEnter,
         opts = {
             -- https://gitspartv.github.io/lua-patterns/
             -- https://riptutorial.com/lua/example/20315/lua-pattern-matching
             mappings = {
-                -- Map <cr> to false to prevent conflict with blink.cmp.
-                --
-                -- Prevents the action if the cursor is just before any character or next to a "\".
-                ["("] = { action = "open", pair = "()", neigh_pattern = "[^\\][%s%)%]%}]", register = { cr = false } },
-                ["["] = { action = "open", pair = "[]", neigh_pattern = "[^\\][%s%)%]%}]", register = { cr = false } },
-                ["{"] = { action = "open", pair = "{}", neigh_pattern = "[^\\][%s%)%]%}]", register = { cr = false } },
+                -- Prevents the action if the cursor is just before any character or at the end of a line.
+                ["("] = { action = "open", pair = "()", neigh_pattern = "[^%s%)%]%}][^%w]", register = { cr = false } },
+                ["["] = { action = "open", pair = "[]", neigh_pattern = "[^%s%)%]%}][^%w]", register = { cr = false } },
+                ["{"] = { action = "open", pair = "{}", neigh_pattern = "[^%s%)%]%}][^%w]", register = { cr = false } },
 
                 -- This is default (prevents the action if the cursor is just next to a "\").
                 [")"] = { action = "close", pair = "()", neigh_pattern = "[^\\].", register = { cr = false } },
                 ["]"] = { action = "close", pair = "[]", neigh_pattern = "[^\\].", register = { cr = false } },
                 ["}"] = { action = "close", pair = "{}", neigh_pattern = "[^\\].", register = { cr = false } },
 
-                -- Don't autocomplete quotes around letters, except f-strings
-                ['"'] = {
-                    action = "closeopen",
-                    pair = '""',
-                    neigh_pattern = '[^A-Za-eg-z0-9\\"][^%w]',
-                    register = { cr = false },
-                },
+                ['"'] = { action = "closeopen", pair = '""', neigh_pattern = '[^%s"][^%w]', register = { cr = false } },
 
-                -- Prevents the action if the cursor is just before or next to any character.
-                ["`"] = { action = "closeopen", pair = "``", neigh_pattern = "[^%w][^%w]", register = { cr = false } },
+                -- Prevent 4th backtick (https://github.com/echasnovski/mini.nvim/issues/31#issuecomment-2151599842)
+                ["`"] = { action = "closeopen", pair = "``", neigh_pattern = "[^%s\\`][^%w]", register = { cr = false } },
 
                 -- Restrict ' with < and & for Rust
                 ["'"] = { neigh_pattern = "[^%a\\|'|<|&].", register = { cr = false } },
@@ -389,21 +335,6 @@ return {
                 -- Add | for Rust iterations
                 ["|"] = { action = "closeopen", pair = "||", neigh_pattern = "[(][)]", register = { cr = false } },
             },
-
-            -- Deal with markdown code blocks better.
-            markdown = true,
-
-            -- In which modes mappings from this config should be created
-            modes = { insert = true, command = false, terminal = false },
-
-            -- Skip autopair when next character is one of these
-            skip_next = [=[[%w%%%'%[%"%.%`%$]]=],
-
-            -- Skip autopair when the cursor is inside these treesitter nodes
-            skip_ts = { "comment", "string" },
-
-            -- Skip autopair when next character is closing pair and there are more closing pairs than opening pairs.
-            skip_unbalanced = true,
         },
         virtual = true,
     },
