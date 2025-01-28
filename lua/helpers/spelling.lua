@@ -8,10 +8,8 @@ end
 ---@param word string
 M.add_word_to_typos = function(word)
     --
-    local fs = require("helpers.file")
-
     local path = vim.g.home .. "/.typos.toml"
-    local config = fs.read_toml(path)
+    local config = nvim.file.read_toml(path)
 
     if not config then
         return
@@ -40,7 +38,7 @@ M.add_word_to_typos = function(word)
 
     config[word] = word
 
-    fs.write(path, tostring(config))
+    nvim.file.write(path, tostring(config))
 end
 
 return M

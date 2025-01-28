@@ -9,7 +9,7 @@ local methods = vim.lsp.protocol.Methods
 ---@param server_name string
 ---@return boolean
 M.should_enable = function(server_name)
-    local is_local = require("helpers.file").is_local_dev()
+    local is_local = nvim.file.is_local_dev()
 
     if server_name == "harper" and not is_local then
         return false

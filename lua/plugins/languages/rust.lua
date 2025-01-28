@@ -33,7 +33,7 @@ return {
                 "--no-deps", -- run Clippy only on the given crate
             }
 
-            if require("helpers.file").is_local_dev() then
+            if nvim.file.is_local_dev() then
                 vim.list_extend(clippy_args, {
                     -- Deny, Warn, Allow, Forbid
                     "-Wclippy::correctness", -- code that is outright wrong or useless
