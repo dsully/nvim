@@ -8,7 +8,7 @@ local pattern = "^([^:]+):(%d*:?%d*):?$"
 ---@return string
 local jump = function()
     --
-    local bufname = vim.api.nvim_buf_get_name(0)
+    local bufname = nvim.file.normalize(vim.api.nvim_buf_get_name(0))
     local filename, capture = bufname:match(pattern)
 
     if filename and capture and vim.uv.fs_access(filename, "R") then
@@ -17,7 +17,7 @@ local jump = function()
         local current_buf = vim.api.nvim_get_current_buf()
 
         -- Open the file while keeping the alternate file unchanged
-        vim.cmd.edit({ vim.fs.normalize(filename), mods = { keepalt = true } })
+        vim.cmd.edit({ filename, mods = { keepalt = true } })
 
         -- If the file was opened with '/path/to/filename:' we won't have a position.
         local line = math.min(math.max(1, pos[1]), vim.api.nvim_buf_line_count(0))
@@ -61,7 +61,7 @@ do
                     local argidx = vim.fn.argidx()
 
                     vim.cmd.argdelete({ range = { argidx + 1 } })
-                    vim.cmd.argadd({ args = { vim.fs.normalize(filename) }, range = { argidx } })
+                    vim.cmd.argadd({ args = { filename }, range = { argidx } })
                 end
 
                 -- Return to the original argument

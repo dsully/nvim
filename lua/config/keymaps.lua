@@ -32,7 +32,7 @@ map("<leader>gcu", "dd/|||<CR>0v/>>><CR>$x", "[G]it [C]onflict Choose [U]pstream
 map("<leader>gcb", "0v/|||<CR>$x/====<CR>0v/>>><CR>$x", "[G]it [C]onflict Choose [B]ase")
 map("<leader>gcs", "0v/====<CR>$x/>>><CR>dd", "[G]it [C]onflict Choose [S]tashed")
 
-map("<space>n", require("helpers.file").edit, "New File", "n", { expr = false })
+map("<space>n", nvim.file.edit, "New File", "n", { expr = false })
 
 -- Open in the filetype default application (macOS)
 if vim.g.os == "Darwin" then

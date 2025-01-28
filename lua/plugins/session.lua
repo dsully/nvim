@@ -28,7 +28,7 @@ return {
             local cwd = tostring(vim.uv.cwd())
 
             for _, pattern in ipairs(ignored.paths) do
-                if cwd:find(require("helpers.file").escape_pattern(tostring(vim.fn.expand(pattern)))) then
+                if cwd:find(nvim.file.escape_pattern(tostring(vim.fn.expand(pattern)))) then
                     return false
                 end
             end

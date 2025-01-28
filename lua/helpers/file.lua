@@ -125,6 +125,12 @@ M.escape_pattern = function(input)
     return input
 end
 
+---@param input string
+---@return string
+M.normalize = function(input)
+    return vim.fs.normalize(vim.fn.fnameescape(input))
+end
+
 ---@param filetype string
 ---@param subdirectory string?
 M.symlink_queries = function(filetype, subdirectory)

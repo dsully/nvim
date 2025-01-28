@@ -2,10 +2,8 @@
 return {
     "age",
     config = function()
-        local fs = require("helpers.file")
-
-        local path = vim.fs.joinpath(vim.env.XDG_CONFIG_HOME, "chezmoi", "/chezmoi.toml")
-        local config = fs.read_toml(path)
+        local path = vim.fs.joinpath(vim.env.XDG_CONFIG_HOME, "/chezmoi/chezmoi.toml")
+        local config = nvim.file.read_toml(path)
 
         if not config then
             return

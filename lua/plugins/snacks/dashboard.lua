@@ -58,7 +58,7 @@ return {
                 function()
                     -- In an initialized but empty / no commits repo,
                     -- there will be an error thrown to stderr from git-dashboard-nvim.
-                    if not require("helpers.file").is_git() then
+                    if not nvim.file.is_git() then
                         return {}
                     end
 

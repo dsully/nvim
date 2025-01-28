@@ -2,7 +2,7 @@
 return {
     "mfussenegger/nvim-lint",
     cond = function()
-        return require("helpers.file").is_local_dev()
+        return nvim.file.is_local_dev()
     end,
     config = function()
         vim.schedule(function()
