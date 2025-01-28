@@ -1,0 +1,21 @@
+{
+  "python_typer_script": {
+    "prefix": "pytyper",
+    "body": [
+      "# /// script",
+      "# dependencies = [",
+      "#   \"typer\",",
+      "# ]",
+      "# ///",
+      "",
+      "import typer",
+      "",
+      "def main(name: str):",
+      "    print(f\"Hello {name}\")",
+      "",
+      "if __name__ == \"__main__\":",
+      "    typer.run(main)"
+    ],
+    "description": "Python script with Typer dependency"
+  }
+}
