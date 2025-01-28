@@ -324,10 +324,10 @@ return {
                 ["]"] = { action = "close", pair = "[]", neigh_pattern = "[^\\].", register = { cr = false } },
                 ["}"] = { action = "close", pair = "{}", neigh_pattern = "[^\\].", register = { cr = false } },
 
-                ['"'] = { action = "closeopen", pair = '""', neigh_pattern = '[^%s"][^%w]', register = { cr = false } },
+                ['"'] = { action = "closeopen", pair = '""', neigh_pattern = '[^%s\"][^%s]', register = { cr = false } },
 
                 -- Prevent 4th backtick (https://github.com/echasnovski/mini.nvim/issues/31#issuecomment-2151599842)
-                ["`"] = { action = "closeopen", pair = "``", neigh_pattern = "[^%s\\`][^%w]", register = { cr = false } },
+                ["`"] = { action = "closeopen", pair = "``", neigh_pattern = "[^%s\\`][^%s]", register = { cr = false } },
 
                 -- Restrict ' with < and & for Rust
                 ["'"] = { neigh_pattern = "[^%a\\|'|<|&].", register = { cr = false } },
