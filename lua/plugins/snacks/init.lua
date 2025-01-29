@@ -42,7 +42,7 @@ return {
 
         hl.apply({
             SnacksNormal = { link = "Normal" },
-            SnacksBackdrop = { link = "Normal" },
+            SnacksBackdrop = { bg = colors.gray.base },
             SnacksIndent = { fg = colors.blue.bright },
             SnacksIndentScope = { fg = colors.blue.bright },
             SnacksNotifierIconTrace = { fg = colors.gray.base },
