@@ -6,8 +6,9 @@ return {
         ---@diagnostic disable: undefined-field
         { "<leader>f/", function() Snacks.picker.grep_word({ dirs = { nvim.file.filename() } }) end, desc = "Buffer Word" },
         { "<leader>f;", function() Snacks.picker.resume() end, desc = "Resume Picker" },
+        { "<leader>fB", function() Snacks.picker.buffers() end, desc = "Buffers" },
         { "<leader>fC", function() Snacks.picker.git_log({ current_file = true }) end, desc = "Commits" },
-        { "<leader>fb", function() Snacks.picker.buffers() end, desc = "Buffers" },
+        { "<leader>fb", function() Snacks.picker.explorer() end, desc = "Browse" },
         { "<leader>fc", function() Snacks.picker.git_log() end, desc = "Commits" },
         { "<leader>fd", function() Snacks.picker.diagnostics({ format = "file" }) end, desc = "Diagnostics" },
         { "<leader>fe", function() Snacks.picker.icons({ icon_sources = { "emoji" }}) end, desc = "Emoji" },
