@@ -128,7 +128,7 @@ return {
             strategies = {
                 agent = { adapter = "anthropic" },
                 chat = {
-                    adapter = "anthropic",
+                    adapter = "copilot",
                     slash_commands = {
                         buffer = { opts = { provider = "snacks" } },
                         file = { opts = { provider = "snacks" } },
