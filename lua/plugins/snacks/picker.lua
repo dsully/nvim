@@ -75,11 +75,6 @@ return {
                 },
                 reverse = false,
             },
-            ---@class snacks.picker.matcher.Config
-            matcher = {
-                fuzzy = true,
-                sort_empty = true,
-            },
             ---@class snacks.picker.sources.Config
             sources = {
                 files = {
@@ -90,13 +85,6 @@ return {
                 },
                 git_files = {
                     untracked = true,
-                },
-            },
-            sort = {
-                fields = {
-                    "text:desc",
-                    "score",
-                    "idx",
                 },
             },
             win = {
