@@ -139,7 +139,7 @@ return {
             },
             ---@type blink.cmp.SourceConfig
             sources = {
-                default = { "lsp", "path", "snippets" },
+                default = { "lsp", "path", "snippets", "env" },
                 min_keyword_length = function(ctx)
                     if ctx.trigger.kind == "trigger_character" then
                         return 0
@@ -175,6 +175,10 @@ return {
                         max_items = 4,
                         min_keyword_length = 4,
                         score_offset = -3,
+                    },
+                    env = {
+                        name = "Env",
+                        module = "blink-cmp-env",
                     },
                     lsp = {
                         name = "LSP",
@@ -260,6 +264,7 @@ return {
         },
     },
     { "saghen/blink.compat", opts = { impersonate_nvim_cmp = true } },
+    { "bydlw98/blink-cmp-env" },
     { "xzbdmw/colorful-menu.nvim" },
     {
         "chrisgrieser/nvim-scissors",
