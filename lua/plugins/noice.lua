@@ -55,6 +55,25 @@ return {
             },
             progress = {
                 enabled = true,
+                -- Don't show the language server client (eg: rust-analyzer)
+                --- @type NoiceFormat|string
+                format = {
+                    {
+                        "{progress} ",
+                        key = "progress.percentage",
+                        contents = {
+                            { "{data.progress.message} " },
+                        },
+                    },
+                    "({data.progress.percentage}%) ",
+                    { "{spinner} ", hl_group = "NoiceLspProgressSpinner" },
+                    { "{data.progress.title} ", hl_group = "NoiceLspProgressTitle" },
+                },
+                --- @type NoiceFormat|string
+                format_done = {
+                    { "✔ ", hl_group = "NoiceLspProgressSpinner" },
+                    { "{data.progress.title} ", hl_group = "NoiceLspProgressTitle" },
+                },
             },
             signature = {
                 auto_open = { enabled = false },
