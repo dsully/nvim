@@ -11,7 +11,7 @@ return {
         highlights = {
             RenderMarkdownCode = { bg = colors.black.base },
         },
-        ---@module 'render-markdown'
+        ---@module "render-markdown"
         ---@type render.md.UserConfig
         opts = {
             ---@type render.md.UserCode
@@ -67,6 +67,9 @@ return {
                 filetype = {
                     codecompanion = {
                         enabled = true,
+                        anti_conceal = {
+                            enabled = false,
+                        },
                         heading = {
                             backgrounds = {},
                             icons = { "", "󰭹 ", "󱙺 ", "", "", "" },
@@ -75,9 +78,14 @@ return {
                     },
                 },
             },
-            render_modes = true, -- Render in ALL modes
             sign = {
                 enabled = false, -- Turn off in the status column
+            },
+            -- https://github.com/MeanderingProgrammer/render-markdown.nvim/issues/319
+            win_options = {
+                concealcursor = {
+                    rendered = "nvic",
+                },
             },
         },
     },
