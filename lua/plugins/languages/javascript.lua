@@ -1,17 +1,5 @@
 ---@type LazySpec[]
 return {
-    -- Log file syntax highlighting.
-    { "fei6409/log-highlight.nvim", event = "BufRead *.log", opts = {} },
-
-    -- C/C++
-    { "p00f/clangd_extensions.nvim", enabled = false },
-
-    -- For adding words to typos.toml
-    { "vhyrro/toml-edit.lua", build = "rockspec", priority = 1000 },
-
-    -- Better vim help.
-    { "dsully/helpview.nvim", branch = "treesitter-compat", ft = { "help", "vimdoc" } },
-
     {
         "vuki656/package-info.nvim",
         config = function()
