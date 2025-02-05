@@ -4,6 +4,23 @@ return {
     { "MunifTanjim/nui.nvim" },
     { "b0o/schemastore.nvim" },
 
+    -- Log file syntax highlighting.
+    { "fei6409/log-highlight.nvim", event = "BufRead *.log", opts = {} },
+
+    -- For adding words to typos.toml
+    { "vhyrro/toml-edit.lua", build = "rockspec", priority = 1000 },
+
+    -- Better vim help.
+    {
+        "OXY2DEV/helpview.nvim",
+        ft = { "help", "vimdoc" },
+        opts = {
+            preview = {
+                icon_provider = "mini",
+            },
+        },
+    },
+
     {
         "rachartier/tiny-glimmer.nvim",
         event = "TextYankPost",
