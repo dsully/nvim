@@ -24,6 +24,7 @@ return {
         { "<leader>fs", function() Snacks.picker.lsp_workspace_symbols() end, desc = "Symbols" },
         { "<leader>fu", function() Snacks.picker.undo() end, desc = "Undo Tree" },
         { "<leader>fw", function() Snacks.picker.grep_word() end, desc = "Words" },
+        { "z=", function() Snacks.picker.spelling() end, desc = "Spelling" },
     },
     ---@type snacks.picker.Config
     opts = {
