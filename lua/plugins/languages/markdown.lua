@@ -14,15 +14,7 @@ return {
         ---@module 'render-markdown'
         ---@type render.md.UserConfig
         opts = {
-            checkbox = {
-                checked = { -- Replaces '[x]' of 'task_list_marker_checked'
-                    icon = "󰄵 ",
-                    scope_highlight = "@markup.strikethrough",
-                },
-                unchecked = { -- Replaces '[ ]' of 'task_list_marker_unchecked'
-                    icon = "󰄱 ",
-                },
-            },
+            ---@type render.md.UserCode
             code = {
                 border = "none",
                 language_pad = 2,
@@ -38,11 +30,19 @@ return {
             },
             link = {
                 custom = {
-                    python = { pattern = "%.py$", icon = "󰌠 " },
+                    discord = { pattern = "discord%.com", icon = "󰙯 " },
+                    file = { pattern = "^file:", icon = " ", highlight = "RenderMarkdownFileLink" },
+                    github = { pattern = "github%.com", icon = "󰊤 " },
+                    neovim = { pattern = "neovim%.io", icon = " " },
+                    python = { pattern = "%.py$", icon = "󰌠'" },
+                    reddit = { pattern = "reddit%.com", icon = "󰑍 " },
+                    slack = { pattern = "^http[s]?://%a+.slack.com", icon = "󰒱 ", highlight = "RenderMarkdownLink" },
+                    stackoverflow = { pattern = "stackoverflow%.com", icon = "󰓌 " },
+                    web = { pattern = "^http", icon = "󰖟 " },
+                    youtube = { pattern = "youtube%.com", icon = "󰗃 " },
                 },
             },
             on = {
-                ---@param buf integer
                 attach = function()
                     --
                     require("snacks")
@@ -64,22 +64,20 @@ return {
                 end,
             },
             overrides = {
-                buftype = {
-                    nofile = {
-                        anti_conceal = {
-                            enabled = false,
-                        },
-                        render_modes = true,
-                    },
-                },
                 filetype = {
                     codecompanion = {
-                        anti_conceal = {
-                            enabled = false,
+                        enabled = true,
+                        heading = {
+                            backgrounds = {},
+                            icons = { "", "󰭹 ", "󱙺 ", "", "", "" },
                         },
                         render_modes = true,
                     },
                 },
+            },
+            render_modes = true, -- Render in ALL modes
+            sign = {
+                enabled = false, -- Turn off in the status column
             },
         },
     },

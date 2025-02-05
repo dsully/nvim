@@ -19,17 +19,15 @@ return {
 
             local group = ev.group("CodeCompanionHooks")
 
+            -- Format the buffer after the inline request has completed
             ev.on(ev.User, function(event)
-                --
-                -- Format the buffer after the inline request has completed
-                if event.match == "CodeCompanionInlineFinished" then
-                    require("conform").format({ bufnr = event.buf })
-                end
+                require("conform").format({ bufnr = event.buf })
             end, {
                 group = group,
-                pattern = "CodeCompanionInline*",
+                pattern = "CodeCompanionInlineFinished",
             })
 
+            -- For status line updates.
             local status = require("plugins.ai.codecompanion.status")
 
             ev.on(ev.User, function(event)
@@ -93,13 +91,12 @@ return {
             },
             display = {
                 chat = {
+                    intro_message = "",
                     window = {
                         layout = "vertical", ---@type "float"|"vertical"|"horizontal"|"buffer"
                         position = "right", ---@type "left"|"right"|"top"|"bottom"
                         width = 0.4,
                     },
-                    render_headers = false,
-                    show_settings = false,
                 },
                 diff = {
                     layout = "vertical", ---@type "horizontal"|"vertical"
@@ -126,7 +123,9 @@ return {
                 ["Spelling"] = require("plugins.ai.codecompanion.prompts.spelling"),
             },
             strategies = {
-                agent = { adapter = "anthropic" },
+                agent = {
+                    adapter = "anthropic",
+                },
                 chat = {
                     adapter = "copilot",
                     slash_commands = {

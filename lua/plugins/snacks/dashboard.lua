@@ -1,7 +1,7 @@
 ---@type LazySpec
 return {
+    ---@module "snacks"
     "folke/snacks.nvim",
-
     opts = {
         ---@type snacks.dashboard.Config
         dashboard = {
