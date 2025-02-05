@@ -78,6 +78,9 @@ return {
         bigfile = {
             enabled = true,
         },
+        explorer = {
+            replace_netrw = true,
+        },
         gitbrowse = {
             notify = false,
         },
@@ -106,6 +109,7 @@ return {
         scope = {
             enabled = true,
         },
+        ---@type snacks.statuscolumn.Config
         statuscolumn = {
             enabled = true,
             left = { "git" },
@@ -130,6 +134,10 @@ return {
             },
             terminal = defaults.ui.float,
             win = defaults.ui.float,
+        },
+        terminal = {
+            enabled = true,
+            shell = "fish",
         },
         words = { enabled = true },
     },
