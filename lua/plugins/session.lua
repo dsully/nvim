@@ -1,6 +1,23 @@
 ---@type LazySpec
 return {
+    ---@module 'resession'
     "stevearc/resession.nvim",
+    config = function(_, opts)
+        local resession = require("resession")
+
+        resession.setup(opts)
+
+        resession.add_hook("post_load", function()
+            --
+            -- Loop over all available buffer and attach to `help` buffers
+            for _, buf in ipairs(vim.api.nvim_list_bufs()) do
+                --
+                if vim.bo[buf].ft == "help" then
+                    require("helpview").actions.attach(buf)
+                end
+            end
+        end)
+    end,
     init = function()
         nvim.command("SessionLoad", function()
             require("resession").load(Snacks.git.get_root(), { silence_errors = false })
@@ -36,5 +53,5 @@ return {
             return vim.bo[bufnr].buflisted
         end,
     },
-    priority = 100, -- Load before alpha.nvim
+    priority = 100, -- Load before the dashboard.
 }
