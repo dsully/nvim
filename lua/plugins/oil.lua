@@ -1,9 +1,10 @@
 ---@type LazySpec
 return {
+    ---@module "oil"
     "stevearc/oil.nvim",
     keys = {
         {
-            "<leader>o",
+            "-",
             function()
                 require("oil").toggle_float()
             end,
@@ -61,7 +62,6 @@ return {
             orig_refresh(...)
         end
 
-        ---@module "oil"
         ---@type oil.SetupOpts
         return {
             columns = {
