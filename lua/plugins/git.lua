@@ -20,7 +20,7 @@ return {
             end, 500)
         end,
         event = ev.LazyFile,
-        ---@module 'gitsigns.config'
+        ---@module "gitsigns"
         ---@type Gitsigns.Config
         opts = {
             attach_to_untracked = true,
@@ -28,6 +28,7 @@ return {
             on_attach = function(buffer)
                 local gs = package.loaded.gitsigns
 
+                ---@param mode string[]?
                 local function bmap(l, r, desc, mode)
                     vim.keymap.set(mode or "n", l, r, { buffer = buffer, desc = desc })
                 end

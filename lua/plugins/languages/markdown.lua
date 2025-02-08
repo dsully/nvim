@@ -28,6 +28,7 @@ return {
                 position = "inline",
                 sign = false,
             },
+            latex = { enabled = false },
             link = {
                 custom = {
                     discord = { pattern = "discord%.com", icon = "󰙯 " },

@@ -1,59 +1,53 @@
-vim.opt.autoread = true -- update file content if it has been modified on disk
-vim.opt.backup = false
-vim.opt.cmdheight = 0 -- Set to 0 if using Noice
-vim.opt.completeopt = { "menu", "menuone", "noselect" }
-vim.opt.confirm = true
-vim.opt.expandtab = true
-vim.opt.exrc = true
-vim.opt.fileformats = "unix" -- force \n
-vim.opt.foldenable = false
-vim.opt.foldexpr = "v:lua.vim.treesitter.foldexpr()"
-vim.opt.grepprg = "rg --engine auto --vimgrep --smart-case --hidden"
-vim.opt.grepformat = "%f:%l:%c:%m"
-vim.opt.guicursor = "a:blinkon10" -- Blink the cursor.
-vim.opt.guifont = "Hack Nerd Font"
-vim.opt.ignorecase = true
-vim.opt.laststatus = 3 -- Global status line.
-vim.opt.mouse = ""
-vim.opt.mousemodel = "extend"
-vim.opt.mousescroll = { "ver:0", "hor:0" } -- Disable mouse scrolling.
-vim.opt.number = false
-vim.opt.pumblend = 10 -- Popup blend
-vim.opt.pumheight = 10 -- maximum number of completion-menu items
-vim.opt.sessionoptions = {
-    "buffers",
-    "curdir",
-    "globals",
-    "options",
-    "skiprtp",
-}
-vim.opt.shell = "sh" -- plugins expect bash - not fish, zsh, etc
-vim.opt.shiftwidth = 4
-vim.opt.signcolumn = "yes" -- Always show the gutter.
-vim.opt.showbreak = ">"
-vim.opt.showmatch = true -- Match brackets
-vim.opt.smartcase = false
-vim.opt.smartindent = true
-vim.opt.smoothscroll = true
-vim.opt.spell = false
-vim.opt.spellcapcheck = "" -- don't check for capital letters at start of sentence.
-vim.opt.spellfile = vim.fn.stdpath("config") .. "/spell/en.utf-8.add"
-vim.opt.spelloptions:append({ "camel", "noplainbuffer" })
-vim.opt.spellsuggest = "best,9"
-vim.opt.splitkeep = "screen"
-vim.opt.shortmess:append({ W = true, I = true, c = true, q = true })
-vim.opt.softtabstop = 4
-vim.opt.termguicolors = true
-vim.opt.textwidth = 160
-vim.opt.ttimeout = true
-vim.opt.ttimeoutlen = 0
-vim.opt.updatetime = 100 -- milliseconds to write the swap file.
-vim.opt.wildignore:append({ ".DS_Store" })
+vim.o.autoread = true -- update file content if it has been modified on disk
+vim.o.backup = false
+vim.o.cmdheight = 0 -- Set to 0 if using Noice
+vim.o.completeopt = "menu,menuone,noselect"
+vim.o.confirm = true
+vim.o.expandtab = true
+vim.o.exrc = true
+vim.o.fileformats = "unix" -- force \n
+vim.o.foldenable = false
+vim.o.foldexpr = "v:lua.vim.treesitter.foldexpr()"
+vim.o.grepprg = "rg --engine auto --vimgrep --smart-case --hidden"
+vim.o.grepformat = "%f:%l:%c:%m"
+vim.o.guicursor = "a:blinkon10" -- Blink the cursor.
+vim.o.guifont = "Hack Nerd Font"
+vim.o.ignorecase = true
+vim.o.laststatus = 3 -- Global status line.
+vim.o.mouse = ""
+vim.o.mousemodel = "extend"
+vim.o.mousescroll = "ver:0,hor:0" -- Disable mouse scrolling.
+vim.o.number = false
+vim.o.pumblend = 10 -- Popup blend
+vim.o.pumheight = 10 -- maximum number of completion-menu items
+vim.o.sessionoptions = "buffers,curdir,globals,options,skiprtp"
+vim.o.shell = "sh" -- plugins expect bash - not fish, zsh, etc
+vim.o.shiftwidth = 4
+vim.o.signcolumn = "yes" -- Always show the gutter.
+vim.o.showbreak = ">"
+vim.o.showmatch = true -- Match brackets
+vim.o.smartcase = false
+vim.o.smartindent = true
+vim.o.smoothscroll = true
+vim.o.spell = false
+vim.o.spellcapcheck = "" -- don't check for capital letters at start of sentence.
+vim.o.spellfile = vim.fn.stdpath("config") .. "/spell/en.utf-8.add"
+vim.o.spelloptions = "camel,noplainbuffer"
+vim.o.spellsuggest = "best,9"
+vim.o.splitkeep = "screen"
+vim.o.shortmess = vim.o.shortmess .. "WIcq"
+vim.o.softtabstop = 4
+vim.o.termguicolors = true
+vim.o.textwidth = 160
+vim.o.ttimeout = true
+vim.o.ttimeoutlen = 0
+vim.o.updatetime = 100 -- milliseconds to write the swap file.
+-- vim.o.wildignore:append({ ".DS_Store" })
 
 -- Don't create root-owned files.
 if vim.env.USER == "root" then
-    vim.opt.undofile = false
-    vim.opt.shada = ""
+    vim.o.undofile = false
+    vim.o.shada = ""
 else
     -- Loading shada is SLOW, load it manually, after UI-enter so it doesn't block startup.
     local shada = vim.o.shada
@@ -61,14 +55,14 @@ else
     vim.o.shada = ""
 
     vim.api.nvim_create_autocmd("User", {
-        callback = function()
+        callback = function(...)
             vim.o.shada = shada
             pcall(vim.cmd.rshada, { bang = true })
         end,
         pattern = "LazyDone",
     })
 
-    vim.opt.undofile = true
+    vim.o.undofile = true
 end
 
 -- Mappings --

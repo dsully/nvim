@@ -6,7 +6,9 @@ return {
     on_attach = function(client)
         --
         -- Use treesitter highlighting, as it supports injections.
-        client.server_capabilities.semanticTokensProvider = nil
+        if client.server_capabilities then
+            client.server_capabilities.semanticTokensProvider = nil
+        end
     end,
     root_markers = {
         "Pipfile",

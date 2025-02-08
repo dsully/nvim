@@ -40,13 +40,16 @@ end, {
 })
 
 ev.on(ev.FileType, function(event)
-    vim.opt.formatoptions = {
+    ---@diagnostic ignore:access-invisible
+    vim.o.formatoptions = vim.iter({
         c = true, -- Auto-wrap comments using 'textwidth', inserting the current comment leader automatically.
         j = true, -- Where it makes sense, remove a comment leader when joining lines.
         l = true, -- Long lines are not broken in insert mode.
         n = true, -- When formatting text, recognize numbered lists.
         q = true, -- Allow formatting of comments with "gq".
-    }
+    })
+        :map(tostring)
+        :join("")
 
     vim.api.nvim_set_option_value("foldenable", false, { scope = "local", win = 0 })
 
