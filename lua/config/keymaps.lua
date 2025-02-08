@@ -48,7 +48,7 @@ if vim.g.os == "Darwin" then
         vim.system({ "open", filename }):wait()
     end, "Open in App")
 
-    nvim.command("Tower", function()
+    nvim.command("Tower", function(...)
         --
         local root = Snacks.git.get_root()
 

@@ -51,4 +51,4 @@ vim.filetype.add({
         end,
         ["requirements[%w_.-]+%.txt"] = "requirements",
     },
-})
+} --[[@as vim.filetype.add.filetypes ]])

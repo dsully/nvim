@@ -44,7 +44,7 @@ return {
         ev.on(ev.FileType, function()
             vim.o.backup = false
             vim.o.writebackup = false
-            vim.opt.shada = ""
+            vim.o.shada = ""
         end, {
             pattern = "age",
         })

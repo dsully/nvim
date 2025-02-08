@@ -42,7 +42,7 @@ end
 
 do
     vim.api.nvim_create_autocmd("VimEnter", {
-        callback = function()
+        callback = function(...)
             -- Skip if we're in lazy.nvim installing new plugins.
             if vim.bo.filetype == "lazy_backdrop" or vim.bo.buftype == "nofile" then
                 return

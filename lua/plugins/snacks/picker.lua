@@ -8,6 +8,7 @@ return {
         { "<leader>f;", function() Snacks.picker.resume() end, desc = "Resume Picker" },
         { "<leader>fB", function() Snacks.picker.buffers() end, desc = "Buffers" },
         { "<leader>fC", function() Snacks.picker.git_log({ current_file = true }) end, desc = "Commits" },
+        { "<leader>fD", function() Snacks.picker.diagnostics_buffer({ format = "file" }) end, desc = "Diagnostics (Buffer)" },
         { "<leader>fb", function() Snacks.picker.explorer() end, desc = "Browse" },
         { "<leader>fc", function() Snacks.picker.git_log() end, desc = "Commits" },
         { "<leader>fd", function() Snacks.picker.diagnostics({ format = "file" }) end, desc = "Diagnostics" },
@@ -33,7 +34,7 @@ return {
                 ---@param p snacks.Picker
                 toggle_cwd = function(p)
                     local root = nvim.root.get({ buf = p.input.filter.current_buf, normalize = true })
-                    local cwd = vim.fs.normalize(vim.uv.cwd() or ".")
+                    local cwd = vim.fs.normalize(tostring(vim.uv.cwd() or "."))
                     local current = p:cwd()
 
                     p:set_cwd(current == root and cwd or root)
@@ -46,7 +47,7 @@ return {
                     truncate = 160,
                 },
             },
-            ---@class snacks.picker.icons
+            ---@type snacks.picker.icons
             icons = {
                 kinds = defaults.icons.lsp,
             },
@@ -76,7 +77,7 @@ return {
                 },
                 reverse = false,
             },
-            ---@class snacks.picker.sources.Config
+            ---@type snacks.picker.sources.Config
             sources = {
                 files = {
                     filter = {

@@ -20,8 +20,8 @@ function M.lazy_notify()
     local orig = vim.notify
     vim.notify = temp
 
-    local timer = vim.loop.new_timer()
-    local check = assert(vim.loop.new_check())
+    local timer = vim.uv.new_timer()
+    local check = assert(vim.uv.new_check())
 
     local replay = function()
         if timer then
@@ -178,7 +178,7 @@ function M.setup()
         LazyProp = { fg = colors.white.bright },
     })
 
-    vim.api.nvim_create_user_command("LazyHealth", function()
+    vim.api.nvim_create_user_command("LazyHealth", function(...)
         vim.cmd.Lazy({ "load all", bang = true })
         vim.cmd.checkhealth()
     end, { desc = "Load all plugins and run :checkhealth" })
@@ -191,6 +191,7 @@ function M.setup()
             local words = vim.split(line, "%s+")
 
             if #words <= 2 then
+                ---@type string
                 local prefix = words[2] or ""
 
                 ---@type table<string>

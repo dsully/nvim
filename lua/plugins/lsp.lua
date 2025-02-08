@@ -8,7 +8,7 @@ return {
         local lsp = require("helpers.lsp")
 
         vim.uv.fs_unlink(vim.lsp.get_log_path())
-        vim.lsp.log.set_level(vim.lsp.log.levels.ERROR)
+        vim.lsp.log.set_level(vim.lsp.log.levels.WARN)
         vim.lsp.log.set_format_func(vim.inspect)
 
         vim.diagnostic.config({
