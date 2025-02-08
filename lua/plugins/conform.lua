@@ -14,9 +14,15 @@ return {
     opts = function()
         ---@type conform.setupOpts
         return {
+            ---@param bufnr integer
+            ---@return conform.FormatOpts?
             format_on_save = function(bufnr)
                 --
                 if not vim.tbl_contains(defaults.formatting.on_save, vim.bo[bufnr].filetype) then
+                    return nil
+                end
+
+                if vim.bo[bufnr].modifiable == false then
                     return nil
                 end
 
