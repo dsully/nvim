@@ -75,16 +75,6 @@ return {
                         maintainers = {},
                         tier = "community",
                     },
-                    jinja2 = {
-                        install_info = {
-                            path = vim.fs.joinpath(root, "tree-sitter-jinja2"),
-                            files = { "src/parser.c" },
-                            queries_dir = vim.fs.joinpath(root, "tree-sitter-jinja2", "queries", "jinja2"),
-                        },
-                        filetype = "jinja2",
-                        maintainers = {},
-                        tier = "community",
-                    },
                 },
             }
         end,
