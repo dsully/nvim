@@ -1,6 +1,6 @@
-;; extends
+; extends
 
-([
+[
   (function_definition)
   (for_statement)
   (begin_statement)
@@ -11,5 +11,4 @@
   (else_clause)
   (if_statement)
   (command)
-] @context)
-
+] @context

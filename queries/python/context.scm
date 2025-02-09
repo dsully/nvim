@@ -1,3 +1,3 @@
-;; extends
+; extends
 
 (expression_statement) @context
