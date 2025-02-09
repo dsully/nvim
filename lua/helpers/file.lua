@@ -175,7 +175,7 @@ end
 ---Create a combined file type for template languages.
 ---@param filename string
 ---@param extension string The extension to strip from the filename for detection.
----@param combined string The combined file type. eg: "jinja2"
+---@param combined string The combined file type. eg: "jinja"
 ---@return string?
 M.template_type = function(filename, extension, combined)
     --

@@ -99,6 +99,5 @@ return {
         opts = {},
     },
     { "bezhermoso/tree-sitter-ghostty", ft = "ghostty" },
-    { "geigerzaehler/tree-sitter-jinja2" },
     { "matthewpi/tree-sitter-caddyfile" },
 }

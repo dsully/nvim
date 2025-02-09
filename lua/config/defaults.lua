@@ -463,7 +463,7 @@ local M = {
             "ini",
             "java",
             "javascript",
-            "jinja2",
+            "jinja",
             "jsdoc",
             "json",
             "json5",

@@ -1,7 +1,7 @@
 ---@type vim.lsp.Config
 return {
     cmd = { "jinja-lsp" },
-    filetypes = { "jinja2" },
+    filetypes = { "jinja" },
     init_options = {
         templates = "./templates",
         backend = { "./src" },
