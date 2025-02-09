@@ -2,11 +2,6 @@
 return {
     cmd = {
         vim.env.HOME .. "/src/rust/ruff/target/release/red_knot",
-        "--target-version",
-        "3.10",
-        "--venv-path",
-        vim.uv.cwd() .. "/.venv",
-        "--watch",
         "server",
     },
     filetypes = { "python" },
