@@ -31,12 +31,12 @@ return {
             },
             underline = true,
             update_in_insert = false, -- https://www.reddit.com/r/neovim/comments/pfk209/nvimlsp_too_fast/
-        })
+        } --[[@as vim.diagnostic.Opts]])
 
         -- Set defaults
         vim.lsp.config("*", {
             root_markers = { ".git" },
-        })
+        } --[[@as vim.lsp.Config]])
 
         local should_enable = require("helpers.lsp").should_enable
 
@@ -119,7 +119,7 @@ return {
         -- end)
 
         ---@param client vim.lsp.Client
-        ---@param buffer number
+        ---@param buffer integer
         lsp.on_supports_method(methods.textDocument_documentHighlight, function(client, buffer)
             --
             local debounce = require("helpers.debounce").debounce
@@ -141,7 +141,7 @@ return {
                         end
 
                         vim.lsp.util.buf_highlight_references(ctx.bufnr, result, enc)
-                    end, buffer)
+                    end --[[@as lsp.Handler ]], buffer)
                 end),
                 {
                     group = id,

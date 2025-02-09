@@ -276,7 +276,7 @@ local M = {
 
 ---@param event string | string[]
 ---@param callback EventCallback
----@param opts EventOpts?
+---@param opts EventOpts
 ---@return integer
 M.on = function(event, callback, opts)
     opts = opts or {}
@@ -295,7 +295,7 @@ M.on = function(event, callback, opts)
 end
 
 ---@param event string
----@param opts EmitOpts?
+---@param opts EmitOpts
 ---@return nil
 M.emit = function(event, opts)
     opts = opts or {}
@@ -312,7 +312,11 @@ end
 --- @param clear boolean? Whether to clear the group. Defaults to true.
 --- @return integer
 M.group = function(name, clear)
-    return vim.api.nvim_create_augroup(vim.env.USER .. "/" .. name, { clear = clear ~= nil and clear or true })
+    if clear == nil then
+        clear = true
+    end
+
+    return vim.api.nvim_create_augroup(vim.env.USER .. "/" .. name, { clear = clear })
 end
 
 M.is_loaded = function(name)
