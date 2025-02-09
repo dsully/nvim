@@ -1,4 +1,4 @@
-;; extends
+; extends
 
 ((identifier) @module.builtin
   (#eq? @module.builtin "defaults"))

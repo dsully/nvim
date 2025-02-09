@@ -1,83 +1,36 @@
-; Identifiers
+; extends
 
-[
-    (field)
-    (field_identifier)
-] @property
-
-(variable) @variable
-
-; Function calls
-
+; All chezmoi template functions
 (function_call
-  function: (identifier) @function)
+  function: (identifier) @function.builtin
+  (#set! priority 130)
+  (#any-of? @function.builtin
+    "awsSecretsManager" "awsSecretsManagerRaw" "bitwarden" "bitwardenAttachment" "bitwardenFields"
+    "comment" "completion" "decrypt" "encrypt" "eqFold" "exit" "fromIni" "fromToml" "fromYaml"
+    "gitHubKeys" "gitHubLatestRelease" "gitHubLatestTag" "glob" "gopass" "gopassRaw" "hexDecode"
+    "hexEncode" "include" "includeTemplate" "ioreg" "joinPath" "keepassxc" "keepassxcAttachment"
+    "keepassxcAttribute" "keeper" "keeperDataFields" "keeperFindPassword" "keyring" "lastpass"
+    "lastpassRaw" "lookPath" "lstat" "mozillaInstallHash" "onepassword" "onepasswordDetailsFields"
+    "onepasswordDocument" "onepasswordItemFields" "onepasswordRead" "output" "pass" "passFields"
+    "passRaw" "passhole" "promptBool" "promptBoolOnce" "promptInt" "promptIntOnce" "promptString"
+    "promptStringOnce" "quote" "quoteList" "replaceAllRegex" "secret" "secretJSON" "setValueAtPath"
+    "sha256sum" "stat" "stdinIsATTY" "toIni" "toToml" "toYaml" "vault" "writeToStdout"))
 
-(method_call
-  method: (selector_expression
-    field: (field_identifier) @function.method))
+; Template variables
+((variable) @variable
+  (#set! priority 130))
 
-; Operators
+; Template operators
+("|" @operator
+  (#set! priority 130))
 
-"|" @operator
-":=" @operator
-
-; Builtin functions
-
-((identifier) @function.builtin
- (#match? @function.builtin "^(and|call|html|index|slice|js|len|not|or|print|printf|println|urlquery|eq|ne|lt|ge|gt|ge)$"))
-
-; Delimiters
-
-"." @punctuation.delimiter
-"," @punctuation.delimiter
-
-"{{" @punctuation.bracket
-"}}" @punctuation.bracket
-"{{-" @punctuation.bracket
-"-}}" @punctuation.bracket
-")" @punctuation.bracket
-"(" @punctuation.bracket
-
-; Keywords
-
-[
-    "else"
-    "else if"
-    "if"
-    "with"
-] @keyword.conditional
-
-[
-    "range"
-    "end"
-    "template"
-    "define"
-    "block"
-] @keyword
-
-; Literals
-
-[
+; Template literals
+([
   (interpreted_string_literal)
   (raw_string_literal)
-  (rune_literal)
 ] @string
+  (#set! priority 130))
 
-(escape_sequence) @string.special
-
-[
-  (int_literal)
-  (float_literal)
-  (imaginary_literal)
-] @number
-
-[
-    (true)
-    (false)
-] @boolean
-
-[
-  (nil)
-] @constant.builtin
-
-(comment) @comment
+; Comments with template syntax
+((comment) @comment
+  (#set! priority 130))

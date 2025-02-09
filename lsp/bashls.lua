@@ -1,7 +1,13 @@
 ---@type vim.lsp.Config
 return {
     cmd = { "bash-language-server", "start" },
-    filetypes = { "bash", "direnv", "sh", "zsh" },
+    filetypes = {
+        "bash",
+        "bash.gotmpl",
+        "direnv",
+        "sh",
+        "zsh",
+    },
     --
     ---@param client vim.lsp.Client
     on_attach = function(client)

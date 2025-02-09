@@ -1,1 +1,2 @@
-((format) @printf(#set! "priority" 1001))
+((format) @printf
+  (#set! "priority" 1001))
