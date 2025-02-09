@@ -75,6 +75,17 @@ return {
                         maintainers = {},
                         tier = "community",
                     },
+                    pkl = {
+                        install_info = {
+                            url = "https://github.com/apple/tree-sitter-pkl",
+                            files = { "src/parser.c", "src/scanner.c" },
+                            queries_dir = vim.fs.joinpath(root, "pkl-neovim", "queries", "pkl"),
+                            used_by = { "pcf" },
+                        },
+                        filetype = "pkl",
+                        maintainers = {},
+                        tier = "community",
+                    },
                 },
             }
         end,
@@ -100,4 +111,6 @@ return {
     },
     { "bezhermoso/tree-sitter-ghostty", ft = "ghostty" },
     { "matthewpi/tree-sitter-caddyfile" },
+    -- Only required for the tree-sitter queries.
+    { "apple/pkl-neovim" },
 }

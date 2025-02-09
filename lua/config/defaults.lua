@@ -482,6 +482,7 @@ local M = {
             "nix",
             "passwd",
             "pem",
+            "pkl",
             "printf",
             "properties",
             "proto",
