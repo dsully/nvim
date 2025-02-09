@@ -7,6 +7,7 @@ vim.filetype.add({
         ["Brewfile"] = "brewfile",
         ["Caddyfile"] = "caddyfile",
         ["Cargo.toml"] = "toml.cargo",
+        ["PklProject"] = "pkl",
         ["config.custom"] = "sshconfig",
         ["direnvrc"] = "direnv",
         ["fish_history"] = "yaml",
@@ -21,6 +22,8 @@ vim.filetype.add({
         gotmpl = "gotmpl",
         jinja = "jinja",
         jinja2 = "jinja",
+        pcf = "pkl",
+        pkl = "pkl",
         plist = "xml.plist", -- macOS PropertyList files
         -- We always want LaTeX, avoid slow detection logic
         tex = "latex",
