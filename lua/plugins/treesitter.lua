@@ -46,7 +46,6 @@ return {
         "lewis6991/ts-install.nvim",
         build = ":TS update!",
         cmd = "TS",
-        commit = "b5b7d602",
         event = ev.LazyFile,
         opts = function()
             local root = require("lazy.core.config").options.root
