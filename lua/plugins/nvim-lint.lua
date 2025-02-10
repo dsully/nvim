@@ -1,9 +1,6 @@
 ---@type LazySpec
 return {
     "mfussenegger/nvim-lint",
-    cond = function()
-        return nvim.file.is_local_dev()
-    end,
     config = function()
         vim.schedule(function()
             local lint = require("lint")
@@ -27,12 +24,30 @@ return {
             if vim.g.os == "Linux" then
                 lint.linters_by_ft["systemd"] = { "systemd-analyze" }
             end
+
+            -- Set up a linting toggle.
+            vim.g.linting = nvim.file.is_local_dev()
+
+            Snacks.toggle({
+                name = "Linting",
+                get = function()
+                    return vim.g.linting
+                end,
+                set = function(state)
+                    vim.g.linting = state
+                    vim.cmd.doautocmd(ev.OptionSet)
+                end,
+            }):map("<space>tl")
         end)
 
         ev.on(
-            { ev.BufReadPost, ev.BufWritePost, ev.InsertLeave },
+            { ev.BufReadPost, ev.BufWritePost, ev.InsertLeave, ev.OptionSet },
             require("helpers.debounce").debounce(100, function(args)
                 --
+                if not vim.g.linting then
+                    return
+                end
+
                 -- Ignore buffer types and empty file types.
                 if vim.tbl_contains(defaults.ignored.buffer_types, vim.bo.buftype) then
                     return
