@@ -97,7 +97,7 @@ function M.setup()
         },
         dev = {
             fallback = true,
-            path = vim.env.HOME .. "/dev/home/neovim",
+            path = vim.env.HOME .. "/dev/forked/neovim",
             patterns = { vim.env.USER },
         },
         diff = {
