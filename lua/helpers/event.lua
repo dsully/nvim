@@ -223,8 +223,6 @@ local M = {
     UILeave = "UILeave",
     --- user defined autocommand
     User = "User",
-    --- when the user presses the same key 42 times
-    UserGettingBored = "UserGettingBored",
     --- after starting Vim
     VimEnter = "VimEnter",
     --- before exiting Vim
@@ -325,7 +323,7 @@ M.is_loaded = function(name)
 end
 
 ---@param name string
----@param fn fun(name:string)
+---@param fn fun(name:string?)
 M.on_load = function(name, fn)
     if M.is_loaded(name) then
         fn(name)

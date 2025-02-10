@@ -297,7 +297,7 @@ return {
         config = function(_, opts)
             require("mini.pairs").setup(opts)
 
-            require("snacks").toggle
+            Snacks.toggle
                 .new({
                     name = "Mini Pairs",
                     get = function()

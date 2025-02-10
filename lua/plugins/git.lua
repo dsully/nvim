@@ -6,17 +6,15 @@ return {
             vim.defer_fn(function()
                 require("gitsigns").setup(opts)
 
-                require("snacks")
-                    .toggle({
-                        name = "Git Signs",
-                        get = function()
-                            return require("gitsigns.config").config.signcolumn
-                        end,
-                        set = function(state)
-                            require("gitsigns").toggle_signs(state)
-                        end,
-                    })
-                    :map("<space>tg")
+                Snacks.toggle({
+                    name = "Git Signs",
+                    get = function()
+                        return require("gitsigns.config").config.signcolumn
+                    end,
+                    set = function(state)
+                        require("gitsigns").toggle_signs(state)
+                    end,
+                }):map("<space>tg")
             end, 500)
         end,
         event = ev.LazyFile,

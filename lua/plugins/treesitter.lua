@@ -24,7 +24,7 @@ return {
                 bang = true,
                 desc = "Wrapper to redirect TSInstall to ts-install's 'TS install'",
                 nargs = 1,
-            })
+            } --[[@as vim.api.keyset.user_command]])
         end,
         lazy = false,
         keys = {

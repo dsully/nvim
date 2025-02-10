@@ -46,22 +46,20 @@ return {
             on = {
                 attach = function()
                     --
-                    require("snacks")
-                        .toggle({
-                            name = "Markdown",
-                            get = function()
-                                return require("render-markdown.state").enabled
-                            end,
-                            set = function(enabled)
-                                local m = require("render-markdown")
-                                if enabled then
-                                    m.enable()
-                                else
-                                    m.disable()
-                                end
-                            end,
-                        })
-                        :map("<space>tm")
+                    Snacks.toggle({
+                        name = "Markdown",
+                        get = function()
+                            return require("render-markdown.state").enabled
+                        end,
+                        set = function(enabled)
+                            local m = require("render-markdown")
+                            if enabled then
+                                m.enable()
+                            else
+                                m.disable()
+                            end
+                        end,
+                    }):map("<space>tm")
                 end,
             },
             overrides = {
