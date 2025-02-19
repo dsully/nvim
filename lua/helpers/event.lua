@@ -270,7 +270,6 @@ local M = {
 
 ---@alias EventOpts vim.api.keyset.create_autocmd
 ---@alias EventCallback string|(fun(args: vim.api.keyset.create_autocmd.callback_args): boolean?)
----@alias EmitOpts vim.api.keyset.exec_autocmds
 
 ---@param event string | string[]
 ---@param callback EventCallback
@@ -293,10 +292,9 @@ M.on = function(event, callback, opts)
 end
 
 ---@param event string
----@param opts EmitOpts
+---@param opts vim.api.keyset.exec_autocmds
 ---@return nil
 M.emit = function(event, opts)
-    opts = opts or {}
 
     if M[event] then
         vim.api.nvim_exec_autocmds(event, opts)

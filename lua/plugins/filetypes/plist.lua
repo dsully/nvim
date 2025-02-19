@@ -5,6 +5,7 @@ local M = {
     pattern = "*.plist",
 }
 
+---@param args vim.api.keyset.create_autocmd.callback_args
 M.read_command = function(args)
     --
     local bufnr = args.buf
@@ -41,6 +42,8 @@ M.read_command = function(args)
     end
 end
 
+---@param args vim.api.keyset.create_autocmd.callback_args
+---@return integer
 M.write_command = function(args)
     local save_format = M.mapping[vim.b.plist_original_format or vim.g.plist_save_format]
 
@@ -54,6 +57,8 @@ M.write_command = function(args)
     return 1
 end
 
+---@param filename string
+---@return string
 M.detect_format = function(filename)
     local fd = vim.uv.fs_open(filename, "r", 438)
 

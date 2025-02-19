@@ -45,7 +45,7 @@ if vim.g.os == "Darwin" then
 
         notify.info("Opening " .. vim.fs.basename(filename), { icon = "󰏋" })
 
-        vim.system({ "open", filename }):wait()
+        vim.system({ "open", filename }):wait(0)
     end, "Open in App")
 
     nvim.command("Tower", function(...)
@@ -53,7 +53,7 @@ if vim.g.os == "Darwin" then
         local root = Snacks.git.get_root()
 
         if root then
-            vim.system({ "/usr/bin/open", "-g", "-a", "Tower", root }):wait()
+            vim.system({ "/usr/bin/open", "-g", "-a", "Tower", root }):wait(0)
         end
     end, { desc = "Open Tower", nargs = 0 })
 
