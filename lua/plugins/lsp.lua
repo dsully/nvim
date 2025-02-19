@@ -122,14 +122,12 @@ return {
         ---@param buffer integer
         lsp.on_supports_method(methods.textDocument_documentHighlight, function(client, buffer)
             --
-            local debounce = require("helpers.debounce").debounce
-
             local group = string.format("%s/highlight/%s", client.name, buffer)
             local id = ev.group(group)
 
             ev.on(
                 { ev.BufEnter, ev.CursorMoved, ev.FocusGained, ev.WinEnter },
-                debounce(200, function()
+                Snacks.util.throttle(function()
                     vim.lsp.buf.clear_references()
 
                     local enc = client.offset_encoding
@@ -142,7 +140,7 @@ return {
 
                         vim.lsp.util.buf_highlight_references(ctx.bufnr, result, enc)
                     end --[[@as lsp.Handler ]], buffer)
-                end),
+                end, { ms = 200 }),
                 {
                     group = id,
                     buffer = buffer,
