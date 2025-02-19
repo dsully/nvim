@@ -46,8 +46,14 @@ return {
                 keys = {
                     { icon = "󰁯 ", key = "l", desc = "Load Session", action = ":SessionLoad", label = "[l]" },
                     { icon = " ", key = "n", desc = "New File", action = ":ene | startinsert", label = "[n]" },
-                    { icon = "󰱼 ", key = "f", desc = "Find File", action = ":lua Snacks.dashboard.pick('find_files')", label = "[f]" },
-                    { icon = " ", key = "g", desc = "Find Text", action = ":lua Snacks.dashboard.pick('live_grep')", label = "[g]" },
+                    {
+                        icon = "󰱼 ",
+                        key = "f",
+                        desc = "Find File",
+                        action = ":lua Snacks.dashboard.pick('smart', { multi = { 'git_files', 'files' } })",
+                        label = "[f]",
+                    },
+                    { icon = " ", key = "g", desc = "Find Text", action = ":lua Snacks.dashboard.pick('grep')", label = "[g]" },
                     { icon = " ", key = "p", desc = "Profile Plugins", action = ":Lazy profile", enabled = package.loaded.lazy ~= nil, label = "[p]" },
                     { icon = " ", key = "u", desc = "Update Plugins", action = ":Lazy sync", enabled = package.loaded.lazy ~= nil, label = "[u]" },
                     { icon = " ", key = "q", desc = "Quit", action = ":qa!", label = "[q]" },
