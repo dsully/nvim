@@ -1,8 +1,14 @@
+---@module "lazy.types"
 ---@type LazySpec[]
 return {
     {
         "nvim-treesitter/nvim-treesitter",
         branch = "main",
+        build = function()
+            if package.loaded["ts-install"] then
+                require("ts-install.install").update()
+            end
+        end,
         init = function()
             -- ts-install handles commands and installs.
             vim.g.loaded_nvim_treesitter = 1
@@ -19,7 +25,7 @@ return {
             vim.highlight.priorities.treesitter = 125
 
             nvim.command("TSInstall", function(opts)
-                vim.cmd(string.format("TS install%s %s", opts.bang and "!" or "", opts.args))
+                require("ts-install.install").install(opts)
             end, {
                 bang = true,
                 desc = "Wrapper to redirect TSInstall to ts-install's 'TS install'",
@@ -31,6 +37,7 @@ return {
             -- stylua: ignore
             { "<leader>i", function() vim.cmd.Inspect() end, desc = "Inspect Position" },
         },
+        priority = 500,
         opts = {
             ensure_install = {},
             ignore_install = { "unsupported" },
@@ -44,8 +51,13 @@ return {
     },
     {
         "lewis6991/ts-install.nvim",
-        build = ":TS update!",
+        build = function()
+            require("ts-install.install").update()
+        end,
         cmd = "TS",
+        dependencies = {
+            "nvim-treesitter/nvim-treesitter",
+        },
         event = ev.LazyFile,
         opts = function()
             local root = require("lazy.core.config").options.root
