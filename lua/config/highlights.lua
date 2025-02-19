@@ -110,7 +110,7 @@ M.ui = {
         CurSearch = { bg = colors.blue.bright, fg = colors.black.dim },
         Cursor = { bg = colors.white.dim, fg = colors.black.dim },
         CursorColumn = { bg = colors.gray.base },
-        CursorLine = { bg = hl.NONE },
+        CursorLine = { bg = colors.bg },
         CursorLineNr = { bold = true, fg = colors.yellow.base },
         DiffAdd = { fg = colors.green.base },
         DiffChange = { fg = colors.yellow.base },
@@ -131,10 +131,10 @@ M.ui = {
         ModesDelete = { bg = colors.red.base },
         ModesInsert = { bg = colors.cyan.base },
         ModesVisual = { bg = colors.magenta.base },
-        MoreMsg = { bold = true, fg = colors.cyan.bright },
+        MoreMsg = { bold = true, fg = colors.fg, bg = colors.bg },
         MsgArea = {},
         NonText = { bg = colors.gray.base, fg = colors.fg },
-        Normal = { fg = colors.fg, bg = colors.none },
+        Normal = { bg = colors.bg, fg = colors.fg },
         NormalFloat = { bg = colors.black.base, fg = colors.white.dim },
         NormalNC = { fg = colors.fg, bg = colors.none },
         Pmenu = { bg = colors.gray.base, fg = colors.fg },
@@ -162,7 +162,7 @@ M.ui = {
         TermCursor = { reverse = true },
         TermCursorNC = {},
         Terminal = { fg = colors.fg },
-        Title = { bold = true, fg = colors.white.bright },
+        -- Title = { bold = true, bg = colors.bg, fg = colors.white.bright },
         UnderlinedTitle = { bold = true, underline = true },
         Visual = { bg = colors.gray.base },
         Whitespace = { fg = colors.gray.base },
@@ -170,6 +170,9 @@ M.ui = {
         WinBar = { link = hl.StatusLine },
         WinBarNC = { link = hl.StatusLineNC },
         WinSeparator = { fg = colors.black.base },
+
+        -- This exists here too for bootstrapping.
+        LazyButton = { bg = colors.black.base },
     },
 
     syntax = {

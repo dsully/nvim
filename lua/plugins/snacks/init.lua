@@ -1,3 +1,4 @@
+---@module "lazy.types"
 ---@type LazySpec
 return {
     "folke/snacks.nvim",
@@ -51,23 +52,23 @@ return {
             SnacksNotifierBorderInfo = { fg = colors.white.bright },
             SnacksNotifierBorderTrace = { fg = colors.white.bright },
             SnacksNotifierBorderWarn = { fg = colors.white.bright },
-            SnacksNotifierDebug = { bg = colors.none },
-            SnacksNotifierError = { bg = colors.none },
+            SnacksNotifierDebug = { bg = colors.bg },
+            SnacksNotifierError = { bg = colors.bg },
             SnacksNotifierIconDebug = { fg = colors.white.base },
             SnacksNotifierIconError = { fg = colors.red.base },
             SnacksNotifierIconInfo = { fg = colors.cyan.base },
             SnacksNotifierIconTrace = { fg = colors.gray.base },
             SnacksNotifierIconWarn = { fg = colors.yellow.base },
-            SnacksNotifierInfo = { bg = colors.none },
-            SnacksNotifierTrace = { bg = colors.none },
-            SnacksNotifierWarn = { bg = colors.none },
+            SnacksNotifierInfo = { bg = colors.bg },
+            SnacksNotifierTrace = { bg = colors.bg },
+            SnacksNotifierWarn = { bg = colors.bg },
 
             -- Picker
             SnacksPicker = { fg = colors.none, bg = colors.black.dim },
             SnacksPickerDir = { fg = colors.gray.bright },
             SnacksPickerInputBorder = { link = "FloatBorder" },
             SnacksPickerListCursorLine = { bg = colors.black.base },
-            SnacksPickerMatch = { fg = "none", bg = "none" },
+            SnacksPickerMatch = { bg = colors.none, fg = colors.none },
             SnacksPickerTotals = { bg = colors.black.dim },
         })
     end,
@@ -83,6 +84,9 @@ return {
         },
         gitbrowse = {
             notify = false,
+        },
+        image = {
+            enabled = true,
         },
         ---@type snacks.indent.Config
         indent = {
@@ -131,6 +135,11 @@ return {
                 border = defaults.ui.border.name,
                 height = 0.8,
                 width = 0.8,
+            },
+            snacks_image = {
+                border = vim.tbl_map(function(icon)
+                    return { icon, "FloatBorderSB" }
+                end, defaults.ui.border.chars),
             },
             terminal = defaults.ui.float,
             win = defaults.ui.float,
