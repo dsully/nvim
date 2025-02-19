@@ -26,6 +26,17 @@ return {
                 kind_icons = defaults.icons.completion_items,
                 nerd_font_variant = "mono",
             },
+            cmdline = {
+                keymap = {
+                    preset = "enter",
+                    -- TODO: Get this behaviour for <tab>:
+                    -- 1. If no menu then open it.
+                    -- 2. If menu:
+                    --   1. If there are multiple options: select the next one.
+                    --   2. If there is only one entry: select it and confirm the selection
+                    ["<Tab>"] = { "show", "select_next", "select_and_accept" },
+                },
+            },
             completion = {
                 accept = {
                     auto_brackets = {
@@ -123,14 +134,12 @@ return {
                 ["<C-j>"] = { "select_next", "fallback" },
                 ["<C-k>"] = { "select_prev", "fallback" },
                 ["<C-y>"] = { "select_and_accept" },
-                cmdline = {
-                    preset = "enter",
-                    -- TODO: Get this behaviour for <tab>:
-                    -- 1. If no menu then open it.
-                    -- 2. If menu:
-                    --   1. If there are multiple options: select the next one.
-                    --   2. If there is only one entry: select it and confirm the selection
-                    ["<Tab>"] = { "show", "select_next", "select_and_accept" },
+                ["<A-d>"] = {
+                    function()
+                        -- Inspect the current completion item for debugging
+                        vim.print(require("blink.cmp.completion.list").get_selected_item())
+                        return true
+                    end,
                 },
             },
             ---@type blink.cmp.SnippetsConfig
@@ -196,7 +205,7 @@ return {
                             -- Sort snippets lower.
                             for _, item in ipairs(items) do
                                 if item.kind == types.Snippet then
-                                    item.score_offset = item.score_offset - 3
+                                    item.score_offset = (item.score_offset or 0) - 3
                                 end
                             end
 
