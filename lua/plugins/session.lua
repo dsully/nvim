@@ -20,7 +20,18 @@ return {
     end,
     init = function()
         nvim.command("SessionLoad", function()
-            require("resession").load(Snacks.git.get_root(), { silence_errors = false })
+            local resession = require("resession")
+
+            if vim.tbl_isempty(resession.list()) then
+                vim.notify("No saved sessions", vim.log.levels.WARN)
+            end
+
+            local ok, _ = pcall(resession.load, Snacks.git.get_root(), { silence_errors = false })
+
+            if not ok then
+                vim.notify("No session to restore!")
+                Snacks.picker.explorer()
+            end
         end, { desc = "Session Load" })
 
         ev.on(ev.VimLeavePre, function()
