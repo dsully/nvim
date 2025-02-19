@@ -29,7 +29,11 @@ _G.nvim = {
 ---@param rhs string|fun(args: vim.api.keyset.create_user_command.command_args)
 ---@param opts vim.api.keyset.user_command
 _G.nvim.command = function(name, rhs, opts)
-    vim.api.nvim_create_user_command(name, rhs, opts or {})
+    if not opts then
+        opts = {} --[[@as vim.api.keyset.user_command]]
+    end
+
+    vim.api.nvim_create_user_command(name, rhs, opts)
 end
 
 --- Create a namespace.
@@ -47,6 +51,7 @@ vim.ui.float = function(options, lines)
 
     ---@param self snacks.win
     local on_buf = function(self)
+        ---@diagnostic disable-next-line: param-type-not-match
         vim.api.nvim_buf_set_lines(self.buf, 0, -1, false, lines)
     end
 

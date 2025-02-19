@@ -6,6 +6,7 @@ if vim.env.PROF or vim.env.PROFILE or vim.env.NVIM_PROFILE then
 
     vim.opt.runtimepath:append(snacks)
 
+    ---@diagnostic disable-next-line: param-type-not-match
     require("snacks.profiler").startup({
         startup = {
             -- Stop profiler on this event. Defaults to `VimEnter`
