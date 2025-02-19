@@ -1,7 +1,6 @@
 ---@type LazySpec
 return {
     "williamboman/mason.nvim",
-    build = ":MasonUpdate",
     cmd = {
         "Mason",
         "MasonInstall",
@@ -11,10 +10,10 @@ return {
     config = function(_, opts)
         require("mason").setup(opts)
 
-        vim.defer_fn(function()
+        require("mason-registry").update(function()
             local mr = require("mason-registry")
 
-            vim.iter(opts.ensure_installed):each(function(tool)
+            vim.iter(defaults.tools):each(function(tool)
                 local p = mr.get_package(tool)
 
                 if p:is_installed() then
@@ -34,12 +33,11 @@ return {
 
                 p:install():once("closed", handle_closed)
             end)
-        end, 5000)
+        end)
     end,
     event = ev.LazyFile,
+    ---@type MasonSettings
     opts = {
-        ---@type string[]
-        ensure_installed = defaults.tools,
         registries = {
             "github:mason-org/mason-registry",
             "github:mkindberg/ghostty-ls",
