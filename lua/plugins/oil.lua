@@ -12,6 +12,14 @@ return {
         },
     },
     opts = function()
+        --
+        -- Trigger Snacks rename on file move.
+        ev.on(ev.User, function(event)
+            if event.data.actions.type == "move" then
+                Snacks.rename.on_rename_file(event.data.actions.src_url, event.data.actions.dest_url)
+            end
+        end, { pattern = "OilActionsPost" })
+
         -- Helper function to parse output
         local function parse_output(proc)
             local result = proc:wait()
