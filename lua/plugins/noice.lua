@@ -12,7 +12,8 @@ return {
         NoiceLspProgressClient = { fg = colors.blue.base },
         NoiceLspProgressSpinner = { fg = colors.cyan.bright },
         NoiceLspProgressTitle = { fg = colors.white.bright },
-        NoiceVirtualText = { fg = colors.blue.base },
+        NoiceSplit = { bg = colors.bg, fg = colors.white.dim },
+        NoiceVirtualText = { bg = colors.bg, fg = colors.blue.base },
     },
     -- stylua: ignore
     keys = {

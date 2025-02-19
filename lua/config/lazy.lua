@@ -72,6 +72,42 @@ function M.setup()
 
     vim.cmd.colorscheme(vim.g.colorscheme)
 
+    hl.apply({
+        LazyButton = { bg = colors.black.base },
+        LazyCommit = { fg = colors.white.bright },
+        LazyDimmed = { link = "Comment" },
+        LazyProp = { fg = colors.white.bright },
+    })
+
+    ev.on(ev.User, function(args)
+        --
+        if args.data and args.data.plugin then
+            local pl = require("lazy.core.config").plugins[args.data.plugin] or {}
+
+            ---@diagnostic disable: undefined-field
+            if pl.highlights then
+                hl.apply(pl.highlights)
+            end
+        end
+    end, {
+        desc = "Apply plugin highlights",
+        pattern = "LazyPlugin*",
+    })
+
+    ev.on_load("which-key.nvim", function()
+        vim.schedule(function()
+            local lazy = require("lazy")
+
+            require("which-key").add({
+                { "<leader>p", group = "Plugins", icon = " " },
+                { "<leader>ph", vim.cmd.LazyHealth, desc = "Health", icon = "󰄬 " },
+                { "<leader>pi", lazy.show, desc = "Info", icon = " " },
+                { "<leader>pp", lazy.profile, desc = "Profile", icon = " " },
+                { "<leader>ps", lazy.sync, desc = "Sync", icon = "󱋖 " },
+            }, { notify = false })
+        end)
+    end)
+
     ---@type LazyConfig
     require("lazy").setup({
         spec = {
@@ -172,12 +208,6 @@ function M.setup()
         },
     })
 
-    hl.apply({
-        LazyCommit = { fg = colors.white.bright },
-        LazyDimmed = { link = "Comment" },
-        LazyProp = { fg = colors.white.bright },
-    })
-
     vim.api.nvim_create_user_command("LazyHealth", function(...)
         vim.cmd.Lazy({ "load all", bang = true })
         vim.cmd.checkhealth()
@@ -211,35 +241,6 @@ function M.setup()
         desc = "Show the merged configuration for a given plugin.",
         nargs = "*",
     })
-
-    ev.on(ev.User, function(args)
-        --
-        if args.data and args.data.plugin then
-            local pl = require("lazy.core.config").plugins[args.data.plugin] or {}
-
-            ---@diagnostic disable: undefined-field
-            if pl.highlights then
-                hl.apply(pl.highlights)
-            end
-        end
-    end, {
-        desc = "Apply plugin highlights",
-        pattern = "LazyPlugin*",
-    })
-
-    ev.on_load("which-key.nvim", function()
-        vim.schedule(function()
-            local lazy = require("lazy")
-
-            require("which-key").add({
-                { "<leader>p", group = "Plugins", icon = " " },
-                { "<leader>ph", vim.cmd.LazyHealth, desc = "Health", icon = "󰄬 " },
-                { "<leader>pi", lazy.show, desc = "Info", icon = " " },
-                { "<leader>pp", lazy.profile, desc = "Profile", icon = " " },
-                { "<leader>ps", lazy.sync, desc = "Sync", icon = "󱋖 " },
-            }, { notify = false })
-        end)
-    end)
 end
 
 return M
