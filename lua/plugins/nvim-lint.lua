@@ -40,37 +40,33 @@ return {
             }):map("<space>tl")
         end)
 
-        ev.on(
-            { ev.BufReadPost, ev.BufWritePost, ev.InsertLeave, ev.OptionSet },
-            require("helpers.debounce").debounce(100, function(args)
-                --
-                if not vim.g.linting then
-                    return
-                end
+        ev.on({ ev.BufReadPost, ev.BufWritePost, ev.InsertLeave, ev.OptionSet }, function(args)
+            --
+            if not vim.g.linting then
+                return
+            end
 
-                -- Ignore buffer types and empty file types.
-                if vim.tbl_contains(defaults.ignored.buffer_types, vim.bo.buftype) then
-                    return
-                end
+            -- Ignore buffer types and empty file types.
+            if vim.tbl_contains(defaults.ignored.buffer_types, vim.bo.buftype) then
+                return
+            end
 
-                if vim.tbl_contains(defaults.ignored.file_types, vim.bo.filetype) then
-                    return
-                end
+            if vim.tbl_contains(defaults.ignored.file_types, vim.bo.filetype) then
+                return
+            end
 
-                -- Ignore 3rd party code.
-                if args.file:match("/(node_modules|__pypackages__|site_packages|cargo/registry)/") then
-                    return
-                end
+            -- Ignore 3rd party code.
+            if args.file:match("/(node_modules|__pypackages__|site_packages|cargo/registry)/") then
+                return
+            end
 
-                local lint = require("lint")
+            local lint = require("lint")
 
-                lint.try_lint()
-                lint.try_lint("typos")
-            end),
-            {
-                group = vim.api.nvim_create_augroup("nvim-lint", { clear = true }),
-            }
-        )
+            lint.try_lint()
+            lint.try_lint("typos")
+        end, {
+            group = vim.api.nvim_create_augroup("nvim-lint", { clear = true }),
+        })
     end,
     event = ev.LazyFile,
 }
