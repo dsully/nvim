@@ -306,7 +306,7 @@ return {
                     set = function(state)
                         vim.g.minipairs_disable = not state
                     end,
-                })
+                } --[[@as snacks.toggle.Opts]])
                 :map("<space>tp")
         end,
         event = ev.InsertEnter,

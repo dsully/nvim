@@ -8,7 +8,7 @@ end, {
 
 ev.on(ev.BufEnter, function(event)
     if vim.fn.winnr("$") == 1 and vim.bo.buftype == "quickfix" then
-        Snacks.bufdelete({ buf = event.buf, force = true })
+        Snacks.bufdelete({ buf = event.buf, force = true } --[[@as snacks.bufdelete.Opts]])
     end
 end, {
     desc = "Close quick fix window if the file containing it was closed.",
@@ -40,16 +40,13 @@ end, {
 })
 
 ev.on(ev.FileType, function(event)
-    ---@diagnostic ignore:access-invisible
-    vim.o.formatoptions = vim.iter({
+    vim.opt.formatoptions = {
         c = true, -- Auto-wrap comments using 'textwidth', inserting the current comment leader automatically.
         j = true, -- Where it makes sense, remove a comment leader when joining lines.
         l = true, -- Long lines are not broken in insert mode.
         n = true, -- When formatting text, recognize numbered lists.
         q = true, -- Allow formatting of comments with "gq".
-    })
-        :map(tostring)
-        :join("")
+    }
 
     vim.api.nvim_set_option_value("foldenable", false, { scope = "local", win = 0 })
 
@@ -77,7 +74,7 @@ ev.on(ev.BufWinEnter, function(args)
     local row, col = unpack(vim.api.nvim_buf_get_mark(args.buf, '"'))
     local count = vim.api.nvim_buf_line_count(args.buf)
 
-    if row > 0 and row <= count then
+    if row and row > 0 and row <= count then
         vim.api.nvim_win_set_cursor(0, { row, col })
 
         -- If we're in the middle of the file, set the cursor position and center the screen

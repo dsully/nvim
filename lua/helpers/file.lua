@@ -18,7 +18,7 @@ function M.edit()
         prompt = "File Name: ",
         default = vim.fs.joinpath(root, ""),
         completion = "file",
-    }, function(newfile)
+    } --[[@as snacks.input.Opts]], function(newfile)
         if not newfile or newfile == "" or newfile == file:sub(#root + 2) then
             return
         end
@@ -103,13 +103,13 @@ M.git_root = function()
         return
     end
 
-    return vim.trim(obj.stdout)
+    return vim.trim(obj.stdout or "")
 end
 
 --- Return true if the current working directory is in a Git repository and has at least 1 commit.
 ---@return boolean
 M.is_git = function()
-    return vim.system({ "git", "rev-parse", "HEAD" }, { stderr = false, stdout = false }):wait().code == 0
+    return vim.system({ "git", "rev-parse", "HEAD" }, { stderr = false, stdout = false } --[[@as vim.SystemOpts]]):wait().code == 0
 end
 
 --- Escape special pattern matching characters in a string
@@ -180,7 +180,7 @@ end
 M.template_type = function(filename, extension, combined)
     --
     -- Remove the chezmoi 'dot_' if it exists.
-    filename = filename:gsub("." .. extension, ""):gsub("dot_", ".")
+    filename = tostring(filename:gsub("." .. extension, ""):gsub("dot_", "."))
 
     -- Attempt with buffer content and filename
     --- @type string?

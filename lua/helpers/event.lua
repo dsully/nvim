@@ -273,7 +273,7 @@ local M = {
 
 ---@param event string | string[]
 ---@param callback EventCallback
----@param opts EventOpts
+---@param opts EventOpts?
 ---@return integer
 M.on = function(event, callback, opts)
     opts = opts or {}
@@ -288,14 +288,13 @@ M.on = function(event, callback, opts)
         opts.callback = callback
     end
 
-    return vim.api.nvim_create_autocmd(event, opts)
+    return vim.api.nvim_create_autocmd(event, opts --[[@as EventOpts]])
 end
 
 ---@param event string
 ---@param opts vim.api.keyset.exec_autocmds
 ---@return nil
 M.emit = function(event, opts)
-
     if M[event] then
         vim.api.nvim_exec_autocmds(event, opts)
     else

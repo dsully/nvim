@@ -28,7 +28,7 @@ return {
             if result.code == 0 then
                 for line in vim.gsplit(result.stdout, "\n", { plain = true, trimempty = true }) do
                     -- Remove trailing slash
-                    if line then
+                    if line ~= nil and line then
                         line = line:gsub("/$", "")
                         ret[line] = true
                     end

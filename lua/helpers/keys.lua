@@ -5,7 +5,7 @@ local M = {}
 -- It will also set `silent` to true by default.
 ---@param lhs string
 ---@param rhs function|string
----@param mode table<string>
+---@param mode string[]
 ---@param opts vim.keymap.set.Opts?
 function M.safe_set(lhs, rhs, mode, opts)
     local lazy_keys = require("lazy.core.handler").handlers.keys or {}
@@ -31,7 +31,7 @@ function M.safe_set(lhs, rhs, mode, opts)
 
         vim.keymap.set(modes, lhs, rhs, opts)
     else
-        vim.notify("Keymap already exists for " .. lhs .. " in: " .. (vim.fn.execute("map " .. lhs) or "?"), vim.log.levels.WARN)
+        vim.notify("Keymap already exists for " .. lhs .. " in: " .. (vim.fn.execute("map " .. lhs) or "?"), vim.log.levels.ERROR)
     end
 end
 
@@ -39,7 +39,7 @@ end
 ---@param lhs string
 ---@param rhs function|string
 ---@param desc string?
----@param mode string|table<string>|nil
+---@param mode string|string[]|nil
 ---@param opts vim.keymap.set.Opts?
 function M.map(lhs, rhs, desc, mode, opts)
     --
@@ -64,7 +64,7 @@ end
 ---@param rhs function|string
 ---@param desc string?
 ---@param buffer integer?
----@param mode string|table<string>|nil
+---@param mode string|string[]|nil
 ---@param opts vim.keymap.set.Opts?
 function M.bmap(lhs, rhs, desc, buffer, mode, opts)
     --

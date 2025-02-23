@@ -14,7 +14,7 @@ return {
                     set = function(state)
                         require("gitsigns").toggle_signs(state)
                     end,
-                }):map("<space>tg")
+                } --[[@as snacks.toggle.Opts]]):map("<space>tg")
             end, 500)
         end,
         event = ev.LazyFile,
