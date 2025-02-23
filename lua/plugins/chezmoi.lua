@@ -57,7 +57,7 @@ return {
                     local items = {}
 
                     if vim.tbl_isempty(M.targets) then
-                        M.targets = vim.split(M.collect():wait().stdout, "\n")
+                        M.targets = vim.split(M.collect(function() end):wait().stdout or "", "\n")
                     end
 
                     for _, file in ipairs(M.targets) do

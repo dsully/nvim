@@ -42,7 +42,7 @@ return {
                 highlight = highlight,
                 text = defaults.statusline.modes,
             },
-        })
+        } --[[@as nougat_nut_mode_config]])
 
         -- Renders a space only when item is rendered.
         local function paired_sep(def)
@@ -76,7 +76,7 @@ return {
             },
             sep_right = sep.right_lower_triangle_solid(true),
             hidden = require("nougat.nut.buf.diagnostic_count").hidden.if_zero(),
-        })
+        } --[[@as nougat.nut.buf.diagnostic_count_config]])
 
         local filetype_icon = item({
             content = function()
@@ -143,7 +143,7 @@ return {
             prefix = "  ",
             sep_left = sep.left_lower_triangle_solid(true),
             suffix = " ",
-        })
+        } --[[@as nougat.nut.git.branch_config?]])
 
         local hl_search = item({
             content = function()

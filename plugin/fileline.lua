@@ -20,6 +20,7 @@ local jump = function()
         vim.cmd.edit({ filename, mods = { keepalt = true } })
 
         -- If the file was opened with '/path/to/filename:' we won't have a position.
+        ---@type integer
         local line = math.min(math.max(1, pos[1]), vim.api.nvim_buf_line_count(0))
         local column = pos[2] and pos[2] - 1 or 0
 

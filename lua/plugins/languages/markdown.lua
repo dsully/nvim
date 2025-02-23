@@ -59,7 +59,7 @@ return {
                                 m.disable()
                             end
                         end,
-                    }):map("<space>tm")
+                    } --[[@as snacks.toggle.Opts]]):map("<space>tm")
                 end,
             },
             overrides = {

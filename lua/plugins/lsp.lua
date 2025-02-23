@@ -72,7 +72,7 @@ return {
                 { "gi", function() Snacks.picker.lsp_implementations() end, desc = "Goto Implementation" },
                 { "grf", function() Snacks.rename.rename_file() end, desc = "Rename File", icon = " ", },
                 { "grr", function() Snacks.picker.lsp_references({ nowait = true }) end, desc = "References" },
-            }, { notify = false })
+            } --[[@as wk.Spec]], { notify = false })
             end)
         end)
 

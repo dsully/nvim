@@ -265,9 +265,12 @@ M.commands = function()
         --
         M.apply_to_buffers(function(bufnr, client)
             --
-            vim.lsp.stop_client(client.id, true)
 
-            notify.info(("Restarting LSP %s for %s"):format(client.name, vim.fs.basename(vim.api.nvim_buf_get_name(bufnr))))
+            if client then
+                vim.lsp.stop_client(client.id, true)
+
+                notify.info(("Restarting LSP %s for %s"):format(client.name, vim.fs.basename(vim.api.nvim_buf_get_name(bufnr))))
+            end
         end, { bufnr = vim.api.nvim_get_current_buf() })
 
         vim.cmd.edit()

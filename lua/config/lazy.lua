@@ -104,7 +104,7 @@ function M.setup()
                 { "<leader>pi", lazy.show, desc = "Info", icon = " " },
                 { "<leader>pp", lazy.profile, desc = "Profile", icon = " " },
                 { "<leader>ps", lazy.sync, desc = "Sync", icon = "󱋖 " },
-            }, { notify = false })
+            } --[[@as wk.Spec]], { notify = false })
         end)
     end)
 
