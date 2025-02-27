@@ -38,7 +38,7 @@ return {
             vim.schedule(function()
                 ---@param client vim.lsp.Client
                 ---@param buffer number
-                require("helpers.lsp").on_supports_method(vim.lsp.protocol.Methods.textDocument_documentSymbol, function(client, buffer)
+                nvim.lsp.on_supports_method(vim.lsp.protocol.Methods.textDocument_documentSymbol, function(client, buffer)
                     require("nvim-navic").attach(client, buffer)
                 end)
             end)
@@ -260,6 +260,7 @@ return {
                 desc = "Log Surround",
             },
         },
+        ---@module 'timber'
         ---@type Timber.Config
         opts = {
             default_keymaps_enabled = false,

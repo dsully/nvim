@@ -21,6 +21,9 @@ return {
             -- https://github.com/MeanderingProgrammer/render-markdown.nvim#vimwiki
             vim.treesitter.language.register("markdown", "vimwiki")
 
+            -- vim.treesitter.language.add("pyproject")
+            -- vim.treesitter.language.register("toml", "pyproject")
+
             vim.highlight.priorities.semantic_tokens = 100
             vim.highlight.priorities.treesitter = 125
 

@@ -3,10 +3,15 @@ return {
     "folke/snacks.nvim",
     keys = {
         --stylua: ignore start
-        ---@diagnostic disable: undefined-field
+        ---@diagnostic disable: missing-parameter, undefined-field
         { "<leader>f/", function() Snacks.picker.grep_word({ dirs = { nvim.file.filename() } }) end, desc = "Buffer Word" },
         { "<leader>f;", function() Snacks.picker.resume() end, desc = "Resume Picker" },
-        { "<leader>fB", function() Snacks.picker.buffers() end, desc = "Buffers" },
+        { "<leader>fB", function() Snacks.picker.smart({
+            title = 'Buffers',
+            multi = false,
+            finder = 'buffers',
+            current = false,
+        }) end, desc = "Buffers" },
         { "<leader>fC", function() Snacks.picker.git_log({ current_file = true }) end, desc = "Commits" },
         { "<leader>fD", function() Snacks.picker.diagnostics_buffer({ format = "file" }) end, desc = "Diagnostics (Buffer)" },
         { "<leader>fb", function() Snacks.picker.explorer() end, desc = "Browse" },
@@ -49,6 +54,8 @@ return {
             },
             ---@type snacks.picker.icons
             icons = {
+                diagnostics = { Hint = "" },
+                git = defaults.icons.git,
                 kinds = defaults.icons.lsp,
             },
             layout = {

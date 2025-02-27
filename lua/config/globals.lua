@@ -21,6 +21,7 @@ _G.lazy = {
 
 _G.nvim = {
     file = require("helpers.file"),
+    lsp = require("helpers.lsp"),
     root = require("helpers.root"),
 }
 

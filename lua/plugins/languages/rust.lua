@@ -69,8 +69,7 @@ return {
                     ---@param _client vim.lsp.Client
                     ---@param bufnr integer
                     on_attach = function(_client, bufnr)
-                        local keys = require("helpers.keys")
-
+                        --
                         keys.bmap("<leader>cC", function()
                             vim.cmd.RustLsp("flyCheck")
                         end, "Check", bufnr)
