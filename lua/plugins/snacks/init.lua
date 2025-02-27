@@ -148,7 +148,13 @@ return {
             enabled = true,
             shell = "fish",
         },
-        words = { enabled = true },
+        words = {
+            enabled = true,
+            filter = function(buf)
+                return vim.bo[buf].buftype ~= defaults.ignored.buffer_types
+            end,
+            modes = { "n" },
+        },
     },
     keys = {
         -- stylua: ignore start
