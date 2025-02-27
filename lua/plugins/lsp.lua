@@ -38,14 +38,12 @@ return {
             root_markers = { ".git" },
         } --[[@as vim.lsp.Config]])
 
-        local should_enable = require("helpers.lsp").should_enable
-
         vim.iter(vim.api.nvim_get_runtime_file("lsp/*.lua", true))
             :map(function(config_path)
                 return vim.fs.basename(config_path):match("^(.*)%.lua$")
             end)
             :each(function(server_name)
-                vim.lsp.enable(server_name, should_enable(server_name))
+                vim.lsp.enable(server_name, nvim.lsp.should_enable(server_name))
             end)
 
         ev.on_load("which-key.nvim", function()
@@ -55,17 +53,18 @@ return {
                 { "<C-S>", vim.lsp.buf.signature_help, desc = "Signature Help", mode = "i", icon = "󰠗 " },
                 { "<leader>l", group = "LSP", icon = " " },
                 { "<leader>lc", vim.cmd.LspCapabilities, desc = "LSP Capabilities", icon = " " },
-                { "<leader>li", lsp.info, desc = "LSP Info", icon = " " },
+                { "<leader>li", nvim.lsp.info, desc = "LSP Info", icon = " " },
                 { "<leader>ll", vim.cmd.LspLog, desc = "LSP Log", icon = " " },
                 { "<leader>lr", vim.cmd.LspRestartBuffer, desc = "LSP Restart", icon = " " },
                 { "<leader>ls", vim.cmd.LspStop, desc = "LSP Stop", icon = " " },
                 { "<leader>xr", vim.diagnostic.reset, desc = "Reset", icon = " " },
                 { "<leader>xs", vim.diagnostic.open_float, desc = "Show", icon = "󰙨" },
-                { "gra", lsp.code_action, desc = "Actions", icon = "󰅯 " },
+                { "gra", nvim.lsp.code_action, desc = "Actions", icon = "󰅯 " },
                 { "grn", vim.lsp.buf.rename, desc = "Rename", icon = " " },
-                { "grq", lsp.apply_quickfix, desc = "Apply Quick Fix", icon = "󱖑 " },
+                { "grq", nvim.lsp.apply_quickfix, desc = "Apply Quick Fix", icon = "󱖑 " },
 
                 -- Snacks pickers
+                ---@diagnostic disable: missing-parameter
                 { "gD", function() Snacks.picker.lsp_type_definitions() end, desc = "Goto Type Definition" },
                 { "gO", function() Snacks.picker.lsp_symbols() end, desc = "References" },
                 { "gd", function() Snacks.picker.lsp_definitions({ unique_lines = true }) end, desc = "Goto Definition" },
@@ -117,34 +116,6 @@ return {
         --         buffer = buffer,
         --     })
         -- end)
-
-        ---@param client vim.lsp.Client
-        ---@param buffer integer
-        lsp.on_supports_method(methods.textDocument_documentHighlight, function(client, buffer)
-            --
-            local group = string.format("%s/highlight/%s", client.name, buffer)
-            local id = ev.group(group)
-
-            ev.on(
-                { ev.BufEnter, ev.CursorMoved, ev.FocusGained, ev.WinEnter },
-                Snacks.util.throttle(function()
-                    vim.lsp.buf.clear_references()
-
-                    local enc = client.offset_encoding
-                    local win = vim.api.nvim_get_current_win()
-
-                    client:request(methods.textDocument_documentHighlight, vim.lsp.util.make_position_params(0, enc), function(_, result, ctx)
-                        if not result or win ~= vim.api.nvim_get_current_win() then
-                            return
-                        end
-
-                        vim.lsp.util.buf_highlight_references(ctx.bufnr, result, enc)
-                    end --[[@as lsp.Handler ]], buffer)
-                end, { ms = 200 }),
-                {
-                    group = id,
-                    buffer = buffer,
-                    desc = group .. "/highlight",
                 }
             )
 
