@@ -126,6 +126,7 @@ return {
             },
             input = {
                 border = defaults.ui.border.name,
+                relative = "cursor",
             },
             notification = {
                 border = defaults.ui.border.name,
@@ -166,9 +167,12 @@ return {
         { [[<C-\>]], function() Snacks.terminal.toggle(vim.env.SHELL) end, mode = { "n", "t" }, desc = "Terminal" },
 
         -- Git helpers.
-        { "<leader>go", function() Snacks.gitbrowse.open() end, desc = "Open Git URL", mode = { "n", "v" } },
+        { "<leader>go", function()
+            Snacks.gitbrowse.open({ what = "permalink" } --[[@as snacks.gitbrowse.Config]])
+        end, desc = "Open Git URL", mode = { "n", "v" } },
+
         { "<leader>gC", function()
-            Snacks.gitbrowse({ open = function(url) vim.fn.setreg("+", url) end, notify = false })
+            Snacks.gitbrowse({ open = function(url) vim.fn.setreg("+", url) end, notify = false } --[[@as snacks.gitbrowse.Config]])
         end, desc = "Copy Git URL", mode = { "n", "v" } },
 
         -- Profiler
@@ -178,7 +182,7 @@ return {
         { "<leader>.",  function() Snacks.scratch() end, desc = "Toggle Scratch Buffer" },
 
         {"<space>g", function()
-            Snacks.terminal({ "gitui" }, { cwd = Snacks.git.get_root() or vim.uv.cwd() })
+            Snacks.terminal({ "gitui" }, { cwd = Snacks.git.get_root() or vim.uv.cwd() } --[[@as snacks.terminal.Opts]])
         end, desc = "Git UI" },
     },
 }
