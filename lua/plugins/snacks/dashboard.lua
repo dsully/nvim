@@ -64,7 +64,7 @@ return {
                 function()
                     -- In an initialized but empty / no commits repo,
                     -- there will be an error thrown to stderr from git-dashboard-nvim.
-                    if not nvim.file.is_git() then
+                    if not Snacks.git.get_root(vim.uv.cwd()) then
                         return {}
                     end
 
