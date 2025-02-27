@@ -94,22 +94,19 @@ M.is_local_dev = function()
     return false
 end
 
+--- Return the git root if it exists.
+---
+---@param quiet boolean?
 ---@return string?
-M.git_root = function()
+M.git_root = function(quiet)
     local obj = vim.system({ "git", "rev-parse", "--show-toplevel" }, { text = true }):wait()
 
-    if obj.code ~= 0 then
+    if obj.code ~= 0 and not quiet then
         notify.error("Not in a Git repository!", { icon = "󰏋" })
         return
     end
 
     return vim.trim(obj.stdout or "")
-end
-
---- Return true if the current working directory is in a Git repository and has at least 1 commit.
----@return boolean
-M.is_git = function()
-    return vim.system({ "git", "rev-parse", "HEAD" }, { stderr = false, stdout = false } --[[@as vim.SystemOpts]]):wait().code == 0
 end
 
 --- Escape special pattern matching characters in a string
@@ -137,39 +134,6 @@ end
 ---@return string
 M.filename = function(bufnr)
     return M.normalize(vim.api.nvim_buf_get_name(bufnr or 0))
-end
-
----@param filetype string
----@param subdirectory string?
-M.symlink_queries = function(filetype, subdirectory)
-    --
-    local src = vim.fs.joinpath(require("lazy.core.config").options.root, "tree-sitter-" .. filetype, "queries")
-    local dst = vim.fs.joinpath(tostring(vim.fn.stdpath("config")), "queries", subdirectory or filetype)
-
-    if subdirectory then
-        src = vim.fs.joinpath(src, subdirectory)
-    end
-
-    local src_stat = vim.uv.fs_stat(src)
-    local dst_stat = vim.uv.fs_stat(dst)
-
-    -- Check if source directory exists
-    if not src_stat then
-        vim.notify("Source directory does not exist: " .. src, vim.log.levels.ERROR)
-        return
-    end
-
-    if dst_stat and src_stat.ino == dst_stat.ino then
-        return
-    end
-
-    vim.uv.fs_unlink(dst)
-
-    local success, err = vim.uv.fs_symlink(src, dst)
-
-    if not success then
-        vim.notify("Failed to create symlink: " .. err, vim.log.levels.ERROR)
-    end
 end
 
 ---Create a combined file type for template languages.

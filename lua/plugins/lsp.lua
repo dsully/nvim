@@ -5,8 +5,6 @@ return {
     config = function()
         local methods = vim.lsp.protocol.Methods
 
-        local lsp = require("helpers.lsp")
-
         vim.uv.fs_unlink(vim.lsp.get_log_path())
         vim.lsp.log.set_level(vim.lsp.log.levels.WARN)
         vim.lsp.log.set_format_func(vim.inspect)
@@ -99,12 +97,12 @@ return {
             return register_capability(err, res, ctx)
         end
 
-        lsp.on_attach(lsp.validate_client)
-        lsp.on_dynamic_capability(lsp.validate_client)
-        lsp.on_dynamic_capability(function() end)
-        lsp.commands()
+        nvim.lsp.on_attach(nvim.lsp.validate_client)
+        nvim.lsp.on_dynamic_capability(nvim.lsp.validate_client)
+        nvim.lsp.on_dynamic_capability(function() end)
+        nvim.lsp.commands()
 
-        lsp.on_supports_method(methods.textDocument_inlayHint, function()
+        nvim.lsp.on_supports_method(methods.textDocument_inlayHint, function()
             vim.lsp.inlay_hint.enable(false)
         end)
 
@@ -116,19 +114,6 @@ return {
         --         buffer = buffer,
         --     })
         -- end)
-                }
-            )
-
-            ev.on({ ev.BufLeave, ev.FocusLost, ev.WinLeave }, function()
-                if vim.api.nvim_buf_is_valid(buffer) then
-                    vim.lsp.buf.clear_references()
-                end
-            end, {
-                group = id,
-                buffer = buffer,
-                desc = group .. "/clear",
-            })
-        end)
     end,
     virtual = true,
 }

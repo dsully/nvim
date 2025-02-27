@@ -63,7 +63,7 @@ return {
                         { "}", desc = "{} with ws" },
                     }
 
-                    ---@type wk.Spec[]
+                    ---@type wk.Spec
                     local ret = { mode = { "o", "v" } }
 
                     ---@type table<string, string>
