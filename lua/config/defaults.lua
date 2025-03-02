@@ -47,27 +47,6 @@ local M = {
         "source.organizeImports",
     },
 
-    files = {
-        ignored_patterns = {
-            "%.DS_Store",
-            "%.gz",
-            "%.jpeg",
-            "%.jpg",
-            "%.lock",
-            "%.png",
-            "%.yarn/.*",
-            "^.direnv/.*",
-            "^.git/",
-            "^.venv/.*",
-            "^__pypackages__/.*",
-            "^lazy-lock.json",
-            "^site-packages/",
-            "^target/",
-            "^venv/.*",
-            "node%_modules/.*",
-        },
-    },
-
     -- Filetypes that should be formatted on save.
     formatting = {
         file_types = {
@@ -369,28 +348,6 @@ local M = {
             "pyright",
             "sonarlint.nvim",
         },
-    },
-
-    root_patterns = {
-        ".chezmoiroot",
-        ".luacheckrc",
-        ".luarc.json",
-        ".luarc.jsonc",
-        ".stylua.toml",
-        "Cargo.toml",
-        "build.zig",
-        "configure",
-        "fish_variables",
-        "go.mod",
-        "package.json",
-        "pyproject.toml",
-        "requirements.txt",
-        "ruff.toml",
-        "selene.toml",
-        "selene.yml",
-        "setup.cfg",
-        "setup.py",
-        "stylua.toml",
     },
 
     statusline = {
