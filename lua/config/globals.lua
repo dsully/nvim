@@ -40,7 +40,7 @@ end
 --- Create a namespace.
 --- @param name string The name of the namespace.
 _G.nvim.ns = function(name)
-    return vim.api.nvim_create_namespace("dsully/" .. name)
+    return vim.api.nvim_create_namespace("dsully." .. name)
 end
 
 --- Create a floating window using snacks.win
