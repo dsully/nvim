@@ -1,6 +1,7 @@
 ---@type vim.lsp.Config
 return {
     cmd = { "nil" },
+    -- cmd = { "nix-shell", "-p", "nil", "--run", "nil" },
     filetypes = {
         "nix",
     },
@@ -11,19 +12,14 @@ return {
     },
     settings = {
         ["nil"] = {
-            diagnostics = {
-                ignored = {},
-            },
             formatting = {
                 command = { "alejandra", "--" },
             },
             nix = {
-                maxMemoryMB = 2048,
-            },
-            flake = {
-                autoArchive = false,
-                autoEvalImputs = true,
-                nixpkgsInputName = "nixpkgs",
+                flake = {
+                    autoArchive = false,
+                    autoEvalImputs = true,
+                },
             },
         },
     },
