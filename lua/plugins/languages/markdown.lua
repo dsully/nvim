@@ -24,6 +24,11 @@ return {
                 sign = false,
                 width = "block",
             },
+            completions = {
+                lsp = {
+                    enabled = true,
+                },
+            },
             heading = {
                 position = "inline",
                 sign = false,
@@ -84,22 +89,6 @@ return {
             win_options = {
                 concealcursor = {
                     rendered = "nvic",
-                },
-            },
-        },
-    },
-    {
-        "Saghen/blink.cmp",
-        optional = true,
-        opts = {
-            sources = {
-                default = { "markdown" },
-                providers = {
-                    markdown = {
-                        name = "RenderMarkdown",
-                        module = "render-markdown.integ.blink",
-                        fallbacks = { "lsp" },
-                    },
                 },
             },
         },
