@@ -55,7 +55,7 @@
         "max_items": 20,
         "initial_value": "",
         "options": [
-            { "value": "", "label": "none" }
+            { "value": "", "label": "none" },
             { "value": "blink", "label": "blink" },
             { "value": "codecompanion", "label": "codecompanion" },
             { "value": "conform", "label": "conform" },
@@ -71,7 +71,7 @@
             { "value": "plugins", "label": "plugins" },
             { "value": "sessions", "label": "sessions" },
             { "value": "snacks", "label": "snacks" },
-            { "value": "treesitter", "label": "treesitter" },
+            { "value": "treesitter", "label": "treesitter" }
         ]
     },
     "check_ticket": {
@@ -105,7 +105,7 @@
         "add_exclamation_to_title": false
     },
     "confirm_with_editor": false,
-    "confirm_commit": true,
+    "confirm_commit": false,
     "print_commit_output": true,
     "branch_pre_commands": [],
     "branch_post_commands": [],
