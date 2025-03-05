@@ -84,6 +84,7 @@ return {
         },
         gitbrowse = {
             notify = false,
+            what = "permalink",
         },
         image = {
             enabled = true,
@@ -167,9 +168,7 @@ return {
         { [[<C-\>]], function() Snacks.terminal.toggle(vim.env.SHELL) end, mode = { "n", "t" }, desc = "Terminal" },
 
         -- Git helpers.
-        { "<leader>go", function()
-            Snacks.gitbrowse.open({ what = "permalink" } --[[@as snacks.gitbrowse.Config]])
-        end, desc = "Open Git URL", mode = { "n", "v" } },
+        { "<leader>go", function() Snacks.gitbrowse.open() end, desc = "Open Git URL", mode = { "n", "v" } },
 
         { "<leader>gC", function()
             Snacks.gitbrowse({ open = function(url) vim.fn.setreg("+", url) end, notify = false } --[[@as snacks.gitbrowse.Config]])
