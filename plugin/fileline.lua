@@ -62,7 +62,10 @@ do
                     local argidx = vim.fn.argidx()
 
                     vim.cmd.argdelete({ range = { argidx + 1 } })
-                    vim.cmd.argadd({ args = { filename }, range = { argidx } })
+
+                    if filename and filename ~= "" then
+                        vim.cmd.argadd({ args = { filename }, range = { argidx } })
+                    end
                 end
 
                 -- Return to the original argument
