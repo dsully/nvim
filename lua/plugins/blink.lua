@@ -165,7 +165,9 @@ return {
                     codecompanion = {
                         "codecompanion",
                     },
-                    gitcommit = {},
+                    gitcommit = {
+                        "conventional_commits",
+                    },
                     snacks_input = {},
                     toml = {
                         "crates",
@@ -184,6 +186,13 @@ return {
                         max_items = 4,
                         min_keyword_length = 4,
                         score_offset = -3,
+                    },
+                    conventional_commits = {
+                        name = "Conventional Commits",
+                        module = "blink-cmp-conventional-commits",
+                        enabled = function()
+                            return vim.bo.filetype == "gitcommit"
+                        end,
                     },
                     env = {
                         name = "Env",
@@ -272,8 +281,10 @@ return {
             "sources.per_filetype",
         },
     },
-    { "saghen/blink.compat", opts = { impersonate_nvim_cmp = true } },
+    { "Kaiser-Yang/blink-cmp-git" },
     { "bydlw98/blink-cmp-env" },
+    { "disrupted/blink-cmp-conventional-commits" },
+    { "saghen/blink.compat", opts = { impersonate_nvim_cmp = true } },
     { "xzbdmw/colorful-menu.nvim" },
     {
         "chrisgrieser/nvim-scissors",
