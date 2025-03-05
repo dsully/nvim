@@ -55,22 +55,23 @@
         "max_items": 20,
         "initial_value": "",
         "options": [
+            { "value": "", "label": "none" }
             { "value": "blink", "label": "blink" },
             { "value": "codecompanion", "label": "codecompanion" },
             { "value": "conform", "label": "conform" },
             { "value": "defaults", "label": "defaults" },
             { "value": "git", "label": "git" },
+            { "value": "highlights", "label": "highlights" },
             { "value": "languages", "label": "languages" },
             { "value": "lazy", "label": "lazy" },
-            { "value": "highlights", "label": "highlights" },
             { "value": "lsp", "label": "lsp" },
-            { "value": "options", "label": "options" },
             { "value": "noice", "label": "noice" },
             { "value": "nvim-lint", "label": "nvim-lint" },
+            { "value": "options", "label": "options" },
+            { "value": "plugins", "label": "plugins" },
             { "value": "sessions", "label": "sessions" },
             { "value": "snacks", "label": "snacks" },
             { "value": "treesitter", "label": "treesitter" },
-            { "value": "", "label": "none" }
         ]
     },
     "check_ticket": {
