@@ -43,16 +43,17 @@ vim.filetype.add({
         end,
     },
     pattern = {
-        ["*.dockerignore"] = "gitignore",
-        [".*/%.github[%w/]+workflows[%w/]+.*%.ya?ml"] = "yaml.github",
         [".*/.config/ghostty/config"] = "ghostty",
+        [".*/%.github[%w/]+workflows[%w/]+.*%.ya?ml"] = "yaml.github",
         [".*/themes?/.*%.theme"] = "fish",
+        [".*/zed/settings.json"] = "jsonc",
+        [".yml$"] = function(path)
+            return path:find("compose") and "yaml.docker-compose" or "yaml"
+        end,
+        ["*.dockerignore"] = "gitignore",
         ["Brewfile.*"] = "brewfile",
         ["Dockerfile.*"] = function(path)
             return path:match("%.dockerignore%*?$") and "gitignore" or "dockerfile"
-        end,
-        [".yml$"] = function(path)
-            return path:find("compose") and "yaml.docker-compose" or "yaml"
         end,
         ["requirements[%w_.-]+%.txt"] = "requirements",
     },
