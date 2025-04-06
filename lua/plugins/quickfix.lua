@@ -13,7 +13,7 @@ return {
                     desc = "Toggle QuickFix list",
                     icon = defaults.icons.misc.quickfix,
                 },
-            })
+            } --[[@as wk.Spec]])
         end,
         ---@module "quicker"
         ---@type quicker.SetupOptions
