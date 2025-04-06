@@ -25,13 +25,13 @@ M.spec = {
 
 M.detectors = {}
 
----@return table<string>
+---@return string[]
 function M.detectors.cwd()
     return { tostring(vim.uv.cwd()) }
 end
 
 ---@param buf integer
----@return table<string>
+---@return string[]
 function M.detectors.lsp(buf)
     local bufpath = M.bufpath(buf)
 
@@ -67,7 +67,7 @@ end
 
 ---@param buf integer
 ---@param patterns string[]
----@return table<string>
+---@return string[]
 function M.detectors.pattern(buf, patterns)
     --
     -- patterns = type(patterns) == "string" and { patterns } or patterns --[[@as string[] ]]
@@ -95,7 +95,7 @@ end
 ---@param buf integer
 ---@return string?
 function M.bufpath(buf)
-    return M.realpath(vim.api.nvim_buf_get_name(assert(buf)))
+    return M.realpath(vim.api.nvim_buf_get_name(buf))
 end
 
 ---@return string
