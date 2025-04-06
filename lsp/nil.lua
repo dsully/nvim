@@ -1,7 +1,6 @@
 ---@type vim.lsp.Config
 return {
     cmd = { "nil" },
-    -- cmd = { "nix-shell", "-p", "nil", "--run", "nil" },
     filetypes = {
         "nix",
     },

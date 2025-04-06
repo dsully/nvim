@@ -7,7 +7,7 @@ return {
             },
         },
     },
-    cmd = { "gh-actions-language-server", "--stdio" },
+    cmd = { "github-actions-languageserver", "--stdio" },
     filetypes = { "yaml.github" },
     handlers = {
         ["textDocument/publishDiagnostics"] = function(err, result, ctx)

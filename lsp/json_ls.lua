@@ -1,11 +1,11 @@
 ---@type vim.lsp.Config
 return {
-    cmd = { 'vscode-json-language-server', '--stdio' },
-    filetypes = { 'json', 'jsonc' },
+    cmd = { "vscode-json-language-server", "--stdio" },
+    filetypes = { "json", "jsonc" },
     ---@type table<vim.lsp.protocol.Methods, lsp.Handler>
     handlers = {
         ---@type lsp.Handler
-        ['textDocument/publishDiagnostics'] = function(err, result, ctx)
+        ["textDocument/publishDiagnostics"] = function(err, result, ctx)
             result.diagnostics = vim.tbl_filter(function(diagnostic)
                 -- disable diagnostics for trailing comma in JSONC
                 if diagnostic.code == 519 then
@@ -18,41 +18,41 @@ return {
         end,
     },
     init_options = {
-        provideFormatter = false,
+        provideFormatter = true,
     },
     settings = {
         json = {
             schemas = {
                 {
-                    fileMatch = { 'package.json' },
-                    url = 'https://json.schemastore.org/package.json',
+                    fileMatch = { "package.json" },
+                    url = "https://json.schemastore.org/package.json",
                 },
                 {
-                    fileMatch = { 'tsconfig*.json' },
-                    url = 'https://json.schemastore.org/tsconfig.json',
-                },
-                {
-                    fileMatch = {
-                        '.prettierrc',
-                        '.prettierrc.json',
-                        'prettier.config.json',
-                    },
-                    url = 'https://json.schemastore.org/prettierrc.json',
+                    fileMatch = { "tsconfig*.json" },
+                    url = "https://json.schemastore.org/tsconfig.json",
                 },
                 {
                     fileMatch = {
-                        '.eslintrc',
-                        '.eslintrc.json',
+                        ".prettierrc",
+                        ".prettierrc.json",
+                        "prettier.config.json",
                     },
-                    url = 'https://json.schemastore.org/eslintrc.json',
+                    url = "https://json.schemastore.org/prettierrc.json",
                 },
                 {
                     fileMatch = {
-                        '.stylelintrc',
-                        '.stylelintrc.json',
-                        'stylelint.config.json',
+                        ".eslintrc",
+                        ".eslintrc.json",
                     },
-                    url = 'http://json.schemastore.org/stylelintrc.json',
+                    url = "https://json.schemastore.org/eslintrc.json",
+                },
+                {
+                    fileMatch = {
+                        ".stylelintrc",
+                        ".stylelintrc.json",
+                        "stylelint.config.json",
+                    },
+                    url = "http://json.schemastore.org/stylelintrc.json",
                 },
             },
         },
