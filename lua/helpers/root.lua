@@ -14,13 +14,13 @@ local M = setmetatable({}, {
 
 ---@alias RootFn fun(buf: number): (string|string[])
 
----@alias RootSpec string|string[]|RootFn
+---@alias RootSpec string[]|RootFn
 
 ---@type RootSpec[]
 M.spec = {
-    "lsp",
+    { "lsp" },
     { ".git", "lua" },
-    "cwd",
+    { "cwd" },
 }
 
 M.detectors = {}
@@ -35,42 +35,42 @@ end
 function M.detectors.lsp(buf)
     local bufpath = M.bufpath(buf)
 
-    if not bufpath then
-        return {}
-    end
+    if bufpath then
+        ---@type string[]
+        local roots = {}
+        local clients = vim.lsp.get_clients({ bufnr = buf })
 
-    ---@type string[]
-    local roots = {}
-    local clients = vim.lsp.get_clients({ bufnr = buf })
+        clients = vim.tbl_filter(function(client)
+            return not vim.tbl_contains(defaults.ignored.lsp, client.name)
+        end, clients)
 
-    clients = vim.tbl_filter(function(client)
-        return not vim.tbl_contains(defaults.ignored.lsp, client.name)
-    end, clients)
+        for _, client in pairs(clients) do
+            local workspace = client.config.workspace_folders
 
-    for _, client in pairs(clients) do
-        local workspace = client.config.workspace_folders
+            for _, ws in pairs(workspace or {}) do
+                roots[#roots + 1] = vim.uri_to_fname(ws.uri)
+            end
 
-        for _, ws in pairs(workspace or {}) do
-            roots[#roots + 1] = vim.uri_to_fname(ws.uri)
+            if client.root_dir then
+                roots[#roots + 1] = client.root_dir
+            end
         end
 
-        if client.root_dir then
-            roots[#roots + 1] = client.root_dir
-        end
+        return vim.tbl_filter(function(path)
+            path = vim.fs.normalize(path)
+            return path and bufpath:find(path, 1, true) == 1
+        end, roots)
     end
 
-    return vim.tbl_filter(function(path)
-        path = vim.fs.normalize(path)
-        return path and bufpath:find(path, 1, true) == 1
-    end, roots)
+    return {}
 end
 
 ---@param buf integer
----@param patterns string[]|string
+---@param patterns string[]
 ---@return table<string>
 function M.detectors.pattern(buf, patterns)
     --
-    patterns = type(patterns) == "string" and { patterns } or patterns --[[@as string[] ]]
+    -- patterns = type(patterns) == "string" and { patterns } or patterns --[[@as string[] ]]
 
     local path = M.bufpath(buf) or vim.uv.cwd()
 
@@ -240,7 +240,7 @@ function M.git()
     local root = M.get()
     local git_root = vim.fs.find(".git", { path = root, upward = true })[1]
 
-    return git_root and vim.fn.fnamemodify(git_root, ":h") or root
+    return git_root and vim.fs.dirname(git_root) or root
 end
 
 return M
