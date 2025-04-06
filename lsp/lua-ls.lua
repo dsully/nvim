@@ -5,8 +5,10 @@ return {
     ---@param client vim.lsp.Client
     on_init = function(client)
         -- Use stylua via conform.nvim
-        client.server_capabilities.documentFormattingProvider = nil
-        client.server_capabilities.documentRangeFormattingProvider = nil
+        if client.server_capabilities then
+            client.server_capabilities.documentFormattingProvider = nil
+            client.server_capabilities.documentRangeFormattingProvider = nil
+        end
     end,
     settings = {
         ---@type LuaLanguageServerSettings
