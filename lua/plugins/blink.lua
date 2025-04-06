@@ -276,6 +276,15 @@ return {
                             end, items)
                         end,
                     },
+                    nerdfont = {
+                        module = "blink-nerdfont",
+                        name = "Nerd Fonts",
+                        score_offset = 15,
+                        opts = { insert = true },
+                        should_show_items = function()
+                            return vim.tbl_contains({ "gitcommit", "markdown", "txt" }, vim.o.filetype)
+                        end,
+                    },
                     path = {
                         name = "Path",
                         -- Do not use `buffer` as fallback
@@ -306,10 +315,11 @@ return {
         -- Get the current released version for the pre-compiled Rust fuzzy finder binary.
         version = "*",
     },
-    { "Kaiser-Yang/blink-cmp-git" },
     { "bydlw98/blink-cmp-env" },
     { "disrupted/blink-cmp-conventional-commits" },
     { "Kaiser-Yang/blink-cmp-dictionary" },
+    { "Kaiser-Yang/blink-cmp-git" },
+    { "MahanRahmati/blink-nerdfont.nvim" },
     { "saghen/blink.compat", opts = { impersonate_nvim_cmp = true } },
     { "xzbdmw/colorful-menu.nvim" },
     {
