@@ -33,6 +33,13 @@ return {
 
         -- Set defaults
         vim.lsp.config("*", {
+            capabilities = require("blink.cmp").get_lsp_capabilities({
+                workspace = {
+                    didChangeWatchedFiles = {
+                        dynamicRegistration = true,
+                    },
+                },
+            }),
             root_markers = { ".git" },
         } --[[@as vim.lsp.Config]])
 
