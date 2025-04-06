@@ -206,6 +206,17 @@ return {
                             return vim.bo.filetype == "gitcommit"
                         end,
                     },
+                    dictionary = {
+                        module = "blink-cmp-dictionary",
+                        name = "Dict",
+                        min_keyword_length = 3,
+                        opts = {
+                            dictionary_files = { "/usr/share/dict/words" },
+                        },
+                        should_show_items = function()
+                            return vim.tbl_contains({ "gitcommit", "markdown", "txt" }, vim.o.filetype)
+                        end,
+                    },
                     env = {
                         name = "Env",
                         module = "blink-cmp-env",
@@ -298,6 +309,7 @@ return {
     { "Kaiser-Yang/blink-cmp-git" },
     { "bydlw98/blink-cmp-env" },
     { "disrupted/blink-cmp-conventional-commits" },
+    { "Kaiser-Yang/blink-cmp-dictionary" },
     { "saghen/blink.compat", opts = { impersonate_nvim_cmp = true } },
     { "xzbdmw/colorful-menu.nvim" },
     {
