@@ -10,10 +10,12 @@ return {
     --- @param client vim.lsp.Client
     --- @param bufnr integer
     on_attach = function(client, bufnr)
-        require("schema-companion.context").setup(bufnr, client)
+        local context = require("schema-companion.context")
+
+        context.setup(bufnr, client)
 
         keys.bmap("<leader>vs", function()
-            local schema = require("schema-companion.context").get_buffer_schema(bufnr)
+            local schema = context.get_buffer_schema(bufnr)
 
             if schema and schema.name then
                 notify.info(schema.name)
