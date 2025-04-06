@@ -8,7 +8,6 @@ end
 return {
     {
         "Saghen/blink.cmp",
-        build = "cargo build --release",
         cmd = {
             "BlinkCmp",
         },
@@ -27,6 +26,13 @@ return {
                 nerd_font_variant = "mono",
             },
             cmdline = {
+                completion = {
+                    menu = {
+                        auto_show = function()
+                            return vim.fn.getcmdtype() == ":" or vim.fn.getcmdtype() == "@"
+                        end,
+                    },
+                },
                 keymap = {
                     preset = "enter",
                     -- TODO: Get this behaviour for <tab>:
@@ -116,6 +122,12 @@ return {
                     },
                     -- Keep the cursor X lines away from the top/bottom of the window
                     scrolloff = 4,
+                },
+            },
+            fuzzy = {
+                implementation = "rust",
+                prebuilt_binaries = {
+                    download = true,
                 },
             },
             ---@type blink.cmp.KeymapConfig
@@ -280,6 +292,8 @@ return {
             "sources.default",
             "sources.per_filetype",
         },
+        -- Get the current released version for the pre-compiled Rust fuzzy finder binary.
+        version = "*",
     },
     { "Kaiser-Yang/blink-cmp-git" },
     { "bydlw98/blink-cmp-env" },
