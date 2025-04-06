@@ -3,7 +3,6 @@ return {
     "folke/snacks.nvim",
     keys = {
         --stylua: ignore start
-        ---@diagnostic disable: missing-parameter, undefined-field
         { "<leader>f/", function() Snacks.picker.grep_word({ dirs = { nvim.file.filename() } }) end, desc = "Buffer Word" },
         { "<leader>f;", function() Snacks.picker.resume() end, desc = "Resume Picker" },
         { "<leader>fB", function() Snacks.picker.smart({
@@ -18,7 +17,7 @@ return {
         { "<leader>fc", function() Snacks.picker.git_log() end, desc = "Commits" },
         { "<leader>fd", function() Snacks.picker.diagnostics({ format = "file" }) end, desc = "Diagnostics" },
         { "<leader>fe", function() Snacks.picker.icons({ icon_sources = { "emoji" }}) end, desc = "Emoji" },
-        { "<leader>ff", function() Snacks.picker.smart({ multi = { "git_files", "files" } }) end, desc = "Files", },
+        { "<leader>ff", function() Snacks.picker.smart({ multi = { "files" } }) end, desc = "Files", },
         { "<leader>fg", function() Snacks.picker.grep() end, desc = "Grep" },
         { "<leader>fh", function() Snacks.picker.highlights() end, desc = "Highlights" },
         { "<leader>fi", function() Snacks.picker.icons({ icon_sources = { "nerd_fonts" }}) end, desc = "Nerd Icons" },
@@ -32,6 +31,7 @@ return {
         { "<leader>fw", function() Snacks.picker.grep_word() end, desc = "Words" },
         { "z=", function() Snacks.picker.spelling() end, desc = "Spelling" },
     },
+    ---@module "snacks"
     ---@type snacks.picker.Config
     opts = {
         picker = {
@@ -52,7 +52,7 @@ return {
                     truncate = 160,
                 },
             },
-            ---@type snacks.picker.icons
+            ---@type snacks.picker.icons?
             icons = {
                 diagnostics = { Hint = "" },
                 git = defaults.icons.git,
@@ -84,7 +84,7 @@ return {
                 },
                 reverse = false,
             },
-            ---@type snacks.picker.sources.Config
+            ---@type snacks.picker.sources.Config?
             sources = {
                 files = {
                     filter = {

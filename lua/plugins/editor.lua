@@ -61,9 +61,7 @@ return {
             { "]t", function() require("todo-comments").jump_next() end, desc = "Next todo comment" },
             { "[t", function() require("todo-comments").jump_prev() end, desc = "Previous todo comment" },
 
-            ---@diagnostic disable-next-line: undefined-field
             { "<leader>ft", function() Snacks.picker.todo_comments() end, desc = "TODOs" },
-            ---@diagnostic disable-next-line: undefined-field
             { "<leader>fT", function() Snacks.picker.todo_comments({ keywords = { "TODO", "FIX", "FIXME" } }) end, desc = "Todo/Fix/Fixme" },
             -- stylua: ignore end
         },
@@ -205,15 +203,16 @@ return {
                     augend.user.new({
                         find = require("dial.augend.common").find_pattern("%u+"),
                         add = function(text, _, _)
-                            return { text = text:lower(), cursor = #text } ---@diagnostic disable-line: redundant-return-value
+                            return { text = text:lower(), cursor = #text }
                         end,
                     }),
                     augend.user.new({
                         find = require("dial.augend.common").find_pattern("%l+"),
                         add = function(text, _, _)
-                            return { text = text:upper(), cursor = #text } ---@diagnostic disable-line: redundant-return-value
+                            return { text = text:upper(), cursor = #text }
                         end,
                     }),
+                    ---@diagnostic disable-next-line: param-type-not-match
                     augend.case.new({
                         types = { "camelCase", "snake_case", "kebab-case", "PascalCase", "SCREAMING_SNAKE_CASE" },
                         cyclic = true,
@@ -230,10 +229,7 @@ return {
         end,
         -- stylua: ignore
         keys = {
-            ---@diagnostic disable-next-line: redundant-return-value
             { "<C-Up>", function() return require("dial.map").inc_normal() end, desc = "Increment Pattern", expr = true },
-
-            ---@diagnostic disable-next-line: redundant-return-value
             { "<C-Down>", function() return require("dial.map").dec_normal() end, desc = "Decrement Pattern", expr = true },
         },
     },

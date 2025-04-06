@@ -11,6 +11,7 @@ return {
         WhichKeySeparator = { link = "Comment" },
         WhichKeyValue = { link = "Comment" },
     },
+    ---@module "which-key.nvim"
     ---@type wk.Config
     opts = {
         delay = 1000,

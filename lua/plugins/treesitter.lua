@@ -65,6 +65,8 @@ return {
         opts = function()
             local root = require("lazy.core.config").options.root
 
+            ---@module "ts-install.nvim"
+            ---@type ts_install.config
             return {
                 auto_install = true,
                 ensure_install = {

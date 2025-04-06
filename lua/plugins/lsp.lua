@@ -62,7 +62,6 @@ return {
                 { "grq", nvim.lsp.apply_quickfix, desc = "Apply Quick Fix", icon = "󱖑 " },
 
                 -- Snacks pickers
-                ---@diagnostic disable: missing-parameter
                 { "gD", function() Snacks.picker.lsp_type_definitions() end, desc = "Goto Type Definition" },
                 { "gO", function() Snacks.picker.lsp_symbols() end, desc = "References" },
                 { "gd", function() Snacks.picker.lsp_definitions({ unique_lines = true }) end, desc = "Goto Definition" },
