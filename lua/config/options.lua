@@ -124,8 +124,5 @@ vim.g.clipboard = {
     },
 }
 
--- Work around: https://github.com/neovim/neovim/issues/31675
-vim.hl = vim.highlight
-
 ---@diagnostic disable-next-line: duplicate-set-field
 vim.deprecate = function() end

@@ -24,13 +24,13 @@ return {
                 footer = { "%s", align = "center" },
                 header = { "%s", align = "center" },
                 file = function(item, ctx)
-                    local fname = vim.fn.fnamemodify(item.file, ":.") -- Or: ":~"
+                    local fname = vim.fs.relpath(vim.env.HOME, item.file) or item.file
 
                     fname = ctx.width and #fname > ctx.width and vim.fn.pathshorten(fname) or fname
 
                     if #fname > ctx.width then
-                        local dir = vim.fn.fnamemodify(fname, ":h")
-                        local file = vim.fn.fnamemodify(fname, ":t")
+                        local dir = vim.fs.dirname(fname)
+                        local file = vim.fs.basename(fname)
 
                         if dir and file then
                             file = file:sub(-(ctx.width - #dir - 2))

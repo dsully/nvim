@@ -80,6 +80,7 @@ return {
                 TEST = { icon = "🧪", color = "test", alt = { "EXPERIMENT", "TESTING" } },
                 TODO = { icon = "✅", color = "info" },
                 WARN = { icon = "⚠️", color = "warning", alt = { "WARNING", "XXX" } },
+                NB = { icon = "󰴄 ", color = "info" },
             },
         },
     },

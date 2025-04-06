@@ -4,7 +4,7 @@ return function()
             ---@see https://github.com/copilot
             model = {
                 default = "o3-mini-2025-01-31",
-                max_tokens = {
+                max_completion_tokens = {
                     default = 8192,
                 },
             },

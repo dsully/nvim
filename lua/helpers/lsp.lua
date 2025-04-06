@@ -348,7 +348,7 @@ M.info = function()
         elseif client.root_dir then
             --
             vim.list_extend(lines, {
-                "  - path   : " .. vim.fn.fnamemodify(client.root_dir, ":~"),
+                "  - path   : " .. vim.fs.relpath(vim.env.HOME, client.root_dir) or client.root_dir,
             })
         end
 
