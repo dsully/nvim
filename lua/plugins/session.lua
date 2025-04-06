@@ -19,6 +19,12 @@ return {
         end)
     end,
     init = function()
+        --
+        ---@return string
+        local root = function()
+            return Snacks.git.get_root() or tostring(vim.uv.cwd())
+        end
+
         nvim.command("SessionLoad", function()
             local resession = require("resession")
 
@@ -26,7 +32,7 @@ return {
                 vim.notify("No saved sessions", vim.log.levels.WARN)
             end
 
-            local ok, _ = pcall(resession.load, Snacks.git.get_root(), { silence_errors = false })
+            local ok, _ = pcall(resession.load, root(), { silence_errors = false })
 
             if not ok then
                 vim.notify("No session to restore!")
@@ -35,7 +41,7 @@ return {
         end, { desc = "Session Load" })
 
         ev.on(ev.VimLeavePre, function()
-            require("resession").save(Snacks.git.get_root(), { notify = false })
+            require("resession").save(root(), { notify = false })
         end, {
             desc = "Save session on exit.",
         })
