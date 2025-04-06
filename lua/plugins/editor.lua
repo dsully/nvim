@@ -105,6 +105,11 @@ return {
     {
         "MagicDuck/grug-far.nvim",
         cmd = "GrugFar",
+        highlights = {
+            GrugFarResultsChangeIndicator = { link = "Changed" },
+            GrugFarResultsRemoveIndicator = { link = "Removed" },
+            GrugFarResultsAddIndicator = { link = "Added" },
+        },
         keys = {
             {
                 "<leader>s/",
