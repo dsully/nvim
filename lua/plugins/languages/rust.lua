@@ -181,6 +181,6 @@ return {
             }
         end,
         ft = "rust",
-        version = "^5", -- Recommended
+        version = "^6", -- Recommended
     },
 }
