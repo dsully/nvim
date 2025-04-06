@@ -173,6 +173,7 @@ M.ui = {
 
         -- This exists here too for bootstrapping.
         LazyButton = { bg = colors.black.base },
+        LazyDimmed = { link = "Comment" },
     },
 
     syntax = {

@@ -21,14 +21,16 @@ function M.lazy_notify()
     vim.notify = temp
 
     local timer = vim.uv.new_timer()
-    local check = assert(vim.uv.new_check())
+    local check = vim.uv.new_check()
 
     local replay = function()
         if timer then
             timer:stop()
         end
 
-        check:stop()
+        if check then
+            check:stop()
+        end
 
         if vim.notify == temp then
             vim.notify = orig -- Put back the original notify if needed
@@ -42,11 +44,13 @@ function M.lazy_notify()
     end
 
     -- Wait till vim.notify has been replaced
-    check:start(function()
-        if vim.notify ~= temp then
-            replay()
-        end
-    end)
+    if check then
+        check:start(function()
+            if vim.notify ~= temp then
+                replay()
+            end
+        end)
+    end
 
     -- Or if it took more than 500ms, then something went wrong
     if timer then
@@ -224,9 +228,10 @@ function M.setup()
                 ---@type string
                 local prefix = words[2] or ""
 
-                ---@type table<string>
+                ---@type string[]
                 local matches = {}
 
+                ---@type LazyPlugin[]
                 for _, plugin in ipairs(require("lazy").plugins()) do
                     if vim.startswith(plugin.name, prefix) then
                         matches[#matches + 1] = plugin.name

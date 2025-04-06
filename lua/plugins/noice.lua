@@ -175,7 +175,6 @@ return {
             {
                 filter = {
                     any = {
-                        { min_height = 10 },
                         { find = "Treesitter" },
                         -- Show cmdline output for :nmap <key> and similar.
                         { cmdline = true, find = "nmap", event = "msg_show", kind = { "list_cmd", "echo" } },

@@ -90,7 +90,7 @@ nvim.command("CopyCodeBlock", function(opts)
     -- Dedent lines
     for i, line in ipairs(lines) do
         if line:match("%S") then
-            lines[i] = line:sub(min_indent + 1)
+            lines[i] = line:sub(math.floor(min_indent) + 1)
         end
     end
 

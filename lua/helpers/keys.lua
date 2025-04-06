@@ -25,10 +25,6 @@ function M.safe_set(lhs, rhs, mode, opts)
     if #modes > 0 or opts and opts.buffer ~= nil then
         opts.silent = opts.silent ~= false
 
-        if opts.remap and not vim.g.vscode then
-            opts.remap = nil
-        end
-
         vim.keymap.set(modes, lhs, rhs, opts)
     else
         vim.notify("Keymap already exists for " .. lhs .. " in: " .. (vim.fn.execute("map " .. lhs) or "?"), vim.log.levels.ERROR)
