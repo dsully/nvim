@@ -31,26 +31,6 @@ return {
             update_in_insert = false, -- https://www.reddit.com/r/neovim/comments/pfk209/nvimlsp_too_fast/
         } --[[@as vim.diagnostic.Opts]])
 
-        -- Set defaults
-        vim.lsp.config("*", {
-            capabilities = require("blink.cmp").get_lsp_capabilities({
-                workspace = {
-                    didChangeWatchedFiles = {
-                        dynamicRegistration = true,
-                    },
-                },
-            }),
-            root_markers = { ".git" },
-        } --[[@as vim.lsp.Config]])
-
-        vim.iter(vim.api.nvim_get_runtime_file("lsp/*.lua", true))
-            :map(function(config_path)
-                return vim.fs.basename(config_path):match("^(.*)%.lua$")
-            end)
-            :each(function(server_name)
-                vim.lsp.enable(server_name, nvim.lsp.should_enable(server_name))
-            end)
-
         ev.on_load("which-key.nvim", function()
             vim.schedule(function()
             -- stylua: ignore
@@ -120,6 +100,26 @@ return {
         --         buffer = buffer,
         --     })
         -- end)
+
+        -- Set defaults
+        vim.lsp.config("*", {
+            capabilities = require("blink.cmp").get_lsp_capabilities({
+                workspace = {
+                    didChangeWatchedFiles = {
+                        dynamicRegistration = true,
+                    },
+                },
+            }),
+            root_markers = { ".git" },
+        } --[[@as vim.lsp.Config]])
+
+        vim.iter(vim.api.nvim_get_runtime_file("lsp/*.lua", true))
+            :map(function(config_path)
+                return vim.fs.basename(config_path):match("^(.*)%.lua$")
+            end)
+            :each(function(server_name)
+                vim.lsp.enable(server_name, nvim.lsp.should_enable(server_name))
+            end)
     end,
     virtual = true,
 }
