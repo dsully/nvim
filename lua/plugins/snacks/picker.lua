@@ -17,7 +17,7 @@ return {
         { "<leader>fc", function() Snacks.picker.git_log() end, desc = "Commits" },
         { "<leader>fd", function() Snacks.picker.diagnostics({ format = "file" }) end, desc = "Diagnostics" },
         { "<leader>fe", function() Snacks.picker.icons({ icon_sources = { "emoji" }}) end, desc = "Emoji" },
-        { "<leader>ff", function() Snacks.picker.smart({ multi = { "files" } }) end, desc = "Files", },
+        { "<leader>ff", function() Snacks.picker.smart({ hidden = true }) end, desc = "Files", },
         { "<leader>fg", function() Snacks.picker.grep() end, desc = "Grep" },
         { "<leader>fh", function() Snacks.picker.highlights() end, desc = "Highlights" },
         { "<leader>fi", function() Snacks.picker.icons({ icon_sources = { "nerd_fonts" }}) end, desc = "Nerd Icons" },
