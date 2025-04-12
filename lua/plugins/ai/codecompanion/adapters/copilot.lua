@@ -3,10 +3,7 @@ return function()
         schema = {
             ---@see https://github.com/copilot
             model = {
-                default = "o3-mini-2025-01-31",
-                max_completion_tokens = {
-                    default = 8192,
-                },
+                default = "claude-3.7-sonnet",
             },
         },
     } --[[@as Copilot.Adapter]])

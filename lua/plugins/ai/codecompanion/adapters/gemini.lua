@@ -3,7 +3,7 @@ return function()
         schema = {
             ---@see https://ai.google.dev/gemini-api/docs/models/gemini
             model = {
-                default = "gemini-2.0-flash-exp",
+                default = "gemini-2.5-pro-preview-03-25",
             },
         },
     } --[[@as Gemini.Adapter]])

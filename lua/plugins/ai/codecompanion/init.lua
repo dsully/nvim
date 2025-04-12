@@ -10,6 +10,10 @@ return {
         },
         cond = defaults.ai.codecompanion,
         config = function(_, opts)
+            --
+            -- Enable agentic tools without confirmation prompts.
+            vim.g.codecompanion_auto_tool_mode = true
+
             require("codecompanion").setup(opts)
 
             -- Disable some built in prompts.
@@ -84,6 +88,7 @@ return {
                 copilot = require("plugins.ai.codecompanion.adapters.copilot"),
                 deepseek = require("plugins.ai.codecompanion.adapters.deepseek"),
                 gemini = require("plugins.ai.codecompanion.adapters.gemini"),
+                githubmodels = require("plugins.ai.codecompanion.adapters.githubmodels"),
                 openai = require("plugins.ai.codecompanion.adapters.openai"),
                 ollama = require("plugins.ai.codecompanion.adapters.ollama"),
                 openrouter = require("plugins.ai.codecompanion.adapters.openrouter"),
@@ -124,7 +129,7 @@ return {
             },
             strategies = {
                 agent = {
-                    adapter = "anthropic",
+                    adapter = "copilot",
                 },
                 chat = {
                     adapter = "copilot",
@@ -136,7 +141,7 @@ return {
                     },
                 },
                 inline = {
-                    adapter = "anthropic",
+                    adapter = "copilot",
                 },
             },
         },
