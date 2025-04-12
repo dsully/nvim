@@ -10,6 +10,9 @@ return {
     -- For adding words to typos.toml
     { "vhyrro/toml-edit.lua", build = "rockspec", priority = 1000 },
 
+    -- Color palette management.
+    { "bhugovilela/palette.nvim", cmd = "Palette" },
+
     -- Better vim help.
     {
         "OXY2DEV/helpview.nvim",
