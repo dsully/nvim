@@ -31,7 +31,7 @@ return {
         taplo = {
             config_file = {
                 enabled = true,
-                path = vim.env.XDG_CONFIG_HOME .. "/taplo.toml",
+                path = nvim.file.xdg_config("/taplo.toml"),
             },
             schema = {
                 enabled = true,

@@ -9,14 +9,14 @@ return {
 
         for i = 1, 9 do
                 -- stylua: ignore
-                map("<leader>" .. i, function() mappings.by_index('focus', i) end, "which_key_ignore")
+                map("<leader>" .. i, function() mappings.by_index("focus", i) end, "which_key_ignore")
 
                 -- Allow Option-N in terminals.
                 -- stylua: ignore
                 map(string.format("<M-%d>", i), function() mappings.by_index("focus", i) end, "which_key_ignore")
         end
 
-        ---@type Component[]
+        ---@type Component
         local components = {
             space = {
                 text = " ",

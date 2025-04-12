@@ -63,14 +63,14 @@ return {
 
                         return #diag > 0
                     end,
-                    prepend_args = { string.format("--config=%s/markdownlint/config.yaml", vim.env.XDG_CONFIG_HOME) },
+                    prepend_args = { "--config=" .. nvim.file.xdg_config("/markdownlint/config.yaml") },
                 },
                 shfmt = {
                     prepend_args = { "-i", "4", "-ci", "-sr", "-s", "-bn" },
                 },
                 -- Remove when https://github.com/tamasfe/taplo/issues/560 is addressed.
                 taplo = {
-                    args = { "format", "--config=" .. vim.env.XDG_CONFIG_HOME .. "/taplo.toml", "-" },
+                    args = { "format", "--config=" .. nvim.file.xdg_config("/taplo.toml"), "-" },
                 },
                 xmlformatter = {
                     prepend_args = { "--blanks", "--indent", "4" },

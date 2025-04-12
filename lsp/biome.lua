@@ -6,7 +6,7 @@ local function get_biome_config_path()
         return path
     end
 
-    return vim.fs.joinpath(vim.env.XDG_CONFIG_HOME or vim.fs.joinpath(vim.fs.expand_home("~"), ".config"), conf)
+    return nvim.file.xdg_config(conf)
 end
 
 ---@type vim.lsp.Config

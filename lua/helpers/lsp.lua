@@ -11,7 +11,7 @@ local methods = vim.lsp.protocol.Methods
 M.should_enable = function(server_name)
     local is_local = nvim.file.is_local_dev()
 
-    if server_name == "harper" and not is_local then
+    if vim.tbl_contains(defaults.ignored.lsp, server_name) or not is_local then
         return false
     end
 
@@ -82,8 +82,9 @@ M.action = setmetatable({}, {
 M.supports_method = {}
 
 ---@param client vim.lsp.Client
+---@param buffer integer
 M.validate_client = function(client, buffer)
-    if buffer == nil or not vim.api.nvim_buf_is_valid(buffer) then
+    if not vim.api.nvim_buf_is_valid(buffer) then
         return
     end
 

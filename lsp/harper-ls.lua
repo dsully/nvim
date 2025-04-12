@@ -12,7 +12,7 @@ return {
                 sentence_capitalization = false,
                 spell_check = false,
             },
-            userDictPath = vim.env.XDG_CONFIG_HOME .. "/harper/dict.txt",
+            userDictPath = nvim.file.xdg_config("/harper/dict.txt"),
         },
     },
     single_file_support = true,

@@ -2,7 +2,7 @@
 return {
     "age",
     config = function()
-        local path = vim.fs.joinpath(vim.env.XDG_CONFIG_HOME, "/chezmoi/chezmoi.toml")
+        local path = nvim.file.xdg_config("/chezmoi/chezmoi.toml")
         local config = nvim.file.read_toml(path)
 
         if not config then

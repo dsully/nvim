@@ -7,12 +7,12 @@ return {
 
             lint.linters["markdownlint-cli2"].args = {
                 "--config",
-                string.format("%s/markdownlint/config.yaml", vim.env.XDG_CONFIG_HOME),
+                nvim.file.xdg_config("/markdownlint/config.yaml"),
             }
 
             lint.linters.yamllint.args = {
                 "--config",
-                string.format("%s/yamllint.yaml", vim.env.XDG_CONFIG_HOME),
+                nvim.file.xdg_config("/yamllint.yaml"),
             }
 
             lint.linters_by_ft = defaults.linters

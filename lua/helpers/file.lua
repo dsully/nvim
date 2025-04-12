@@ -4,11 +4,18 @@ local realpath = function(path)
     return (vim.uv.fs_realpath(path) or path)
 end
 
+---Return the XDG config path to a file.
+---@param path string
+---@return string
+function M.xdg_config(path)
+    return vim.fs.joinpath(vim.env.XDG_CONFIG_HOME or vim.fs.joinpath(vim.fs.expand_home("~"), ".config"), path)
+end
+
 ---Edit a new file relative to the same directory as the current buffer
 function M.edit()
     local buf = vim.api.nvim_get_current_buf()
     local file = realpath(vim.api.nvim_buf_get_name(buf))
-    local root = assert(realpath(vim.uv.cwd() or "."))
+    local root = realpath(vim.uv.cwd() or ".")
 
     if file:find(root, 1, true) ~= 1 then
         root = vim.fs.dirname(file)

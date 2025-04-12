@@ -92,7 +92,7 @@ return {
             worktrees = {
                 {
                     toplevel = vim.g.home,
-                    gitdir = string.format("%s/repos/dotfiles", vim.env.XDG_CONFIG_HOME),
+                    gitdir = nvim.file.xdg_config("/repos/dotfiles"),
                 },
             },
         },
