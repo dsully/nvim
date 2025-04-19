@@ -24,8 +24,8 @@ return {
             -- vim.treesitter.language.add("pyproject")
             -- vim.treesitter.language.register("toml", "pyproject")
 
-            vim.highlight.priorities.semantic_tokens = 100
-            vim.highlight.priorities.treesitter = 125
+            vim.hl.priorities.semantic_tokens = 100
+            vim.hl.priorities.treesitter = 125
 
             nvim.command("TSInstall", function(opts)
                 require("ts-install.install").install(opts)
