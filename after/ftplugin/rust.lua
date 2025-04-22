@@ -24,8 +24,8 @@ if vim.fn.executable("codesort") == 1 then
     end, "Sort code", bufnr)
 
     keys.xmap("<leader>cs", function()
-        local start_line = vim.api.nvim_buf_get_mark(0, "<")[1]
-        local end_line = vim.api.nvim_buf_get_mark(0, ">")[1]
+        local start_line = vim.api.nvim_buf_get_mark(0, "<")[1] or 0
+        local end_line = vim.api.nvim_buf_get_mark(0, ">")[1] or 0
 
         local result = vim.system({ "codesort" }, { stdin = vim.api.nvim_buf_get_lines(0, start_line - 1, end_line, false) }):wait()
 
@@ -39,7 +39,7 @@ end
 
 -- Insert Clippy allow directive above the current line
 keys.bmap("<leader>ri", function()
-    local line = vim.api.nvim_win_get_cursor(0)[1] - 1
+    local line = (vim.api.nvim_win_get_cursor(0)[1] or 1) - 1
 
     ---@type lsp.Diagnostic[]
     local diagnostics = vim.lsp.diagnostic.from(vim.diagnostic.get(bufnr, { lnum = line }))
@@ -50,7 +50,7 @@ keys.bmap("<leader>ri", function()
             -- Match both the new pattern and the old pattern
             local directive = diagnostic.message:match("`#%[deny%(clippy::([%w_]+)%)%]`") or diagnostic.message:match("add `(#%[allow%(clippy::[%w_%-]+%)%])`")
 
-            if directive then
+            if directive ~= "" then
                 -- If it's the new pattern, construct the full directive
                 if not directive:match("^#%[") then
                     directive = string.format("#[allow(clippy::%s)]", directive)
@@ -64,7 +64,7 @@ keys.bmap("<leader>ri", function()
         if diagnostic.source == "rustc" then
             local directive = diagnostic.message:match("`(#%[deny%([%w_%-]+%)%])`") or diagnostic.message:match("`(#%[warn%([%w_%-]+%)%])`")
 
-            if directive then
+            if directive ~= "" then
                 directive = directive:gsub("%[deny", "[allow"):gsub("%[warn", "[allow")
                 vim.api.nvim_buf_set_lines(bufnr, line, line, false, { directive })
                 return

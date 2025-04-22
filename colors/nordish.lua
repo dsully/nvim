@@ -3,7 +3,12 @@ vim.o.background = "dark"
 
 vim.cmd.highlight("clear")
 
+---@class LSPSemanticToken
+---@field modifiers table<lsp.SemanticTokenModifiers,bool>
+---@field type string
+
 ev.on(ev.LspTokenUpdate, function(args)
+    ---@type LSPSemanticToken
     local token = args.data.token
 
     if token.modifiers.defaultLibrary and token.modifiers.readonly then
