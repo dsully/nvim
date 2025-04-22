@@ -7,6 +7,7 @@ return {
         "MasonUninstall",
         "MasonUpdate",
     },
+    cond = false,
     config = function(_, opts)
         require("mason").setup(opts)
 
