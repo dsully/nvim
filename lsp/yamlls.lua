@@ -17,14 +17,14 @@ return {
         keys.bmap("<leader>vs", function()
             local schema = context.get_buffer_schema(bufnr)
 
-            if schema and schema.name then
+            if schema.name then
                 notify.info(schema.name)
             end
         end, "Show YAML schema", bufnr)
     end,
     --- @param client vim.lsp.Client
     on_init = function(client)
-        client:notify("yaml/supportSchemaSelection", { {} })
+        client:notify("yaml/supportSchemaSelection" --[[@as vim.lsp.protocol.Method.ClientToServer.Notification]], { {} })
     end,
     on_new_config = function(config)
         config.settings = vim.tbl_deep_extend("force", config.settings, {

@@ -16,7 +16,7 @@ return {
             local bufnr = vim.api.nvim_get_current_buf()
 
             client:request(
-                "taplo/associatedSchema",
+                "taplo/associatedSchema" --[[@as vim.lsp.protocol.Method.ClientToServer.Request]],
                 vim.tbl_extend("force", vim.lsp.util.make_position_params(0, client.offset_encoding), { documentUri = vim.uri_from_bufnr(bufnr) }),
                 ---@type lsp.Handler
                 function(_err, result, _context, _config)

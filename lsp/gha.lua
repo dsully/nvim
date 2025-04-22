@@ -1,12 +1,5 @@
 ---@type vim.lsp.Config
 return {
-    capabilities = {
-        workspace = {
-            didChangeWorkspaceFolders = {
-                dynamicRegistration = true,
-            },
-        },
-    },
     cmd = { "github-actions-languageserver", "--stdio" },
     filetypes = { "yaml.github" },
     handlers = {
@@ -14,7 +7,7 @@ return {
             --
             result.diagnostics = vim.tbl_filter(function(diagnostic)
                 -- silence annoying context warnings https://github.com/github/vscode-github-actions/issues/222
-                if diagnostic.severity == vim.diagnostic.severity.WARN and diagnostic.message:match("Context access might be invalid:") then
+                if diagnostic.message:match("Context access might be invalid:") then
                     return false
                 end
 
