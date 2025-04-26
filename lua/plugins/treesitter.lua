@@ -74,7 +74,8 @@ return {
                     "c",
                     "caddyfile",
                     "cmake",
-                    "comment",
+                    -- Currently broken in 0.12-nightly
+                    -- "comment",
                     "cpp",
                     "css",
                     "csv",
