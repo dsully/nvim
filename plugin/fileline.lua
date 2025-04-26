@@ -52,24 +52,24 @@ do
             if vim.fn.argc() > 0 then
                 local original = vim.fn.argidx()
 
-                ---@diagnostic disable-next-line: param-type-mismatch
+                ---@diagnostic disable-next-line: param-type-not-match
                 for _, arg in ipairs(vim.fn.argv()) do
                     --
-                    pcall(vim.cmd.edit, { vim.fs.normalize(arg), mods = { keepalt = true } })
+                    if arg:match(pattern) then
+                        --
+                        pcall(vim.cmd.edit, { vim.fs.normalize(arg), mods = { keepalt = true } })
 
-                    local filename = jump()
+                        local filename = jump()
 
-                    local argidx = vim.fn.argidx()
+                        local argidx = vim.fn.argidx()
 
-                    vim.cmd.argdelete({ range = { argidx + 1 } })
+                        vim.cmd.argdelete({ range = { argidx + 1 } })
 
-                    if filename and filename ~= "" then
-                        vim.cmd.argadd({ args = { filename }, range = { argidx } })
+                        if filename and filename ~= "" then
+                            vim.cmd.argadd({ args = { filename }, range = { argidx } })
+                        end
                     end
                 end
-
-                -- Return to the original argument
-                vim.cmd.argument({ range = { original + 1 } })
             end
         end,
         nested = true,

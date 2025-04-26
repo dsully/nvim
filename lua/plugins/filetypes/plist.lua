@@ -17,29 +17,27 @@ M.read_command = function(args)
 
     vim.b.plist_original_format = M.detect_format(args.file)
 
-    if vim.b.plist_original_format ~= "binary" then
-        vim.cmd.bdelete("#")
+    if vim.b.plist_original_format == "binary" then
+        --
+        local xml = vim.system({ "plutil", "-convert", "xml1", "-r", args.file, "-o", "-" }, { text = true }):wait().stdout
+
+        if xml then
+            vim.api.nvim_buf_set_lines(bufnr, -1, -1, false, vim.split(xml, "\n"))
+
+            local size = (vim.uv.fs_stat(args.file) or {}).size or 0
+
+            vim.notify(string.format("%s, %dB [%s]", args.file, size, vim.b.plist_original_format))
+        end
+    else
         vim.cmd.edit({ args.file, mods = { keepalt = true } })
-
-        return
     end
 
-    local xml = vim.system({ "plutil", "-convert", "xml1", "-r", args.file, "-o", "-" }, { text = true }):wait().stdout
-
-    if xml then
-        vim.api.nvim_buf_set_lines(bufnr, -1, -1, false, vim.split(xml, "\n"))
-
-        vim.bo[bufnr].buftype = ""
-        vim.bo[bufnr].filetype = "xml.plist"
-        vim.bo[bufnr].modifiable = true
-        vim.bo[bufnr].modified = false
-        vim.bo[bufnr].readonly = false
-        vim.opt_local.wrap = false
-
-        local size = (vim.uv.fs_stat(args.file) or {}).size or 0
-
-        vim.notify(string.format("%s, %dB [%s]", args.file, size, vim.b.plist_original_format))
-    end
+    vim.bo[bufnr].buftype = ""
+    vim.bo[bufnr].filetype = "xml.plist"
+    vim.bo[bufnr].modifiable = true
+    vim.bo[bufnr].modified = false
+    vim.bo[bufnr].readonly = false
+    vim.opt_local.wrap = false
 end
 
 ---@param args vim.api.keyset.create_autocmd.callback_args
@@ -83,9 +81,7 @@ end
 ---@type LazySpec
 return {
     "plist",
-    cond = function()
-        return vim.g.os == "Darwin"
-    end,
+    cond = vim.fn.has("darwin"),
     init = function()
         local ev = require("helpers.event")
 
