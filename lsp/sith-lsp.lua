@@ -8,11 +8,11 @@ return {
         "pyproject.toml",
         "requirements.txt",
     },
-    settings = {
-        ruff = {
-            enable = true,
-            format = { enable = true },
-            lint = { enable = true },
+    init_options = {
+        settings = {
+            ruff = {
+                path = vim.fn.executable("ruff"),
+            },
         },
     },
     single_file_support = true,
