@@ -44,7 +44,7 @@ return {
     -- Pretty screen shots.
     {
         "mistricky/codesnap.nvim",
-        build = "make build_generator",
+        build = "make",
         cmd = {
             "CodeSnap",
             "CodeSnapSave",
