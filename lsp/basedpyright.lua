@@ -10,6 +10,9 @@ return {
             client.server_capabilities.semanticTokensProvider = nil
         end
     end,
+    root_dir = function(_bufnr, _on_dir)
+        -- Disable and prefer sith-lsp
+    end,
     root_markers = {
         "Pipfile",
         "pyproject.toml",
