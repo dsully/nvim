@@ -188,7 +188,7 @@ return {
                         "path",
                     },
                     lua = {
-                        "lazydev",
+                        -- "lazydev",
                         "lsp",
                         "path",
                         -- "snippets",
