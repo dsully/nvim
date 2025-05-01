@@ -10,8 +10,10 @@ return {
             client.server_capabilities.documentRangeFormattingProvider = nil
         end
     end,
-    root_dir = function(_bufnr, _on_dir)
-        -- Disable and prefer emmylua-ls
+    root_dir = function(_bufnr, on_dir)
+        if not vim.uv.fs_stat(".emmyrc.json") then
+            on_dir(vim.uv.cwd())
+        end
     end,
     settings = {
         ---@type LuaLanguageServerSettings
