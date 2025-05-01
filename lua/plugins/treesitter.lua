@@ -98,6 +98,7 @@ return {
                     "graphql",
                     "groovy",
                     "hcl",
+                    "helm",
                     "html",
                     "htmldjango",
                     "http",

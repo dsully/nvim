@@ -7,8 +7,9 @@ vim.filetype.add({
         ["Brewfile"] = "brewfile",
         ["Caddyfile"] = "caddyfile",
         ["Cargo.toml"] = "toml.cargo",
-        ["PklProject"] = "pkl",
+        ["Chart.yaml"] = "helm",
         ["config.custom"] = "sshconfig",
+        ["PklProject"] = "pkl",
         ["direnvrc"] = "direnv",
         ["fish_history"] = "yaml",
         ["poetry.lock"] = "toml",
@@ -45,6 +46,9 @@ vim.filetype.add({
     pattern = {
         [".*/.config/ghostty/config"] = "ghostty",
         [".*/%.github[%w/]+workflows[%w/]+.*%.ya?ml"] = "yaml.github",
+        [".*/layouts/.*%.html"] = "gohtmltmpl",
+        [".*/templates/.*%.tpl"] = "helm",
+        [".*/templates/.*%.ya?ml"] = "helm",
         [".*/themes?/.*%.theme"] = "fish",
         [".*/zed/settings.json"] = "jsonc",
         [".yml$"] = function(path)
@@ -52,9 +56,10 @@ vim.filetype.add({
         end,
         ["*.dockerignore"] = "gitignore",
         ["Brewfile.*"] = "brewfile",
-        ["Dockerfile.*"] = function(path)
+        [".*Dockerfile.*"] = function(path)
             return path:match("%.dockerignore%*?$") and "gitignore" or "dockerfile"
         end,
+        ["helmfile.*%.ya?ml"] = "helm",
         ["requirements[%w_.-]+%.txt"] = "requirements",
     },
 } --[[@as vim.filetype.add.filetypes ]])
