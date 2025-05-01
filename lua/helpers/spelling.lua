@@ -8,7 +8,7 @@ end
 ---@param word string
 M.add_word_to_typos = function(word)
     --
-    local path = vim.g.home .. "/.typos.toml"
+    local path = vim.fs.abspath("~/.typos.toml")
     local config = nvim.file.read_toml(path)
 
     if not config then

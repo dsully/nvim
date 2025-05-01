@@ -101,7 +101,7 @@ vim.g.loaded_python3_provider = 0
 vim.g.loaded_perl_provider = 0
 vim.g.loaded_ruby_provider = 0
 
-vim.g.home = vim.uv.os_homedir()
+---@type string
 vim.g.os = vim.uv.os_uname().sysname
 
 -- Health check in a floating window.
@@ -123,6 +123,3 @@ vim.g.clipboard = {
         ["*"] = require("vim.ui.clipboard.osc52").paste("*"),
     },
 }
-
----@diagnostic disable-next-line: duplicate-set-field
-vim.deprecate = function() end

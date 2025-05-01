@@ -151,7 +151,7 @@ return {
             shell = "fish",
         },
         words = {
-            enabled = true,
+            enabled = false,
             filter = function(buf)
                 return vim.bo[buf].buftype ~= defaults.ignored.buffer_types
             end,

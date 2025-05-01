@@ -101,7 +101,9 @@ M.validate_client = function(client, buffer)
 
         if not clients[client][buffer] then
             --
-            if client:supports_method(method, buffer) then
+            if
+                client:supports_method(method --[[@as vim.lsp.protocol.Method.ClientToServer]], buffer)
+            then
                 clients[client][buffer] = true
 
                 ev.emit(ev.User, {
@@ -215,6 +217,7 @@ M.commands = function()
             end
         end
 
+        ---@diagnostic disable-next-line param-type-not-match
         vim.ui.float({ ft = "lua", relative = "editor" }, lines):show()
     end, { desc = "Show LSP Capabilities" })
 
@@ -253,6 +256,7 @@ M.commands = function()
             table.insert(lines, "No code actions available")
         end
 
+        ---@diagnostic disable-next-line param-type-not-match
         vim.ui.float({ ft = "lua", relative = "editor" }, lines):show()
     end, { desc = "Show LSP Code Actions" })
 
@@ -349,7 +353,7 @@ M.info = function()
         elseif client.root_dir then
             --
             vim.list_extend(lines, {
-                "  - path   : " .. vim.fs.relpath(vim.env.HOME, client.root_dir) or client.root_dir,
+                "  - path   : " .. vim.fs.relpath("~", client.root_dir) or client.root_dir,
             })
         end
 
@@ -358,6 +362,7 @@ M.info = function()
         end
     end
 
+    ---@diagnostic disable-next-line param-type-not-match
     vim.ui.float({ ft = "lua", relative = "editor" }, lines):show()
 end
 

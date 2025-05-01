@@ -3,6 +3,7 @@ return {
     {
         "folke/lazydev.nvim",
         cmd = "LazyDev",
+        cond = false,
         ft = "lua",
         opts = {
             integrations = {

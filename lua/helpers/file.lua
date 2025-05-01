@@ -8,7 +8,7 @@ end
 ---@param path string
 ---@return string
 function M.xdg_config(path)
-    return vim.fs.joinpath(vim.env.XDG_CONFIG_HOME or vim.fs.joinpath(vim.fs.expand_home("~"), ".config"), path)
+    return vim.fs.joinpath(vim.env.XDG_CONFIG_HOME or vim.fs.abspath("~/.config"), path)
 end
 
 ---Edit a new file relative to the same directory as the current buffer
@@ -91,7 +91,7 @@ M.is_local_dev = function()
     for _, path in ipairs({
         vim.env.XDG_CONFIG_HOME,
         vim.env.XDG_DATA_HOME .. "/chezmoi",
-        vim.fs.joinpath(vim.env.HOME, "dev", "home"),
+        vim.fs.abspath("~/dev/home"),
     }) do
         if vim.startswith(cwd, path) then
             return true

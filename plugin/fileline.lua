@@ -50,8 +50,6 @@ do
             end
 
             if vim.fn.argc() > 0 then
-                local original = vim.fn.argidx()
-
                 ---@diagnostic disable-next-line: param-type-not-match
                 for _, arg in ipairs(vim.fn.argv()) do
                     --

@@ -20,6 +20,7 @@ return {
                 vim.tbl_extend("force", vim.lsp.util.make_position_params(0, client.offset_encoding), { documentUri = vim.uri_from_bufnr(bufnr) }),
                 ---@type lsp.Handler
                 function(_err, result, _context, _config)
+                    ---@diagnostic disable-next-line: param-type-not-match
                     vim.ui.float({ ft = "toml", relative = "editor" }, vim.split(result, "\n")):show()
                 end,
                 bufnr

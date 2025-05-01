@@ -10,6 +10,9 @@ return {
             client.server_capabilities.documentRangeFormattingProvider = nil
         end
     end,
+    root_dir = function(_bufnr, _on_dir)
+        -- Disable and prefer emmylua-ls
+    end,
     settings = {
         ---@type LuaLanguageServerSettings
         Lua = {

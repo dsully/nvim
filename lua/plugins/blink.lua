@@ -8,6 +8,7 @@ end
 return {
     {
         "Saghen/blink.cmp",
+        build = 'nix run .#build-plugin',
         cmd = {
             "BlinkCmp",
         },
@@ -34,7 +35,7 @@ return {
                     },
                 },
                 keymap = {
-                    preset = "enter",
+                    -- preset = "enter",
                     -- TODO: Get this behaviour for <tab>:
                     -- 1. If no menu then open it.
                     -- 2. If menu:
@@ -312,8 +313,6 @@ return {
             "sources.default",
             "sources.per_filetype",
         },
-        -- Get the current released version for the pre-compiled Rust fuzzy finder binary.
-        version = "*",
     },
     { "bydlw98/blink-cmp-env" },
     { "disrupted/blink-cmp-conventional-commits" },

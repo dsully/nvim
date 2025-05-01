@@ -91,7 +91,7 @@ return {
             trouble = true,
             worktrees = {
                 {
-                    toplevel = vim.g.home,
+                    toplevel = vim.fs.abspath("~"),
                     gitdir = nvim.file.xdg_config("/repos/dotfiles"),
                 },
             },

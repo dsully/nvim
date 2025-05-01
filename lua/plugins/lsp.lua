@@ -117,8 +117,8 @@ return {
             :map(function(config_path)
                 return vim.fs.basename(config_path):match("^(.*)%.lua$")
             end)
-            :each(function(server_name)
-                vim.lsp.enable(server_name, nvim.lsp.should_enable(server_name))
+            :map(function(server_name)
+                vim.lsp.enable(server_name)
             end)
     end,
     virtual = true,

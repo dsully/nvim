@@ -26,7 +26,7 @@ return {
             },
             completions = {
                 lsp = {
-                    enabled = true,
+                    enabled = false,
                 },
             },
             heading = {

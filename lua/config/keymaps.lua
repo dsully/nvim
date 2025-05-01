@@ -35,7 +35,7 @@ map("<leader>gcs", "0v/====<CR>$x/>>><CR>dd", "[G]it [C]onflict Choose [S]tashed
 map("<space>n", nvim.file.edit, "New File", "n", { expr = false })
 
 -- Open in the filetype default application (macOS)
-if vim.g.os == "Darwin" then
+if vim.fn.has("darwin") then
     map("<space>o", function()
         if vim.bo.buftype ~= "markdown" then
             return
