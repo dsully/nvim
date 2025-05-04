@@ -1,7 +1,7 @@
 ---@type vim.lsp.Config
 return {
     cmd = {
-        "red_knot",
+        "ty",
         "server",
     },
     filetypes = { "python" },
@@ -14,5 +14,4 @@ return {
         "requirements.txt",
     },
     single_file_support = true,
-    trace = "messages",
 }
