@@ -90,15 +90,6 @@ local M = {
         yaml = { "yamllint" },
     },
 
-    tools = {
-        "ghostty-ls",
-        "goimports",
-        "lemminx",
-        "marksman",
-        "vtsls",
-        "xmlformatter",
-    },
-
     icons = {
         actions = {
             close = "󰅖 ",
