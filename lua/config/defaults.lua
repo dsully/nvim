@@ -30,9 +30,8 @@ local lsp = {
 local M = {
 
     ai = {
-        copilot = true,
+        copilot = vim.env.WORK and false or true,
         codecompanion = true,
-        supermaven = false,
     },
 
     code_actions = {
@@ -128,7 +127,6 @@ local M = {
             -- Extras that are not part of lsp.CompleteItemKind.
             Code = " ",
             Copilot = " ",
-            Supermaven = " ",
             Version = "󱘗 ", -- crates.nvim lsp completion type.
         },
         diagnostics = {

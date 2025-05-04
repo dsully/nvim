@@ -58,9 +58,13 @@ return {
             },
         },
     },
-    { "fang2hou/blink-copilot" },
+    {
+        "fang2hou/blink-copilot",
+        cond = defaults.ai.copilot,
+    },
     {
         "Saghen/blink.cmp",
+        cond = defaults.ai.copilot,
         optional = true,
         opts = {
             completion = { menu = { draw = { treesitter = { "copilot" } } } },
