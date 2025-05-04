@@ -30,3 +30,5 @@ end
 require("config.options")
 require("config.globals")
 require("config.lazy").setup()
+
+require("vim._extui").enable({})

@@ -27,6 +27,7 @@ return {
                 nerd_font_variant = "mono",
             },
             cmdline = {
+                enabled = vim.opt.cmdheight == 0,
                 completion = {
                     menu = {
                         auto_show = function()

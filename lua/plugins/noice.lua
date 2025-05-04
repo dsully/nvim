@@ -19,9 +19,11 @@ return {
     keys = {
         { "<leader>fN", function() vim.cmd.Noice("pick") end, desc = "Noice" },
     },
+    ---@module "noice"
     ---@type NoiceConfig
     opts = {
         cmdline = {
+            enabled = vim.opt.cmdheight == 0,
             format = {
                 git = { pattern = { "^:Gitsigns%s+", "^:Neogit%s+", "^:GitLink%s+" }, icon = " ", lang = "vim", title = " git " },
                 input = { icon = " ", lang = "text", view = "cmdline_popup", title = "" },
@@ -81,7 +83,7 @@ return {
             },
         },
         messages = {
-            enabled = true,
+            enabled = vim.opt.cmdheight == 0,
         },
         notify = {
             enabled = true,
@@ -225,6 +227,10 @@ return {
         views = {
             mini = {
                 format = { "{title} ", "{message}" }, -- leave out "{level}"
+                position = {
+                    -- Position it 2 rows from the bottom (1 for statusline, 1 for cmdheight)
+                    row = vim.opt.cmdheight == 0 and -1 or -2,
+                },
                 zindex = 10,
             },
             popupmenu = {

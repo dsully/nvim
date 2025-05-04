@@ -304,7 +304,6 @@ local M = {
             "help",
             "lazy",
             "log",
-            "mason",
             "noice",
             "notify",
             "oil",
