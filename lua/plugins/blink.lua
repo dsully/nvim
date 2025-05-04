@@ -8,7 +8,7 @@ end
 return {
     {
         "Saghen/blink.cmp",
-        build = 'nix run .#build-plugin',
+        build = "nix run .#build-plugin",
         cmd = {
             "BlinkCmp",
         },
