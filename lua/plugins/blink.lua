@@ -37,13 +37,12 @@ return {
                     },
                 },
                 keymap = {
-                    -- preset = "enter",
-                    -- TODO: Get this behaviour for <tab>:
-                    -- 1. If no menu then open it.
-                    -- 2. If menu:
-                    --   1. If there are multiple options: select the next one.
-                    --   2. If there is only one entry: select it and confirm the selection
-                    ["<Tab>"] = { "show", "select_next", "select_and_accept" },
+                    preset = "cmdline",
+                    ["<CR>"] = { "accept", "fallback" },
+                    ["<Tab>"] = { "show_and_insert", "select_next" },
+                    ["<S-Tab>"] = { "show_and_insert", "select_prev" },
+                    ["<Up>"] = { "select_prev", "fallback" },
+                    ["<Down>"] = { "select_next", "fallback" },
                 },
             },
             completion = {
