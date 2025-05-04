@@ -1,17 +1,6 @@
 -- https://github.com/neovim/neovim/pull/24044
 vim.loader.enable()
 
--- Neovim receiving weird keys on launching
--- Fixing vim.termcap by overriding query field
--- https://github.com/neovim/neovim/issues/33148
-local ok, vimtermcap = pcall(require, "vim.termcap")
-
-if not ok then
-    return
-end
-
-vimtermcap.query = function() end
-
 if vim.env.PROF or vim.env.PROFILE or vim.env.NVIM_PROFILE then
     local snacks = vim.fs.joinpath(tostring(vim.fn.stdpath("data")), "lazy/snacks.nvim")
 
@@ -31,4 +20,9 @@ require("config.options")
 require("config.globals")
 require("config.lazy").setup()
 
-require("vim._extui").enable({})
+---@type boolean?
+vim.g.noice = true
+
+if vim.g.noice == false then
+    require("vim._extui").enable({})
+end

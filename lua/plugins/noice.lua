@@ -23,7 +23,7 @@ return {
     ---@type NoiceConfig
     opts = {
         cmdline = {
-            enabled = vim.opt.cmdheight == 0,
+            enabled = vim.g.noice,
             format = {
                 git = { pattern = { "^:Gitsigns%s+", "^:Neogit%s+", "^:GitLink%s+" }, icon = " ", lang = "vim", title = " git " },
                 input = { icon = " ", lang = "text", view = "cmdline_popup", title = "" },
@@ -83,7 +83,7 @@ return {
             },
         },
         messages = {
-            enabled = vim.opt.cmdheight == 0,
+            enabled = vim.g.noice,
         },
         notify = {
             enabled = true,
@@ -229,7 +229,7 @@ return {
                 format = { "{title} ", "{message}" }, -- leave out "{level}"
                 position = {
                     -- Position it 2 rows from the bottom (1 for statusline, 1 for cmdheight)
-                    row = vim.opt.cmdheight == 0 and -1 or -2,
+                    row = vim.g.noice and -2 or -1,
                 },
                 zindex = 10,
             },

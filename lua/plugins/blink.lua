@@ -27,8 +27,9 @@ return {
                 nerd_font_variant = "mono",
             },
             cmdline = {
-                enabled = vim.opt.cmdheight == 0,
                 completion = {
+                    ghost_text = { enabled = false },
+                    list = { selection = { preselect = false, auto_insert = false } },
                     menu = {
                         auto_show = function()
                             return vim.fn.getcmdtype() == ":" or vim.fn.getcmdtype() == "@"
@@ -245,6 +246,7 @@ return {
 
                             ---@param item blink.cmp.CompletionItem
                             return vim.tbl_filter(function(item)
+                                ---@diagnostic disable param-type-not-match
                                 --
                                 if item.kind == types.Text or item.kind == types.Snippet or item.deprecated then
                                     return false

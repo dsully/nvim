@@ -1,6 +1,6 @@
 vim.opt.autoread = true -- update file content if it has been modified on disk
 vim.opt.backup = false
-vim.opt.cmdheight = 1 -- Set to 0 if using Noice
+vim.opt.cmdheight = vim.g.noice == true and 0 or 1 -- Set to 0 if using Noice
 vim.opt.completeopt = {
     "menu",
     "menuone",
