@@ -1,7 +1,7 @@
 ---@type LazySpec
 return {
     "lsp",
-    event = ev.LazyFile,
+    event = ev.VeryLazy,
     config = function()
         local methods = vim.lsp.protocol.Methods
 
@@ -88,6 +88,10 @@ return {
         nvim.lsp.on_dynamic_capability(function() end)
         nvim.lsp.commands()
 
+        nvim.lsp.on_supports_method(methods.textDocument_documentColor, function(_, buffer)
+            vim.lsp.document_color.enable(true, buffer)
+        end)
+
         nvim.lsp.on_supports_method(methods.textDocument_inlayHint, function()
             vim.lsp.inlay_hint.enable(false)
         end)
@@ -101,25 +105,31 @@ return {
         --     })
         -- end)
 
-        -- Set defaults
-        vim.lsp.config("*", {
+        local capabilities = nil
+
+        if pcall(require, "blink.cmp") then
             capabilities = require("blink.cmp").get_lsp_capabilities({
                 workspace = {
                     didChangeWatchedFiles = {
                         dynamicRegistration = true,
                     },
                 },
-            }),
+            })
+        end
+
+        -- Set defaults
+        vim.lsp.config("*", {
+            capabilities = capabilities,
             root_markers = { ".git" },
         } --[[@as vim.lsp.Config]])
 
-        vim.iter(vim.api.nvim_get_runtime_file("lsp/*.lua", true))
-            :map(function(config_path)
-                return vim.fs.basename(config_path):match("^(.*)%.lua$")
+        local servers = vim.iter(vim.api.nvim_get_runtime_file("lsp/*.lua", true))
+            :map(function(config)
+                return vim.fs.basename(config):match("^(.*)%.lua$")
             end)
-            :map(function(server_name)
-                vim.lsp.enable(server_name)
-            end)
+            :totable()
+
+        vim.lsp.enable(servers)
     end,
     virtual = true,
 }
