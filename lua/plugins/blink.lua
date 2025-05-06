@@ -8,7 +8,7 @@ end
 return {
     {
         "Saghen/blink.cmp",
-        build = "nix run .#build-plugin",
+        build = "nix run --accept-flake-config .#build-plugin",
         cmd = {
             "BlinkCmp",
         },
