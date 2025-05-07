@@ -88,8 +88,11 @@ return {
         nvim.lsp.on_dynamic_capability(function() end)
         nvim.lsp.commands()
 
-        nvim.lsp.on_supports_method(methods.textDocument_documentColor, function(_, buffer)
-            vim.lsp.document_color.enable(true, buffer)
+        nvim.lsp.on_attach(function(client, buffer)
+            --
+            if client.name ~= "emmylua-analyzer-rust" then
+                vim.lsp.document_color.enable(true, buffer, { style = "foreground" })
+            end
         end)
 
         nvim.lsp.on_supports_method(methods.textDocument_inlayHint, function()
