@@ -1,5 +1,6 @@
 ---@type LazySpec
 return {
+    ---@module "conform"
     "stevearc/conform.nvim",
     cmd = "ConformInfo",
     keys = {

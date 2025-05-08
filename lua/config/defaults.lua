@@ -30,7 +30,7 @@ local lsp = {
 local M = {
 
     ai = {
-        copilot = vim.env.WORK and false or true,
+        copilot = vim.env.WORK == nil,
         codecompanion = true,
     },
 
