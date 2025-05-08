@@ -294,6 +294,7 @@ return {
     },
     {
         "echasnovski/mini.pairs",
+        cond = false,
         config = function(_, opts)
             require("mini.pairs").setup(opts)
 
