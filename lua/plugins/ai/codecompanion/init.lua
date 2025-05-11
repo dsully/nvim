@@ -8,7 +8,7 @@ return {
             "CodeCompanionChat",
             "CodeCompanionActions",
         },
-        cond = defaults.ai.codecompanion,
+        cond = defaults.ai.codecompanion.enabled,
         config = function(_, opts)
             --
             -- Enable agentic tools without confirmation prompts.
@@ -83,17 +83,7 @@ return {
             },
         },
         opts = {
-            adapters = {
-                anthropic = require("plugins.ai.codecompanion.adapters.anthropic"),
-                copilot = require("plugins.ai.codecompanion.adapters.copilot"),
-                deepseek = require("plugins.ai.codecompanion.adapters.deepseek"),
-                gemini = require("plugins.ai.codecompanion.adapters.gemini"),
-                githubmodels = require("plugins.ai.codecompanion.adapters.githubmodels"),
-                openai = require("plugins.ai.codecompanion.adapters.openai"),
-                ollama = require("plugins.ai.codecompanion.adapters.ollama"),
-                openrouter = require("plugins.ai.codecompanion.adapters.openrouter"),
-                qwen25 = require("plugins.ai.codecompanion.adapters.qwen"),
-            },
+            adapters = require("plugins.ai.codecompanion.adapters"),
             display = {
                 chat = {
                     intro_message = "",
@@ -129,10 +119,10 @@ return {
             },
             strategies = {
                 agent = {
-                    adapter = "copilot",
+                    adapter = defaults.ai.codecompanion.model,
                 },
                 chat = {
-                    adapter = "copilot",
+                    adapter = defaults.ai.codecompanion.model,
                     slash_commands = {
                         buffer = { opts = { provider = "snacks" } },
                         file = { opts = { provider = "snacks" } },
@@ -141,7 +131,7 @@ return {
                     },
                 },
                 inline = {
-                    adapter = "copilot",
+                    adapter = defaults.ai.codecompanion.model,
                 },
             },
         },

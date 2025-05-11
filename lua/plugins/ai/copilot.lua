@@ -22,6 +22,7 @@ if defaults.ai.copilot then
                 end)
             end,
             opts = {
+                copilot_model = "gpt-4o-copilot",
                 filetypes = {
                     ["*"] = false, -- Disable for all other filetypes and ignore default `filetypes`
                     bash = true,

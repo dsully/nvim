@@ -27,11 +27,18 @@ local lsp = {
     Variable = "󰀫 ",
 }
 
+local work = vim.env.WORK ~= nil
+
 local M = {
 
+    work = work,
+
     ai = {
-        copilot = vim.env.WORK == nil,
-        codecompanion = true,
+        copilot = not work,
+        codecompanion = {
+            enabled = true,
+            model = "copilot",
+        },
     },
 
     code_actions = {
