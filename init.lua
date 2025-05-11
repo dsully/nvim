@@ -24,5 +24,5 @@ require("config.lazy").setup()
 vim.g.noice = true
 
 if vim.g.noice == false then
-    require("vim._extui").enable({})
+    require("vim._extui").enable({ msg = { pos = "box" } })
 end
