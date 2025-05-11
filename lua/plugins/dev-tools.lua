@@ -1,4 +1,5 @@
 -- https://github.com/ThePrimeagen/refactoring.nvim ?
+---@type LazySpec
 return {
     "yarospace/dev-tools.nvim",
     ---@type Config
