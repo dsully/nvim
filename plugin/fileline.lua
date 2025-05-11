@@ -50,11 +50,16 @@ do
             end
 
             if vim.fn.argc() > 0 then
+                local original = vim.fn.argidx()
+                local changed = false
+
                 ---@diagnostic disable-next-line: param-type-not-match
                 for _, arg in ipairs(vim.fn.argv()) do
                     --
                     if arg:match(pattern) then
                         --
+                        changed = true
+
                         pcall(vim.cmd.edit, { vim.fs.normalize(arg), mods = { keepalt = true } })
 
                         local filename = jump()
@@ -68,6 +73,9 @@ do
                         end
                     end
                 end
+
+                -- Return to the original argument
+                vim.cmd.argument({ range = { original + 1 } })
             end
         end,
         nested = true,
