@@ -63,11 +63,21 @@ local M = {
             fish = { "fish_indent" },
             go = { "goimports", "gofumpt" },
             lua = { "stylua" },
-            markdown = { "markdownlint-cli2" },
+            -- markdown = function(bufnr)
+            --     return { require("helpers.formatting").first(bufnr, "prettierd", "prettier"), "injected" }
+            -- end,
             pyproject = { "pyproject-fmt" },
             python = { "ruff_organize_imports", "ruff_format", "ruff_fix" },
             sh = { "shellharden", "shfmt" },
-            toml = { "taplo" },
+            toml = function(bufnr)
+                local bufname = vim.api.nvim_buf_get_name(bufnr)
+
+                if bufname:find("pyproject.toml") then
+                    return { "pyproject-fmt" }
+                end
+
+                return { "taplo" }
+            end,
             xml = { "xmlformatter" },
         },
         on_save = {

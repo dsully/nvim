@@ -30,6 +30,13 @@ return {
             )
         end, "Show associated TOML schema")
     end,
+    root_dir = function(bufnr, on_dir)
+        local bufname = vim.api.nvim_buf_get_name(bufnr)
+
+        if not bufname:find("pyproject.toml") then
+            on_dir(vim.uv.cwd())
+        end
+    end,
     -- This doesn't work. https://github.com/tamasfe/taplo/issues/560
     settings = {
         evenBetterToml = {
