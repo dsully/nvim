@@ -1,4 +1,5 @@
 local M = {
+    ---@type boolean
     processing = false,
     spinner_index = 1,
 }
@@ -20,7 +21,7 @@ local symbols_len = #symbols
 
 ---Return true if CodeCompanion is open.
 function M:open()
-    return M.processing or vim.bo.filetype == "codecompanion"
+    return self.processing or vim.bo.filetype == "codecompanion"
 end
 
 function M:update()

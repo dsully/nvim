@@ -4,6 +4,13 @@ local realpath = function(path)
     return (vim.uv.fs_realpath(path) or path)
 end
 
+---Return the XDG cache path to a file.
+---@param path string
+---@return string
+function M.xdg_cache(path)
+    return vim.fs.joinpath(vim.env.XDG_CACHE_HOME or vim.fs.abspath("~/.cache"), path)
+end
+
 ---Return the XDG config path to a file.
 ---@param path string
 ---@return string

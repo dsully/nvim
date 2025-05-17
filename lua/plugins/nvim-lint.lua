@@ -21,7 +21,7 @@ return {
                 lint.linters_by_ft["python"] = { "mypy" }
             end
 
-            if vim.fn.has("linux") then
+            if vim.fn.has("linux") == 1 then
                 lint.linters_by_ft["systemd"] = { "systemd-analyze" }
             end
 

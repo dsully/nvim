@@ -314,6 +314,8 @@ M.group = function(name, clear)
     return vim.api.nvim_create_augroup(vim.env.USER .. "/" .. name, { clear = clear })
 end
 
+---@param name string
+---@return boolean?
 M.is_loaded = function(name)
     local config = require("lazy.core.config")
     return config.plugins[name] and config.plugins[name]._.loaded

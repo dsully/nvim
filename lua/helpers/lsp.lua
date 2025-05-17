@@ -233,7 +233,7 @@ M.commands = function()
             params.context = { diagnostics = vim.lsp.diagnostic.get_line_diagnostics() }
 
             client:request(methods.textDocument_codeAction, params, function(_, result)
-                if not vim.tbl_contains(defaults.ignored.lsp, name) and result.result then
+                if not vim.tbl_contains(defaults.ignored.lsp, name) and result.result ~= nil then
                     --
                     table.insert(lines, name .. " Code Actions:")
                     table.insert(lines, "")

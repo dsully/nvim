@@ -35,9 +35,9 @@ map("<leader>gcs", "0v/====<CR>$x/>>><CR>dd", "[G]it [C]onflict Choose [S]tashed
 map("<space>n", nvim.file.edit, "New File", "n", { expr = false })
 
 -- Open in the filetype default application (macOS)
-if vim.fn.has("darwin") then
+if vim.fn.has("darwin") == 1 then
     map("<space>o", function()
-        if vim.bo.buftype ~= "markdown" then
+        if not vim.bo.buftype or vim.bo.buftype == "markdown" then
             return
         end
 
@@ -81,9 +81,11 @@ nvim.command("CopyCodeBlock", function(opts)
 
     for _, line in ipairs(lines) do
         if line:match("%S") then -- Skip empty lines
-            local indent = line:match("^%s*"):len()
+            local ws = line:match("^%s*")
 
-            min_indent = math.min(min_indent, indent)
+            if ws then
+                min_indent = math.min(min_indent, ws:len())
+            end
         end
     end
 

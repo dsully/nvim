@@ -21,8 +21,8 @@ return {
                 filetype = { "nix" },
                 handle = function(mode, line, _)
                     local find = require("gx.helper").find
-                    local user = find(line, mode, "github:(.-)/.*")
-                    local repo = find(line, mode, 'github:.-/([%w_-]+)"?.*')
+                    local user = find(line, mode, "github:(.-)/.*") --[[@as string?]]
+                    local repo = find(line, mode, 'github:.-/([%w_-]+)"?.*') --[[@as string?]]
 
                     if user and repo then
                         return ("https://github.com/%s/%s"):format(user, repo)
