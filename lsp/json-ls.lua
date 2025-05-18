@@ -20,40 +20,25 @@ return {
     init_options = {
         provideFormatter = true,
     },
+    --- @param client vim.lsp.Client
+    on_init = function(client)
+        local schemas = nvim.file.read(nvim.file.xdg_config("schemas.json")) or "{}"
+
+        ---@diagnostic disable-next-line: inject-field, need-check-nil
+        client.config.settings.json.schemas = require("schemastore").json.schemas({
+            extra = vim.json.decode(schemas),
+        })
+
+        client:notify(vim.lsp.protocol.Methods.workspace_didChangeConfiguration, { settings = client.config.settings })
+    end,
     settings = {
         json = {
-            schemas = {
-                {
-                    fileMatch = { "package.json" },
-                    url = "https://json.schemastore.org/package.json",
-                },
-                {
-                    fileMatch = { "tsconfig*.json" },
-                    url = "https://json.schemastore.org/tsconfig.json",
-                },
-                {
-                    fileMatch = {
-                        ".prettierrc",
-                        ".prettierrc.json",
-                        "prettier.config.json",
-                    },
-                    url = "https://json.schemastore.org/prettierrc.json",
-                },
-                {
-                    fileMatch = {
-                        ".eslintrc",
-                        ".eslintrc.json",
-                    },
-                    url = "https://json.schemastore.org/eslintrc.json",
-                },
-                {
-                    fileMatch = {
-                        ".stylelintrc",
-                        ".stylelintrc.json",
-                        "stylelint.config.json",
-                    },
-                    url = "http://json.schemastore.org/stylelintrc.json",
-                },
+            format = {
+                enable = true,
+            },
+            schemas = {},
+            validate = {
+                enable = true,
             },
         },
     },

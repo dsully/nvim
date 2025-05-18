@@ -1,7 +1,7 @@
 ---@type vim.lsp.Config
 return {
     cmd = { "yaml-language-server", "--stdio" },
-    filetypes = { "yaml" },
+    filetypes = { "yaml", "yaml.github" },
     handlers = {
         ["yaml/schema/store/initialized"] = function(...)
             require("schema-companion.lsp").store_initialized(...)
@@ -24,12 +24,16 @@ return {
     end,
     --- @param client vim.lsp.Client
     on_init = function(client)
-        client:notify("yaml/supportSchemaSelection" --[[@as vim.lsp.protocol.Method.ClientToServer.Notification]], { {} })
-    end,
-    on_new_config = function(config)
-        config.settings = vim.tbl_deep_extend("force", config.settings, {
-            yaml = { schemas = require("schemastore").yaml.schemas() },
+        local schemas = nvim.file.read(nvim.file.xdg_config("schemas.json")) or "{}"
+
+        ---@diagnostic disable-next-line: inject-field, need-check-nil
+        client.config.settings.yaml.schemas = require("schemastore").yaml.schemas({
+            extra = vim.json.decode(schemas),
         })
+
+        client:notify(vim.lsp.protocol.Methods.workspace_didChangeConfiguration, { settings = client.config.settings })
+
+        client:notify("yaml/supportSchemaSelection" --[[@as vim.lsp.protocol.Method.ClientToServer.Notification]], { {} })
     end,
     settings = {
         redhat = {
@@ -46,9 +50,9 @@ return {
                 formatOnType = false,
             },
             hover = true,
-            schemas = {
-                -- GitHub CI workflows
-                ["https://json.schemastore.org/github-workflow.json"] = "/.github/workflows/*",
+            schemaStore = {
+                enable = false,
+                url = "",
             },
             validate = true,
         },

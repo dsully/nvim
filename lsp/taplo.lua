@@ -2,6 +2,9 @@
 return {
     cmd = { "taplo", "lsp", "stdio" },
     filetypes = { "toml", "toml.pyproject" },
+    init_options = {
+        cachePath = nvim.file.xdg_cache("taplo"),
+    },
     ---@param client vim.lsp.Client
     on_attach = function(client)
         --
@@ -29,18 +32,34 @@ return {
     end,
     -- This doesn't work. https://github.com/tamasfe/taplo/issues/560
     settings = {
-        taplo = {
-            config_file = {
-                enabled = true,
-                path = nvim.file.xdg_config("/taplo.toml"),
-            },
+        evenBetterToml = {
+            semanticTokens = true,
             schema = {
-                enabled = true,
-                catalogs = { "https://www.schemastore.org/api/json/catalog.json" },
-                cache = {
-                    diskExpiration = 600,
-                    memoryExpiration = 60,
+                associations = {
+                    ["Cargo.toml"] = "https://json.schemastore.org/cargo.json",
+                    ["Makefile.toml"] = "https://json.schemastore.org/cargo-make.json",
+                    ["pyproject.toml"] = "https://json.schemastore.org/pyproject.json",
+                    ["rust-toolchain.toml"] = "https://json.schemastore.org/rust-toolchain.json",
+                    ["starship.toml)"] = "https://starship.rs/config-schema.json",
+                    ["**/action.toml"] = "https://json.schemastore.org/github-action.json",
+                    ["**/workflow*.toml"] = "https://json.schemastore.org/github-workflow.json",
                 },
+                cache = {
+                    diskExpiration = 60 * 60 * 24,
+                    memoryExpiration = 60 * 10,
+                },
+                links = true,
+            },
+            formatter = {
+                alignEntries = false,
+                arrayAutoExpand = true,
+                arrayTrailingComma = true,
+                compact = false,
+                indentString = "  ", -- 2 spaces
+                indentTables = true,
+                reorderArrays = true,
+                reorderInlineTables = true,
+                reorderKeys = true,
             },
         },
     },
