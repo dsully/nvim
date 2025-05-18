@@ -9,9 +9,9 @@ M.collect = function(callback)
     --
     return vim.system({ "chezmoi", "list", "--include", "files", "--path-style", "absolute", "--exclude", "externals" }, { text = true }, function(obj)
         --
-        M.targets = vim.split(obj.stdout, "\n")
+        M.targets = vim.split(obj.stdout or "", "\n")
 
-        if callback then
+        if callback ~= nil then
             vim.schedule(function()
                 callback(M.targets)
             end)

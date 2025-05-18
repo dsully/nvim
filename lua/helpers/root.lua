@@ -2,6 +2,7 @@
 
 ---@class helpers.root
 ---@overload fun(): string
+---@return string[]
 local M = setmetatable({}, {
     __call = function(m, ...)
         return m.get(...)
@@ -229,7 +230,12 @@ function M.get(opts)
 
     if not ret then
         local roots = M.detect({ all = false, buf = buf })
-        M.cache[buf] = roots[1] and roots[1].paths[1] or tostring(vim.uv.cwd())
+
+        if roots[1] and roots[1] ~= nil then
+            M.cache[buf] = roots[1].paths[1]
+        else
+            M.cache[buf] = tostring(vim.uv.cwd())
+        end
     end
 
     return M.cache[buf]

@@ -11,6 +11,7 @@ M.popup = function(event)
             local help_win = vim.api.nvim_get_current_win()
             local lines = vim.api.nvim_buf_get_lines(event.buf, 0, -1, false)
 
+            ---@diagnostic disable-next-line: param-type-not-match
             vim.ui.float({ ft = filetype, wo = { anchor = "E" } }, lines):show()
 
             -- Close the initial help split window.

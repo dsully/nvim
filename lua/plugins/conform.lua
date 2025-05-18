@@ -41,7 +41,7 @@ return {
                     return nil
                 end
 
-                ---@type conform.FormatOpts
+                ---@diagnostic disable-next-line: return-type-mismatch
                 return { timeout_ms = 500, lsp_format = "fallback" }
             end,
             formatters = {

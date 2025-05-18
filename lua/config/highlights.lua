@@ -97,10 +97,12 @@ local M = {
 }
 
 ---@alias HighlightName string
----@alias Highlight table<string, vim.api.keyset.highlight>>
+---@alias HighlightMap table<HighlightName, vim.api.keyset.highlight>>
+---@alias HighlightMaps table<string, table<HighlightName, vim.api.keyset.highlight[]>>
 
----@type table<HighlightName, Highlight>
+---@type HighlightMap|HighlightMaps
 M.ui = {
+    -- ---@type Highlight
     core = {
         Added = { link = hl.DiffAdd },
         Bold = { bold = true },

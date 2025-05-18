@@ -28,7 +28,7 @@ function M.lazy_notify()
             timer:stop()
         end
 
-        if check then
+        if check ~= nil then
             check:stop()
         end
 
@@ -44,7 +44,7 @@ function M.lazy_notify()
     end
 
     -- Wait till vim.notify has been replaced
-    if check then
+    if check ~= nil then
         check:start(function()
             if vim.notify ~= temp then
                 replay()
@@ -69,7 +69,7 @@ function M.bootstrap()
     vim.opt.runtimepath:prepend(lazypath)
 end
 
-function M.setup()
+function M.init()
     M.bootstrap()
     M.lazy_notify()
     M.lazy_file()
@@ -112,7 +112,6 @@ function M.setup()
         end)
     end)
 
-    ---@type LazyConfig
     require("lazy").setup({
         spec = {
             { import = "config.autocommands" },
@@ -210,7 +209,7 @@ function M.setup()
             backdrop = 90,
             border = defaults.ui.border.name,
         },
-    })
+    } --[[@as LazyConfig]])
 
     vim.api.nvim_create_user_command("LazyHealth", function(...)
         vim.cmd.Lazy({ "load all", bang = true })
@@ -219,7 +218,7 @@ function M.setup()
 
     vim.api.nvim_create_user_command("LazyPlugin", function(opts)
         --
-        dd(lazy.opts(unpack(opts.fargs)))
+        dd(lazy.opts(unpack(opts.fargs) --[[@as string ]]))
     end, {
         complete = function(_, line)
             local words = vim.split(line, "%s+")

@@ -239,6 +239,7 @@ return {
                             -- Sort snippets lower.
                             for _, item in ipairs(items) do
                                 if item.kind == types.Snippet then
+                                    ---@diagnostic disable-next-line: inject-field
                                     item.score_offset = (item.score_offset or 0) - 3
                                 end
                             end

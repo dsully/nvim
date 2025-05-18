@@ -50,7 +50,7 @@ keys.bmap("<leader>ri", function()
             -- Match both the new pattern and the old pattern
             local directive = diagnostic.message:match("`#%[deny%(clippy::([%w_]+)%)%]`") or diagnostic.message:match("add `(#%[allow%(clippy::[%w_%-]+%)%])`")
 
-            if directive ~= "" then
+            if directive ~= nil and directive ~= "" then
                 -- If it's the new pattern, construct the full directive
                 if not directive:match("^#%[") then
                     directive = string.format("#[allow(clippy::%s)]", directive)
@@ -64,7 +64,7 @@ keys.bmap("<leader>ri", function()
         if diagnostic.source == "rustc" then
             local directive = diagnostic.message:match("`(#%[deny%([%w_%-]+%)%])`") or diagnostic.message:match("`(#%[warn%([%w_%-]+%)%])`")
 
-            if directive ~= "" then
+            if directive ~= nil and directive ~= "" then
                 directive = directive:gsub("%[deny", "[allow"):gsub("%[warn", "[allow")
                 vim.api.nvim_buf_set_lines(bufnr, line, line, false, { directive })
                 return

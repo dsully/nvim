@@ -144,7 +144,7 @@ M.normalize = function(input)
 end
 
 -- Return the current filename.
----@param bufnr integer
+---@param bufnr integer?
 ---@return string
 M.filename = function(bufnr)
     return M.normalize(vim.api.nvim_buf_get_name(bufnr or 0))

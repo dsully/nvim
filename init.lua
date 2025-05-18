@@ -18,7 +18,7 @@ end
 
 require("config.options")
 require("config.globals")
-require("config.lazy").setup()
+require("config.lazy").init()
 
 ---@type boolean?
 vim.g.noice = true
