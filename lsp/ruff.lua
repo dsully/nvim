@@ -2,14 +2,14 @@
 return {
     cmd = { "ruff", "server" },
     filetypes = {
-        "pyproject",
         "python",
-        "toml.pyproject",
     },
     root_markers = {
         ".ruff.toml",
         "pyproject.toml",
+        "requirements.txt",
         "ruff.toml",
+        "setup.py",
     },
     single_file_support = true,
 }
