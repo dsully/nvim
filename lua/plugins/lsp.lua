@@ -5,7 +5,6 @@ return {
     config = function()
         local methods = vim.lsp.protocol.Methods
 
-        vim.uv.fs_unlink(vim.lsp.get_log_path())
         vim.lsp.log.set_level(vim.lsp.log.levels.WARN)
         vim.lsp.log.set_format_func(vim.inspect)
 
