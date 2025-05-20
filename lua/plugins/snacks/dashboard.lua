@@ -69,7 +69,9 @@ return {
                 function()
                     -- In an initialized but empty / no commits repo,
                     -- there will be an error thrown to stderr from git-dashboard-nvim.
-                    if not Snacks.git.get_root(vim.uv.cwd()) then
+                    local is_valid = vim.system({ "git", "rev-parse", "HEAD" }, { cwd = vim.uv.cwd() }):wait()
+
+                    if is_valid.code ~= 0 then
                         return {}
                     end
 
