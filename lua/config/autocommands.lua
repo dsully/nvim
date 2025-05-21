@@ -71,8 +71,7 @@ ev.on(ev.BufWinEnter, function(args)
         return
     end
 
-    local pos = vim.api.nvim_buf_get_mark(args.buf, '"')
-    local row, col = pos[1], pos[2]
+    local row, col = unpack(vim.api.nvim_buf_get_mark(args.buf, '"'))
     local count = vim.api.nvim_buf_line_count(args.buf)
 
     if row and row > 0 and row <= count then
