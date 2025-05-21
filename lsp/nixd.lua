@@ -28,7 +28,7 @@ return {
             },
             options = vim.tbl_extend("force", {
                 enable = true,
-            }, vim.fn.has("darwin") and {
+            }, vim.fn.has("mac") and {
                 ["nix-darwin"] = {
                     expr = string.format("(builtins.getFlake (toString ./.)).darwinConfigurations.%s.options", vim.fn.hostname()),
                 },

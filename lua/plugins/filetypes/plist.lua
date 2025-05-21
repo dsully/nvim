@@ -81,7 +81,7 @@ end
 ---@type LazySpec
 return {
     "plist",
-    cond = vim.fn.has("darwin"),
+    cond = vim.fn.has("mac"),
     init = function()
         local ev = require("helpers.event")
 
