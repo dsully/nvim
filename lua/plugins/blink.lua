@@ -162,7 +162,7 @@ return {
             },
             ---@type blink.cmp.SourceConfig
             sources = {
-                default = { "lsp", "path", "snippets", "env" },
+                default = { "lsp", "path", "snippets" },
                 min_keyword_length = function(ctx)
                     if ctx.trigger.kind == "trigger_character" then
                         return 0
@@ -222,6 +222,9 @@ return {
                     env = {
                         name = "Env",
                         module = "blink-cmp-env",
+                        enabled = function()
+                            vim.tbl_contains({ "bash", "fish", "zsh" }, vim.o.filetype)
+                        end,
                     },
                     lsp = {
                         name = "LSP",
