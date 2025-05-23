@@ -37,7 +37,7 @@ local M = {
         copilot = not work,
         codecompanion = {
             enabled = true,
-            model = "copilot",
+            model = "anthropic",
         },
     },
 
