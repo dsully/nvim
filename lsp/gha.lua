@@ -1,6 +1,6 @@
 ---@type vim.lsp.Config
 return {
-    cmd = { "github-actions-languageserver", "--stdio" },
+    cmd = { "gh-actions-language-server", "--stdio" },
     filetypes = { "yaml.github" },
     handlers = {
         ["textDocument/publishDiagnostics"] = function(err, result, ctx)
@@ -8,6 +8,11 @@ return {
             result.diagnostics = vim.tbl_filter(function(diagnostic)
                 -- silence annoying context warnings https://github.com/github/vscode-github-actions/issues/222
                 if diagnostic.message:match("Context access might be invalid:") then
+                    return false
+                end
+
+                -- https://github.com/github/vscode-github-actions/issues/433
+                if diagnostic.message:match("Unable to resolve action") then
                     return false
                 end
 
