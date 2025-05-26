@@ -184,9 +184,6 @@ function M.init()
                     --
                     "plenary",
                 },
-                paths = {
-                    vim.fs.joinpath(M.data, "ts-install"),
-                },
             },
         },
         pkg = {

@@ -109,8 +109,6 @@ vim.g.os = vim.uv.os_uname().sysname
 --
 vim.g.colorscheme = "nordish"
 
-vim.g.ts_path = vim.fs.joinpath(tostring(vim.fn.stdpath("data")), "ts-install")
-
 vim.g.clipboard = {
     name = "OSC 52",
     copy = {

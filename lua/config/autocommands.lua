@@ -39,7 +39,7 @@ end, {
     },
 })
 
-ev.on(ev.FileType, function(event)
+ev.on(ev.FileType, function()
     vim.opt.formatoptions = {
         c = true, -- Auto-wrap comments using 'textwidth', inserting the current comment leader automatically.
         j = true, -- Where it makes sense, remove a comment leader when joining lines.
@@ -49,10 +49,6 @@ ev.on(ev.FileType, function(event)
     }
 
     vim.api.nvim_set_option_value("foldenable", false, { scope = "local", win = 0 })
-
-    if pcall(vim.treesitter.start, event.buf) then
-        ev.emit(ev.User, { pattern = "ts_attach" })
-    end
 end, {
     desc = "Update format options and folding.",
 })
