@@ -48,7 +48,14 @@ ev.on(ev.FileType, function()
         q = true, -- Allow formatting of comments with "gq".
     }
 
-    vim.api.nvim_set_option_value("foldenable", false, { scope = "local", win = 0 })
+    --- Fold the output of vim.lsp config.
+    if vim.bo.filetype == "checkhealth" then
+        vim.opt_local.foldenable = true
+        vim.opt_local.foldlevel = 0
+        vim.opt_local.foldmethod = "indent"
+    else
+        vim.opt_local.foldenable = false
+    end
 end, {
     desc = "Update format options and folding.",
 })

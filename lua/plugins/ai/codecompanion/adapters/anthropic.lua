@@ -5,6 +5,7 @@ return function()
             model = {
                 default = "claude-opus-4-20250514",
             },
+            extended_thinking = false,
         },
     } --[[@as Anthropic.Adapter]])
 end
