@@ -2,9 +2,14 @@
 return {
     {
         "lewis6991/gitsigns.nvim",
-        config = function(_, opts)
-            vim.defer_fn(function()
-                require("gitsigns").setup(opts)
+        event = ev.LazyFile,
+        ---@module "gitsigns"
+        ---@type Gitsigns.Config
+        opts = {
+            attach_to_untracked = true,
+            --- @param buffer integer
+            on_attach = function(buffer)
+                local gs = package.loaded.gitsigns
 
                 Snacks.toggle({
                     name = "Git Signs",
@@ -15,17 +20,10 @@ return {
                         require("gitsigns").toggle_signs(state)
                     end,
                 } --[[@as snacks.toggle.Opts]]):map("<space>tg")
-            end, 500)
-        end,
-        event = ev.LazyFile,
-        ---@module "gitsigns"
-        ---@type Gitsigns.Config
-        opts = {
-            attach_to_untracked = true,
-            --- @param buffer integer
-            on_attach = function(buffer)
-                local gs = package.loaded.gitsigns
 
+                ---@param l string
+                ---@param r function
+                ---@param desc string
                 ---@param mode string[]?
                 local function bmap(l, r, desc, mode)
                     vim.keymap.set(mode or "n", l, r, { buffer = buffer, desc = desc })
