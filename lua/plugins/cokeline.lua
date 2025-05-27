@@ -9,10 +9,12 @@ return {
 
         for i = 1, 9 do
                 -- stylua: ignore
+                ---@diagnostic disable-next-line: param-type-not-match
                 map("<leader>" .. i, function() mappings.by_index("focus", i) end, "which_key_ignore")
 
                 -- Allow Option-N in terminals.
                 -- stylua: ignore
+                ---@diagnostic disable-next-line: param-type-not-match
                 map(string.format("<M-%d>", i), function() mappings.by_index("focus", i) end, "which_key_ignore")
         end
 
@@ -50,7 +52,7 @@ return {
                 truncation = { priority = 1 },
             },
 
-            idx = {
+            index_ = {
                 ---@param buffer Buffer
                 text = function(buffer)
                     return buffer.index .. ": "
@@ -131,7 +133,7 @@ return {
                 components.space,
                 components.devicon,
                 components.space,
-                components.idx,
+                components.index_,
                 components.unique_prefix,
                 components.filename,
                 components.space,

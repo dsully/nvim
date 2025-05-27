@@ -318,7 +318,7 @@ end
 ---@return boolean?
 M.is_loaded = function(name)
     local config = require("lazy.core.config")
-    return config.plugins[name] and config.plugins[name]._.loaded
+    return config.plugins[name] and config.plugins[name]._.loaded ~= nil
 end
 
 ---@param name string

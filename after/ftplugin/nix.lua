@@ -1,4 +1,4 @@
-local ok, otter = pcall(require, 'otter')
+local ok, otter = pcall(require, "otter")
 if ok then
-  pcall(otter.activate)
+    pcall(otter.activate)
 end

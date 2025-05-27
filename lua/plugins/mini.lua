@@ -369,7 +369,7 @@ return {
             end)
         end,
         keys = function(plugin, keys)
-            local opts = require("lazy.core.plugin").values(plugin, "opts", false)
+            local opts = require("lazy.core.plugin").values(plugin, "opts", false) or { mappings = {} }
 
             local mappings = {
                 { opts.mappings.add, desc = "Add surrounding", mode = { "n", "v" } },

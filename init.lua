@@ -1,7 +1,7 @@
 -- https://github.com/neovim/neovim/pull/24044
 vim.loader.enable()
 
-if vim.env.PROF or vim.env.PROFILE or vim.env.NVIM_PROFILE then
+if vim.env.PROF ~= nil or vim.env.PROFILE ~= nil or vim.env.NVIM_PROFILE ~= nil then
     local snacks = vim.fs.joinpath(tostring(vim.fn.stdpath("data")), "lazy/snacks.nvim")
 
     vim.opt.runtimepath:append(snacks)

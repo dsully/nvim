@@ -2,19 +2,37 @@
 ---@type LazySpec[]
 return {
     {
+        ---@module "nvim-treesitter"
         "nvim-treesitter/nvim-treesitter",
         branch = "main",
-        build = function()
-            require("nvim-treesitter.install").update()
-        end,
+        build = ":TSUpdate",
         config = function()
-            -- Install the comment parser.
-            if #vim.api.nvim_get_runtime_file("parser/comment.*", false) == 0 then
-                require("nvim-treesitter.install").install("comment")
+            -- Install some basics.
+
+            ---@type string[]
+            local essential = {
+                "bash",
+                "css",
+                "html",
+                "javascript",
+                "latex",
+                "norg",
+                "regex",
+                "scss",
+                "svelte",
+                "tsx",
+                "typst",
+                "vue",
+            }
+
+            for _, lang in ipairs(essential) do
+                if #vim.api.nvim_get_runtime_file(string.format("parser/%s.*", lang), false) == 0 then
+                    require("nvim-treesitter").install(lang)
+                end
             end
 
             if pcall(vim.treesitter.start) then
-                vim.o.indentexpr = 'v:lua.require("nvim-treesitter").indentexpr()'
+                vim.bo.indentexpr = 'v:lua.require("nvim-treesitter").indentexpr()'
             end
         end,
         init = function()
@@ -41,51 +59,54 @@ return {
                 local root = require("lazy.core.config").options.root
                 local parsers = require("nvim-treesitter.parsers")
 
+                ---@type ParserInfo
                 parsers.caddyfile = {
                     install_info = {
                         path = vim.fs.joinpath(root, "tree-sitter-caddyfile"),
                         files = { "src/parser.c" },
-                    },
+                    } --[[@as InstallInfo]],
                     filetype = "caddyfile",
                     maintainers = {},
-                    tier = "community",
+                    tier = 3,
                 }
 
+                ---@type ParserInfo
                 parsers.ghostty = {
                     install_info = {
                         path = vim.fs.joinpath(root, "tree-sitter-ghostty"),
                         files = { "src/parser.c" },
                         generate_from_json = true,
                         queries_dir = vim.fs.joinpath(root, "tree-sitter-ghostty", "queries", "ghostty"),
-                    },
+                    } --[[@as InstallInfo]],
                     filetype = "ghostty",
                     maintainers = {},
-                    tier = "community",
+                    tier = 3,
                 }
 
+                ---@type ParserInfo
                 parsers.pkl = {
                     install_info = {
                         url = "https://github.com/apple/tree-sitter-pkl",
                         files = { "src/parser.c", "src/scanner.c" },
                         queries_dir = vim.fs.joinpath(root, "pkl-neovim", "queries", "pkl"),
                         used_by = { "pcf" },
-                    },
+                    } --[[@as InstallInfo]],
                     filetype = "pkl",
                     maintainers = {},
-                    tier = "community",
+                    tier = 3,
                 }
 
+                ---@type ParserInfo
                 parsers.pyproject = {
                     install_info = {
                         -- url = "https://github.com/dsully/tree-sitter-pyproject",
-                        -- url = "~/dev/home/tree-sitter-pyproject",
-                        path = "~/dev/home/tree-sitter-pyproject",
+                        path = vim.fs.abspath("~/dev/home/tree-sitter-pyproject"),
                         files = { "src/parser.c", "src/scanner.c" },
                         revision = "",
-                    },
+                    } --[[@as InstallInfo]],
                     filetype = "pyproject",
                     maintainers = {},
-                    tier = "community",
+                    tier = 3,
                 }
 
                 -- vim.treesitter.language.add("pyproject")

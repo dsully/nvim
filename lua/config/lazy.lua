@@ -85,7 +85,7 @@ function M.init()
 
     ev.on(ev.User, function(args)
         --
-        if args.data and args.data.plugin then
+        if args.data ~= nil and args.data.plugin ~= nil then
             local pl = require("lazy.core.config").plugins[args.data.plugin] or {}
 
             ---@diagnostic disable: undefined-field

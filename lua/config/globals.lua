@@ -15,7 +15,7 @@ _G.lazy = {
             return {}
         end
 
-        return require("lazy.core.plugin").values(plugin, "opts", false)
+        return require("lazy.core.plugin").values(plugin, "opts", false) --[[@as table]]
     end,
 }
 

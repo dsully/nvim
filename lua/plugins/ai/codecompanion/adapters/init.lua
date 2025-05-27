@@ -9,7 +9,7 @@ if defaults.work then
 
     local status, chunk = pcall(loadfile, vim.env.WORK_NVIM)
 
-    if status and chunk then
+    if status and chunk ~= nil then
         return chunk()
     end
 
