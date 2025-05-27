@@ -31,13 +31,11 @@ local work = vim.env.WORK ~= nil
 
 local M = {
 
-    work = work,
-
     ai = {
         copilot = not work,
         codecompanion = {
             enabled = true,
-            model = "anthropic",
+            model = work and "" or "anthropic",
         },
     },
 
@@ -409,6 +407,8 @@ local M = {
             wo = { wrap = true },
         },
     },
+
+    work = work,
 }
 
 return M

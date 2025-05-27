@@ -1,23 +1,5 @@
 if defaults.work then
-    --
-    if vim.env.WORK_NVIM == nil then
-        vim.notify("WORK is set, but WORK_NVIM is not set or invalid.", vim.log.levels.ERROR, {
-            title = "CodeCompanion",
-        })
-        return {}
-    end
-
-    local status, chunk = pcall(loadfile, vim.env.WORK_NVIM)
-
-    if status and chunk ~= nil then
-        return chunk()
-    end
-
-    vim.notify("Loading from " .. vim.env.WORK_NVIM .. " failed!", vim.log.levels.ERROR, {
-        title = "CodeCompanion",
-    })
-
-    return {}
+    return require("plugins.work.codecompanion.adapters")
 else
     return {
         anthropic = require("plugins.ai.codecompanion.adapters.anthropic"),
