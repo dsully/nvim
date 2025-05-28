@@ -12,7 +12,6 @@ vim.opt.expandtab = true
 vim.opt.exrc = true
 vim.opt.fileformats = "unix" -- force \n
 vim.opt.foldenable = false
-vim.opt.foldexpr = "v:lua.vim.treesitter.foldexpr()"
 vim.opt.grepprg = "rg --engine auto --vimgrep --smart-case --hidden"
 vim.opt.grepformat = "%f:%l:%c:%m"
 vim.opt.guicursor = "a:blinkon10" -- Blink the cursor.

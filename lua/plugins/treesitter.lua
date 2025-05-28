@@ -6,35 +6,6 @@ return {
         "nvim-treesitter/nvim-treesitter",
         branch = "main",
         build = ":TSUpdate",
-        config = function()
-            -- Install some basics.
-
-            ---@type string[]
-            local essential = {
-                "bash",
-                "css",
-                "html",
-                "javascript",
-                "latex",
-                "norg",
-                "regex",
-                "scss",
-                "svelte",
-                "tsx",
-                "typst",
-                "vue",
-            }
-
-            for _, lang in ipairs(essential) do
-                if #vim.api.nvim_get_runtime_file(string.format("parser/%s.*", lang), false) == 0 then
-                    require("nvim-treesitter").install(lang)
-                end
-            end
-
-            if pcall(vim.treesitter.start) then
-                vim.bo.indentexpr = 'v:lua.require("nvim-treesitter").indentexpr()'
-            end
-        end,
         init = function()
             -- Map languages to my created file types.
             vim.treesitter.language.register("bash", "direnv")
@@ -47,11 +18,30 @@ return {
             vim.hl.priorities.semantic_tokens = 100
             vim.hl.priorities.treesitter = 125
 
-            -- Not sure if there is better place for this.
-            ev.on(ev.BufEnter, function()
-                --
-                if #vim.api.nvim_get_runtime_file(string.format("parser/%s.*", vim.bo.filetype), false) == 0 then
-                    require("nvim-treesitter").install(vim.bo.filetype)
+            -- How to address https://github.com/nvim-treesitter/nvim-treesitter/issues/7881#issuecomment-2907762259 ?
+            ev.on(ev.FileType, function(ctx)
+                local filetype = ctx.match
+
+                -- Skip bigfile, etc.
+                if vim.list_contains(defaults.treesitter.highlight.skip, filetype) then
+                    return
+                end
+
+                local available = require("nvim-treesitter.config").get_available()
+                local language = vim.treesitter.language.get_lang(filetype)
+                local treesitter = require("nvim-treesitter")
+
+                if vim.list_contains(available, language) then
+                    --
+                    treesitter.install(language):await(function()
+                        vim.wo.foldexpr = "v:lua.vim.treesitter.foldexpr()"
+
+                        if not vim.list_contains(defaults.treesitter.indent.skip, filetype) then
+                            vim.bo.indentexpr = "v:lua.require'nvim-treesitter'.indentexpr()"
+                        end
+
+                        pcall(vim.treesitter.start)
+                    end)
                 end
             end)
 

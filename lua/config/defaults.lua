@@ -393,6 +393,21 @@ local M = {
         },
     },
 
+    treesitter = {
+        highlight = {
+            skip = {
+                "bigfile",
+            },
+        },
+        indent = {
+            skip = {
+                "javascript",
+                "markdown",
+                "typescript",
+            },
+        },
+    },
+
     ui = {
         border = {
             name = "single",

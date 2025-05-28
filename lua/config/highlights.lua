@@ -225,6 +225,7 @@ M.ui = {
         ["@character"] = { link = hl.Character }, -- character literals
         ["@character.special"] = { link = hl.SpecialChar }, -- special characters (e.g. wildcards)
         ["@comment"] = { link = hl.Comment }, -- line and block comments
+        ["@comment.bold"] = { bold = true },
         ["@comment.error"] = { fg = colors.red.base }, -- error-type comments (e.g. `ERROR`, `FIXME`, `DEPRECATED`)
         ["@comment.note"] = { fg = colors.blue.base }, -- note-type comments (e.g. `NOTE`, `INFO`, `XXX`)
         ["@comment.todo"] = { fg = colors.orange.base }, -- todo-type comments (e.g. `TODO`, `WIP`)
