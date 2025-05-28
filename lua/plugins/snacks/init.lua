@@ -160,10 +160,9 @@ return {
     },
     keys = {
         -- stylua: ignore start
-        ---@diagnostic disable-next-line: param-type-mismatch
-        { "<leader>nd", function() Snacks.notifier:hide() end, desc = "Notification: Dismiss" },
-        { "]]", function() Snacks.words.jump(vim.v.count1) end, desc = "snacks: goto next reference" },
-        { "[[", function() Snacks.words.jump(-vim.v.count1) end, desc = "snacks: goto prev reference" },
+        { "<leader>xd", function() Snacks.notifier.hide() end, desc = "Dismiss Notification" },
+        { "]]", function() Snacks.words.jump(vim.v.count1) end, desc = "Snacks: goto next reference" },
+        { "[[", function() Snacks.words.jump(-vim.v.count1) end, desc = "Snacks: goto prev reference" },
 
         { [[<C-\>]], function() Snacks.terminal.toggle(vim.env.SHELL) end, mode = { "n", "t" }, desc = "Terminal" },
 
