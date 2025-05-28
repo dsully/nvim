@@ -307,7 +307,6 @@ local M = {
         },
         file_types = {
             "",
-            "alpha",
             "bigfile",
             "checkhealth",
             "crates.nvim",
@@ -332,7 +331,6 @@ local M = {
         lsp = {
             "copilot",
             "harper-ls",
-            "typos_lsp",
         },
         paths = {
             "~/.cache",
@@ -345,10 +343,6 @@ local M = {
         progress = {
             "basedpyright",
             "copilot",
-            "ltex",
-            "pylance",
-            "pyright",
-            "sonarlint.nvim",
         },
     },
 
