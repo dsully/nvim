@@ -7,7 +7,7 @@ return {
         {
             "<space>f",
             function()
-                require("conform").format({ async = true, lsp_format = "fallback", timeout_ms = 3000 })
+                require("conform").format({ async = true, lsp_format = "fallback", timeout_ms = 3000 } --[[@as conform.FormatOpts?]])
             end,
             desc = "Format Buffer",
         },
@@ -41,8 +41,7 @@ return {
                     return nil
                 end
 
-                ---@diagnostic disable-next-line: return-type-mismatch
-                return { timeout_ms = 500, lsp_format = "fallback" }
+                return { timeout_ms = 500, lsp_format = "fallback" } --[[@as conform.FormatOpts?]]
             end,
             formatters = {
                 caddy = {
