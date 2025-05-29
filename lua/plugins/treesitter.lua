@@ -27,9 +27,9 @@ return {
                     return
                 end
 
-                local available = require("nvim-treesitter.config").get_available()
-                local language = vim.treesitter.language.get_lang(filetype)
                 local treesitter = require("nvim-treesitter")
+                local available = treesitter.get_available()
+                local language = vim.treesitter.language.get_lang(filetype)
 
                 if vim.list_contains(available, language) then
                     --
