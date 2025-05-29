@@ -50,17 +50,6 @@ return {
                 local parsers = require("nvim-treesitter.parsers")
 
                 ---@type ParserInfo
-                parsers.caddyfile = {
-                    install_info = {
-                        path = vim.fs.joinpath(root, "tree-sitter-caddyfile"),
-                        files = { "src/parser.c" },
-                    } --[[@as InstallInfo]],
-                    filetype = "caddyfile",
-                    maintainers = {},
-                    tier = 3,
-                }
-
-                ---@type ParserInfo
                 parsers.ghostty = {
                     install_info = {
                         path = vim.fs.joinpath(root, "tree-sitter-ghostty"),
@@ -135,7 +124,6 @@ return {
         opts = {},
     },
     { "bezhermoso/tree-sitter-ghostty", ft = "ghostty" },
-    { "matthewpi/tree-sitter-caddyfile" },
     -- Only required for the tree-sitter queries.
     { "apple/pkl-neovim" },
 }

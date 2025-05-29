@@ -5,7 +5,7 @@ vim.filetype.add({
         [".flake8"] = "ini",
         [".rgignore"] = "gitignore",
         ["Brewfile"] = "brewfile",
-        ["Caddyfile"] = "caddyfile",
+        ["Caddyfile"] = "caddy",
         ["Cargo.toml"] = "toml.cargo",
         ["Chart.yaml"] = "helm",
         ["config.custom"] = "sshconfig",

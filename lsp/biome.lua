@@ -14,7 +14,7 @@ return {
     cmd = { "biome", "lsp-proxy", "--config-path=" .. get_biome_config_path() },
     filetypes = {
         "astro",
-        "caddyfile",
+        "caddy",
         "css",
         "graphql",
         "javascript",
