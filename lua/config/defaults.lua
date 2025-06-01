@@ -77,6 +77,7 @@ local M = {
                 return { "taplo" }
             end,
             xml = { "xmlformatter" },
+            zsh = { "shellharden", "shfmt" },
         },
         on_save = {
             "bash",
