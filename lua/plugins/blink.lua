@@ -223,13 +223,11 @@ return {
                         name = "Env",
                         module = "blink-cmp-env",
                         enabled = function()
-                            vim.tbl_contains({ "bash", "fish", "zsh" }, vim.o.filetype)
+                            return vim.tbl_contains({ "bash", "fish", "zsh" }, vim.o.filetype)
                         end,
                     },
                     lsp = {
                         name = "LSP",
-                        -- Do not use `buffer` as fallback
-                        fallbacks = {},
                         timeout_ms = 400,
                         ---@param ctx blink.cmp.Context
                         ---@param items blink.cmp.CompletionItem[]
