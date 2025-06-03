@@ -11,7 +11,9 @@ return {
         end
     end,
     root_dir = function(_bufnr, _on_dir)
-        -- Disable and prefer sith-lsp
+        if vim.env.SITH == nil then
+            on_dir(vim.uv.cwd())
+        end
     end,
     root_markers = {
         "Pipfile",
