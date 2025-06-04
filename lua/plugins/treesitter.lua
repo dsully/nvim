@@ -55,7 +55,7 @@ return {
                         path = vim.fs.joinpath(root, "tree-sitter-ghostty"),
                         files = { "src/parser.c" },
                         generate_from_json = true,
-                        queries_dir = vim.fs.joinpath(root, "tree-sitter-ghostty", "queries", "ghostty"),
+                        queries = vim.fs.joinpath(root, "tree-sitter-ghostty", "queries", "ghostty"),
                     } --[[@as InstallInfo]],
                     filetype = "ghostty",
                     maintainers = {},
@@ -67,7 +67,7 @@ return {
                     install_info = {
                         url = "https://github.com/apple/tree-sitter-pkl",
                         files = { "src/parser.c", "src/scanner.c" },
-                        queries_dir = vim.fs.joinpath(root, "pkl-neovim", "queries", "pkl"),
+                        queries = vim.fs.joinpath(root, "pkl-neovim", "queries", "pkl"),
                         used_by = { "pcf" },
                     } --[[@as InstallInfo]],
                     filetype = "pkl",
