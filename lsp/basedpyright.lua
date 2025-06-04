@@ -10,8 +10,9 @@ return {
             client.server_capabilities.semanticTokensProvider = nil
         end
     end,
-    root_dir = function(_bufnr, _on_dir)
-        if vim.env.SITH == nil then
+    root_dir = function(_bufnr, on_dir)
+        -- Make basePyright the default.
+        if vim.env.SITH == nil and vim.env.JEDI == nil then
             on_dir(vim.uv.cwd())
         end
     end,
@@ -26,15 +27,15 @@ return {
     settings = {
         basedpyright = {
             analysis = {
-                autoImportCompletions = false,
+                autoImportCompletions = true,
                 autoSearchPaths = true,
-                diagnosticMode = "openFilesOnly",
+                diagnosticMode = "workspace",
                 reportMissingTypeStubs = false,
-                reportUndefinedVariable = "none", -- covered by ruff
-                reportUnreachable = "none",
-                reportUnusedImport = "none", -- covered by ruff
-                typeCheckingMode = "basic", -- standard
-                useLibraryCodeForTypes = true,
+                reportUndefinedVariable = "off", -- covered by ruff
+                reportUnreachable = "off",
+                reportUnusedImport = "off", -- covered by ruff
+                typeCheckingMode = "off", -- standard
+                useLibraryCodeForTypes = false,
             },
             disableOrganizeImports = true,
         },
