@@ -1,11 +1,4 @@
-; extend
-;
-(command
-  name: (word) @_cmd
-  (#eq? @_cmd "printf")
-  argument: (double_quote_string) @injection.content
-  (#set! injection.include-children))
-(#set! injection.language "printf")
+; extends
 
 ; Inject gotmpl sections into fish
 ((comment) @injection.content
