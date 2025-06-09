@@ -20,7 +20,7 @@ return {
         ft = "python",
         opts = {
             -- Auto-activate virtual environments when found
-            auto_activate_venv = true,
+            auto_activate_venv = false,
 
             -- Auto commands for directory changes
             auto_commands = true,
