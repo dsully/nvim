@@ -21,7 +21,7 @@ local jump = function()
 
         -- If the file was opened with '/path/to/filename:' we won't have a position.
         ---@type integer
-        local line = math.min(math.max(1, pos[1]), vim.api.nvim_buf_line_count(0))
+        local line = math.min(math.max(1, pos[1] or 0), vim.api.nvim_buf_line_count(0))
         local column = pos[2] and math.floor(pos[2] - 1) or 0
 
         -- Go to the specified line and column
