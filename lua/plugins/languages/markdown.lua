@@ -29,6 +29,8 @@ return {
                     enabled = false,
                 },
             },
+            -- Disable by default. Use <space>tm to toggle on.
+            enabled = false,
             heading = {
                 position = "inline",
                 sign = false,
