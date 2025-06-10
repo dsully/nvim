@@ -18,6 +18,9 @@ return {
             vim.hl.priorities.semantic_tokens = 100
             vim.hl.priorities.treesitter = 125
 
+            -- https://github.com/neovim/neovim/issues/32660
+            vim.g._ts_force_sync_parsing = true
+
             -- How to address https://github.com/nvim-treesitter/nvim-treesitter/issues/7881#issuecomment-2907762259 ?
             ev.on(ev.FileType, function(ctx)
                 local filetype = ctx.match
