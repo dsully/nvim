@@ -68,9 +68,9 @@ return {
                 ---@type ParserInfo
                 parsers.pkl = {
                     install_info = {
-                        url = "https://github.com/apple/tree-sitter-pkl",
+                        path = vim.fs.joinpath(root, "tree-sitter-pkl"),
                         files = { "src/parser.c", "src/scanner.c" },
-                        queries = vim.fs.joinpath(root, "pkl-neovim", "queries", "pkl"),
+                        queries = vim.fs.joinpath("..", "pkl-neovim", "queries", "pkl"),
                         used_by = { "pcf" },
                     } --[[@as InstallInfo]],
                     filetype = "pkl",
@@ -127,6 +127,8 @@ return {
         opts = {},
     },
     { "bezhermoso/tree-sitter-ghostty", ft = "ghostty" },
+
     -- Only required for the tree-sitter queries.
     { "apple/pkl-neovim" },
+    { "apple/tree-sitter-pkl" },
 }
