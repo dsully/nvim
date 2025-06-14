@@ -44,7 +44,8 @@ vim.filetype.add({
         end,
     },
     pattern = {
-        [".*/.config/ghostty/config"] = "ghostty",
+        [".*/.config/ghostty/config.*"] = "ghostty",
+        [".*/.config/ghostty/themes/.*"] = "ghostty",
         [".*/%.github[%w/]+workflows[%w/]+.*%.ya?ml"] = "yaml.github",
         [".*/layouts/.*%.html"] = "gohtmltmpl",
         [".*/templates/.*%.tpl"] = "helm",

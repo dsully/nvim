@@ -58,7 +58,7 @@ return {
                         path = vim.fs.joinpath(root, "tree-sitter-ghostty"),
                         files = { "src/parser.c" },
                         generate_from_json = true,
-                        queries = vim.fs.joinpath(root, "tree-sitter-ghostty", "queries", "ghostty"),
+                        queries = vim.fs.joinpath("queries", "ghostty"),
                     } --[[@as InstallInfo]],
                     filetype = "ghostty",
                     maintainers = {},
@@ -126,9 +126,9 @@ return {
         event = ev.LazyFile,
         opts = {},
     },
-    { "bezhermoso/tree-sitter-ghostty", ft = "ghostty" },
 
     -- Only required for the tree-sitter queries.
     { "apple/pkl-neovim" },
     { "apple/tree-sitter-pkl" },
+    { "bezhermoso/tree-sitter-ghostty" },
 }
