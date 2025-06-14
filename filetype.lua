@@ -6,7 +6,6 @@ vim.filetype.add({
         [".rgignore"] = "gitignore",
         ["Brewfile"] = "brewfile",
         ["Caddyfile"] = "caddy",
-        ["Cargo.toml"] = "toml.cargo",
         ["Chart.yaml"] = "helm",
         ["config.custom"] = "sshconfig",
         ["PklProject"] = "pkl",
