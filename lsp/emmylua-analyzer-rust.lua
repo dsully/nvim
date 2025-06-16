@@ -4,11 +4,6 @@ return {
         "emmylua_ls",
     },
     filetypes = { "lua" },
-    root_dir = function(_bufnr, on_dir)
-        if vim.uv.fs_stat(".emmyrc.json") then
-            on_dir(vim.uv.cwd())
-        end
-    end,
     root_markers = {
         ".emmyrc.json",
         ".luarc.json",

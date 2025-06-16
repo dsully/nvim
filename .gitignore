@@ -1,6 +1,7 @@
 lazy-lock.json
-unused
+lua/plugins/work
 queries/caddyfile
 queries/ghostty
 queries/htmljinja
 queries/jinja2
+unused
