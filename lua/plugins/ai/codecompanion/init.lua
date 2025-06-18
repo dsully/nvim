@@ -31,6 +31,13 @@ return {
                 pattern = "CodeCompanionInlineFinished",
             })
 
+            ev.on(ev.User, function(event)
+                vim.treesitter.start(event.data.bufnr, "markdown")
+            end, {
+                group = group,
+                pattern = "CodeCompanionChatCreated",
+            })
+
             -- For status line updates.
             local status = require("plugins.ai.codecompanion.status")
 

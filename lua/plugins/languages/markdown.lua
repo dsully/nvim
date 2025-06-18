@@ -80,6 +80,38 @@ return {
                             backgrounds = {},
                             icons = { "", "󰭹 ", "󱙺 ", "", "", "" },
                         },
+                        html = {
+                            tag = {
+                                buf = {
+                                    icon = " ",
+                                    highlight = "Comment",
+                                },
+                                file = {
+                                    icon = "󰨸 ",
+                                    highlight = "Comment",
+                                },
+                                help = {
+                                    icon = " ",
+                                    highlight = "Comment",
+                                },
+                                image = {
+                                    icon = "󰥶 ",
+                                    highlight = "Comment",
+                                },
+                                symbols = {
+                                    icon = " ",
+                                    highlight = "Comment",
+                                },
+                                tool = {
+                                    icon = " ",
+                                    highlight = "Comment",
+                                },
+                                url = {
+                                    icon = "󰌹 ",
+                                    highlight = "Comment",
+                                },
+                            },
+                        },
                         render_modes = true,
                     },
                 },
