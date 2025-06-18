@@ -68,13 +68,13 @@ local M = {
             python = { "ruff_organize_imports", "ruff_format", "ruff_fix" },
             sh = { "shellharden", "shfmt" },
             toml = function(bufnr)
-                local bufname = vim.api.nvim_buf_get_name(bufnr)
+                local bufname = vim.fs.basename(vim.api.nvim_buf_get_name(bufnr))
 
-                if bufname:find("pyproject.toml") then
-                    return { "pyproject-fmt" }
+                if bufname == "pyproject.toml" then
+                    return { "pyproject-fmt", "tombi" }
                 end
 
-                return { "taplo" }
+                return { "tombi" }
             end,
             xml = { "xmlformatter" },
             zsh = { "shellharden", "shfmt" },

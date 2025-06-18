@@ -68,10 +68,6 @@ return {
                 shfmt = {
                     prepend_args = { "-i", "4", "-ci", "-sr", "-s", "-bn" },
                 },
-                -- Remove when https://github.com/tamasfe/taplo/issues/560 is addressed.
-                taplo = {
-                    args = { "format", "--config=" .. nvim.file.xdg_config("/taplo.toml"), "-" },
-                },
                 xmlformatter = {
                     prepend_args = { "--blanks", "--indent", "4" },
                 },
