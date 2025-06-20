@@ -69,7 +69,7 @@ return {
             local client_id = ctx.client_id
             local client = vim.lsp.get_client_by_id(client_id)
 
-            if client then
+            if client ~= nil then
                 for buffer in pairs(client.attached_buffers) do
                     --
                     ev.emit(ev.User, {
@@ -87,11 +87,18 @@ return {
         nvim.lsp.on_dynamic_capability(function() end)
         nvim.lsp.commands()
 
-        nvim.lsp.on_attach(function(client, buffer)
-            --
-            if client.name ~= "emmylua-analyzer-rust" then
-                vim.lsp.document_color.enable(true, buffer, { style = "foreground" })
-            end
+        nvim.lsp.on_supports_method(methods.textDocument_documentColor, function(_, buffer)
+            vim.lsp.document_color.enable(true, buffer)
+
+            Snacks.toggle({
+                name = "Color",
+                get = function()
+                    return vim.lsp.document_color.is_enabled()
+                end,
+                set = function(state)
+                    vim.lsp.document_color.enable(not state)
+                end,
+            }):map("<space>tc")
         end)
 
         nvim.lsp.on_supports_method(methods.textDocument_inlayHint, function()

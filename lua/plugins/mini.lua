@@ -150,71 +150,92 @@ return {
         opts = function()
             local vtext = defaults.icons.misc.circle_filled_large
             local extmark_opts = { priority = 2000 }
+            local mini_hipatterns = require("mini.hipatterns")
+            local compute_hex_color_group = mini_hipatterns.compute_hex_color_group
 
             local extmark_vtext = function(_, _, data)
-                return vim.tbl_extend("force", extmark_opts, { virt_text = { { vtext, data.hl_group } }, virt_text_pos = "eol" })
+                return {
+                    priority = 2000,
+                    virt_text = { { vtext, data.hl_group } },
+                    virt_text_pos = "eol",
+                }
+            end
+
+            local hex = {
+                pattern = "[ =:'\"]()#?%x%x%x%x%x%x%f[%X]",
+                group = function(_, match)
+                    local color = vim.startswith(match, "#") and match or "#" .. match
+                    return compute_hex_color_group(color, "bg")
+                end,
+                extmark_opts = extmark_opts,
+            }
+
+            local shorthand = {
+                pattern = "()#%x%x%x()%f[^%x%w]",
+                group = function(_, _, data)
+                    local match = data.full_match
+                    local r, g, b = match:byte(2), match:byte(3), match:byte(4)
+                    local hex_color = string.format("#%c%c%c%c%c%c", r, r, g, g, b, b)
+                    return compute_hex_color_group(hex_color, "bg")
+                end,
+                extmark_opts = extmark_opts,
+            }
+
+            local separated = {
+                pattern = "%[()%d+,%s*%d+,%s*%d+()%]",
+                group = function(_, matched)
+                    local r, g, b = matched:match("(%d+),%s*(%d+),%s*(%d+)")
+                    -- Fix: Use string.format instead of matched.format
+                    local hex_color = string.format("#%02X%02X%02X", r, g, b)
+                    return compute_hex_color_group(hex_color, "fg")
+                end,
+                extmark_opts = extmark_vtext,
+            }
+
+            local nvim_hl_colors = {
+                pattern = {
+                    "%f[%w]()M%.colors%.[%w_%.]+()%f[%W]",
+                    "%f[%w]()colors%.[%w_%.]+()%f[%W]",
+                    "%f[%w]()defaults%.colors%.[%w_%.]+()%f[%W]",
+                },
+                group = function(_, match)
+                    local parts = vim.split(match, ".", { plain = true })
+                    local start_idx = 1
+
+                    -- Optimize conditional checks
+                    if parts[1] == "M" or parts[1] == "defaults" then
+                        start_idx = 3
+                    elseif parts[1] == "colors" then
+                        start_idx = 2
+                    end
+
+                    -- Create new table instead of multiple removes
+                    if start_idx > 1 then
+                        local new_parts = {}
+                        for i = start_idx, #parts do
+                            new_parts[#new_parts + 1] = parts[i]
+                        end
+                        parts = new_parts
+                    end
+
+                    local color = vim.tbl_get(colors, unpack(parts))
+                    return type(color) == "string" and require("helpers.highlights").group({ fg = color })
+                end,
+                extmark_opts = extmark_vtext,
+            }
+
+            local highlighters = {
+                nvim_hl_colors = nvim_hl_colors,
+            }
+
+            if not vim.lsp.document_color.is_enabled() then
+                highlighters.hex = hex
+                highlighters.separated = separated
+                highlighters.shorthand = shorthand
             end
 
             return {
-                highlighters = {
-                    -- Match against hex colors with no leading `#` as well.
-                    hex = {
-                        pattern = "[ =:'\"]()#?%x%x%x%x%x%x%f[%X]",
-                        group = function(_, match, _)
-                            local color = vim.startswith(match, "#") and match or "#" .. match
-
-                            return require("mini.hipatterns").compute_hex_color_group(color, "bg")
-                        end,
-                        extmark_opts = extmark_opts,
-                    },
-                    nvim_hl_colors = {
-                        pattern = {
-                            "%f[%w]()M.colors%.[%w_%.]+()%f[%W]",
-                            "%f[%w]()colors%.[%w_%.]+()%f[%W]",
-                            "%f[%w]()defaults.colors%.[%w_%.]+()%f[%W]",
-                        },
-                        group = function(_, match)
-                            local parts = vim.split(match, ".", { plain = true })
-
-                            if (parts[1] == "M" or parts[1] == "defaults") and parts[2] == "colors" then
-                                table.remove(parts, 1)
-                                table.remove(parts, 1)
-                            end
-
-                            if parts[1] == "colors" then
-                                table.remove(parts, 1)
-                            end
-
-                            local color = vim.tbl_get(colors, unpack(parts))
-
-                            return type(color) == "string" and require("helpers.highlights").group({ fg = color })
-                        end,
-                        extmark_opts = extmark_vtext,
-                    },
-                    shorthand = {
-                        pattern = "()#%x%x%x()%f[^%x%w]",
-                        group = function(_, _, data)
-                            ---@type string
-                            local match = data.full_match
-                            local r, g, b = match:sub(2, 2), match:sub(3, 3), match:sub(4, 4)
-                            local hex_color = "#" .. r .. r .. g .. g .. b .. b
-
-                            return require("mini.hipatterns").compute_hex_color_group(hex_color, "bg")
-                        end,
-                        extmark_opts = extmark_opts,
-                    },
-                    separated = {
-                        pattern = "%[()%d+,%s*%d+,%s*%d+()%]",
-                        group = function(_, matched, _data)
-                            ---@type string
-                            local r, g, b = matched:match("(%d+),%s*(%d+),%s*(%d+)")
-                            local hex_color = matched.format("#%02X%02X%02X", r, g, b)
-
-                            return require("mini.hipatterns").compute_hex_color_group(hex_color, "fg")
-                        end,
-                        extmark_opts = extmark_vtext,
-                    },
-                },
+                highlighters = highlighters,
             }
         end,
         virtual = true,
