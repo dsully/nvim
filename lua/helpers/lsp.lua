@@ -2,7 +2,9 @@ local M = {}
 
 local methods = vim.lsp.protocol.Methods
 
----@alias LspClientBuffers table<vim.lsp.Client, integer[]>
+---@class LspClientBuffers
+---@field client vim.lsp.Client
+---@field buffers integer[]
 
 ---Return false if the server should be disabled.
 --
@@ -36,20 +38,26 @@ M.should_ignore = function(client)
 end
 
 ---@param filter? vim.lsp.get_clients.Filter
----@return LspClientBuffers
+---@return LspClientBuffers[]
 M.buffers_for_client = function(filter)
-    --
-    ---@type LspClientBuffers
-    local mapping = {}
+    local clients = {}
 
-    for _, client in ipairs(vim.lsp.get_clients(filter)) do
-        --
+    for _, client in
+        ipairs(vim.lsp.get_clients(filter) --[[@as vim.lsp.Client[] ]])
+    do
         if not M.should_ignore(client) then
-            mapping[client] = vim.tbl_extend("force", mapping[client] or {}, vim.lsp.get_buffers_by_client_id(client.id))
+            local buffers = vim.lsp.get_buffers_by_client_id(client.id)
+
+            if #buffers > 0 then
+                clients[#clients + 1] = {
+                    client = client,
+                    buffers = buffers,
+                }
+            end
         end
     end
 
-    return mapping
+    return clients
 end
 
 ---@param callback fun(buf: integer, client: vim.lsp.Client?)
@@ -120,6 +128,8 @@ function M.on_attach(on_attach)
     --
     ev.on(ev.LspAttach, function(args)
         local buffer = args.buf ---@type integer
+
+        ---@type vim.lsp.Client
         local client = vim.lsp.get_client_by_id(args.data.client_id)
 
         if client and not M.should_ignore(client) then
@@ -132,10 +142,10 @@ end
 function M.on_dynamic_capability(fn)
     --
     return ev.on(ev.User, function(args)
-        local client = vim.lsp.get_client_by_id(args.data.client_id)
+        local client = vim.lsp.get_client_by_id(args.data.client_id) ---@type vim.lsp.Client
         local buffer = args.data.buffer ---@type number
 
-        if client then
+        if client ~= nil then
             return fn(client, buffer)
         end
     end, {
@@ -149,7 +159,7 @@ function M.on_supports_method(method, fn)
     M.supports_method[method] = M.supports_method[method] or setmetatable({}, { __mode = "k" })
 
     return ev.on(ev.User, function(args)
-        local client = vim.lsp.get_client_by_id(args.data.client_id)
+        local client = vim.lsp.get_client_by_id(args.data.client_id) ---@type vim.lsp.Client
         local buffer = args.data.buffer ---@type number
 
         if client and method == args.data.method then
@@ -161,7 +171,6 @@ function M.on_supports_method(method, fn)
 end
 
 M.code_action = function()
-    ---@type vim.lsp.buf.code_action.Opts
     vim.lsp.buf.code_action({
         context = {
             diagnostics = {},
@@ -187,8 +196,7 @@ end
 M.commands = function()
     nvim.command("LspCapabilities", function()
         --
-        ---@type vim.lsp.Client[]
-        local clients = vim.lsp.get_clients({ bufnr = vim.api.nvim_get_current_buf() })
+        local clients = vim.lsp.get_clients({ bufnr = vim.api.nvim_get_current_buf() }) --[[@as vim.lsp.Client[] ]]
 
         local lines = {}
 
@@ -241,7 +249,7 @@ M.commands = function()
                     for _, code_action in pairs(result.result or {}) do
                         --
                         ---@cast code_action lsp.CodeAction
-                        if code_action.title then
+                        if code_action ~= nil and code_action.title then
                             table.insert(lines, "Title: " .. code_action.title)
                             table.insert(lines, "Kind: " .. code_action.kind)
                             table.insert(lines, "Preferred: " .. tostring(code_action.isPreferred))
@@ -319,7 +327,7 @@ M.info = function()
     end
 
     local bufnr = vim.api.nvim_get_current_buf()
-    local clients = vim.lsp.get_clients({ bufnr = bufnr })
+    local clients = vim.lsp.get_clients({ bufnr = bufnr }) --[[@as vim.lsp.Client[] ]]
 
     local lines = {
         "Language Server Log: " .. vim.lsp.get_log_path(),
