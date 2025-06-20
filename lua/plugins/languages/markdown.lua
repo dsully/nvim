@@ -17,6 +17,9 @@ return {
             ---@type render.md.UserCode
             code = {
                 border = "none",
+                highlight = "@markup.codeblock",
+                highlight_border = "@markup.codeblock",
+                highlight_inline = "@markup.raw.markdown_inline",
                 language_pad = 2,
                 left_pad = 2,
                 min_width = 45,
@@ -115,6 +118,10 @@ return {
                         render_modes = true,
                     },
                 },
+            },
+            pipe_table = {
+                head = "@markup.table",
+                row = "@markup.table",
             },
             sign = {
                 enabled = false, -- Turn off in the status column
