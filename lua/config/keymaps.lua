@@ -1,6 +1,18 @@
 local map = require("helpers.keys").map
 local mode = { "n", "v" }
 
+map("/", "ms/", "Keeps jumplist after forward searching")
+map("?", "ms?", "Keeps jumplist after backward searching")
+
+-- Don't count {} as jumps for the jumplist. See https://superuser.com/a/836924/1124707
+map("}", function()
+    vim.cmd.normal({ args = { vim.v.count1 .. "}" }, bang = true, mods = { keepjumps = true } })
+end)
+
+map("{", function()
+    vim.cmd.normal({ args = { vim.v.count1 .. "{" }, bang = true, mods = { keepjumps = true } })
+end)
+
 map("Y", "y$", "Yank to clipboard", mode)
 map("gY", '"*y$', "Yank until end of line to system clipboard", mode)
 map("gy", '"*y', "Yank to system clipboard", mode)

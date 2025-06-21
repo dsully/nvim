@@ -17,6 +17,7 @@ vim.opt.grepformat = "%f:%l:%c:%m"
 vim.opt.guicursor = "a:blinkon10" -- Blink the cursor.
 vim.opt.guifont = "Hack Nerd Font"
 vim.opt.ignorecase = true
+vim.opt.jumpoptions = "view"
 vim.opt.laststatus = 3 -- Global status line.
 vim.opt.mouse = ""
 vim.opt.mousemodel = "extend"
