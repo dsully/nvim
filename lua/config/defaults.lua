@@ -73,16 +73,6 @@ local M = {
             xml = { "xmlformatter" },
             zsh = { "shellharden", "shfmt" },
         },
-        on_save = {
-            "bash",
-            "caddy",
-            "direnv",
-            "fish",
-            "go",
-            "lua",
-            "rust",
-            "toml",
-        },
     },
 
     linters = {
