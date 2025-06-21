@@ -58,7 +58,7 @@ local M = {
             caddy = { "caddy" },
             direnv = { "shellharden", "shfmt" },
             fish = { "fish_indent" },
-            go = { "goimports", "gofumpt" },
+            go = { "gofumpt" },
             lua = { "stylua" },
             markdown = function(bufnr)
                 return { require("helpers.formatting").first(bufnr, "prettierd", "prettier"), "injected" }
@@ -67,13 +67,7 @@ local M = {
             python = { "ruff_organize_imports", "ruff_format", "ruff_fix" },
             sh = { "shellharden", "shfmt" },
             toml = function(bufnr)
-                local bufname = vim.fs.basename(vim.api.nvim_buf_get_name(bufnr))
-
-                if bufname == "pyproject.toml" then
-                    return { "pyproject-fmt", "tombi" }
-                end
-
-                return { "tombi" }
+                return vim.fs.basename(vim.api.nvim_buf_get_name(bufnr)) == "pyproject.toml" and { "pyproject-fmt" } or {}
             end,
             xml = { "xmlformatter" },
             zsh = { "shellharden", "shfmt" },
