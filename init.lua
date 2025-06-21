@@ -6,14 +6,13 @@ if vim.env.PROF ~= nil or vim.env.PROFILE ~= nil or vim.env.NVIM_PROFILE ~= nil 
 
     vim.opt.runtimepath:append(snacks)
 
-    ---@diagnostic disable-next-line: param-type-not-match
     require("snacks.profiler").startup({
         startup = {
             -- Stop profiler on this event. Defaults to `VimEnter`
             event = "User",
             pattern = "VeryLazy",
         },
-    })
+    } --[[@as snacks.profiler.Config]])
 end
 
 require("config.options")

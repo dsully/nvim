@@ -67,7 +67,7 @@ function M.detectors.lsp(buf)
 end
 
 ---@param buf integer
----@param patterns string[]
+---@param patterns RootSpec
 ---@return string[]
 function M.detectors.pattern(buf, patterns)
     --
@@ -77,7 +77,9 @@ function M.detectors.pattern(buf, patterns)
 
     local pattern = vim.fs.find(function(name)
         --
-        for _, p in ipairs(patterns) do
+        for _, p in
+            ipairs(patterns --[[@as table]])
+        do
             if name == p then
                 return true
             end
@@ -134,12 +136,11 @@ end
 function M.detect(opts)
     --
     opts = opts or {}
-    opts.spec = opts.spec or M.spec
     opts.buf = (opts.buf == nil or opts.buf == 0) and vim.api.nvim_get_current_buf() or opts.buf
 
     local ret = {} ---@type Root[]
 
-    for _, spec in ipairs(opts.spec) do
+    for _, spec in ipairs(M.spec) do
         --
         local paths = M.resolve(spec)(opts.buf)
 
@@ -198,7 +199,9 @@ function M.info()
 
     notify.info(lines, { title = "LazyVim Roots" })
 
-    return roots[1] and roots[1].paths[1] or tostring(vim.uv.cwd())
+    local root = roots[1]
+
+    return root ~= nil and root.paths[1] or tostring(vim.uv.cwd())
 end
 
 ---@type table<number, string>
@@ -230,9 +233,10 @@ function M.get(opts)
 
     if not ret then
         local roots = M.detect({ all = false, buf = buf })
+        local root = roots[1]
 
-        if roots[1] and roots[1] ~= nil then
-            M.cache[buf] = roots[1].paths[1]
+        if root ~= nil then
+            M.cache[buf] = root.paths[1]
         else
             M.cache[buf] = tostring(vim.uv.cwd())
         end

@@ -50,7 +50,6 @@ return {
             end
 
             ---@module "rustaceanvim"
-            ---@type rustaceanvim.Opts
             vim.g.rustaceanvim = {
                 dap = {
                     adapter = false,
@@ -178,7 +177,7 @@ return {
                         },
                     },
                 },
-            }
+            } --[[@as rustaceanvim.Opts]]
         end,
         ft = "rust",
         version = "^6", -- Recommended

@@ -129,8 +129,7 @@ function M.on_attach(on_attach)
     ev.on(ev.LspAttach, function(args)
         local buffer = args.buf ---@type integer
 
-        ---@type vim.lsp.Client
-        local client = vim.lsp.get_client_by_id(args.data.client_id)
+        local client = vim.lsp.get_client_by_id(args.data.client_id) --[[@as vim.lsp.Client]]
 
         if client and not M.should_ignore(client) then
             return on_attach(client, buffer)
@@ -142,7 +141,8 @@ end
 function M.on_dynamic_capability(fn)
     --
     return ev.on(ev.User, function(args)
-        local client = vim.lsp.get_client_by_id(args.data.client_id) ---@type vim.lsp.Client
+        local client = vim.lsp.get_client_by_id(args.data.client_id) --[[@as vim.lsp.Client]]
+
         local buffer = args.data.buffer ---@type number
 
         if client ~= nil then
@@ -159,7 +159,7 @@ function M.on_supports_method(method, fn)
     M.supports_method[method] = M.supports_method[method] or setmetatable({}, { __mode = "k" })
 
     return ev.on(ev.User, function(args)
-        local client = vim.lsp.get_client_by_id(args.data.client_id) ---@type vim.lsp.Client
+        local client = vim.lsp.get_client_by_id(args.data.client_id) --[[@as vim.lsp.Client]]
         local buffer = args.data.buffer ---@type number
 
         if client and method == args.data.method then

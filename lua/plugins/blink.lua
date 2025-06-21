@@ -240,14 +240,12 @@ return {
                             -- Sort snippets lower.
                             for _, item in ipairs(items) do
                                 if item.kind == types.Snippet then
-                                    ---@diagnostic disable-next-line: inject-field
                                     item.score_offset = (item.score_offset or 0) - 3
                                 end
                             end
 
                             ---@param item blink.cmp.CompletionItem
                             return vim.tbl_filter(function(item)
-                                ---@diagnostic disable param-type-not-match
                                 --
                                 if item.kind == types.Text or item.kind == types.Snippet or item.deprecated then
                                     return false
@@ -258,8 +256,7 @@ return {
                                 end
 
                                 if ft == "rust" then
-                                    ---@type RustData
-                                    local data = item.data ---@diagnostic disable-line: assign-type-mismatch
+                                    local data = item.data --[[@as RustData]]
 
                                     -- Only filter out imported methods.
                                     if data == nil or #data.imports == 0 or item.kind ~= types.Method then

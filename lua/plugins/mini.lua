@@ -82,7 +82,6 @@ return {
                     for name, prefix in pairs(mappings) do
                         name = name:gsub("^around_", ""):gsub("^inside_", "")
 
-                        ---@diagnostic disable-next-line: inject-field
                         ret[#ret + 1] = { prefix, group = name }
 
                         for _, obj in ipairs(objects) do
@@ -92,7 +91,6 @@ return {
                                 desc = desc:gsub(" with ws", "")
                             end
 
-                            ---@diagnostic disable-next-line: inject-field
                             ret[#ret + 1] = { prefix .. obj[1], desc = desc }
                         end
                     end
