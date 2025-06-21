@@ -5,10 +5,21 @@ return {
         vim.schedule(function()
             local lint = require("lint")
 
-            lint.linters["markdownlint-cli2"].args = {
-                "--config",
-                nvim.file.xdg_config("/markdownlint/config.yaml"),
-            }
+            lint.linters.mado = {
+                cmd = "mado",
+                args = {
+                    "--config",
+                    nvim.file.xdg_config("/mado.toml"),
+                    "check",
+                },
+                ignore_exitcode = true,
+                stream = "stdout",
+                stdin = true,
+                parser = require("lint.parser").from_errorformat("(stdin):%l:%c: %m", {
+                    source = "mado",
+                    severity = vim.diagnostic.severity.WARN,
+                }),
+            } --[[@as lint.Linter]]
 
             lint.linters.yamllint.args = {
                 "--config",
