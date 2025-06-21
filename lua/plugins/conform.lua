@@ -44,6 +44,11 @@ return {
                 return { timeout_ms = 500, lsp_format = "fallback" } --[[@as conform.FormatOpts?]]
             end,
             formatters = {
+                bake = {
+                    command = "bake",
+                    args = { "format", "$FILENAME" },
+                    stdin = false,
+                },
                 caddy = {
                     command = "caddy",
                     args = { "fmt" },

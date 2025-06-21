@@ -60,6 +60,7 @@ local M = {
             fish = { "fish_indent" },
             go = { "gofumpt" },
             lua = { "stylua" },
+            make = { "bake" },
             markdown = function(bufnr)
                 return { require("helpers.formatting").first(bufnr, "prettierd", "prettier"), "injected" }
             end,
