@@ -71,3 +71,5 @@ vim.ui.open = function(uri) ---@diagnostic disable-line: duplicate-set-field
 
     open(uri)
 end
+
+nvim.command("Root", nvim.root.info, { desc = "Roots for the current buffer" })
