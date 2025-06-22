@@ -12,7 +12,7 @@ return {
     end,
     root_dir = function(_bufnr, on_dir)
         if vim.env.JEDI ~= nil and vim.env.SITH == nil then
-            on_dir(vim.uv.cwd())
+            on_dir(nvim.file.cwd())
         end
     end,
     root_markers = {

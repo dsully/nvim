@@ -69,7 +69,7 @@ return {
                 function()
                     -- In an initialized but empty / no commits repo,
                     -- there will be an error thrown to stderr from git-dashboard-nvim.
-                    local is_valid = vim.system({ "git", "rev-parse", "HEAD" }, { cwd = vim.uv.cwd() }):wait()
+                    local is_valid = vim.system({ "git", "rev-parse", "HEAD" }, { cwd = nvim.file.cwd() }):wait()
 
                     if is_valid.code ~= 0 then
                         return {}

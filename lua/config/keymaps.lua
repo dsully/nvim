@@ -53,7 +53,7 @@ if vim.fn.has("mac") == 1 then
             return
         end
 
-        local filename = vim.api.nvim_buf_get_name(0)
+        local filename = nvim.file.filename()
 
         notify.info("Opening " .. vim.fs.basename(filename), { icon = "󰏋" })
 

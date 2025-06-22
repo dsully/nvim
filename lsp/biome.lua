@@ -1,6 +1,6 @@
 local function get_biome_config_path()
     local conf = "biome.json"
-    local path = vim.fs.joinpath(tostring(vim.uv.cwd()), conf)
+    local path = vim.fs.joinpath(nvim.file.cwd(), conf)
 
     if vim.uv.fs_stat(path) then
         return path

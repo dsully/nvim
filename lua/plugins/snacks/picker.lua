@@ -39,7 +39,7 @@ return {
                 ---@param p snacks.Picker
                 toggle_cwd = function(p)
                     local root = nvim.root.get({ buf = p.input.filter.current_buf, normalize = true })
-                    local cwd = vim.fs.normalize(tostring(vim.uv.cwd() or "."))
+                    local cwd = nvim.root.cwd()
                     local current = p:cwd()
 
                     p:set_cwd(current == root and cwd or root)

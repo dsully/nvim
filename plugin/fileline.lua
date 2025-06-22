@@ -8,7 +8,7 @@ local pattern = "^([^:]+):(%d*:?%d*):?$"
 ---@return string
 local jump = function()
     --
-    local bufname = nvim.file.normalize(vim.api.nvim_buf_get_name(0))
+    local bufname = nvim.file.filename()
     local filename, capture = bufname:match(pattern)
 
     if filename and capture and vim.uv.fs_access(filename, "R") then

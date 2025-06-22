@@ -178,7 +178,7 @@ return {
         { "<leader>.",  function() Snacks.scratch() end, desc = "Toggle Scratch Buffer" },
 
         {"<space>g", function()
-            Snacks.terminal({ "gitui" }, { cwd = Snacks.git.get_root() or vim.uv.cwd() } --[[@as snacks.terminal.Opts]])
+            Snacks.terminal({ "gitui" }, { cwd = Snacks.git.get_root() or nvim.file.cwd() } --[[@as snacks.terminal.Opts]])
         end, desc = "Git UI" },
     },
 }

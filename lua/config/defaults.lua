@@ -68,7 +68,7 @@ local M = {
             python = { "ruff_organize_imports", "ruff_format", "ruff_fix" },
             sh = { "shellharden", "shfmt" },
             toml = function(bufnr)
-                return vim.fs.basename(vim.api.nvim_buf_get_name(bufnr)) == "pyproject.toml" and { "pyproject-fmt" } or {}
+                return vim.fs.basename(nvim.file.filename(bufnr)) == "pyproject.toml" and { "pyproject-fmt" } or {}
             end,
             xml = { "xmlformatter" },
             zsh = { "shellharden", "shfmt" },

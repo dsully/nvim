@@ -83,7 +83,7 @@ return {
                 local devicons = require("mini.icons")
 
                 ---@type string?, string?
-                local icon, icon_hl = devicons.get("file", vim.api.nvim_buf_get_name(0))
+                local icon, icon_hl = devicons.get("file", nvim.file.filename())
 
                 if not icon then
                     ---@type string?, string?

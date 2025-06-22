@@ -1,6 +1,8 @@
 local M = {}
 
-local realpath = function(path)
+---@param path string
+---@return string
+function M.realpath(path)
     return (vim.uv.fs_realpath(path) or path)
 end
 
@@ -18,22 +20,22 @@ function M.xdg_config(path)
     return vim.fs.joinpath(vim.env.XDG_CONFIG_HOME or vim.fs.abspath("~/.config"), path)
 end
 
+---@return string
+function M.cwd()
+    return M.realpath(vim.uv.cwd() or ".")
+end
+
 ---Edit a new file relative to the same directory as the current buffer
 function M.edit()
     local buf = vim.api.nvim_get_current_buf()
-    local file = realpath(vim.api.nvim_buf_get_name(buf))
-    local root = realpath(vim.uv.cwd() or ".")
-
-    if file:find(root, 1, true) ~= 1 then
-        root = vim.fs.dirname(file)
-    end
+    local file = M.filename(buf)
 
     vim.ui.input({
         prompt = "File Name: ",
-        default = vim.fs.joinpath(root, ""),
+        default = vim.fs.dirname(file),
         completion = "file",
     } --[[@as snacks.input.Opts]], function(newfile)
-        if not newfile or newfile == "" or newfile == file:sub(#root + 2) then
+        if not newfile or newfile == "" then
             return
         end
 
@@ -93,7 +95,7 @@ end
 ---Return true if the current working directory is in my local source directory.
 ---@return boolean
 M.is_local_dev = function()
-    local cwd = tostring(vim.uv.cwd())
+    local cwd = M.cwd()
 
     for _, path in ipairs({
         vim.env.XDG_CONFIG_HOME,
@@ -147,7 +149,7 @@ end
 ---@param bufnr integer?
 ---@return string
 M.filename = function(bufnr)
-    return M.normalize(vim.api.nvim_buf_get_name(bufnr or 0))
+    return M.normalize(M.realpath(vim.api.nvim_buf_get_name(bufnr or 0)))
 end
 
 ---Create a combined file type for template languages.

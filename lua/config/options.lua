@@ -66,15 +66,12 @@ else
     --
     --—@return string
     local shadafile = function()
-        local cwd = vim.uv.cwd()
-
-        if not cwd then
-            return "NONE"
-        end
+        local file = require("helpers.file")
+        local cwd = file.cwd()
 
         local config = tostring(vim.fn.stdpath("config"))
         local rel_to_config = vim.fs.relpath(config, cwd)
-        local git_root = rel_to_config and config or require("helpers.file").git_root(true)
+        local git_root = rel_to_config and config or file.git_root(true)
 
         if not git_root then
             return "NONE"

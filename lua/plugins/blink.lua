@@ -292,7 +292,7 @@ return {
                         -- Do not use `buffer` as fallback
                         fallbacks = {},
                         opts = {
-                            get_cwd = vim.uv.cwd,
+                            get_cwd = nvim.file.cwd,
                         },
                     },
                     snippets = {

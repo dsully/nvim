@@ -10,7 +10,7 @@ return {
         "swift",
     },
     root_dir = function(bufnr, on_dir)
-        local filename = vim.api.nvim_buf_get_name(bufnr)
+        local filename = nvim.file.filename(bufnr)
 
         on_dir(
             string.find(filename, "buildServer.json")

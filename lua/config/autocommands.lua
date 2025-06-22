@@ -114,8 +114,7 @@ ev.on(ev.FileType, function()
         end
 
         ev.on(ev.BufWritePost, function(args)
-            local filename = vim.api.nvim_buf_get_name(args.buf)
-
+            local filename = nvim.file.filename(args.buf)
             local fileinfo = vim.uv.fs_stat(filename)
 
             if not fileinfo or bit.band(fileinfo.mode - 32768, 0x40) ~= 0 then

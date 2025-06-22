@@ -22,7 +22,7 @@ return {
         --
         ---@return string
         local root = function()
-            return Snacks.git.get_root() or tostring(vim.uv.cwd())
+            return Snacks.git.get_root() or nvim.file.cwd()
         end
 
         nvim.command("SessionLoad", function()
@@ -59,7 +59,7 @@ return {
                 return false
             end
 
-            local cwd = tostring(vim.uv.cwd())
+            local cwd = nvim.file.cwd()
 
             for _, pattern in ipairs(ignored.paths) do
                 if cwd:find(nvim.file.escape_pattern(tostring(vim.fn.expand(pattern)))) then
