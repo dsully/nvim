@@ -129,25 +129,12 @@ return {
                         -- Ignore deprecated messages from plugins.
                         { find = "vim.lsp.get_active_clients", event = "msg_show" },
 
-                        -- Ignore useless messages
-                        { find = "method textDocument/codeLens is not supported" },
-                        { find = "Invalid offset" },
-                        { find = "Invalid buffer id" },
-                        { find = "Found a swap file by the name" },
-                        { find = "An error happened while handling a ui event" }, -- Coming from noice.
-                        { find = "multiple different client offset_encodings detected" },
-                        { find = "offset_encoding is required" },
-                        { find = "No information available", event = "notify" },
-
-                        -- Semantic Tokens failure in the neovim runtime.
-                        { find = "index out of range" },
+                        -- Noisy render-markdown
+                        { find = "Conversion failed at step" },
 
                         -- Only show progress on multiple of 5 percent.
                         { find = "[^05]/", event = "lsp", kind = "progress" },
 
-                        -- lua-ls is noisy.
-                        { find = "Diagnosing", event = "lsp", kind = "progress" },
-                        { find = "code_action", event = "lsp" },
                         {
                             event = "lsp",
                             kind = "progress",
@@ -156,18 +143,6 @@ return {
                             end,
                         },
                         { find = "cargo clippy", event = "lsp", kind = "progress" },
-                        {
-                            event = "lsp",
-                            cond = function(message)
-                                local content = message:content()
-                                local skipped = {
-                                    ["unknown command"] = true,
-                                    ["Ruff encountered a problem"] = true,
-                                }
-
-                                return vim.bo[vim.api.nvim_get_current_buf()].filetype == "python" and skipped[content] or false
-                            end,
-                        },
                     },
                 },
                 opts = { skip = true },
