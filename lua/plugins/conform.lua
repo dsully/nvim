@@ -15,34 +15,6 @@ return {
     opts = function()
         ---@type conform.setupOpts
         return {
-            ---@param bufnr integer
-            ---@return conform.FormatOpts?
-            format_on_save = function(bufnr)
-                --
-                if not vim.tbl_contains(defaults.formatting.on_save, vim.bo[bufnr].filetype) then
-                    return nil
-                end
-
-                if vim.bo[bufnr].modifiable == false then
-                    return nil
-                end
-
-                -- Disable autoformat for files in a certain path
-                local bufname = vim.api.nvim_buf_get_name(bufnr)
-
-                if
-                    bufname:find("node_modules")
-                    or bufname:find("__pypackages__")
-                    or bufname:find("site_packages")
-                    or bufname:find("cargo/registry")
-                    or bufname:find("product-spec.json")
-                    or bufname:find("Cargo.lock")
-                then
-                    return nil
-                end
-
-                return { timeout_ms = 500, lsp_format = "fallback" } --[[@as conform.FormatOpts?]]
-            end,
             formatters = {
                 bake = {
                     command = "bake",
