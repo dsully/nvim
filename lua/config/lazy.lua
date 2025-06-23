@@ -112,16 +112,22 @@ function M.init()
         end)
     end)
 
+    local spec = {
+        { import = "config.autocommands" },
+        { import = "config.keymaps" },
+        { import = "plugins" },
+        { import = "plugins.ai" },
+        { import = "plugins.filetypes" },
+        { import = "plugins.languages" },
+        { import = "plugins.snacks" },
+    }
+
+    if vim.env.WORK ~= nil then
+        spec = vim.tbl_extend("force", spec, { import = "plugins.work" })
+    end
+
     require("lazy").setup({
-        spec = {
-            { import = "config.autocommands" },
-            { import = "config.keymaps" },
-            { import = "plugins" },
-            { import = "plugins.ai" },
-            { import = "plugins.filetypes" },
-            { import = "plugins.languages" },
-            { import = "plugins.snacks" },
-        },
+        spec = spec,
         change_detection = {
             enabled = false,
             notify = false,

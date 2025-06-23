@@ -132,6 +132,7 @@ return {
                         -- Noisy render-markdown
                         { find = "Conversion failed at step" },
                         { find = "mmdc failed to render diagram" },
+                        { event = "lsp", find = "unhandled notification textDocument/didSave" },
 
                         -- Only show progress on multiple of 5 percent.
                         { find = "[^05]/", event = "lsp", kind = "progress" },
