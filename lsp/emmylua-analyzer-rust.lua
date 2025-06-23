@@ -1,6 +1,6 @@
 local settings = {}
 
-if vim.fs.find({ ".emmyrc.json", ".luarc.json" }, { path = require("helpers.file").git_root(), type = "file" }) == false then
+if not vim.fs.find({ ".emmyrc.json", ".luarc.json" }, { path = require("helpers.file").git_root(), type = "file"})[0] then
     settings = {
         Lua = {
             diagnostics = {
