@@ -166,7 +166,16 @@ function M.info()
     end
 
     ---@diagnostic disable-next-line param-type-not-match
-    vim.ui.float({ ft = "markdown", relative = "editor" }, lines):show()
+    vim.ui
+        .float({
+            ft = "markdown",
+            relative = "editor",
+            width = 80,
+            height = 10,
+            row = math.floor((vim.o.lines - 10) / 2),
+            col = math.floor((vim.o.columns - 80) / 2),
+        }, lines)
+        :show()
 
     local root = roots[1]
 
