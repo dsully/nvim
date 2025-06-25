@@ -114,7 +114,7 @@ return {
     },
     {
         "dsully/treesitter-jump.nvim",
-        dev = true,
+        dev = false,
         keys = {
             -- stylua: ignore
             { "%", function() require("treesitter-jump").jump() end },
