@@ -11,6 +11,7 @@ return {
         --
         -- https://www.reddit.com/r/neovim/comments/10qmicv/help_understanding_miniai_custom_textobjects/
         "echasnovski/mini.ai",
+        -- cond = false,
         config = function(_, opts)
             --
             vim.schedule(function()

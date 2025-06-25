@@ -30,11 +30,12 @@ function M.edit()
     local buf = vim.api.nvim_get_current_buf()
     local file = M.filename(buf)
 
+    ---@diagnostic disable-next-line: param-type-not-match
     vim.ui.input({
         prompt = "File Name: ",
         default = vim.fs.dirname(file),
         completion = "file",
-    } --[[@as snacks.input.Opts]], function(newfile)
+    }, function(newfile)
         if not newfile or newfile == "" then
             return
         end
