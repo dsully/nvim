@@ -35,7 +35,7 @@ local M = {
         copilot = not work,
         codecompanion = {
             enabled = true,
-            model = work and "" or "anthropic",
+            model = work and vim.env.CODECOMPANION_ADAPTER or "anthropic",
         },
     },
 
