@@ -14,6 +14,15 @@ return {
     { "bhugovilela/palette.nvim", cmd = "Palette" },
 
     {
+        "dsully/ignore.nvim",
+        keys = {
+            -- stylua: ignore
+            { "<leader>di", function() require("helpers.ignore").ignore() end },
+        },
+        virtual = true,
+    },
+
+    {
         "maskudo/devdocs.nvim",
         cmd = "DevDocs",
         event = ev.LazyFile,
