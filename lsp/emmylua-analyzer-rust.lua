@@ -1,28 +1,3 @@
-local settings = {}
-
-if not vim.fs.find({ ".emmyrc.json", ".luarc.json" }, { path = require("helpers.file").git_root(), type = "file"})[0] then
-    settings = {
-        Lua = {
-            diagnostics = {
-                globals = {
-                    "bit",
-                    "package",
-                    "require",
-                    "vim",
-                },
-            },
-            runtime = {
-                version = "LuaJIT",
-            },
-            workspace = {
-                library = {
-                    "$VIMRUNTIME",
-                },
-            },
-        },
-    }
-end
-
 ---@type vim.lsp.Config
 local config = {
     cmd = {
@@ -43,7 +18,7 @@ local config = {
     single_file_support = true,
 }
 
-local root = require("helpers.file").git_root()
+local root = require("helpers.file").git_root(true)
 
 if root then
     for _, path in ipairs({ ".emmyrc.json", ".luarc.json" }) do
