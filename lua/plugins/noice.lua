@@ -116,6 +116,7 @@ return {
 
                         -- Ignored swap file.
                         { find = "W325:" },
+                        { find = "Found a swap file by the name" },
 
                         -- Unneeded info on search patterns
                         { find = "^[/?].", event = "msg_show" },
