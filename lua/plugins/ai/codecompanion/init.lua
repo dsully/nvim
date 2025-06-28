@@ -8,7 +8,6 @@ return {
             "CodeCompanionChat",
             "CodeCompanionActions",
         },
-        cond = defaults.ai.codecompanion.enabled,
         config = function(_, opts)
             --
             -- Enable agentic tools without confirmation prompts.
@@ -89,59 +88,63 @@ return {
                 mode = { "n", "v", "x" },
             },
         },
-        opts = {
-            adapters = require("plugins.ai.codecompanion.adapters"),
-            display = {
-                chat = {
-                    intro_message = "",
-                    window = {
-                        layout = "vertical", ---@type "float"|"vertical"|"horizontal"|"buffer"
-                        position = "right", ---@type "left"|"right"|"top"|"bottom"
-                        width = 0.4,
+        opts = function()
+            local adapter = vim.env.CODECOMPANION_ADAPTER or "anthropic"
+
+            return {
+                adapters = require("plugins.ai.codecompanion.adapters"),
+                display = {
+                    chat = {
+                        intro_message = "",
+                        window = {
+                            layout = "vertical", ---@type "float"|"vertical"|"horizontal"|"buffer"
+                            position = "right", ---@type "left"|"right"|"top"|"bottom"
+                            width = 0.4,
+                        },
+                    },
+                    diff = {
+                        layout = "vertical", ---@type "horizontal"|"vertical"
+                        provider = "mini_diff", ---@type "default"|"mini_diff"
+                    },
+                    inline = {
+                        layout = "vertical", ---@type "vertical"|"horizontal"|"buffer"
                     },
                 },
-                diff = {
-                    layout = "vertical", ---@type "horizontal"|"vertical"
-                    provider = "mini_diff", ---@type "default"|"mini_diff"
+                prompt_library = {
+                    ["Generate a Commit Message"] = {
+                        opts = {
+                            modes = { "n" },
+                        },
+                    },
+                    ["Communication"] = require("plugins.ai.codecompanion.prompts.communications"),
+                    ["Docstring"] = require("plugins.ai.codecompanion.prompts.docstring"),
+                    ["Documentation"] = require("plugins.ai.codecompanion.prompts.documentation"),
+                    ["Expert"] = require("plugins.ai.codecompanion.prompts.expert"),
+                    ["Naming"] = require("plugins.ai.codecompanion.prompts.naming"),
+                    ["Optimize"] = require("plugins.ai.codecompanion.prompts.optimize"),
+                    ["Pull Request"] = require("plugins.ai.codecompanion.prompts.pull_request"),
+                    ["Refactor"] = require("plugins.ai.codecompanion.prompts.refactor"),
+                    ["Spelling"] = require("plugins.ai.codecompanion.prompts.spelling"),
                 },
-                inline = {
-                    layout = "vertical", ---@type "vertical"|"horizontal"|"buffer"
-                },
-            },
-            prompt_library = {
-                ["Generate a Commit Message"] = {
-                    opts = {
-                        modes = { "n" },
+                strategies = {
+                    agent = {
+                        adapter = adapter,
+                    },
+                    chat = {
+                        adapter = adapter,
+                        slash_commands = {
+                            buffer = { opts = { provider = "snacks" } },
+                            file = { opts = { provider = "snacks" } },
+                            help = { opts = { provider = "snacks" } },
+                            symbols = { opts = { provider = "snacks" } },
+                        },
+                    },
+                    inline = {
+                        adapter = adapter,
                     },
                 },
-                ["Communication"] = require("plugins.ai.codecompanion.prompts.communications"),
-                ["Docstring"] = require("plugins.ai.codecompanion.prompts.docstring"),
-                ["Documentation"] = require("plugins.ai.codecompanion.prompts.documentation"),
-                ["Expert"] = require("plugins.ai.codecompanion.prompts.expert"),
-                ["Naming"] = require("plugins.ai.codecompanion.prompts.naming"),
-                ["Optimize"] = require("plugins.ai.codecompanion.prompts.optimize"),
-                ["Pull Request"] = require("plugins.ai.codecompanion.prompts.pull_request"),
-                ["Refactor"] = require("plugins.ai.codecompanion.prompts.refactor"),
-                ["Spelling"] = require("plugins.ai.codecompanion.prompts.spelling"),
-            },
-            strategies = {
-                agent = {
-                    adapter = defaults.ai.codecompanion.model,
-                },
-                chat = {
-                    adapter = defaults.ai.codecompanion.model,
-                    slash_commands = {
-                        buffer = { opts = { provider = "snacks" } },
-                        file = { opts = { provider = "snacks" } },
-                        help = { opts = { provider = "snacks" } },
-                        symbols = { opts = { provider = "snacks" } },
-                    },
-                },
-                inline = {
-                    adapter = defaults.ai.codecompanion.model,
-                },
-            },
-        },
+            }
+        end,
     },
     {
         "folke/which-key.nvim",

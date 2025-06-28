@@ -27,18 +27,7 @@ local lsp = {
     Variable = "󰀫 ",
 }
 
-local work = vim.env.WORK ~= nil
-
 local M = {
-
-    ai = {
-        copilot = not work,
-        codecompanion = {
-            enabled = true,
-            model = work and vim.env.CODECOMPANION_ADAPTER or "anthropic",
-        },
-    },
-
     code_actions = {
         "",
         "quickfix",
@@ -400,8 +389,6 @@ local M = {
             wo = { wrap = true },
         },
     },
-
-    work = work,
 }
 
 return M
