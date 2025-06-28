@@ -27,10 +27,12 @@
         "version": "LuaJIT"
     },
     "workspace": {
-        "enableReindex": true,
         "library": [
             "$VIMRUNTIME",
             "$XDG_DATA_HOME/nvim/lazy/"
+        ],
+        "workspaceRoots": [
+            "lua"
         ]
     }
 }

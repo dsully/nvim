@@ -1,5 +1,5 @@
 ---@type vim.lsp.Config
-local config = {
+return {
     cmd = {
         "emmylua_ls",
     },
@@ -15,28 +15,29 @@ local config = {
         "stylua.toml",
         "lua/",
     },
-    single_file_support = true,
-}
-
-local root = require("helpers.file").git_root(true)
-
-if root then
-    for _, path in ipairs({ ".emmyrc.json", ".luarc.json" }) do
-        if vim.uv.fs_stat(vim.fs.joinpath(root, path)) then
-            return config
-        end
-    end
-end
-
-return vim.tbl_extend("keep", config, {
     settings = {
         Lua = {
             diagnostics = {
+                disable = {
+                    "missing-fields",
+                    "type-not-found",
+                    "undefined-field",
+                },
                 globals = {
+                    "Snacks",
                     "bit",
+                    "colors",
+                    "defaults",
+                    "ev",
+                    "hl",
+                    "keys",
+                    "ns",
                     "package",
                     "require",
                     "vim",
+                },
+                unusedLocalExclude = {
+                    "_*",
                 },
             },
             runtime = {
@@ -45,8 +46,13 @@ return vim.tbl_extend("keep", config, {
             workspace = {
                 library = {
                     "$VIMRUNTIME",
+                    "$XDG_DATA_HOME/nvim/lazy/",
+                },
+                workspaceRoots = {
+                    "lua",
                 },
             },
         },
     },
-})
+    single_file_support = true,
+}
