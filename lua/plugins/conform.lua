@@ -15,6 +15,7 @@ return {
     opts = function()
         ---@type conform.setupOpts
         return {
+            format_on_save = {},
             formatters = {
                 bake = {
                     command = "bake",
