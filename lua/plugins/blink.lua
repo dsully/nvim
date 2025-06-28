@@ -133,6 +133,10 @@ return {
                     -- Keep the cursor X lines away from the top/bottom of the window
                     scrolloff = 4,
                 },
+                trigger = {
+                    show_on_backspace = true,
+                    show_on_backspace_in_keyword = true,
+                },
             },
             fuzzy = {
                 implementation = "rust",
