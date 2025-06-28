@@ -114,12 +114,14 @@ return {
     },
     {
         "dsully/treesitter-jump.nvim",
+        config = function()
+            keys.map("%", require("treesitter-jump").jump)
+        end,
         dev = false,
-        keys = {
-            -- stylua: ignore
-            { "%", function() require("treesitter-jump").jump() end },
+        ft = {
+            "lua",
+            "python",
         },
-        opts = {},
     },
     {
         "folke/ts-comments.nvim",
