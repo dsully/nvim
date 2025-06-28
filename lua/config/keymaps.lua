@@ -13,6 +13,17 @@ map("{", function()
     vim.cmd.normal({ args = { vim.v.count1 .. "{" }, bang = true, mods = { keepjumps = true } })
 end)
 
+vim.keymap.set("n", "p", function()
+    -- Remove trailing newline from the " register.
+    local lines = vim.split(vim.fn.getreg('"'):gsub("\n$", ""), "\n", { plain = true })
+
+    -- Position cursor at start of the paste
+    for _ = 1, vim.v.vcount1 do
+        vim.api.nvim_put(lines, "l", true, true)
+        vim.cmd.normal({ args = { "`[" }, bang = true })
+    end
+end, { desc = 'Paste on newline from the " register without extra newline.' })
+
 map("Y", "y$", "Yank to clipboard", mode)
 map("gY", '"*y$', "Yank until end of line to system clipboard", mode)
 map("gy", '"*y', "Yank to system clipboard", mode)
