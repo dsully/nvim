@@ -20,12 +20,15 @@ return {
             -- Inside a snippet, use backspace to remove the placeholder.
             { "<bs>", "<C-O>s", desc = "Remove Snippet Placeholder", mode = "s" },
         },
+
         ---@type blink.cmp.Config
         opts = {
+            ---@type blink.cmp.AppearanceConfig
             appearance = {
                 kind_icons = defaults.icons.completion_items,
                 nerd_font_variant = "mono",
             },
+            ---@type blink.cmp.ModeConfig
             cmdline = {
                 completion = {
                     ghost_text = { enabled = false },
@@ -36,6 +39,7 @@ return {
                         end,
                     },
                 },
+                ---@type blink.cmp.KeymapConfig
                 keymap = {
                     preset = "cmdline",
                     ["<CR>"] = { "accept", "fallback" },
@@ -65,10 +69,14 @@ return {
                         preselect = false,
                     },
                 },
+                ---@type blink.cmp.CompletionMenuConfig
                 menu = {
+                    ---@type blink.cmp.WindowBorder
+                    border = "none",
+
                     -- Which directions to show the window, falling back to the next direction when there's not enough space
                     direction_priority = { "n", "s" },
-                    --- @type blink.cmp.Draw
+                    ---@type blink.cmp.Draw
                     draw = {
                         align_to = "cursor",
                         columns = {
@@ -333,9 +341,6 @@ return {
             { "<leader>Se", vim.cmd.ScissorsEditSnippet, desc = "Add edit snippet" },
         },
         opts = {
-            editSnippetPopup = {
-                border = defaults.ui.border.name,
-            },
             jsonFormatter = "jq",
             snippetDir = vim.fn.stdpath("config") .. "/snippets",
         },

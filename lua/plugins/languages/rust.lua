@@ -20,7 +20,6 @@ return {
             },
             popup = {
                 autofocus = true,
-                border = defaults.ui.border.name,
             },
         },
     },

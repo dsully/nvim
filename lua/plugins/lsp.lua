@@ -9,7 +9,6 @@ return {
 
         vim.diagnostic.config({
             float = {
-                border = defaults.ui.border.name,
                 focusable = true,
                 header = { "" },
                 severity_sort = true,
