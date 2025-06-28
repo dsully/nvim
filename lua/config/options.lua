@@ -98,13 +98,6 @@ vim.g.loaded_python3_provider = 0
 vim.g.loaded_perl_provider = 0
 vim.g.loaded_ruby_provider = 0
 
----@type string
-vim.g.os = vim.uv.os_uname().sysname
-
--- Health check in a floating window.
--- vim.g.health = { style = "float" }
-
---
 vim.g.colorscheme = "nordish"
 
 vim.g.clipboard = {
