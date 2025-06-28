@@ -1,17 +1,6 @@
-local function get_biome_config_path()
-    local conf = "biome.json"
-    local path = vim.fs.joinpath(nvim.file.cwd(), conf)
-
-    if vim.uv.fs_stat(path) then
-        return path
-    end
-
-    return nvim.file.xdg_config(conf)
-end
-
 ---@type vim.lsp.Config
 return {
-    cmd = { "biome", "lsp-proxy", "--config-path=" .. get_biome_config_path() },
+    cmd = { "biome", "lsp-proxy" },
     filetypes = {
         "astro",
         "caddy",
