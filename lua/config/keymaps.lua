@@ -16,9 +16,10 @@ end)
 vim.keymap.set("n", "p", function()
     -- Remove trailing newline from the " register.
     local lines = vim.split(vim.fn.getreg('"'):gsub("\n$", ""), "\n", { plain = true })
+    local count = vim.v.vcount1 or 1
 
     -- Position cursor at start of the paste
-    for _ = 1, vim.v.vcount1 do
+    for _ = 1, count do
         vim.api.nvim_put(lines, "l", true, true)
         vim.cmd.normal({ args = { "`[" }, bang = true })
     end
