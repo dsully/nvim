@@ -1,7 +1,7 @@
 ---@param source string
 ---@return boolean
 local is_ai_source = function(source)
-    return vim.tbl_contains(vim.tbl_keys(defaults.ai), source:lower())
+    return vim.tbl_contains(vim.tbl_keys(defaults.ai.sources), source:lower())
 end
 
 ---@type LazySpec[]

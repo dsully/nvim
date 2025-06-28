@@ -28,6 +28,13 @@ local lsp = {
 }
 
 local M = {
+    ai = {
+        sources = {
+            "codecompanion",
+            "copilot",
+        },
+    },
+
     code_actions = {
         "",
         "quickfix",

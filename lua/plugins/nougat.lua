@@ -10,8 +10,6 @@ return {
 
         local icons = defaults.icons
 
-        local ai = require("plugins.ai.codecompanion.status")
-
         local word_filetypes = {
             markdown = true,
             text = true,
@@ -134,7 +132,7 @@ return {
         local git_status = require("nougat.nut.git.branch").create({
             config = { provider = "gitsigns" },
             hidden = function()
-                return not vim.g.gitsigns_head or ai:open()
+                return not vim.g.gitsigns_head
             end,
             hl = {
                 bg = colors.black.base,
@@ -169,21 +167,6 @@ return {
                 return not package.loaded["nvim-navic"] or not require("nvim-navic").is_available()
             end,
             prefix = " ",
-        })
-
-        local codecompanion = item({
-            content = function()
-                return ai:update()
-            end,
-            hidden = function()
-                return not ai.processing
-            end,
-            prefix = " " .. defaults.icons.misc.ai .. " ",
-            suffix = " ",
-            hl = {
-                bg = colors.black.base,
-                fg = colors.white.base,
-            },
         })
 
         local schema = item({
@@ -232,9 +215,6 @@ return {
                 bg = colors.black.base,
                 fg = colors.white.base,
             },
-            hidden = function()
-                return ai:open()
-            end,
             prefix = " ",
             sep_left = sep.left_lower_triangle_solid(true),
             content = table.concat({
@@ -259,7 +239,6 @@ return {
             { require("nougat.nut.spacer").create() },
             { require("nougat.nut.truncation_point").create() },
             { white_left_triangle(schema), schema },
-            { white_left_triangle(codecompanion), codecompanion },
             { white_left_triangle(git_status), git_status },
             { white_left_triangle(wordcount), wordcount },
             { white_left_triangle(counts), counts },
