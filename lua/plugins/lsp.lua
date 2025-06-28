@@ -5,8 +5,7 @@ return {
     config = function()
         local methods = vim.lsp.protocol.Methods
 
-        vim.lsp.log.set_level(vim.lsp.log.levels.OFF)
-        vim.lsp.log.set_format_func(vim.inspect)
+        vim.lsp.log.set_level(vim.lsp.log.levels.WARN)
 
         vim.diagnostic.config({
             float = {
