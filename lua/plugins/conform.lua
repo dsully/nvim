@@ -27,6 +27,10 @@ return {
                     args = { "fmt" },
                     stdin = true,
                 },
+                dockerfmt = {
+                    command = "dockerfmt",
+                    args = { "$FILENAME" },
+                },
                 injected = {
                     options = {
                         ignore_errors = true,

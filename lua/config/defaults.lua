@@ -53,6 +53,7 @@ local M = {
             bash = { "shellharden", "shfmt" },
             caddy = { "caddy" },
             direnv = { "shellharden", "shfmt" },
+            dockerfile = { "dockerfmt" },
             fish = { "fish_indent" },
             go = { "gofumpt" },
             lua = { "stylua" },
