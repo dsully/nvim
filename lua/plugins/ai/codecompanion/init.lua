@@ -107,6 +107,28 @@ return {
                         layout = "vertical", ---@type "vertical"|"horizontal"|"buffer"
                     },
                 },
+                extensions = {
+                    history = {
+                        enabled = true,
+                        auto_generate_title = true,
+                        auto_save = false,
+                        chat_filter = function(chat_data)
+                            local seven_days_ago = os.time() - (7 * 24 * 60 * 60)
+
+                            return (chat_data.updated_at >= seven_days_ago) and (chat_data.cwd == vim.fn.getcwd())
+                        end,
+                        continue_last_chat = false,
+                        delete_on_clearing_chat = false,
+                        keymap = "gh",
+                        picker = "snacks",
+                        save_chat_keymap = "sc",
+                    },
+                    vectorcode = {
+                        opts = {
+                            add_tool = true,
+                        },
+                    },
+                },
                 prompt_library = {
                     ["Generate a Commit Message"] = {
                         opts = {
@@ -142,6 +164,15 @@ return {
                 },
             }
         end,
+    },
+    {
+        "ravitemer/codecompanion-history.nvim",
+    },
+    {
+        -- Index and search code in your repositories
+        "Davidyz/VectorCode",
+        build = "uv tool install --upgrade vectorcode",
+        version = "*",
     },
     {
         "folke/which-key.nvim",
