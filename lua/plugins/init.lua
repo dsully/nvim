@@ -14,6 +14,15 @@ return {
     { "bhugovilela/palette.nvim", cmd = "Palette" },
 
     {
+        "CameronDixon0/hex-reader.nvim",
+        keys = {
+            -- stylua: ignore
+            { "<leader>hx", function() require("hex_reader").toggle() end, desc = "Toggle hex reader." },
+        },
+        opts = true,
+    },
+
+    {
         "dsully/ignore.nvim",
         keys = {
             -- stylua: ignore
