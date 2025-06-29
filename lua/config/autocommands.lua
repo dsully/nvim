@@ -82,7 +82,7 @@ ev.on(ev.BufWinEnter, function(args)
 
         -- If we're in the middle of the file, set the cursor position and center the screen
         if count - row > ((vim.fn.line("w$") - vim.fn.line("w0")) / 2) - 1 then
-            vim.cmd.normal({ "zz", bang = true })
+            vim.cmd.normal({ args = { "zz" }, bang = true })
 
         -- If we're at the end of the screen, set the cursor position and move the window up by one with C-e.
         -- This is to show that we are at the end of the file. If we did "zz" half the screen would be blank.
