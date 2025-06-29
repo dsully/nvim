@@ -85,7 +85,13 @@ return {
             return {
                 adapters = require("plugins.ai.codecompanion.adapters"),
                 display = {
+                    action_palette = {
+                        provider = "default",
+                    },
                     chat = {
+                        icons = {
+                            tool_success = "󰸞",
+                        },
                         intro_message = "",
                         window = {
                             layout = "vertical", ---@type "float"|"vertical"|"horizontal"|"buffer"
