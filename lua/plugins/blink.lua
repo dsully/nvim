@@ -4,6 +4,15 @@ local is_ai_source = function(source)
     return vim.tbl_contains(vim.tbl_keys(defaults.ai.sources), source:lower())
 end
 
+ev.on(ev.User, function(ev)
+    if ev.data.item.kind == require("blink.cmp.types").CompletionItemKind.path then
+        vim.defer_fn(require("blink.cmp").show, 1)
+    end
+end, {
+    desc = "Keep completing path on <Tab>",
+    pattern = "BlinkCmpAccept",
+})
+
 ---@type LazySpec[]
 return {
     {
@@ -174,7 +183,7 @@ return {
             },
             ---@type blink.cmp.SourceConfig
             sources = {
-                default = { "lsp", "path", "snippets" },
+                default = { "lsp", "path", "env" },
                 min_keyword_length = function(ctx)
                     if ctx.trigger.kind == "trigger_character" then
                         return 0
@@ -186,13 +195,17 @@ return {
                         return 2
                     end
                 end,
-                -- Ignore
                 per_filetype = {
                     codecompanion = {
                         "codecompanion",
                     },
                     gitcommit = {
                         "conventional_commits",
+                        "dictionary",
+                    },
+                    lua = {
+                        "lsp",
+                        "path",
                     },
                     snacks_input = {},
                     toml = {
@@ -200,11 +213,8 @@ return {
                         "lsp",
                         "path",
                     },
-                    lua = {
-                        -- "lazydev",
-                        "lsp",
-                        "path",
-                        -- "snippets",
+                    txt = {
+                        "dictionary",
                     },
                 },
                 providers = {
@@ -241,54 +251,6 @@ return {
                     lsp = {
                         name = "LSP",
                         timeout_ms = 400,
-                        ---@param ctx blink.cmp.Context
-                        ---@param items blink.cmp.CompletionItem[]
-                        transform_items = function(ctx, items)
-                            --
-                            local types = require("blink.cmp.types").CompletionItemKind
-                            local is_word_only = string.match(ctx.line, "^%s+%w+$")
-                            local ft = vim.bo[ctx.bufnr].filetype
-
-                            -- Sort snippets lower.
-                            for _, item in ipairs(items) do
-                                if item.kind == types.Snippet then
-                                    item.score_offset = (item.score_offset or 0) - 3
-                                end
-                            end
-
-                            ---@param item blink.cmp.CompletionItem
-                            return vim.tbl_filter(function(item)
-                                --
-                                if item.kind == types.Text or item.kind == types.Snippet or item.deprecated then
-                                    return false
-                                end
-
-                                if is_word_only and (item.kind == types.Function or item.kind == types.Variable) then
-                                    return false
-                                end
-
-                                if ft == "rust" then
-                                    local data = item.data --[[@as RustData]]
-
-                                    -- Only filter out imported methods.
-                                    if data == nil or #data.imports == 0 or item.kind ~= types.Method then
-                                        return true
-                                    end
-
-                                    for _, to_be_imported in ipairs(data.imports) do
-                                        --
-                                        -- Can be the crate name or a module name.
-                                        for _, unwanted_prefix in ipairs({ "owo_colors" }) do
-                                            if vim.startswith(to_be_imported.full_import_path, unwanted_prefix) then
-                                                return false
-                                            end
-                                        end
-                                    end
-                                end
-
-                                return true
-                            end, items)
-                        end,
                     },
                     nerdfont = {
                         module = "blink-nerdfont",
@@ -319,6 +281,53 @@ return {
                         },
                     },
                 },
+                ---@param ctx blink.cmp.Context
+                ---@param items blink.cmp.CompletionItem[]
+                transform_items = function(ctx, items)
+                    --
+                    local types = require("blink.cmp.types").CompletionItemKind
+                    local is_word_only = string.match(ctx.line, "^%s+%w+$")
+                    local ft = vim.bo[ctx.bufnr].filetype
+
+                    -- Sort snippets lower.
+                    for _, item in ipairs(items) do
+                        if item.kind == types.Snippet then
+                            item.score_offset = (item.score_offset or 0) - 3
+                        end
+                    end
+                    ---@param item blink.cmp.CompletionItem
+                    return vim.tbl_filter(function(item)
+                        --
+                        if item.kind == types.Text or item.kind == types.Snippet or item.deprecated then
+                            return false
+                        end
+
+                        if is_word_only and (item.kind == types.Function or item.kind == types.Variable) then
+                            return false
+                        end
+
+                        if ft == "rust" then
+                            local data = item.data --[[@as RustData]]
+
+                            -- Only filter out imported methods.
+                            if data == nil or #data.imports == 0 or item.kind ~= types.Method then
+                                return true
+                            end
+
+                            for _, to_be_imported in ipairs(data.imports) do
+                                --
+                                -- Can be the crate name or a module name.
+                                for _, unwanted_prefix in ipairs({ "owo_colors" }) do
+                                    if vim.startswith(to_be_imported.full_import_path, unwanted_prefix) then
+                                        return false
+                                    end
+                                end
+                            end
+                        end
+
+                        return true
+                    end, items)
+                end,
             },
         },
         opts_extend = {
