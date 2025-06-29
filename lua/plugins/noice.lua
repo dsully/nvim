@@ -114,6 +114,11 @@ return {
                         { find = "^%d+ change[s]?; after #%d+" },
                         { find = "^%-%-No lines in buffer%-%-$" },
 
+                        { find = "%d+ lines yanked" },
+                        { find = "%d+ lines >ed" },
+                        { find = "%d+ lines <ed" },
+                        { find = "%d+ lines filtered" },
+
                         -- Ignored swap file.
                         { find = "W325:" },
                         { find = "Found a swap file by the name" },
