@@ -125,4 +125,8 @@ end, { range = true })
 
 map("<leader>cc", ":CopyCodeBlock<cr>", "Copy Code Block", "v")
 
+-- Command Mode
+map("<c-a>", "<home>", "goto start of line", "c")
+map("<c-e>", "<end>", "goto end of line", "c")
+
 return {}
