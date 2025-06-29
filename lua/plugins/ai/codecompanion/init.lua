@@ -60,13 +60,15 @@ return {
                 "<leader>aq",
                 function()
                     if vim.tbl_contains({ "v", "V", "x" }, vim.fn.mode()) then
-                        vim.ui.input({ prompt = "CodeCompanion: " } --[[@as snacks.input.Opts]], function(input)
+                        ---@diagnostic disable-next-line: param-type-not-match
+                        vim.ui.input({ prompt = "CodeCompanion: " }, function(input)
                             if input then
                                 vim.cmd("'<,'>CodeCompanion " .. input)
                             end
                         end)
                     else
-                        vim.ui.input({ prompt = "CodeCompanion: " } --[[@as snacks.input.Opts]], function(input)
+                        ---@diagnostic disable-next-line: param-type-not-match
+                        vim.ui.input({ prompt = "CodeCompanion: " }, function(input)
                             if input then
                                 vim.cmd.CodeCompanion(input)
                             end
