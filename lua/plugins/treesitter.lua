@@ -1,4 +1,3 @@
----@module "lazy.types"
 ---@type LazySpec[]
 return {
     {
@@ -7,13 +6,32 @@ return {
         branch = "main",
         build = ":TSUpdate",
         init = function()
-            -- Map languages to my created file types.
-            vim.treesitter.language.register("bash", "direnv")
-            vim.treesitter.language.register("ruby", "brewfile")
-            vim.treesitter.language.register("gotmpl", "gotexttmpl")
+            local config = {
+                highlight = {
+                    skip = {
+                        "bigfile",
+                    },
+                },
+                indent = {
+                    skip = {
+                        "javascript",
+                        "markdown",
+                        "typescript",
+                    },
+                },
+                languages = {
+                    bash = { "direnv" },
+                    ruby = { "brewfile" },
+                    gotmpl = { "gotexttmpl" },
+                    -- https://github.com/MeanderingProgrammer/render-markdown.nvim#vimwiki
+                    markdown = { "vimwiki" },
+                },
+            }
 
-            -- https://github.com/MeanderingProgrammer/render-markdown.nvim#vimwiki
-            vim.treesitter.language.register("markdown", "vimwiki")
+            -- Map languages to my created file types.
+            for lang, filetypes in pairs(config.languages) do
+                vim.treesitter.language.register(lang, filetypes)
+            end
 
             vim.hl.priorities.semantic_tokens = 100
             vim.hl.priorities.treesitter = 125
@@ -26,7 +44,7 @@ return {
                 local filetype = ctx.match
 
                 -- Skip bigfile, etc.
-                if vim.list_contains(defaults.treesitter.highlight.skip, filetype) then
+                if vim.list_contains(config.highlight.skip, filetype) then
                     return
                 end
 
@@ -39,7 +57,7 @@ return {
                     treesitter.install(language):await(function()
                         vim.wo.foldexpr = "v:lua.vim.treesitter.foldexpr()"
 
-                        if not vim.list_contains(defaults.treesitter.indent.skip, filetype) then
+                        if not vim.list_contains(config.indent.skip, filetype) then
                             vim.bo.indentexpr = "v:lua.require'nvim-treesitter'.indentexpr()"
                         end
 

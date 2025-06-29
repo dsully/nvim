@@ -26,7 +26,18 @@ return {
                 nvim.file.xdg_config("/yamllint.yaml"),
             }
 
-            lint.linters_by_ft = defaults.linters
+            lint.linters_by_ft = {
+                css = { "stylelint" },
+                fish = { "fish" },
+                gitcommit = { "commitlint" },
+                github = { "actionlint" },
+                go = { "revive" },
+                markdown = { "mado", "write_good" },
+                nix = { "deadnix", "statix" },
+                rst = { "rstcheck", "sphinx-lint" },
+                text = { "write_good" },
+                yaml = { "yamllint" },
+            }
 
             if vim.fn.executable("mypy") == 1 then
                 lint.linters_by_ft["python"] = { "mypy" }

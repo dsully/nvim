@@ -35,56 +35,6 @@ local M = {
         },
     },
 
-    code_actions = {
-        "",
-        "quickfix",
-        -- "refactor",
-        -- "refactor.extract",
-        -- "refactor.inline",
-        "refactor.rewrite",
-        "source",
-        "source.fixAll",
-        "source.organizeImports",
-    },
-
-    -- Filetypes that should be formatted on save.
-    formatting = {
-        file_types = {
-            bash = { "shellharden", "shfmt" },
-            caddy = { "caddy" },
-            direnv = { "shellharden", "shfmt" },
-            dockerfile = { "dockerfmt" },
-            fish = { "fish_indent" },
-            go = { "gofumpt" },
-            lua = { "stylua" },
-            make = { "bake" },
-            markdown = function(bufnr)
-                return { require("helpers.formatting").first(bufnr, "prettierd", "prettier"), "injected" }
-            end,
-            pyproject = { "pyproject-fmt" },
-            python = { "ruff_organize_imports", "ruff_format", "ruff_fix" },
-            sh = { "shellharden", "shfmt" },
-            toml = function(bufnr)
-                return vim.fs.basename(nvim.file.filename(bufnr)) == "pyproject.toml" and { "pyproject-fmt" } or {}
-            end,
-            xml = { "xmlformatter" },
-            zsh = { "shellharden", "shfmt" },
-        },
-    },
-
-    linters = {
-        css = { "stylelint" },
-        fish = { "fish" },
-        gitcommit = { "commitlint" },
-        github = { "actionlint" },
-        go = { "revive" },
-        markdown = { "mado", "write_good" },
-        nix = { "deadnix", "statix" },
-        rst = { "rstcheck", "sphinx-lint" },
-        text = { "write_good" },
-        yaml = { "yamllint" },
-    },
-
     icons = {
         actions = {
             close = "󰅖 ",
@@ -365,21 +315,6 @@ local M = {
             markdown = true,
             text = true,
             vimwiki = true,
-        },
-    },
-
-    treesitter = {
-        highlight = {
-            skip = {
-                "bigfile",
-            },
-        },
-        indent = {
-            skip = {
-                "javascript",
-                "markdown",
-                "typescript",
-            },
         },
     },
 

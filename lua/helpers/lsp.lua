@@ -2,6 +2,18 @@ local M = {}
 
 local methods = vim.lsp.protocol.Methods
 
+local code_actions = {
+    "",
+    "quickfix",
+    -- "refactor",
+    -- "refactor.extract",
+    -- "refactor.inline",
+    "refactor.rewrite",
+    "source",
+    "source.fixAll",
+    "source.organizeImports",
+}
+
 ---@class LspClientBuffers
 ---@field client vim.lsp.Client
 ---@field buffers integer[]
@@ -174,7 +186,7 @@ M.code_action = function()
     vim.lsp.buf.code_action({
         context = {
             diagnostics = {},
-            only = defaults.code_actions,
+            only = code_actions,
         },
     })
 end
@@ -184,7 +196,7 @@ M.apply_quickfix = function()
         apply = true,
         context = {
             diagnostics = {},
-            only = defaults.code_actions,
+            only = code_actions,
         },
         ---@param action lsp.CodeAction|lsp.Command
         filter = function(action)

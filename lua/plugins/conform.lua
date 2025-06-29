@@ -43,7 +43,27 @@ return {
                     prepend_args = { "--blanks", "--indent", "4" },
                 },
             },
-            formatters_by_ft = defaults.formatting.file_types,
+            formatters_by_ft = {
+                bash = { "shellharden", "shfmt" },
+                caddy = { "caddy" },
+                direnv = { "shellharden", "shfmt" },
+                dockerfile = { "dockerfmt" },
+                fish = { "fish_indent" },
+                go = { "gofumpt" },
+                lua = { "stylua" },
+                make = { "bake" },
+                markdown = function(bufnr)
+                    return { require("helpers.formatting").first(bufnr, "prettierd", "prettier"), "injected" }
+                end,
+                pyproject = { "pyproject-fmt" },
+                python = { "ruff_organize_imports", "ruff_format", "ruff_fix" },
+                sh = { "shellharden", "shfmt" },
+                toml = function(bufnr)
+                    return vim.fs.basename(nvim.file.filename(bufnr)) == "pyproject.toml" and { "pyproject-fmt" } or {}
+                end,
+                xml = { "xmlformatter" },
+                zsh = { "shellharden", "shfmt" },
+            },
         }
     end,
 }
