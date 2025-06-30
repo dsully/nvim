@@ -1,7 +1,7 @@
 ---@type LazySpec[]
 return {
     {
-        "olimorris/codecompanion.nvim",
+        vim.env.CODECOMPANION_REPO or "olimorris/codecompanion.nvim",
         cmd = {
             "CodeCompanion",
             "CodeCompanionAdd",
@@ -18,7 +18,6 @@ return {
             -- Disable some built in prompts.
             require("codecompanion.config").prompt_library["Custom Prompt"] = nil
             require("codecompanion.config").prompt_library["Explain"] = nil
-            require("codecompanion.config").prompt_library["Buffer selection"] = nil
 
             local group = ev.group("CodeCompanionHooks")
 
@@ -43,10 +42,10 @@ return {
         end,
         keys = {
             --stylua: ignore start
-            { "<leader>a+", function() vim.cmd.CodeCompanionChat("Add") end, mode = "v", desc = "Add" },
+            -- { "<leader>a+", function() vim.cmd.CodeCompanionChat("Add") end, mode = "v", desc = "Add" },
             { "<leader>aD", function() require("codecompanion").prompt("docstring") end, mode = "v", desc = "Docstring" },
-            { "<leader>aa", function() vim.cmd.CodeCompanionActions() end, mode = { "n", "v" }, desc = "Actions" },
-            { "<leader>ac", function() vim.cmd.CodeCompanionChat("Toggle") end, mode = { "n", "v" }, desc = "Chat" },
+            { "<leader>aa", function() require("codecompanion").actions() end, mode = { "n", "v" }, desc = "Actions" },
+            { "<leader>ac", function() require("codecompanion").toggle() end, mode = { "n", "v" }, desc = "Chat" },
             { "<leader>ad", function() require("codecompanion").prompt("doc") end, mode = "v", desc = "Documentation" },
             { "<leader>af", function() require("codecompanion").prompt("fix") end, mode = "v", desc = "Fix Code" },
             { "<leader>al", function() require("codecompanion").prompt("lsp") end, mode = "v", desc = "LSP Diagnostics" },
@@ -83,7 +82,6 @@ return {
             local adapter = vim.env.CODECOMPANION_ADAPTER or "anthropic"
 
             return {
-                adapters = require("plugins.ai.codecompanion.adapters"),
                 display = {
                     action_palette = {
                         provider = "default",
