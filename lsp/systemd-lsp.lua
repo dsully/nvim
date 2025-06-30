@@ -1,6 +1,6 @@
 ---@type vim.lsp.Config
 return {
-    cmd = { "systemd-language-server" },
+    cmd = { "systemd-lsp" },
     filetypes = { "systemd" },
     single_file_support = true,
 }
