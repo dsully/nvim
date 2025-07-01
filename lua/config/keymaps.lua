@@ -96,9 +96,16 @@ map("zg", function()
     require("helpers.spelling").add_word_to_typos(vim.fn.expand("<cword>"))
 end, "Add word to spell list")
 
----Copy text to clipboard using codeblock format ```{ft}{content}```
-nvim.command("CopyCodeBlock", function(opts)
-    local lines = vim.api.nvim_buf_get_lines(0, opts.line1 - 1, opts.line2, true)
+---@param bufnr integer?
+---@return string
+local code_block = function(bufnr)
+    vim.cmd.normal({ "v", bang = true })
+
+    bufnr = bufnr or 0
+
+    local line_s = vim.api.nvim_buf_get_mark(bufnr, "<")[1] or 0
+    local line_e = vim.api.nvim_buf_get_mark(bufnr, ">")[1] or 0
+    local lines = vim.api.nvim_buf_get_lines(bufnr, line_s - 1, line_e, true)
 
     -- Find minimum indentation
     local min_indent = math.huge
@@ -120,10 +127,16 @@ nvim.command("CopyCodeBlock", function(opts)
         end
     end
 
-    vim.fn.setreg("+", string.format("```%s\n%s\n```", vim.bo.filetype, table.concat(lines, "\n")))
-end, { range = true })
+    return table.concat(lines, "\n")
+end
 
-map("<leader>cc", ":CopyCodeBlock<cr>", "Copy Code Block", "v")
+map("<leader>cc", function()
+    vim.fn.setreg("+", string.format("```%s\n%s\n```", vim.bo.filetype, code_block()))
+end, "Copy Code: GitHub")
+
+map("<leader>cs", function()
+    vim.fn.setreg("+", string.format("```%s\n```", code_block()))
+end, "Copy Code: Slack", "v")
 
 -- Command Mode
 map("<c-a>", "<home>", "goto start of line", "c")
