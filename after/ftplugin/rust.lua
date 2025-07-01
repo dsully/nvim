@@ -23,7 +23,7 @@ if vim.fn.executable("codesort") == 1 then
         end
     end, "Sort code", bufnr)
 
-    keys.xmap("<leader>cs", function()
+    keys.vmap("<leader>cs", function()
         local start_line = vim.api.nvim_buf_get_mark(0, "<")[1] or 0
         local end_line = vim.api.nvim_buf_get_mark(0, ">")[1] or 0
 

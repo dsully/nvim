@@ -330,11 +330,11 @@ return {
         init = function()
 
             ev.on_load("mini.surround", function()
-                keys.xmap('"', function() keys.feed('ma"', "t") end, "Surround Add Double Quote")
-                keys.xmap("[", function() keys.feed("ma[<left>", "t") vim.schedule(function() keys.feed("%", "m") end) end, "Surround Add Square Bracket")
-                keys.xmap("{", function() keys.feed("ma{<left>", "t") vim.schedule(function() keys.feed("%", "m") end) end, "Surround Add Curly Bracket")
-                keys.xmap("(", function() keys.feed("ma(<left>", "t") vim.schedule(function() keys.feed("%", "m") end) end, "Surround Add Parenthesis")
-                keys.xmap("`", function() keys.feed("ma`", "t") end, "Surround Add Backtick")
+                keys.vmap('"', function() keys.feed('ma"', "t") end, "Surround Add Double Quote")
+                keys.vmap("[", function() keys.feed("ma[<left>", "t") vim.schedule(function() keys.feed("%", "m") end) end, "Surround Add Square Bracket")
+                keys.vmap("{", function() keys.feed("ma{<left>", "t") vim.schedule(function() keys.feed("%", "m") end) end, "Surround Add Curly Bracket")
+                keys.vmap("(", function() keys.feed("ma(<left>", "t") vim.schedule(function() keys.feed("%", "m") end) end, "Surround Add Parenthesis")
+                keys.vmap("`", function() keys.feed("ma`", "t") end, "Surround Add Backtick")
 
                 -- vim.defer_fn(function() keys.xmap("<", function() keys.feed("ma<", "t") end, "Surround Add Angle Bracket") end, 2000)
 

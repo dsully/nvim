@@ -67,18 +67,18 @@ function M.bmap(lhs, rhs, desc, buffer, mode, opts)
     M.map(lhs, rhs, desc, mode, vim.tbl_deep_extend("force", opts or {}, { buffer = buffer or true }))
 end
 
----Create a global key mapping in x/v mode.
+---Create a global key mapping in v mode.
 ---@param lhs string
 ---@param rhs function|string
 ---@param desc string?
 ---@param buffer integer?
 ---@param opts vim.keymap.set.Opts?
-function M.xmap(lhs, rhs, desc, buffer, opts)
+function M.vmap(lhs, rhs, desc, buffer, opts)
     --
     M.safe_set(
         lhs,
         rhs,
-        { "x" },
+        { "v" },
         vim.tbl_deep_extend("force", {
             desc = desc or "Undocumented",
             noremap = true,
