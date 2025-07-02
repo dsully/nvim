@@ -55,11 +55,12 @@ local function handle_python_type(diagnostic, cursor_line, line)
     end
 
     local ignore_comment
+    local type = diagnostic.source == "basedpyright" and "pyright" or "type"
 
     if diagnostic.code then
-        ignore_comment = "  # type: ignore[" .. diagnostic.code .. "]"
+        ignore_comment = string.format("  # %s: ignore[" .. diagnostic.code .. "]", type)
     else
-        ignore_comment = "  # type: ignore"
+        ignore_comment = string.format("  # %s: ignore", type)
     end
 
     return replace(cursor_line, 1, (line .. ignore_comment), diagnostic.code)
@@ -108,6 +109,7 @@ end
 
 local handlers = {
     ["rust-analyzer"] = handle_rust,
+    basedpyright = handle_python_type,
     emmylua = handle_lua,
     jedi = handle_python_type,
     pyrefly = handle_python_type,
