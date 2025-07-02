@@ -13,7 +13,7 @@ map("{", function()
     vim.cmd.normal({ args = { vim.v.count1 .. "{" }, bang = true, mods = { keepjumps = true } })
 end)
 
-vim.keymap.set("n", "p", function()
+map("p", function()
     -- Remove trailing newline from the " register.
     local lines = vim.split(vim.fn.getreg('"'):gsub("\n$", ""), "\n", { plain = true })
     local count = vim.v.vcount1 or 1
@@ -26,7 +26,7 @@ vim.keymap.set("n", "p", function()
         vim.api.nvim_put(lines, type, true, false)
         vim.cmd.normal({ args = { "`[" }, bang = true })
     end
-end, { desc = 'Paste on newline from the " register without extra newline.' })
+end, 'Paste on newline from the " register without extra newline.')
 
 map("Y", "y$", "Yank to clipboard", mode)
 map("gY", '"*y$', "Yank until end of line to system clipboard", mode)
@@ -138,7 +138,7 @@ map("<leader>cc", function()
 end, "Copy Code: GitHub")
 
 map("<leader>cs", function()
-    vim.fn.setreg("+", string.format("```%s\n```", code_block()))
+    vim.fn.setreg("+", code_block())
 end, "Copy Code: Slack", "v")
 
 -- Command Mode
