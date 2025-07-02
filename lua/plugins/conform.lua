@@ -27,10 +27,6 @@ return {
                     args = { "fmt" },
                     stdin = true,
                 },
-                dockerfmt = {
-                    command = "dockerfmt",
-                    args = { "$FILENAME" },
-                },
                 injected = {
                     options = {
                         ignore_errors = true,
@@ -47,7 +43,6 @@ return {
                 bash = { "shellharden", "shfmt" },
                 caddy = { "caddy" },
                 direnv = { "shellharden", "shfmt" },
-                dockerfile = { "dockerfmt" },
                 fish = { "fish_indent" },
                 go = { "gofumpt" },
                 lua = { "stylua" },
