@@ -18,9 +18,12 @@ vim.keymap.set("n", "p", function()
     local lines = vim.split(vim.fn.getreg('"'):gsub("\n$", ""), "\n", { plain = true })
     local count = vim.v.vcount1 or 1
 
+    -- Handle character-wise registers (like from 'x' command)
+    local type = vim.fn.getregtype('"') == "v" and "c" or "l"
+
     -- Position cursor at start of the paste
     for _ = 1, count do
-        vim.api.nvim_put(lines, "l", true, true)
+        vim.api.nvim_put(lines, type, true, false)
         vim.cmd.normal({ args = { "`[" }, bang = true })
     end
 end, { desc = 'Paste on newline from the " register without extra newline.' })
