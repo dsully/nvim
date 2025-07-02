@@ -131,6 +131,10 @@ return {
         opts = {},
     },
     {
+        "calops/hmts.nvim",
+        ft = "nix",
+    },
+    {
         "dsully/treesitter-jump.nvim",
         config = function()
             keys.map("%", require("treesitter-jump").jump)
