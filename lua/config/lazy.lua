@@ -114,7 +114,6 @@ function M.init()
 
     local spec = {
         { import = "config.autocommands" },
-        { import = "config.keymaps" },
         { import = "plugins" },
         { import = "plugins.ai" },
         { import = "plugins.filetypes" },

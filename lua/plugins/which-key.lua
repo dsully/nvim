@@ -11,6 +11,15 @@ return {
         WhichKeySeparator = { link = "Comment" },
         WhichKeyValue = { link = "Comment" },
     },
+    init = function()
+        -- Common misspellings
+        vim.cmd.cnoreabbrev("qw", "wq")
+        vim.cmd.cnoreabbrev("Wq", "wq")
+        vim.cmd.cnoreabbrev("WQ", "wq")
+        vim.cmd.cnoreabbrev("Qa", "qa")
+        vim.cmd.cnoreabbrev("Bd", "bd")
+        vim.cmd.cnoreabbrev("bD", "bd")
+    end,
     ---@module "which-key.nvim"
     ---@type wk.Config
     opts = {
@@ -72,7 +81,6 @@ return {
             { "<leader>g", group = "Git", mode = { "n", "v" } },
             { "<leader>gh", group = "GitHub", mode = { "n", "v" } },
             { "<leader>n", group = "Notifications" },
-            { "<leader>q", group = "Quit" },
             { "<leader>r", group = "Rules" },
             { "<leader>s", group = "Substitute" },
             { "<leader>S", group = "Snippets" },
@@ -95,6 +103,148 @@ return {
             --         { "shl", desc = "Highlight Prev Surround" },
             --     },
             -- },
+
+            -- Search mappings
+            { "/", "ms/", desc = "Keeps jumplist after forward searching" },
+            { "?", "ms?", desc = "Keeps jumplist after backward searching" },
+
+            -- Navigation mappings (don't count as jumps)
+            {
+                "}",
+                function()
+                    vim.cmd.normal({ args = { vim.v.count1 .. "}" }, bang = true, mods = { keepjumps = true } })
+                end,
+                desc = "Next paragraph (keepjumps)",
+            },
+            {
+                "{",
+                function()
+                    vim.cmd.normal({ args = { vim.v.count1 .. "{" }, bang = true, mods = { keepjumps = true } })
+                end,
+                desc = "Previous paragraph (keepjumps)",
+            },
+
+            -- Custom paste mapping
+            {
+                "p",
+                function()
+                    -- Remove trailing newline from the " register.
+                    local lines = vim.split(vim.fn.getreg('"'):gsub("\n$", ""), "\n", { plain = true })
+                    local count = vim.v.vcount1 or 1
+
+                    -- Handle character-wise registers (like from 'x' command)
+                    local type = vim.fn.getregtype('"') == "v" and "c" or "l"
+
+                    -- Position cursor at start of the paste
+                    for _ = 1, count do
+                        vim.api.nvim_put(lines, type, true, false)
+                        vim.cmd.normal({ args = { "`[" }, bang = true })
+                    end
+                end,
+                desc = 'Paste on newline from the " register without extra newline.',
+            },
+
+            -- Yank mappings
+            { "Y", "y$", desc = "Yank to clipboard", mode = { "n", "v" } },
+            { "gY", '"*y$', desc = "Yank until end of line to system clipboard", mode = { "n", "v" } },
+            { "gy", '"*y', desc = "Yank to system clipboard", mode = { "n", "v" } },
+            { "gp", '"*p', desc = "Paste from system clipboard", mode = { "n", "v" } },
+
+            -- Comment mappings
+            { "gco", "o<esc>Vcx<esc><cmd>normal gcc<cr>fxa<bs>", desc = "Add Comment Below" },
+            { "gcO", "O<esc>Vcx<esc><cmd>normal gcc<cr>fxa<bs>", desc = "Add Comment Above" },
+
+            -- Leader mappings
+            { "<leader>Y", "<cmd>%y<cr>", desc = "Yank All Lines" },
+
+            -- Control mappings
+            { "<C-a>", "gg<S-v>G", desc = "Select All" },
+            { "<C-c>", "ciw", desc = "Change In Word" },
+
+            -- Duplicate and comment
+            { "yc", "<cmd>norm yygcc<cr>p", desc = "Duplicate line and comment original" },
+
+            -- Alt mappings for line movement
+            { "<A-j>", ":m .+1<cr>==", desc = "Move line down" },
+            { "<A-k>", ":m .-2<cr>==", desc = "Move line up" },
+            { "<A-j>", "<Esc>:m .+1<cr>==gi", desc = "Move line down (insert mode)", mode = "i" },
+            { "<A-k>", "<Esc>:m .-2<cr>==gi", desc = "Move line up (insert mode)", mode = "i" },
+            { "<A-j>", ":m '>+1<cr>gv=gv", desc = "Move block down", mode = "v" },
+            { "<A-k>", ":m '<-2<cr>gv=gv", desc = "Move block up", mode = "v" },
+
+            -- Git conflict mappings
+            { "<leader>mc", "^[<>=]", desc = "Find Conflicts" },
+            { "<leader>gcu", "dd/|||<CR>0v/>>><CR>$x", desc = "Git Conflict Choose Upstream" },
+            { "<leader>gcb", "0v/|||<CR>$x/====<CR>0v/>>><CR>$x", desc = "Git Conflict Choose Base" },
+            { "<leader>gcs", "0v/====<CR>$x/>>><CR>dd", desc = "Git Conflict Choose Stashed" },
+
+            -- Space mappings
+            {
+                "<space>n",
+                function()
+                    return nvim.file.edit
+                end,
+                desc = "New File",
+                expr = false,
+            },
+
+            -- macOS specific mappings
+            vim.fn.has("mac") == 1
+                    and {
+                        {
+                            "<space>o",
+                            function()
+                                if vim.bo.buftype ~= nil then
+                                    vim.system({ "open", nvim.file.filename() }):wait()
+                                end
+                            end,
+                            desc = "Open in App",
+                        },
+                        {
+                            "<space>T",
+                            function()
+                                local root = Snacks.git.get_root()
+
+                                if root then
+                                    vim.system({ "/usr/bin/open", "-g", "-a", "Tower", root }):wait()
+                                end
+                            end,
+                            desc = "Open in Tower",
+                        },
+                    }
+                or nil,
+
+            -- Spelling
+            {
+                "zg",
+                function()
+                    require("helpers.spelling").add_word_to_typos(vim.fn.expand("<cword>"))
+                end,
+                desc = "Add word to spell list",
+            },
+
+            -- Code block functions
+            {
+                "<leader>cc",
+                function()
+                    vim.fn.setreg("+", string.format("```%s\n%s\n```", vim.bo.filetype, require("helpers.buffer").code_block()))
+                end,
+                desc = "Copy Code: GitHub",
+                mode = "v",
+            },
+
+            {
+                "<leader>cs",
+                function()
+                    vim.fn.setreg("+", require("helpers.buffer").code_block())
+                end,
+                desc = "Copy Code: Slack",
+                mode = "v",
+            },
+
+            -- Command mode mappings
+            { "<c-a>", "<home>", desc = "goto start of line", mode = "c" },
+            { "<c-e>", "<end>", desc = "goto end of line", mode = "c" },
 
             -- Don't delete into the system clipboard.
             { "dw", '"_dw', hidden = true, mode = { "n", "v" }, noremap = true },
