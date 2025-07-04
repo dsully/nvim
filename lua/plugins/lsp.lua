@@ -103,14 +103,32 @@ return {
             vim.lsp.inlay_hint.enable(false)
         end)
 
-        -- Disable codeLens for now.
-        -- lsp.on_supports_method(methods.textDocument_codeLens, function(_, buffer)
-        --     vim.lsp.codelens.refresh()
-        --
-        --     ev.on({ ev.BufEnter, ev.CursorHold, ev.InsertLeave }, vim.lsp.codelens.refresh, {
-        --         buffer = buffer,
-        --     })
-        -- end)
+        nvim.lsp.on_supports_method(methods.textDocument_codeLens, function()
+            --
+            ev.on({ ev.BufEnter, ev.CursorHold, ev.InsertLeave }, function()
+                if vim.g.codelens then
+                    vim.lsp.codelens.refresh({ bufnr = 0 })
+                end
+            end, {
+                group = ev.group("vim.lsp.codelens.refresh", true),
+            })
+
+            Snacks.toggle({
+                name = "Code Lens",
+                get = function()
+                    return vim.g.codelens
+                end,
+                set = function(state)
+                    vim.g.codelens = state
+
+                    if state == true then
+                        vim.lsp.codelens.refresh()
+                    else
+                        vim.lsp.codelens.clear()
+                    end
+                end,
+            }):map("<space>tL")
+        end)
 
         local capabilities = nil
 
