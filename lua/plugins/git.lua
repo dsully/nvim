@@ -63,6 +63,8 @@ return {
                     gs.blame_line({ full = true, ignore_whitespace = true })
                 end, "Git Blame")
 
+                bmap("<leader>gd", gs.diffthis, "Git Diff")
+
                 bmap("<leader>gR", gs.reset_buffer, "Reset Git Buffer")
                 bmap("<leader>gp", gs.preview_hunk, "Preview Git Hunk")
                 bmap("<leader>gU", gs.undo_stage_hunk, "Undo Git Stage Hunk")
