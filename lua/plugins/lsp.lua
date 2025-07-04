@@ -130,13 +130,7 @@ return {
             root_markers = { ".git" },
         } --[[@as vim.lsp.Config]])
 
-        local servers = vim.iter(vim.api.nvim_get_runtime_file("lsp/*.lua", true))
-            :map(function(config)
-                return vim.fs.basename(config):match("^(.*)%.lua$")
-            end)
-            :totable()
-
-        vim.lsp.enable(servers)
+        vim.lsp.enable(vim.iter(vim.fs.dir(nvim.file.xdg_config("nvim/lsp"))):map(nvim.file.stem):totable())
     end,
     virtual = true,
 }

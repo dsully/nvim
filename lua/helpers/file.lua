@@ -153,6 +153,17 @@ M.filename = function(bufnr)
     return M.normalize(M.realpath(vim.api.nvim_buf_get_name(bufnr or 0)))
 end
 
+-- Return the stem part of a path, ie: without any extension.
+---@param path string
+---@return string
+M.stem = function(path)
+    local filename = vim.fs.basename(path)
+
+    local last_dot = filename:reverse():find("%.")
+
+    return filename:sub(1, last_dot and -last_dot - 1 or #filename)
+end
+
 ---Create a combined file type for template languages.
 ---@param filename string
 ---@param extension string The extension to strip from the filename for detection.
