@@ -7,6 +7,13 @@ return {
         ---@type Gitsigns.Config
         opts = {
             attach_to_untracked = true,
+            diff_opts = {
+                algorithm = "histogram",
+                context_lines = 3,
+                indent_heuristic = true,
+                internal = true,
+            },
+            gh = true,
             --- @param buffer integer
             on_attach = function(buffer)
                 local gs = package.loaded.gitsigns
@@ -93,8 +100,9 @@ return {
                     gitdir = nvim.file.xdg_config("/repos/dotfiles"),
                 },
             },
+            _new_sign_calc = true,
+            _refresh_staged_on_update = true,
         },
-        _new_sign_calc = true,
     },
     {
         "juansalvatore/git-dashboard-nvim",
