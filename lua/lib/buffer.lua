@@ -1,14 +1,27 @@
 local M = {}
 
+---Retrieves the current visual selection as a string using Neovim's modern Lua API.
+---
 ---@param bufnr integer?
-M.code_block = function(bufnr)
+---@return string[] Selected text as a string, or nil if not in visual mode or selection is empty.
+M.visual_selection = function(bufnr)
     vim.cmd.normal({ "v", bang = true })
 
     bufnr = bufnr or 0
 
-    local line_s = vim.api.nvim_buf_get_mark(bufnr, "<")[1] or 0
-    local line_e = vim.api.nvim_buf_get_mark(bufnr, ">")[1] or 0
-    local lines = vim.api.nvim_buf_get_lines(bufnr, line_s - 1, line_e, true)
+    local start = vim.api.nvim_buf_get_mark(bufnr, "<")
+    local finish = vim.api.nvim_buf_get_mark(bufnr, ">")
+
+    if start[1] == 0 or finish[1] == 0 then
+        return {}
+    end
+
+    return vim.api.nvim_buf_get_text(bufnr, start[1] - 1, start[2], finish[1] - 1, finish[2] + 1, {})
+end
+
+---@param bufnr integer?
+M.code_block = function(bufnr)
+    local lines = M.visual_selection(bufnr)
 
     -- Find minimum indentation
     local min_indent = math.huge
@@ -16,6 +29,7 @@ M.code_block = function(bufnr)
     for _, line in ipairs(lines) do
         if line:match("%S") then -- Skip empty lines
             local ws = line:match("^%s*")
+
             if ws then
                 min_indent = math.min(min_indent, ws:len())
             end
