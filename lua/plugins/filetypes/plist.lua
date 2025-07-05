@@ -83,7 +83,7 @@ return {
     "plist",
     cond = vim.fn.has("mac"),
     init = function()
-        local ev = require("helpers.event")
+        local ev = require("lib.event")
 
         ev.on(ev.BufReadCmd, function(args)
             vim.cmd.doautocmd(ev.BufReadPre)

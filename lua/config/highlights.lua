@@ -1,4 +1,4 @@
-local hl = require("helpers.highlights")
+local hl = require("lib.highlights")
 
 --
 -- Nord palette : https://www.nordtheme.com/docs/colors-and-palettes

@@ -1,6 +1,6 @@
 -- Modified from LazyVim :)
 
----@class helpers.root
+---@class lib.root
 ---@overload fun(): string
 ---@return string[]
 local M = setmetatable({}, {

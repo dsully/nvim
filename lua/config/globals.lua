@@ -1,9 +1,9 @@
 -- Make my life easier..
 _G.defaults = require("config.defaults")
 _G.colors = require("config.highlights").colors
-_G.ev = require("helpers.event")
-_G.hl = require("helpers.highlights")
-_G.keys = require("helpers.keys")
+_G.ev = require("lib.event")
+_G.hl = require("lib.highlights")
+_G.keys = require("lib.keys")
 
 _G.lazy = {
     ---@param name string
@@ -20,10 +20,10 @@ _G.lazy = {
 }
 
 _G.nvim = {
-    buffer = require("helpers.buffer"),
-    file = require("helpers.file"),
-    lsp = require("helpers.lsp"),
-    root = require("helpers.root"),
+    buffer = require("lib.buffer"),
+    file = require("lib.file"),
+    lsp = require("lib.lsp"),
+    root = require("lib.root"),
 }
 
 ---Create a Neovim command

@@ -218,7 +218,7 @@ return {
                     end
 
                     local color = vim.tbl_get(colors, unpack(parts))
-                    return type(color) == "string" and require("helpers.highlights").group({ fg = color })
+                    return type(color) == "string" and require("lib.highlights").group({ fg = color })
                 end,
                 extmark_opts = extmark_vtext,
             }

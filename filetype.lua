@@ -34,10 +34,10 @@ vim.filetype.add({
             return "c"
         end,
         j2 = function(filename, _)
-            return require("helpers.file").template_type(filename, "j2", "jinja")
+            return require("lib.file").template_type(filename, "j2", "jinja")
         end,
         tmpl = function(filename, _)
-            return require("helpers.file").template_type(filename, "tmpl", "gotmpl")
+            return require("lib.file").template_type(filename, "tmpl", "gotmpl")
         end,
     },
     pattern = {

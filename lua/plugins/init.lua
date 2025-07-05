@@ -26,7 +26,7 @@ return {
         "dsully/ignore.nvim",
         keys = {
             -- stylua: ignore
-            { "<leader>di", function() require("helpers.ignore").ignore() end },
+            { "<leader>di", function() require("lib.ignore").ignore() end },
         },
         virtual = true,
     },

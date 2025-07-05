@@ -49,7 +49,7 @@ return {
                 lua = { "stylua" },
                 make = { "bake" },
                 markdown = function(bufnr)
-                    return { require("helpers.formatting").first(bufnr, "prettierd", "prettier"), "injected" }
+                    return { require("lib.formatting").first(bufnr, "prettierd", "prettier"), "injected" }
                 end,
                 pyproject = { "pyproject-fmt" },
                 python = { "ruff_organize_imports", "ruff_format", "ruff_fix" },

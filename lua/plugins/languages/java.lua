@@ -5,7 +5,7 @@ return {
     --     config = function(_, opts)
     --         require("java").setup(opts)
     --         require("lspconfig").jdtls.setup({
-    --             capabilities = require("helpers.lsp").capabilities(),
+    --             capabilities = require("lib.lsp").capabilities(),
     --         })
     --     end,
     --     ft = { "java" },

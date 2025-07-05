@@ -67,7 +67,7 @@ else
     --
     --—@return string
     local shadafile = function()
-        local file = require("helpers.file")
+        local file = require("lib.file")
         local cwd = file.cwd()
 
         local config = tostring(vim.fn.stdpath("config"))

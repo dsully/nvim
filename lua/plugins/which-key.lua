@@ -218,7 +218,7 @@ return {
             {
                 "zg",
                 function()
-                    require("helpers.spelling").add_word_to_typos(vim.fn.expand("<cword>"))
+                    require("lib.spelling").add_word_to_typos(vim.fn.expand("<cword>"))
                 end,
                 desc = "Add word to spell list",
             },
@@ -227,7 +227,7 @@ return {
             {
                 "<leader>cc",
                 function()
-                    vim.fn.setreg("+", string.format("```%s\n%s\n```", vim.bo.filetype, require("helpers.buffer").code_block()))
+                    vim.fn.setreg("+", string.format("```%s\n%s\n```", vim.bo.filetype, require("lib.buffer").code_block()))
                 end,
                 desc = "Copy Code: GitHub",
                 mode = "v",
@@ -236,7 +236,7 @@ return {
             {
                 "<leader>cs",
                 function()
-                    vim.fn.setreg("+", require("helpers.buffer").code_block())
+                    vim.fn.setreg("+", require("lib.buffer").code_block())
                 end,
                 desc = "Copy Code: Slack",
                 mode = "v",

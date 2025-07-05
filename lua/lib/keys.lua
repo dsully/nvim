@@ -1,4 +1,4 @@
----@class helpers.keys
+---@class lib.keys
 local M = {}
 
 -- Wrapper around vim.keymap.set that will not create a keymap if a lazy.nvim key handler exists.

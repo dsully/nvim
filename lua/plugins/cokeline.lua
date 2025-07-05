@@ -5,7 +5,7 @@ return {
         local icons = defaults.icons
 
         local mappings = require("cokeline.mappings")
-        local map = require("helpers.keys").map
+        local map = require("lib.keys").map
 
         for i = 1, 9 do
                 -- stylua: ignore
