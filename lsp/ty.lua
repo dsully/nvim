@@ -19,5 +19,10 @@ return {
         "setup.cfg",
         "requirements.txt",
     },
+    settings = {
+        ty = {
+            diagnosticMode = "workspace",
+        },
+    },
     single_file_support = true,
 }
