@@ -5,6 +5,40 @@ return {
         "nvim-treesitter/nvim-treesitter",
         branch = "main",
         build = ":TSUpdate",
+        config = function()
+            require("nvim-treesitter").install({
+                "bash",
+                "css",
+                "diff",
+                "editorconfig",
+                "fish",
+                "git_config",
+                "gitcommit",
+                "gitignore",
+                "go",
+                "html",
+                "javascript",
+                "json",
+                "jsonc",
+                "just",
+                "lua",
+                "markdown",
+                "markdown_inline",
+                "nix",
+                "python",
+                "query",
+                "regex",
+                "rust",
+                "toml",
+                "typescript",
+                "vim",
+                "vimdoc",
+                "vimwiki",
+                "yaml",
+            })
+            require("nvim-treesitter").update()
+        end,
+
         init = function()
             local config = {
                 highlight = {
