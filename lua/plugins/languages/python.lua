@@ -19,13 +19,9 @@ return {
         cmd = { "UVInit", "UVRunFile", "UVRunSelection", "UVRunFunction" },
         ft = "python",
         opts = {
-            -- Auto-activate virtual environments when found
             auto_activate_venv = false,
-
-            -- Auto commands for directory changes
             auto_commands = true,
-
-            -- Integration with snacks picker
+            notify_activate_venv = false,
             picker_integration = true,
 
             -- Keymaps to register (set to false to disable)
@@ -41,16 +37,9 @@ return {
                 remove = true, -- Remove a package (<leader>xd)
                 sync = true, -- Sync packages (<leader>xc)
             },
-
-            -- Execution options
             execution = {
-                -- Python run command template
                 run_command = "uv run python",
-
-                -- Show output in notifications
                 notify_output = true,
-
-                -- Notification timeout in ms
                 notification_timeout = 10000,
             },
         },
