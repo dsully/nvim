@@ -225,8 +225,8 @@ return {
                             return { text = text:upper(), cursor = #text }
                         end,
                     }),
-                    ---@diagnostic disable-next-line: param-type-not-match
                     augend.case.new({
+                        ---@diagnostic disable-next-line: assign-type-mismatch
                         types = { "camelCase", "snake_case", "kebab-case", "PascalCase", "SCREAMING_SNAKE_CASE" },
                         cyclic = true,
                     }),
