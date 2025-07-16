@@ -268,10 +268,12 @@ local M = {
     LspSupportsMethod = "LspSupportsMethod",
 }
 
+---@alias Event vim.api.keyset.events | vim.api.keyset.events[]
+
 ---@alias EventOpts vim.api.keyset.create_autocmd
 ---@alias EventCallback string|(fun(args: vim.api.keyset.create_autocmd.callback_args): boolean?)
 
----@param event string | string[]
+---@param event Event
 ---@param callback EventCallback
 ---@param opts EventOpts?
 ---@return integer
@@ -296,7 +298,7 @@ end
 ---@return nil
 M.emit = function(event, opts)
     if M[event] then
-        vim.api.nvim_exec_autocmds(event, opts)
+        vim.api.nvim_exec_autocmds(event --[[@as vim.api.keyset.events]], opts)
     else
         Snacks.notify.error("Unknown event: " .. event)
     end

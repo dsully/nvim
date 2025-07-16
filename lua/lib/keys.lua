@@ -16,7 +16,7 @@ function M.safe_set(lhs, rhs, mode, opts)
     ---@param m string
     modes = vim.tbl_filter(function(m)
         return not (lazy_keys.have and lazy_keys:have(lhs, m))
-    end, modes)
+    end, modes --[[@as table<any,string>]])
 
     opts = opts or {}
 
