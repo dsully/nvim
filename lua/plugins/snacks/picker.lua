@@ -84,6 +84,16 @@ return {
                 },
                 reverse = false,
             },
+            ---@type snacks.picker.matcher.Config
+            matcher = {
+                fuzzy = false,
+                sort_empty = true,
+                filename_bonus = true,
+                file_pos = true,
+                cwd_bonus = true, -- give bonus for matching files in the cwd
+                frecency = true, -- frecency bonus
+                history_bonus = false, -- give more weight to chronological order
+            },
             ---@type snacks.picker.sources.Config?
             sources = {
                 files = {
