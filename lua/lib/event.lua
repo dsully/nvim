@@ -298,7 +298,7 @@ M.emit = function(event, opts)
     if M[event] then
         vim.api.nvim_exec_autocmds(event, opts)
     else
-        notify.error("Unknown event: " .. event)
+        Snacks.notify.error("Unknown event: " .. event)
     end
 end
 

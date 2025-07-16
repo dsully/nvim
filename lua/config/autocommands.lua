@@ -173,7 +173,7 @@ ev.on(ev.TextYankPost, function()
         local ok, error = pcall(vim.fn.setreg, "+", str)
 
         if not ok then
-            notify.error("Failed to copy to clipboard: " .. error)
+            Snacks.notify.error("Failed to copy to clipboard: " .. error)
             return
         end
     end
@@ -181,7 +181,7 @@ ev.on(ev.TextYankPost, function()
     local present, yank_data = pcall(vim.fn.getreg, '"')
 
     if not present then
-        notify.error('Failed to get content from register ": ' .. yank_data)
+        Snacks.notify.error('Failed to get content from register ": ' .. yank_data)
         return
     end
 

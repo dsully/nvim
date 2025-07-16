@@ -293,7 +293,7 @@ M.commands = function()
             if client then
                 vim.lsp.stop_client(client.id, true)
 
-                notify.info(("Restarting LSP %s for %s"):format(client.name, nvim.file.filename(bufnr)))
+                Snacks.notify.info(("Restarting LSP %s for %s"):format(client.name, nvim.file.filename(bufnr)))
             end
         end, { bufnr = vim.api.nvim_get_current_buf() })
 

@@ -74,7 +74,7 @@ M.read_toml = function(path)
     local parsed = toml.parse(M.read(path))
 
     if not parsed then
-        notify.error("Couldn't read " .. path)
+        Snacks.notify.error("Couldn't read " .. path)
         return {}
     end
 

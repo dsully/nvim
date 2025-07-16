@@ -18,7 +18,7 @@ return {
             local schema = context.get_buffer_schema(bufnr)
 
             if schema.name then
-                notify.info(schema.name)
+                Snacks.notify.info(schema.name)
             end
         end, "Show YAML schema", bufnr)
     end,
