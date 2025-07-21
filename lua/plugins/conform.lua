@@ -19,7 +19,7 @@ return {
             format_on_save = nil,
             formatters = {
                 bake = {
-                    command = "bake",
+                    command = "mbake",
                     args = { "format", "$FILENAME" },
                     stdin = false,
                 },
