@@ -33,6 +33,7 @@ return {
             },
             package_json = true, -- open dependencies from package.json
             plugin = true,
+            python_pep = true,
             rust = {
                 name = "rust",
                 filename = "Cargo.toml",
