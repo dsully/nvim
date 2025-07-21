@@ -17,7 +17,9 @@ vim.filetype.add({
     extension = {
         age = "age",
         conf = "conf",
-        gotmpl = "gotmpl",
+        gotmpl = function(filename, _)
+            return require("lib.file").template_type(filename, "gotmpl", "gotmpl")
+        end,
         jinja = "jinja",
         jinja2 = "jinja",
         pcf = "pkl",
