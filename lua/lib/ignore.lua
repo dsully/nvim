@@ -90,8 +90,8 @@ local function handle_rust(diagnostic, cursor_line, line)
     local indent = indentation(line)
     local attribute
 
-    if type(diagnostic.code) == "string" and diagnostic.code:match("^clippy::") then
-        attribute = indent .. "#[clippy(allow(" .. diagnostic.code .. "))]"
+    if diagnostic.source == "clippy" then
+        attribute = indent .. "#[allow(clippy::" .. diagnostic.code .. ")]"
     else
         attribute = indent .. "#[allow(" .. diagnostic.code .. ")]"
     end
