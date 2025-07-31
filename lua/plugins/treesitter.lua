@@ -12,7 +12,6 @@ return {
                 "diff",
                 "editorconfig",
                 "fish",
-                "ghostty",
                 "git_config",
                 "gitcommit",
                 "gitignore",
@@ -101,40 +100,6 @@ return {
                     end)
                 end
             end)
-
-            ev.on(ev.User, function()
-                local root = require("lazy.core.config").options.root
-                local parsers = require("nvim-treesitter.parsers")
-
-                ---@type ParserInfo
-                parsers.ghostty = {
-                    install_info = {
-                        path = vim.fs.joinpath(root, "tree-sitter-ghostty"),
-                        files = { "src/parser.c" },
-                        generate_from_json = true,
-                        queries = vim.fs.joinpath("queries", "ghostty"),
-                    } --[[@as InstallInfo]],
-                    filetype = "ghostty",
-                    maintainers = {},
-                    tier = 3,
-                }
-
-                ---@type ParserInfo
-                parsers.pyproject = {
-                    install_info = {
-                        -- url = "https://github.com/dsully/tree-sitter-pyproject",
-                        path = vim.fs.abspath("~/dev/home/tree-sitter-pyproject"),
-                        files = { "src/parser.c", "src/scanner.c" },
-                        revision = "",
-                    } --[[@as InstallInfo]],
-                    filetype = "pyproject",
-                    maintainers = {},
-                    tier = 3,
-                }
-
-                -- vim.treesitter.language.add("pyproject")
-                -- vim.treesitter.language.register("toml", "pyproject")
-            end, { pattern = "TSUpdate" })
         end,
         lazy = false,
         keys = {
@@ -173,7 +138,4 @@ return {
         event = ev.LazyFile,
         opts = {},
     },
-
-    -- Only required for the tree-sitter queries.
-    { "bezhermoso/tree-sitter-ghostty" },
 }
