@@ -5,12 +5,18 @@ return {
     settings = {
         ["harper-ls"] = {
             codeActions = {
-                forceStable = true,
+                ForceStable = true,
             },
-            -- typos handles spell checking
             linters = {
-                sentence_capitalization = false,
-                spell_check = false,
+                -- Dashes = false,
+                -- LongSentences = false,
+                -- Matcher = false, -- e.g. deps to dependencies
+                -- Spaces = false,
+                SpellCheck = false,
+                -- ToDoHyphen = false,
+            },
+            markdown = {
+                IgnoreLinkTitle = true,
             },
             userDictPath = nvim.file.xdg_config("/harper/dict.txt"),
         },
