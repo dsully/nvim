@@ -4,14 +4,6 @@ return {
         "Saecki/crates.nvim",
         event = "BufReadPost Cargo.toml",
         opts = {
-            completion = {
-                cmp = {
-                    enabled = false,
-                },
-                crates = {
-                    enabled = true,
-                },
-            },
             lsp = {
                 actions = true,
                 completion = true,
