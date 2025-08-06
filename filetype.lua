@@ -49,6 +49,12 @@ vim.filetype.add({
         [".*/templates/.*%.ya?ml"] = "helm",
         [".*/themes?/.*%.theme"] = "fish",
         [".*/zed/settings.json"] = "jsonc",
+        [".*%.log"] = function()
+            return "log"
+        end,
+        [".*%.log%.txt"] = function()
+            return "log"
+        end,
         [".yml$"] = function(path)
             return path:find("compose") and "yaml.docker-compose" or "yaml"
         end,

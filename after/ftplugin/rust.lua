@@ -11,7 +11,7 @@ if vim.fn.executable("codesort") == 1 then
             "--around",
             tostring(vim.api.nvim_win_get_cursor(0)[1]),
             "--detect",
-            nvim.file.filename()
+            nvim.file.filename(),
         }, {
             stdin = vim.api.nvim_buf_get_lines(bufnr, 0, -1, false),
         }):wait()
