@@ -6,7 +6,7 @@ return {
         branch = "main",
         build = ":TSUpdate",
         config = function()
-            require("nvim-treesitter").install({
+            require("nvim-treesitter").update({
                 "bash",
                 "css",
                 "diff",
@@ -37,9 +37,7 @@ return {
                 "vimwiki",
                 "yaml",
             })
-            require("nvim-treesitter").update()
         end,
-
         init = function()
             local config = {
                 highlight = {
@@ -83,6 +81,8 @@ return {
                     return
                 end
 
+                pcall(vim.treesitter.start)
+
                 local treesitter = require("nvim-treesitter")
                 local available = treesitter.get_available()
                 local language = vim.treesitter.language.get_lang(filetype)
@@ -90,7 +90,7 @@ return {
                 if vim.list_contains(available, language) then
                     --
                     treesitter.install(language):await(function()
-                        vim.wo.foldexpr = "v:lua.vim.treesitter.foldexpr()"
+                        -- vim.wo.foldexpr = "v:lua.vim.treesitter.foldexpr()"
 
                         if not vim.list_contains(config.indent.skip, filetype) then
                             vim.bo.indentexpr = "v:lua.require'nvim-treesitter'.indentexpr()"
