@@ -102,7 +102,6 @@ return {
                     gitdir = nvim.file.xdg_config("/repos/dotfiles"),
                 },
             },
-            _new_sign_calc = true,
             _refresh_staged_on_update = true,
         },
     },

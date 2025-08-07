@@ -70,6 +70,22 @@ end
 ---@param cursor_line integer
 ---@param line string
 ---@return boolean
+local function handle_fish(diagnostic, cursor_line, line)
+    if line:match("%s*#%s@fish%-lsp%-disable%-next%-line") then
+        vim.notify("Line already has diagnostic disable comment", vim.log.levels.WARN)
+        return false
+    end
+
+    local indent = indentation(line)
+    local ignore_comment = indent .. "# @fish-lsp-disable-next-line " .. diagnostic.code
+
+    return replace(cursor_line, 0, ignore_comment, diagnostic.code)
+end
+
+---@param diagnostic vim.Diagnostic
+---@param cursor_line integer
+---@param line string
+---@return boolean
 local function handle_lua(diagnostic, cursor_line, line)
     if line:match("%s*%-%-%-@diagnostic%s+disable%-next%-line") then
         vim.notify("Line already has diagnostic disable comment", vim.log.levels.WARN)
@@ -108,6 +124,7 @@ local function handle_rust(diagnostic, cursor_line, line)
 end
 
 local handlers = {
+    ["fish-lsp"] = handle_fish,
     ["rust-analyzer"] = handle_rust,
     basedpyright = handle_python_type,
     emmylua = handle_lua,
@@ -116,6 +133,7 @@ local handlers = {
     ruff = handle_python_lint,
     rustc = handle_rust,
     ty = handle_python_type,
+    zubanls = handle_python_type
 }
 
 function M.ignore()
@@ -126,6 +144,9 @@ function M.ignore()
         return
     end
 
+    -- TODO: group multiple diagnostics from the same source.
+    -- for path in Path("diags/incidents").iterdir():
+    --   log: dict[str, Any] = json.loads(path.read_text())  # pyright: ignore[reportAny]
     local source = diagnostic.source
 
     if source then

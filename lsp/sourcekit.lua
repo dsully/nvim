@@ -3,8 +3,8 @@
 return {
     cmd = { "sourcekit-lsp" },
     filetypes = {
-        -- "c",
-        -- "cpp",
+        "c",
+        "cpp",
         "objc",
         "objcpp",
         "swift",

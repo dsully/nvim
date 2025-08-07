@@ -7,7 +7,9 @@ return {
     ---@param client vim.lsp.Client
     on_attach = function(client)
         if client.server_capabilities then
+            client.server_capabilities.documentFormattingProvider = false
             client.server_capabilities.documentHighlightProvider = false
+            client.server_capabilities.documentRangeFormattingProvider = false
         end
     end,
     root_markers = {
