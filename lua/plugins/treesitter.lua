@@ -13,6 +13,7 @@ return {
                 "editorconfig",
                 "fish",
                 "git_config",
+                "git_rebase",
                 "gitcommit",
                 "gitignore",
                 "go",
@@ -119,7 +120,9 @@ return {
         opts = {},
     },
     {
+        -- Broken right now on nightly / interaction with snacks indent scope.
         "calops/hmts.nvim",
+        cond = false,
         ft = "nix",
     },
     {

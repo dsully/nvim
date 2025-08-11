@@ -127,6 +127,7 @@ local handlers = {
     ["fish-lsp"] = handle_fish,
     ["rust-analyzer"] = handle_rust,
     basedpyright = handle_python_type,
+    clippy = handle_rust,
     emmylua = handle_lua,
     jedi = handle_python_type,
     pyrefly = handle_python_type,
