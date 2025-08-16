@@ -105,6 +105,18 @@ return {
             vim.lsp.inlay_hint.enable(false)
         end)
 
+        nvim.lsp.on_supports_method(methods.textDocument_semanticTokens_full, function()
+            Snacks.toggle({
+                name = "Semantic Tokens",
+                get = function()
+                    return vim.lsp.semantic_tokens.is_enabled()
+                end,
+                set = function(state)
+                    vim.lsp.semantic_tokens.enable(not state)
+                end,
+            }):map("<space>tS")
+        end)
+
         nvim.lsp.on_supports_method(methods.textDocument_codeLens, function()
             --
             ev.on({ ev.BufEnter, ev.CursorHold, ev.InsertLeave }, function()
