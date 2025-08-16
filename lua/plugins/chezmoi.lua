@@ -40,7 +40,7 @@ return {
             M.collect(function(targets)
                 --
                 ev.on(ev.BufWritePost, function(args)
-                    notify.info("Adding changes to: " .. args.file, { title = "chezmoi" })
+                    Snacks.notify.info("Adding changes to: " .. args.file, { title = "chezmoi" })
 
                     vim.system({ "chezmoi", "add", args.file }, { detach = true })
                 end, {
@@ -67,7 +67,6 @@ return {
                         })
                     end
 
-                    ---@type snacks.picker.Config
                     Snacks.picker.pick({
                         confirm = function(picker, item)
                             picker:close()

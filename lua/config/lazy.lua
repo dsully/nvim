@@ -232,8 +232,10 @@ function M.init()
                 ---@type string[]
                 local matches = {}
 
-                ---@type LazyPlugin[]
-                for _, plugin in ipairs(require("lazy").plugins()) do
+                for
+                    _,
+                    plugin --[[@as LazyPlugin[] ]]
+                in ipairs(require("lazy").plugins()) do
                     if vim.startswith(plugin.name, prefix) then
                         matches[#matches + 1] = plugin.name
                     end

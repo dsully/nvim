@@ -15,7 +15,7 @@ return {
         local age = config.age
 
         if not age or not age.identity then
-            notify.error("Could not find [age] identity in chezmoi.toml")
+            Snacks.notify.error("Could not find [age] identity in chezmoi.toml")
             return
         end
 

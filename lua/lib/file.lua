@@ -119,7 +119,7 @@ M.git_root = function(quiet)
     local obj = vim.system({ "git", "rev-parse", "--show-toplevel" }, { text = true }):wait()
 
     if obj.code ~= 0 and not quiet then
-        notify.error("Not in a Git repository!", { icon = "󰏋" })
+        Snacks.notify.error("Not in a Git repository!", { icon = "󰏋" })
         return
     end
 
