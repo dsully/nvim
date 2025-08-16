@@ -11,12 +11,13 @@ return {
         highlights = {
             RenderMarkdownCode = { bg = colors.black.base },
         },
-        ---@module "render-markdown"
         ---@type render.md.UserConfig
         opts = {
-            ---@type render.md.UserCode
+            ---@type render.md.code.UserConfig
             code = {
                 border = "none",
+                conceal_delimiters = false,
+                language = false,
                 language_pad = 2,
                 left_pad = 2,
                 min_width = 45,
