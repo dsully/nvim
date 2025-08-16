@@ -80,6 +80,7 @@ return {
             { "<leader>f", group = "Find" },
             { "<leader>g", group = "Git", mode = { "n", "v" } },
             { "<leader>gh", group = "GitHub", mode = { "n", "v" } },
+            { "<leader>gm", group = "Merge", mode = { "n", "v" } },
             { "<leader>n", group = "Notifications" },
             { "<leader>r", group = "Rules" },
             { "<leader>s", group = "Substitute" },
@@ -171,12 +172,6 @@ return {
             { "<A-k>", "<Esc>:m .-2<cr>==gi", desc = "Move line up (insert mode)", mode = "i" },
             { "<A-j>", ":m '>+1<cr>gv=gv", desc = "Move block down", mode = "v" },
             { "<A-k>", ":m '<-2<cr>gv=gv", desc = "Move block up", mode = "v" },
-
-            -- Git conflict mappings
-            { "<leader>mc", "^[<>=]", desc = "Find Conflicts" },
-            { "<leader>gcu", "dd/|||<CR>0v/>>><CR>$x", desc = "Git Conflict Choose Upstream" },
-            { "<leader>gcb", "0v/|||<CR>$x/====<CR>0v/>>><CR>$x", desc = "Git Conflict Choose Base" },
-            { "<leader>gcs", "0v/====<CR>$x/>>><CR>dd", desc = "Git Conflict Choose Stashed" },
 
             -- Space mappings
             {
