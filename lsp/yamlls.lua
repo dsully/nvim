@@ -24,6 +24,13 @@ return {
     end,
     --- @param client vim.lsp.Client
     on_init = function(client)
+        --- Since formatting is disabled by default if you check `client:supports_method('textDocument/formatting')`
+        --- during `LspAttach` it will return `false`. This hack sets the capability to `true` to facilitate
+        --- autocmd's which check this capability
+        if client.server_capabilities then
+            client.server_capabilities.documentFormattingProvider = true
+        end
+
         local schemas = nvim.file.read(nvim.file.xdg_config("schemas.json")) or "{}"
 
         ---@diagnostic disable-next-line: inject-field, need-check-nil
