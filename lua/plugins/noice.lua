@@ -118,6 +118,7 @@ return {
                         { find = "%d+ lines >ed" },
                         { find = "%d+ lines <ed" },
                         { find = "%d+ lines filtered" },
+                        { find = "Hunk %d+ of" },
 
                         -- Ignored swap file.
                         { find = "W325:" },
