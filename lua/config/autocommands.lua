@@ -1,5 +1,6 @@
-ev.on({ ev.FocusGained, ev.TermClose, ev.TermLeave }, function()
-    if vim.o.buftype ~= defaults.ignored.buffer_types then
+ev.on({ ev.BufEnter, ev.BufWinEnter, ev.BufWinLeave, ev.FocusGained, ev.TermClose, ev.TermLeave }, function()
+    --
+    if vim.o.buftype ~= defaults.ignored.buffer_types and vim.api.nvim_get_mode().mode ~= "c" then
         vim.cmd.checktime()
     end
 end, {
