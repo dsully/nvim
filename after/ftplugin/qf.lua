@@ -10,6 +10,4 @@ vim.o.number = false
 vim.o.relativenumber = false
 vim.o.winhighlight = "CursorLine:Visual"
 
-vim.keymap.set("n", "q", function()
-    vim.api.nvim_win_close(0, false)
-end, { buffer = 0, desc = "Close QuickFix list" })
+vim.keymap.set("n", "q", vim.cmd.close, { buffer = 0, desc = "Close QuickFix list" })
