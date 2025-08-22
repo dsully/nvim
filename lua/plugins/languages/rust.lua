@@ -94,6 +94,8 @@ return {
                                 buildScripts = {
                                     enable = true,
                                 },
+                                -- Build in sub directory to prevent locking
+                                targetDir = true,
                             },
                             check = {
                                 command = "clippy",
