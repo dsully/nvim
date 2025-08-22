@@ -73,6 +73,8 @@ local M = {
     CursorMoved = "CursorMoved",
     --- cursor was moved in Insert mode
     CursorMovedI = "CursorMovedI",
+    --- After diagnostics have changed.
+    DiagnosticChanged = "DiagnosticChanged",
     --- diffs have been updated
     DiffUpdated = "DiffUpdated",
     --- directory changed
