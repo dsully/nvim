@@ -13,7 +13,7 @@ return {
         }) end, desc = "Buffers" },
         { "<leader>fC", function() Snacks.picker.git_log({ current_file = true }) end, desc = "Commits" },
         { "<leader>fD", function() Snacks.picker.diagnostics_buffer({ format = "file" }) end, desc = "Diagnostics (Buffer)" },
-        { "<leader>fb", function() Snacks.picker.explorer() end, desc = "Browse" },
+        { "<leader>fb", function() Snacks.picker.explorer({ auto_close = true }) end, desc = "Browse" },
         { "<leader>fc", function() Snacks.picker.git_log() end, desc = "Commits" },
         { "<leader>fd", function() Snacks.picker.diagnostics({ format = "file" }) end, desc = "Diagnostics" },
         { "<leader>fe", function() Snacks.picker.icons({ icon_sources = { "emoji" }}) end, desc = "Emoji" },
