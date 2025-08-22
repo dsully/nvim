@@ -59,7 +59,7 @@ return {
                     vim.g.linting = state
                     vim.cmd.doautocmd(ev.OptionSet)
                 end,
-            } --[[@as snacks.toggle.Opts]]):map("<space>tl")
+            }):map("<space>tl")
         end)
 
         ev.on({ ev.BufReadPost, ev.BufWritePost, ev.InsertLeave, ev.OptionSet }, function(args)

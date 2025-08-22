@@ -358,4 +358,44 @@ return {
             snippetDir = vim.fn.stdpath("config") .. "/snippets",
         },
     },
+    {
+        "Saghen/blink.indent",
+        event = ev.LazyFile,
+        highlights = {
+            BlinkIndent = { fg = colors.blue.bright },
+            BlinkIndentScope = { fg = colors.blue.bright },
+        },
+        init = function()
+            vim.g.indent_guide = true
+        end,
+        opts = function()
+            Snacks.toggle({
+                name = "Indent",
+                get = function()
+                    return vim.g.indent_guide
+                end,
+                set = require("blink.indent").toggle,
+            }):map("<space>tI")
+
+            --- @type blink.indent.Config
+            return {
+                blocked = {
+                    buftypes = defaults.ignored.buffer_types,
+                    filetypes = defaults.ignored.file_types,
+                },
+                static = {
+                    enabled = false,
+                },
+                scope = {
+                    enabled = true,
+                    char = "│",
+                    priority = 1024,
+                    highlights = { "BlinkIndent" },
+                    underline = {
+                        enabled = false,
+                    },
+                },
+            }
+        end,
+    },
 }

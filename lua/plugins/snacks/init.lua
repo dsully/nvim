@@ -17,7 +17,6 @@ return {
         ev.on(ev.User, function()
             -- Toggle mappings
             snacks.toggle.diagnostics():map("<space>td")
-            snacks.toggle.indent():map("<leader>tI")
             snacks.toggle.inlay_hints():map("<space>ti")
             snacks.toggle.line_number():map("<space>tn")
             snacks.toggle.treesitter():map("<space>tt")
@@ -42,8 +41,6 @@ return {
         hl.apply({
             SnacksNormal = { link = "Normal" },
             SnacksBackdrop = { link = "Normal" },
-            SnacksIndent = { fg = colors.blue.bright },
-            SnacksIndentScope = { fg = colors.blue.bright },
 
             SnacksNotifierBorderDebug = { fg = colors.white.bright },
             SnacksNotifierBorderError = { fg = colors.white.bright },
@@ -95,14 +92,8 @@ return {
         image = {
             enabled = true,
         },
-        ---@type snacks.indent.Config
         indent = {
-            animate = {
-                enabled = false,
-            },
-            indent = {
-                enabled = false,
-            },
+            enabled = false,
         },
         input = {
             enabled = true,
@@ -118,7 +109,7 @@ return {
             },
         },
         scope = {
-            enabled = true,
+            enabled = false,
         },
         ---@type snacks.statuscolumn.Config
         statuscolumn = {
