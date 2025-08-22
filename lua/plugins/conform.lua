@@ -18,14 +18,9 @@ return {
             format_after_save = nil,
             format_on_save = nil,
             formatters = {
-                bake = {
-                    command = "mbake",
-                    args = { "format", "$FILENAME" },
-                    stdin = false,
-                },
                 caddy = {
                     command = "caddy",
-                    args = { "fmt" },
+                    args = { "fmt", "-" },
                     stdin = true,
                 },
                 injected = {
