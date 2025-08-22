@@ -49,11 +49,7 @@ ev.on(ev.FileType, function()
     }
 
     --- Fold the output of vim.lsp config.
-    if vim.bo.filetype == "checkhealth" then
-        vim.opt_local.foldenable = true
-        vim.opt_local.foldlevel = 0
-        vim.opt_local.foldmethod = "indent"
-    else
+    if vim.bo.filetype ~= "checkhealth" then
         vim.opt_local.foldenable = false
     end
 end, {
