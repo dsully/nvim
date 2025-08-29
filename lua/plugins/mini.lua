@@ -1,6 +1,6 @@
 ---@type LazySpec[]
 return {
-    { "echasnovski/mini.nvim" },
+    { "nvim-mini/mini.nvim" },
     {
         -- Better Around/Inside text-objects
         --
@@ -10,7 +10,7 @@ return {
         --  - ci'  - Change Inside [']quote
         --
         -- https://www.reddit.com/r/neovim/comments/10qmicv/help_understanding_miniai_custom_textobjects/
-        "echasnovski/mini.ai",
+        "nvim-mini/mini.ai",
         -- cond = false,
         config = function(_, opts)
             --
@@ -104,7 +104,7 @@ return {
         virtual = true,
     },
     {
-        "echasnovski/mini.align",
+        "nvim-mini/mini.align",
         keys = {
             { "g=", desc = "mini.align: align", mode = { "n", "v" } },
             { "g+", desc = "mini.align: align with preview", mode = { "n", "" } },
@@ -119,7 +119,7 @@ return {
     },
     {
         -- Use [ and ] to move between various things.
-        "echasnovski/mini.bracketed",
+        "nvim-mini/mini.bracketed",
         keys = {
             { "[c", desc = "comment previous " },
             { "]c", desc = "comment next" },
@@ -144,7 +144,7 @@ return {
         virtual = true,
     },
     {
-        "echasnovski/mini.hipatterns",
+        "nvim-mini/mini.hipatterns",
         event = ev.LazyFile,
         opts = function()
             local vtext = defaults.icons.misc.circle_filled_large
@@ -240,7 +240,7 @@ return {
         virtual = true,
     },
     {
-        "echasnovski/mini.icons",
+        "nvim-mini/mini.icons",
         init = function()
             hl.apply({
                 MiniIconsAzure = { fg = colors.blue.bright },
@@ -325,7 +325,7 @@ return {
         -- sh}   - Surround Highlight [}]
         --
         -- vim.keymap.set({ "n", "v" }, "s", "<Nop>")
-        "echasnovski/mini.surround",
+        "nvim-mini/mini.surround",
         -- stylua: ignore
         init = function()
 
