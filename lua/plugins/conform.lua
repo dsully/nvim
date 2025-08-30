@@ -18,6 +18,9 @@ return {
             format_after_save = nil,
             format_on_save = nil,
             formatters = {
+                bake = {
+                    command = "mbake",
+                },
                 caddy = {
                     command = "caddy",
                     args = { "fmt", "-" },
