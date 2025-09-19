@@ -335,6 +335,7 @@ return {
             "sources.default",
             "sources.per_filetype",
         },
+        version = "v1.*",
     },
     { "bydlw98/blink-cmp-env" },
     { "disrupted/blink-cmp-conventional-commits" },

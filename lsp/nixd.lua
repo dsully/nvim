@@ -14,6 +14,7 @@ return {
     end,
     root_markers = {
         "default.nix",
+        "devshell.nix",
         "flake.nix",
         "shell.nix",
     },

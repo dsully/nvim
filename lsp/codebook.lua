@@ -12,7 +12,6 @@ return {
         "python",
         "rust",
         "toml",
-        "text",
         "typescript",
         "typescriptreact",
     },

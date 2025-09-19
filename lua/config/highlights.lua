@@ -689,4 +689,8 @@ M.languages = {
     },
 }
 
+-- Emmylua highlights `nil` as keyword+readonly, change this to constant.builtin
+-- to match treesitter
+vim.api.nvim_set_hl(0, "@lsp.typemod.keyword.readonly", { link = "@constant.builtin" })
+
 return M

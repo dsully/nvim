@@ -85,6 +85,8 @@ return {
         nvim.lsp.on_dynamic_capability(function() end)
         nvim.lsp.commands()
 
+        vim.lsp.on_type_formatting.enable()
+
         nvim.lsp.on_supports_method(methods.textDocument_documentColor, function(_, buffer)
             vim.lsp.document_color.enable(true, buffer)
 

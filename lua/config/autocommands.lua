@@ -1,5 +1,6 @@
 ev.on({ ev.BufEnter, ev.BufWinEnter, ev.BufWinLeave, ev.FocusGained, ev.TermClose, ev.TermLeave }, function()
     --
+    -- if vim.buf.is_regular(buffer) then
     if vim.o.buftype ~= defaults.ignored.buffer_types and vim.api.nvim_get_mode().mode ~= "c" then
         vim.cmd.checktime()
     end
@@ -13,6 +14,34 @@ ev.on(ev.BufEnter, function(event)
     end
 end, {
     desc = "Close quick fix window if the file containing it was closed.",
+})
+
+ev.on({ ev.BufEnter, ev.ModeChanged }, function()
+    -- Equivalent to modicator but fast
+    local mode_hl_groups = {
+        [""] = "ModeVisual",
+        v = "ModeVisual",
+        V = "ModeVisual",
+        ["\22"] = "ModeVisual",
+        n = "ModeNormal",
+        no = "ModeNormal",
+        i = "ModeInsert",
+        c = "ModeCommand",
+        s = "ModeSelect",
+        S = "ModeSelect",
+        R = "ModeReplace",
+        t = "ModeTerminal",
+        nt = "ModeTerminal",
+    }
+
+    local mode = vim.api.nvim_get_mode().mode
+    local mode_hl_group = mode_hl_groups[mode] or "ModeNormal"
+
+    local hl = vim.api.nvim_get_hl(0, { name = mode_hl_group, link = false })
+
+    vim.api.nvim_set_hl(0, "CursorLineNr", vim.tbl_extend("force", { bold = true }, hl))
+end, {
+    desc = "Set the current line's color based on the current mode",
 })
 
 ev.on(ev.QuitPre, function()

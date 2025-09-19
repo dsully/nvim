@@ -80,8 +80,22 @@ return {
         },
         opts = function()
             local adapter = vim.env.CODECOMPANION_ADAPTER or "anthropic"
+            local model = vim.env.CODECOMPANION_MODEL or "claude-sonnet-4-20250514"
 
+            ---@module "codecompanion"
+            ---@type CodeCompanion.Config
             return {
+                adapters = {
+                    adapter = function()
+                        return require("codecompanion.adapters").extend("anthropic", {
+                            schema = {
+                                extended_thinking = {
+                                    default = false,
+                                },
+                            },
+                        })
+                    end,
+                },
                 display = {
                     action_palette = {
                         provider = "default",
@@ -127,6 +141,11 @@ return {
                         },
                     },
                 },
+                memory = {
+                    opts = {
+                        chat = { enabled = true },
+                    },
+                },
                 prompt_library = {
                     ["Generate a Commit Message"] = {
                         opts = {
@@ -146,9 +165,11 @@ return {
                 strategies = {
                     agent = {
                         adapter = adapter,
+                        model = model,
                     },
                     chat = {
                         adapter = adapter,
+                        model = model,
                         slash_commands = {
                             buffer = { opts = { provider = "snacks" } },
                             file = { opts = { provider = "snacks" } },
@@ -158,6 +179,7 @@ return {
                     },
                     inline = {
                         adapter = adapter,
+                        model = model,
                     },
                 },
             }
