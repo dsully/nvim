@@ -388,9 +388,9 @@
       name: (identifier) @constructor)))
   (#any-of? @constructor "__new__" "__init__"))
 
-((attribute
-  attribute: (identifier) @field)
-  (#vim-match? @field "^([A-Z])@!.*$"))
+; ((attribute
+;   attribute: (identifier) @field)
+;   (#vim-match? @field "^([A-Z])@!.*$"))
 
 ; Regex from the `re` module
 (call
