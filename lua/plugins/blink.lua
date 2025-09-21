@@ -17,7 +17,7 @@ end, {
 return {
     {
         "Saghen/blink.cmp",
-        build = "nix run --accept-flake-config .#build-plugin",
+        build = "cargo build --release",
         cmd = {
             "BlinkCmp",
         },
@@ -61,7 +61,7 @@ return {
             completion = {
                 accept = {
                     auto_brackets = {
-                        enabled = true,
+                        enabled = false,
                     },
                 },
                 ---@type blink.cmp.CompletionDocumentationConfig
@@ -335,7 +335,6 @@ return {
             "sources.default",
             "sources.per_filetype",
         },
-        version = "v1.*",
     },
     { "bydlw98/blink-cmp-env" },
     { "disrupted/blink-cmp-conventional-commits" },
