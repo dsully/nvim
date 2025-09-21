@@ -1,12 +1,13 @@
 -- Custom file types
 vim.filetype.add({
     filename = {
+        [".duckdbrc"] = "sql",
         [".envrc"] = "direnv",
         [".flake8"] = "ini",
         [".rgignore"] = "gitignore",
         ["Brewfile"] = "brewfile",
         ["Caddyfile"] = "caddy",
-        ["Chart.yaml"] = "helm",
+        ["Chart.yaml"] = "yaml.helm-chartfile",
         ["config.custom"] = "sshconfig",
         ["PklProject"] = "pkl",
         ["direnvrc"] = "direnv",
@@ -45,9 +46,6 @@ vim.filetype.add({
     pattern = {
         [".*/%.github[%w/]+workflows[%w/]+.*%.ya?ml"] = "yaml.github",
         [".*/layouts/.*%.html"] = "gohtmltmpl",
-        [".*/templates/.*%.tpl"] = "helm",
-        [".*/templates/.*%.ya?ml"] = "helm",
-        [".*/themes?/.*%.theme"] = "fish",
         [".*/zed/settings.json"] = "jsonc",
         [".*%.log"] = function()
             return "log"

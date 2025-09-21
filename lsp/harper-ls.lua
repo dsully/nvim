@@ -1,7 +1,7 @@
 ---@type vim.lsp.Config
 return {
     cmd = { "harper-ls", "--stdio" },
-    filetypes = { "gitcommit", "markdown", "text" },
+    filetypes = { "gitcommit", "markdown" },
     settings = {
         ["harper-ls"] = {
             codeActions = {

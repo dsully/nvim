@@ -18,7 +18,7 @@ return {
         end,
     },
     init_options = {
-        provideFormatter = true,
+        provideFormatter = false,
     },
     --- @param client vim.lsp.Client
     on_init = function(client)
@@ -34,7 +34,7 @@ return {
     settings = {
         json = {
             format = {
-                enable = true,
+                enable = false,
             },
             schemas = {},
             validate = {
