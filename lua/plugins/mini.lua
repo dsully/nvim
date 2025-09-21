@@ -1,3 +1,29 @@
+---@class MiniHipatterns.MatchData
+---@field full_match string String with full pattern match
+---@field line integer Match line number (1-indexed)
+---@field from_col integer Match starting byte column (1-indexed)
+---@field to_col integer Match ending byte column (1-indexed, inclusive)
+---@field hl_group? string Highlight group value (available in extmark_opts function)
+
+---@alias MiniHipatterns.Pattern string|string[]|fun(buf_id: integer): string?
+
+---@alias MiniHipatterns.ExtmarkOpts table|fun(buf_id: integer, match: string, data: MiniHipatterns.MatchData): MiniHipatterns.MatchData?
+
+---@class MiniHipatterns.Highlighter
+---@field pattern MiniHipatterns.Pattern Lua pattern to highlight. Can be string, callable returning string, or array of those
+---@field group string|fun(buf_id: integer, match: string, data: MiniHipatterns.MatchData): string?
+---@field extmark_opts? MiniHipatterns.ExtmarkOpts Optional extra options for nvim_buf_set_extmark()
+
+---@class ExtmarkOpts
+---@field end_row integer?
+---@field end_col integer?
+---@field hl_group string?
+---@field priority integer?
+---@field [string] any Additional options for nvim_buf_set_extmark()
+---
+
+------@field group string|MiniHipatterns.GroupFunction Name of highlight group to use. Can be string or callable returning string
+
 ---@type LazySpec[]
 return {
     { "nvim-mini/mini.nvim" },
@@ -152,6 +178,7 @@ return {
             local mini_hipatterns = require("mini.hipatterns")
             local compute_hex_color_group = mini_hipatterns.compute_hex_color_group
 
+            ---@param data MiniHipatterns.MatchData
             local extmark_vtext = function(_, _, data)
                 return {
                     priority = 2000,
@@ -160,17 +187,19 @@ return {
                 }
             end
 
+            ---@type MiniHipatterns.Highlighter
             local hex = {
-                pattern = "[ =:'\"]()#?%x%x%x%x%x%x%f[%X]",
-                group = function(_, match)
+                pattern = "[ =:'\"]()#?%x%x%x%x%x%x%f[%W]",
+                group = function(_buf, match, _data)
                     local color = vim.startswith(match, "#") and match or "#" .. match
                     return compute_hex_color_group(color, "bg")
                 end,
                 extmark_opts = extmark_opts,
             }
 
+            ---@type MiniHipatterns.Highlighter
             local shorthand = {
-                pattern = "()#%x%x%x()%f[^%x%w]",
+                pattern = "()#%x%x%x()%f[%W]",
                 group = function(_, _, data)
                     local match = data.full_match
                     local r, g, b = match:byte(2), match:byte(3), match:byte(4)
@@ -180,10 +209,12 @@ return {
                 extmark_opts = extmark_opts,
             }
 
+            ---@type MiniHipatterns.Highlighter
             local separated = {
-                pattern = "%[()%d+,%s*%d+,%s*%d+()%]",
+                pattern = "%f[%[]%[()%d+,%s*%d+,%s*%d+()%]%f[%]]",
                 group = function(_, matched)
                     local r, g, b = matched:match("(%d+),%s*(%d+),%s*(%d+)")
+
                     -- Fix: Use string.format instead of matched.format
                     local hex_color = string.format("#%02X%02X%02X", r, g, b)
                     return compute_hex_color_group(hex_color, "fg")
@@ -191,6 +222,7 @@ return {
                 extmark_opts = extmark_vtext,
             }
 
+            ---@type MiniHipatterns.Highlighter
             local nvim_hl_colors = {
                 pattern = {
                     "%f[%w]()M%.colors%.[%w_%.]+()%f[%W]",
@@ -218,7 +250,10 @@ return {
                     end
 
                     local color = vim.tbl_get(colors, unpack(parts))
-                    return type(color) == "string" and require("lib.highlights").group({ fg = color })
+
+                    if type(color) == "string" then
+                        return require("lib.highlights").group({ fg = color })
+                    end
                 end,
                 extmark_opts = extmark_vtext,
             }
