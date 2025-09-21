@@ -16,7 +16,7 @@ return {
             ---@type render.md.code.UserConfig
             code = {
                 border = "none",
-                conceal_delimiters = false,
+                conceal_delimiters = true,
                 language = false,
                 language_pad = 2,
                 left_pad = 2,
@@ -27,11 +27,11 @@ return {
             },
             completions = {
                 lsp = {
-                    enabled = false,
+                    enabled = true,
                 },
             },
             -- Disable by default. Use <space>tm to toggle on.
-            enabled = false,
+            enabled = true,
             heading = {
                 position = "inline",
                 sign = false,

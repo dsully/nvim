@@ -44,6 +44,7 @@ return {
                 direnv = { "shellharden", "shfmt" },
                 fish = { "fish_indent" },
                 go = { "gofumpt" },
+                json = { "jq" },
                 lua = { "stylua" },
                 make = { "bake" },
                 markdown = function(bufnr)
