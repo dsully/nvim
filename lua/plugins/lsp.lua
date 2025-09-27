@@ -1,6 +1,6 @@
 ---@type LazySpec
 return {
-    "lsp",
+    "neovim/nvim-lspconfig",
     event = ev.VeryLazy,
     config = function()
         local methods = vim.lsp.protocol.Methods
@@ -164,7 +164,41 @@ return {
             root_markers = { ".git" },
         } --[[@as vim.lsp.Config]])
 
-        vim.lsp.enable(vim.iter(vim.fs.dir(nvim.file.xdg_config("nvim/lsp"))):map(nvim.file.stem):totable())
+        local configured = {
+            "codebook",
+            "config-lsp",
+            "dockerls",
+            "emmylua_ls",
+            "fish-ls",
+            "gopls",
+            "harper_ls",
+            "helm_ls",
+            "superhtml",
+            "jinja_lsp",
+            "jsonls",
+            "just-lsp",
+            "lemminx",
+            "marksman",
+            "nil_ls",
+            "nixd",
+            "pkl",
+            "pyrefly",
+            "ruff",
+            "sourcekit",
+            "systemd_ls",
+            "tombi",
+            "ts_query_ls",
+            "tsgo",
+            "ty",
+            "yamlls",
+            "zls",
+        }
+
+        vim.iter(configured):each(vim.schedule_wrap(function(server_name)
+            -- if disabled[server_name] then
+            --     return
+            -- end
+            vim.lsp.enable(server_name)
+        end))
     end,
-    virtual = true,
 }

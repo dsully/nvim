@@ -281,7 +281,7 @@ M.commands = function()
     end, { desc = "Show LSP Code Actions" })
 
     nvim.command("LspLog", function()
-        vim.cmd.tabnew(vim.lsp.get_log_path())
+        vim.cmd.tabnew(vim.lsp.log.get_filename())
     end, {
         desc = "Opens the Nvim LSP client log.",
     })
@@ -341,7 +341,7 @@ M.info = function()
     local clients = vim.lsp.get_clients({ bufnr = bufnr }) --[[@as vim.lsp.Client[] ]]
 
     local lines = {
-        "Language Server Log: " .. vim.lsp.get_log_path(),
+        "Language Server Log: " .. vim.lsp.log.get_filename(),
         "Detected filetype  : " .. vim.bo[bufnr].filetype,
         "",
         string.format("%s %s attached to this buffer:", tostring(#clients), pluralize("client", clients)),
