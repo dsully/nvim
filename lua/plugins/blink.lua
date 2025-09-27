@@ -209,7 +209,6 @@ return {
                     },
                     snacks_input = {},
                     toml = {
-                        "crates",
                         "lsp",
                         "path",
                     },
