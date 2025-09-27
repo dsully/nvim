@@ -50,6 +50,7 @@ return {
                     skip = {
                         "javascript",
                         "markdown",
+                        "python",
                         "typescript",
                     },
                 },
