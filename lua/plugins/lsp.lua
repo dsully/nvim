@@ -203,4 +203,279 @@ return {
             end))
         end,
     },
+    {
+        "oribarilan/lensline.nvim",
+        event = ev.LspAttach,
+        opts = {
+            -- Profile configuration (first profile used as default)
+            profiles = {
+                {
+                    name = "default",
+                    providers = { -- Array format: order determines display sequence
+                        {
+                            name = "usages",
+                            enabled = true, -- enable usages provider by default (replaces references)
+                            include = { "refs" }, -- refs-only setup to match references provider behavior
+                            breakdown = true, -- false = aggregate count, true = breakdown by type
+                            show_zero = true, -- show zero counts when LSP supports the capability
+                            labels = {
+                                refs = "refs",
+                                impls = "impls",
+                                defs = "defs",
+                                usages = "usages",
+                            },
+                            icon_for_single = "󰌹 ", -- icon when only one attribute or aggregate display
+                            inner_separator = ", ", -- separator between breakdown items
+                        },
+                        {
+                            name = "last_author",
+                            enabled = true, -- enabled by default with caching optimization
+                            cache_max_files = 50, -- maximum number of files to cache blame data for (default: 50)
+                        },
+                        -- additional built-in or custom providers can be added here
+                    },
+                    style = {
+                        separator = " • ", -- separator between all lens attributes
+                        highlight = "Comment", -- highlight group for lens text
+                        prefix = "┃ ", -- prefix before lens content
+                        placement = "above", -- "above" | "inline" - where to render lenses (consider prefix = "" for inline)
+                        use_nerdfont = true, -- enable nerd font icons in built-in providers
+                        render = "all", -- "all" | "focused" (only active window's focused function)
+                    },
+                },
+                -- You can define additional profiles here and switch between them at runtime
+                -- , {
+                --   name = "minimal",
+                --   providers = { { name = "diagnostics", enabled = true } },
+                --   style = { render = "focused" }
+                -- }
+            },
+            -- global settings (apply to all profiles)
+            limits = {
+                -- exclude = {
+                -- file patterns that lensline will not process for lenses
+                -- see config.lua for extensive list of default patterns
+                -- },
+                exclude_append = {}, -- additional patterns to append to exclude list (empty by default)
+                exclude_gitignored = true, -- respect .gitignore by not processing ignored files
+                max_lines = 1000, -- process only first N lines of large files
+                max_lenses = 70, -- skip rendering if too many lenses generated
+            },
+            debounce_ms = 500, -- unified debounce delay for all providers
+            focused_debounce_ms = 150, -- debounce delay for focus tracking in focused mode
+            silence_lsp = true, -- suppress noisy LSP log messages (e.g., Pyright reference spam)
+            debug_mode = false, -- enable debug output for development, see CONTRIBUTE.md
+        },
+    },
+    {
+        "jinzhongjia/LspUI.nvim",
+        options = {
+            prompt = {
+                border = true,
+            },
+            code_action = {
+                enable = true,
+                command_enable = true,
+                gitsigns = true,
+                extend_gitsigns = true,
+                ui = {
+                    title = "Code Action",
+                    -- border = "rounded",
+                    winblend = 0,
+                },
+                keys = {
+                    quit = "q",
+                    exec = "<CR>",
+                },
+            },
+            hover = {
+                enable = true,
+                command_enable = true,
+                ui = {
+                    title = "Hover",
+                    border = "rounded",
+                    winblend = 0,
+                },
+                keys = {
+                    quit = "q",
+                },
+            },
+
+            -- Rename configuration
+            rename = {
+                enable = true,
+                command_enable = true,
+                auto_save = false,
+                ui = {
+                    title = "Rename",
+                    border = "rounded",
+                    winblend = 0,
+                },
+                keys = {
+                    quit = "<C-c>",
+                    exec = "<CR>",
+                },
+            },
+
+            -- Diagnostic configuration
+            diagnostic = {
+                enable = true,
+                command_enable = true,
+                ui = {
+                    title = "Diagnostic",
+                    border = "rounded",
+                    winblend = 0,
+                },
+                keys = {
+                    quit = "q",
+                    exec = "<CR>",
+                },
+            },
+
+            -- Definition configuration
+            definition = {
+                enable = true,
+                command_enable = true,
+                ui = {
+                    title = "Definition",
+                    border = "rounded",
+                    winblend = 0,
+                },
+                keys = {
+                    quit = "q",
+                    exec = "<CR>",
+                    vsplit = "v",
+                    split = "s",
+                    tabe = "t",
+                },
+            },
+
+            -- Reference configuration
+            reference = {
+                enable = true,
+                command_enable = true,
+                ui = {
+                    title = "Reference",
+                    border = "rounded",
+                    winblend = 0,
+                },
+                keys = {
+                    quit = "q",
+                    exec = "<CR>",
+                    vsplit = "v",
+                    split = "s",
+                },
+            },
+
+            -- Implementation configuration
+            implementation = {
+                enable = true,
+                command_enable = true,
+                ui = {
+                    title = "Implementation",
+                    border = "rounded",
+                    winblend = 0,
+                },
+                keys = {
+                    quit = "q",
+                    exec = "<CR>",
+                    vsplit = "v",
+                    split = "s",
+                    tabe = "t",
+                },
+            },
+
+            -- Type Definition configuration
+            type_definition = {
+                enable = true,
+                command_enable = true,
+                ui = {
+                    title = "Type Definition",
+                    border = "rounded",
+                    winblend = 0,
+                },
+                keys = {
+                    quit = "q",
+                    exec = "<CR>",
+                    vsplit = "v",
+                    split = "s",
+                    tabe = "t",
+                },
+            },
+
+            -- Declaration configuration
+            declaration = {
+                enable = true,
+                command_enable = true,
+                ui = {
+                    title = "Declaration",
+                    border = "rounded",
+                    winblend = 0,
+                },
+                keys = {
+                    quit = "q",
+                    exec = "<CR>",
+                    vsplit = "v",
+                    split = "s",
+                    tabe = "t",
+                },
+            },
+
+            -- Call Hierarchy configuration
+            call_hierarchy = {
+                enable = true,
+                command_enable = true,
+                ui = {
+                    title = "Call Hierarchy",
+                    border = "rounded",
+                    winblend = 0,
+                },
+                keys = {
+                    quit = "q",
+                    exec = "<CR>",
+                    expand = "o",
+                    jump = "e",
+                    vsplit = "v",
+                    split = "s",
+                    tabe = "t",
+                },
+            },
+
+            -- Lightbulb configuration
+            lightbulb = {
+                enable = true,
+                command_enable = true,
+                icon = "💡",
+                action_kind = {
+                    QuickFix = "🔧",
+                    Refactor = "♻️",
+                    RefactorExtract = "📤",
+                    RefactorInline = "📥",
+                    RefactorRewrite = "✏️",
+                    Source = "📄",
+                    SourceOrganizeImports = "📦",
+                },
+            },
+
+            -- Inlay Hint configuration
+            inlay_hint = {
+                enable = true,
+                command_enable = true,
+            },
+
+            -- Signature Help configuration
+            signature = {
+                enable = true,
+                command_enable = true,
+                ui = {
+                    title = "Signature Help",
+                    border = "rounded",
+                    winblend = 0,
+                },
+                keys = {
+                    quit = "q",
+                },
+            },
+        },
+    },
 }

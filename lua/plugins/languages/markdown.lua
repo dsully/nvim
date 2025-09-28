@@ -5,6 +5,7 @@ return {
         ft = {
             "codecompanion",
             "markdown",
+            "opencode_output",
             "snacks_notif",
             "vimwiki",
         },
