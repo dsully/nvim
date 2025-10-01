@@ -205,6 +205,7 @@ return {
     },
     {
         "oribarilan/lensline.nvim",
+        cond = false,
         event = ev.LspAttach,
         opts = {
             -- Profile configuration (first profile used as default)
@@ -269,6 +270,7 @@ return {
     },
     {
         "jinzhongjia/LspUI.nvim",
+        cond = false,
         options = {
             prompt = {
                 border = true,
