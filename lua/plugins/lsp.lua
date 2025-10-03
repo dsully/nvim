@@ -27,33 +27,87 @@ return {
                 },
                 underline = true,
                 update_in_insert = false, -- https://www.reddit.com/r/neovim/comments/pfk209/nvimlsp_too_fast/
-            } --[[@as vim.diagnostic.Opts]])
+            })
+
+            ---@type table<string, string[]|boolean>?
+            kind_filter = {
+                default = {
+                    "Class",
+                    "Constructor",
+                    "Enum",
+                    "Field",
+                    "Function",
+                    "Interface",
+                    "Method",
+                    "Module",
+                    "Namespace",
+                    "Package",
+                    "Property",
+                    "Struct",
+                    "Trait",
+                },
+                markdown = false,
+                help = false,
+                -- you can specify a different filter for each filetype
+                lua = {
+                    "Class",
+                    "Constructor",
+                    "Enum",
+                    "Field",
+                    "Function",
+                    "Interface",
+                    "Method",
+                    "Module",
+                    "Namespace",
+                    -- "Package", -- remove package since luals uses it for control flow structures
+                    "Property",
+                    "Struct",
+                    "Trait",
+                },
+            }
+
+            local diagnostic_goto = function(next, severity)
+                return function()
+                    vim.diagnostic.jump({
+                        count = (next and 1 or -1) * vim.v.count1,
+                        severity = severity and vim.diagnostic.severity[severity] or nil,
+                        float = true,
+                    })
+                end
+            end
 
             ev.on_load("which-key.nvim", function()
                 vim.schedule(function()
-            -- stylua: ignore
-            require("which-key").add({
-                { "<C-S>", vim.lsp.buf.signature_help, desc = "Signature Help", mode = "i", icon = "󰠗 " },
-                { "<leader>l", group = "LSP", icon = " " },
-                { "<leader>lc", vim.cmd.LspCapabilities, desc = "LSP Capabilities", icon = " " },
-                { "<leader>li", nvim.lsp.info, desc = "LSP Info", icon = " " },
-                { "<leader>ll", vim.cmd.LspLog, desc = "LSP Log", icon = " " },
-                { "<leader>lr", vim.cmd.LspRestartBuffer, desc = "LSP Restart", icon = " " },
-                { "<leader>ls", vim.cmd.LspStop, desc = "LSP Stop", icon = " " },
-                { "<leader>xr", vim.diagnostic.reset, desc = "Reset", icon = " " },
-                { "<leader>xs", vim.diagnostic.open_float, desc = "Show", icon = "󰙨" },
-                { "gra", nvim.lsp.code_action, desc = "Actions", icon = "󰅯 " },
-                { "grn", vim.lsp.buf.rename, desc = "Rename", icon = " " },
-                { "grq", nvim.lsp.apply_quickfix, desc = "Apply Quick Fix", icon = "󱖑 " },
+                    -- stylua: ignore
+                    require("which-key").add({
+                        { "]d", function() diagnostic_goto(true) end, desc = "Next Diagnostic" },
+                        { "[d", function() diagnostic_goto(false) end, desc = "Prev Diagnostic" },
+                        { "]e", function() diagnostic_goto(true, "ERROR") end, desc = "Next Error" },
+                        { "[e", function() diagnostic_goto(false, "ERROR") end, desc = "Prev Error" },
+                        { "]w", function() diagnostic_goto(true, "WARN") end, desc = "Next Warning" },
+                        { "[w", function() diagnostic_goto(false, "WARN") end, desc = "Prev Warning" },
 
-                -- Snacks pickers
-                { "gD", function() Snacks.picker.lsp_type_definitions() end, desc = "Goto Type Definition" },
-                { "gO", function() Snacks.picker.lsp_symbols() end, desc = "References" },
-                { "gd", function() Snacks.picker.lsp_definitions({ unique_lines = true }) end, desc = "Goto Definition" },
-                { "gi", function() Snacks.picker.lsp_implementations() end, desc = "Goto Implementation" },
-                { "grf", function() Snacks.rename.rename_file() end, desc = "Rename File", icon = " ", },
-                { "grr", function() Snacks.picker.lsp_references({ nowait = true }) end, desc = "References" },
-            } --[[@as wk.Spec]], { notify = false })
+                        { "<C-S>", vim.lsp.buf.signature_help, desc = "Signature Help", mode = "i", icon = "󰠗 " },
+                        { "<leader>l", group = "LSP", icon = " " },
+                        { "<leader>lc", vim.cmd.LspCapabilities, desc = "LSP Capabilities", icon = " " },
+                        { "<leader>li", nvim.lsp.info, desc = "LSP Info", icon = " " },
+                        { "<leader>ll", vim.cmd.LspLog, desc = "LSP Log", icon = " " },
+                        { "<leader>lr", vim.cmd.LspRestartBuffer, desc = "LSP Restart", icon = " " },
+                        { "<leader>ls", vim.cmd.LspStop, desc = "LSP Stop", icon = " " },
+                        { "<leader>xr", vim.diagnostic.reset, desc = "Reset", icon = " " },
+                        { "<leader>xs", vim.diagnostic.open_float, desc = "Show", icon = "󰙨" },
+                        { "gra", nvim.lsp.code_action, desc = "Actions", icon = "󰅯 " },
+                        { "grn", vim.lsp.buf.rename, desc = "Rename", icon = " " },
+                        { "grq", nvim.lsp.apply_quickfix, desc = "Apply Quick Fix", icon = "󱖑 " },
+
+                        -- Snacks pickers
+                        { "gD", function() Snacks.picker.lsp_type_definitions() end, desc = "Goto Type Definition" },
+                        { "gO", function() Snacks.picker.lsp_symbols({ filter = kind_filter }) end, desc = "References" },
+                        { "gd", function() Snacks.picker.lsp_definitions({ unique_lines = true }) end, desc = "Goto Definition" },
+                        { "gi", function() Snacks.picker.lsp_implementations() end, desc = "Goto Implementation" },
+                        { "grf", function() Snacks.rename.rename_file() end, desc = "Rename File", icon = " ", },
+                        { "grr", function() Snacks.picker.lsp_references() end, nowait = true, desc = "References" },
+                    } --[[@as wk.Spec]], { notify = false })
                 end)
             end)
 
