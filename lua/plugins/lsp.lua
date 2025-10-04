@@ -205,6 +205,11 @@ return {
 
             if pcall(require, "blink.cmp") then
                 capabilities = require("blink.cmp").get_lsp_capabilities({
+                    textDocument = {
+                        onTypeFormatting = {
+                            dynamicRegistration = false,
+                        },
+                    },
                     workspace = {
                         didChangeWatchedFiles = {
                             dynamicRegistration = true,

@@ -64,7 +64,7 @@ return require("schema-companion").setup_client(
             yaml = {
                 completion = true,
                 editor = {
-                    formatOnType = false,
+                    formatOnType = true,
                 },
                 format = {
                     enable = true,

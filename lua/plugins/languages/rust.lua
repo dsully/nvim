@@ -111,6 +111,9 @@ return {
                                 experimental = { enable = true },
                                 styleLints = { enable = true },
                             },
+                            editor = {
+                                formatOnType = true,
+                            },
                             files = {
                                 excludeDirs = {
                                     ".direnv",
