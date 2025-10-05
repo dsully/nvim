@@ -173,6 +173,20 @@ return {
             { "<A-j>", ":m '>+1<cr>gv=gv", desc = "Move block down", mode = "v" },
             { "<A-k>", ":m '<-2<cr>gv=gv", desc = "Move block up", mode = "v" },
 
+            -- Inline completions
+            {
+                "<C-a>",
+                function()
+                    if not vim.lsp.inline_completion.get() then
+                        return "<C-a>"
+                    end
+                end,
+                mode = "i",
+                expr = true,
+                replace_keycodes = true,
+                desc = "Get the current inline completion",
+            },
+
             -- Space mappings
             {
                 "<space>n",
