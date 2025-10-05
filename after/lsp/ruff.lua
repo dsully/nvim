@@ -7,7 +7,10 @@ return {
     ---@param client vim.lsp.Client
     on_attach = function(client)
         if client.server_capabilities then
-            client.server_capabilities.hoverProvider = false
+            -- client.server_capabilities.codeActionProvider = nil
+
+            client.server_capabilities.hoverProvider = nil
+            client.server_capabilities.notebookDocumentSync = nil
         end
     end,
     root_markers = {
