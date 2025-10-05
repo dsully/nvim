@@ -203,6 +203,93 @@ M.apply_quickfix = function()
     })
 end
 
+local function get_capability_display_name(key)
+    local capability_names = {
+        completionProvider = "Completion Provider",
+        hoverProvider = "Hover Provider",
+        signatureHelpProvider = "Signature Help Provider",
+        diagnosticProvider = "Diagnostic Provider",
+        documentFormattingProvider = "Document Formatting Provider",
+        documentRangeFormattingProvider = "Document Range Formatting Provider",
+        codeActionProvider = "Code Action Provider",
+        documentSymbolProvider = "Document Symbol Provider",
+        workspaceSymbolProvider = "Workspace Symbol Provider",
+        definitionProvider = "Definition Provider",
+        declarationProvider = "Declaration Provider",
+        implementationProvider = "Implementation Provider",
+        typeDefinitionProvider = "Type Definition Provider",
+        referencesProvider = "References Provider",
+        renameProvider = "Rename Provider",
+        inlayHintProvider = "Inlay Hint Provider",
+        semanticTokensProvider = "Semantic Tokens Provider",
+        executeCommandProvider = "Execute Command Provider",
+        textDocumentSync = "Text Document Sync",
+        workspace = "Workspace Features",
+        selectionRangeProvider = "Selection Range Provider",
+        documentHighlightProvider = "Document Highlight Provider",
+        positionEncoding = "Position Encoding",
+    }
+    return capability_names[key] or key
+end
+
+local function extract_capabilities(clients)
+    local capabilities = {}
+
+    for _, client in ipairs(clients) do
+        if not vim.tbl_contains(defaults.ignored.lsp, client.name) then
+            for key, value in pairs(client.server_capabilities) do
+                if value ~= nil and value ~= false then
+                    capabilities[key] = capabilities[key] or {}
+                    capabilities[key][client.name] = value
+                end
+            end
+        end
+    end
+
+    return capabilities
+end
+
+local function format_capability_value(value, key)
+    if type(value) == "boolean" and value then
+        return "enabled"
+    elseif type(value) == "table" then
+        local parts = {}
+        for k, v in pairs(value) do
+            -- Skip unwanted details
+            if k == "workDoneProgress" or k == "prepareProvider" or k == "interFileDependencies" or (k == "workspaceDiagnostics" and v == false) then
+                goto continue
+            end
+
+            -- Skip semantic token details (legend, full, range)
+            if key == "semanticTokensProvider" and (k == "legend" or k == "full" or k == "range") then
+                goto continue
+            end
+
+            if type(v) == "table" then
+                if k == "commands" then
+                    -- Return special marker for multiline handling
+                    return { type = "commands", values = v }
+                elseif k == "codeActionKinds" then
+                    -- Return special marker for multiline handling
+                    return { type = "kinds", values = v }
+                else
+                    table.insert(parts, k .. " = " .. vim.inspect(v, { indent = "", newline = " " }))
+                end
+            else
+                table.insert(parts, k .. " = " .. tostring(v))
+            end
+            ::continue::
+        end
+
+        if #parts == 0 then
+            return "enabled"
+        end
+        return table.concat(parts, ", ")
+    else
+        return tostring(value)
+    end
+end
+
 M.commands = function()
     nvim.command("LspCapabilities", function()
         --
@@ -210,23 +297,93 @@ M.commands = function()
 
         local lines = {}
 
-        for i, client in ipairs(clients) do
+        -- Filter out ignored clients
+        local active_clients = {}
+        for _, client in ipairs(clients) do
             if not vim.tbl_contains(defaults.ignored.lsp, client.name) then
-                table.insert(lines, client.name .. " Capabilities: ")
+                table.insert(active_clients, client.name)
+            end
+        end
+
+        if #active_clients == 0 then
+            table.insert(lines, "No active LSP clients")
+            ---@diagnostic disable-next-line param-type-not-match
+            vim.ui.float({ ft = "lua", relative = "editor" }, lines):show()
+            return
+        end
+
+        -- Header with active clients
+        table.insert(lines, "Active LSP Servers: " .. table.concat(active_clients, ", "))
+        table.insert(lines, "")
+        table.insert(lines, "=== CAPABILITIES BY TYPE ===")
+        table.insert(lines, "")
+
+        -- Group capabilities by type
+        local capabilities = extract_capabilities(clients)
+
+        -- Sort capability keys for consistent output
+        local sorted_keys = {}
+        for key in pairs(capabilities) do
+            table.insert(sorted_keys, key)
+        end
+        table.sort(sorted_keys)
+
+        for _, key in ipairs(sorted_keys) do
+            -- Skip certain capabilities
+            if key == "positionEncoding" or key == "workspace" or key == "textDocumentSync" then
+                goto continue
+            end
+
+            local providers = capabilities[key]
+            local display_name = get_capability_display_name(key)
+
+            table.insert(lines, display_name .. ":")
+
+            -- Sort LSP names for consistent output
+            local sorted_lsps = {}
+            for lsp_name in pairs(providers) do
+                table.insert(sorted_lsps, lsp_name)
+            end
+            table.sort(sorted_lsps)
+
+            for _, lsp_name in ipairs(sorted_lsps) do
+                local value = providers[lsp_name]
+                local formatted_value = format_capability_value(value, key)
+
+                if formatted_value == "enabled" then
+                    table.insert(lines, "  • " .. lsp_name)
+                elseif type(formatted_value) == "table" then
+                    -- Handle multiline formatting
+                    if formatted_value.type == "commands" then
+                        table.insert(lines, "  • " .. lsp_name .. ": commands:")
+                        for _, cmd in ipairs(formatted_value.values) do
+                            table.insert(lines, "      " .. cmd)
+                        end
+                    elseif formatted_value.type == "kinds" then
+                        table.insert(lines, "  • " .. lsp_name .. ": kinds:")
+                        for _, kind in ipairs(formatted_value.values) do
+                            table.insert(lines, "      " .. kind)
+                        end
+                    end
+                else
+                    table.insert(lines, "  • " .. lsp_name .. ": " .. formatted_value)
+                end
+            end
+            table.insert(lines, "")
+            ::continue::
+        end
+
+        -- Configuration section
+        table.insert(lines, "=== CONFIGURATIONS ===")
+        table.insert(lines, "")
+
+        for i, client in ipairs(clients) do
+            if not vim.tbl_contains(defaults.ignored.lsp, client.name) and client.config.settings then
+                table.insert(lines, client.name .. " Config:")
                 table.insert(lines, "")
 
-                for s in vim.inspect(client.server_capabilities):gmatch("[^\r\n]+") do
+                for s in vim.inspect(client.config.settings):gmatch("[^\r\n]+") do
                     table.insert(lines, s)
-                end
-
-                if client.config.settings then
-                    table.insert(lines, "")
-                    table.insert(lines, client.name .. " Config: ")
-                    table.insert(lines, "")
-
-                    for s in vim.inspect(client.config.settings):gmatch("[^\r\n]+") do
-                        table.insert(lines, s)
-                    end
                 end
 
                 if i < #clients then
