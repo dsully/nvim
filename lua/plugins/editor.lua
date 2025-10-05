@@ -38,7 +38,7 @@ return {
             vim.schedule(function()
                 ---@param client vim.lsp.Client
                 ---@param buffer number
-                nvim.lsp.on_supports_method(vim.lsp.protocol.Methods.textDocument_documentSymbol, function(client, buffer)
+                nvim.lsp.on_supports_method("textDocument/documentSymbol", function(client, buffer)
                     require("nvim-navic").attach(client, buffer)
                 end)
             end)
