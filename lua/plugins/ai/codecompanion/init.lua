@@ -79,22 +79,33 @@ return {
             },
         },
         opts = function()
-            local adapter = vim.env.CODECOMPANION_ADAPTER or "anthropic"
-            local model = vim.env.CODECOMPANION_MODEL or "claude-sonnet-4-20250514"
+            local adapter = vim.env.CODECOMPANION_ADAPTER or "acp"
+            local model = vim.env.CODECOMPANION_MODEL or "claude-sonnet-4-5-2025092"
 
-            ---@module "codecompanion"
             ---@type CodeCompanion.Config
             return {
                 adapters = {
-                    adapter = function()
-                        return require("codecompanion.adapters").extend("anthropic", {
-                            schema = {
-                                extended_thinking = {
-                                    default = false,
+                    acp = {
+                        claude_code = function()
+                            return require("codecompanion.adapters").extend("claude_code", {
+                                env = {
+                                    ANTHROPIC_API_KEY = vim.env.ANTHROPIC_OAUTH_API_KEY,
                                 },
-                            },
-                        })
-                    end,
+                                model = model
+                            })
+                        end,
+                    },
+                    -- http = {
+                    --     adapter = function()
+                    --         return require("codecompanion.adapters").extend("anthropic", {
+                    --             schema = {
+                    --                 extended_thinking = {
+                    --                     default = false,
+                    --                 },
+                    --             },
+                    --         })
+                    --     end,
+                    -- },
                 },
                 display = {
                     action_palette = {
