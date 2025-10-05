@@ -1,7 +1,6 @@
 ---@type LazySpec[]
 return {
     "MunifTanjim/nougat.nvim",
-    cond = false,
     config = function()
         local bar = require("nougat.bar")
         local core = require("nougat.core")
@@ -173,12 +172,19 @@ return {
         local schema = item({
             ---@param ctx nougat_bar_ctx
             content = function(_, ctx)
-                return ("%s%s"):format(defaults.icons.misc.table, require("schema-companion").get_current_schema().name):sub(0, 128)
+                return ("%s%s"):format(defaults.icons.misc.table, require("schema-companion").get_current_schemas() or "none"):sub(0, 128)
             end,
             ---@param ctx nougat_bar_ctx
             hidden = function(_, ctx)
-                if vim.tbl_contains({ "yaml", "helm" }, vim.api.nvim_get_option_value("filetype", { buf = ctx.bufnr })) then
-                    return require("schema-companion").get_current_schema().name == "none"
+                if
+                    vim.tbl_contains({
+                        "helm",
+                        "json",
+                        "toml",
+                        "yaml",
+                    }, vim.api.nvim_get_option_value("filetype", { buf = ctx.bufnr }))
+                then
+                    return require("schema-companion").get_current_schemas() or "none"
                 end
 
                 return true

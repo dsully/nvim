@@ -80,7 +80,7 @@ return {
         },
         opts = function()
             local adapter = vim.env.CODECOMPANION_ADAPTER or "acp"
-            local model = vim.env.CODECOMPANION_MODEL or "claude-sonnet-4-5-2025092"
+            local model = vim.env.CODECOMPANION_MODEL or "claude-sonnet-4-5-20250929"
 
             ---@type CodeCompanion.Config
             return {

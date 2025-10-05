@@ -78,8 +78,8 @@ return {
                 vim.schedule(function()
                     -- stylua: ignore
                     require("which-key").add({
-                        { "]d", function() diagnostic_goto(true) end, desc = "Next Diagnostic" },
-                        { "[d", function() diagnostic_goto(false) end, desc = "Prev Diagnostic" },
+                        -- { "]d", function() diagnostic_goto(true) end, desc = "Next Diagnostic" },
+                        -- { "[d", function() diagnostic_goto(false) end, desc = "Prev Diagnostic" },
                         { "]e", function() diagnostic_goto(true, "ERROR") end, desc = "Next Error" },
                         { "[e", function() diagnostic_goto(false, "ERROR") end, desc = "Prev Error" },
                         { "]w", function() diagnostic_goto(true, "WARN") end, desc = "Next Warning" },
@@ -223,7 +223,9 @@ return {
             } --[[@as vim.lsp.Config]])
 
             local configured = {
-                "codebook",
+                "bashls",
+                "basedpyright",
+                -- "codebook",
                 "config-lsp",
                 "dockerls",
                 "emmylua_ls",
@@ -231,7 +233,6 @@ return {
                 "gopls",
                 "harper_ls",
                 "helm_ls",
-                "superhtml",
                 "jinja_lsp",
                 "jsonls",
                 "just-lsp",
@@ -243,6 +244,7 @@ return {
                 "pyrefly",
                 "ruff",
                 "sourcekit",
+                "superhtml",
                 "systemd_ls",
                 "tombi",
                 "ts_query_ls",
