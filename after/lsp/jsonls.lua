@@ -6,7 +6,7 @@ return require("schema-companion").setup_client(
         },
     }),
     {
-        ---@type table<vim.lsp.protocol.Methods, lsp.Handler>
+        ---@type table<vim.lsp.protocol.Method.ServerToClient.Notification, lsp.Handler>
         handlers = {
             ---@type lsp.Handler
             ["textDocument/publishDiagnostics"] = function(err, result, ctx)
@@ -35,7 +35,7 @@ return require("schema-companion").setup_client(
                 extra = vim.json.decode(schemas),
             })
 
-            client:notify(vim.lsp.protocol.Methods.workspace_didChangeConfiguration, { settings = client.config.settings })
+            client:notify("workspace/didChangeConfiguration", { settings = client.config.settings })
         end,
         settings = {
             json = {

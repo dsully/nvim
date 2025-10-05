@@ -4,8 +4,6 @@ return {
         "neovim/nvim-lspconfig",
         event = ev.VeryLazy,
         config = function()
-            local methods = vim.lsp.protocol.Methods
-
             vim.lsp.log.set_level(vim.lsp.log.levels.WARN)
 
             vim.diagnostic.config({
@@ -114,11 +112,11 @@ return {
             -- Handle dynamic registration.
             --
             -- https://github.com/neovim/neovim/issues/24229
-            local register_capability = vim.lsp.handlers[methods.client_registerCapability]
+            local register_capability = vim.lsp.handlers["client/registerCapability"]
 
             ---@param res lsp.RegistrationParams
             ---@param ctx lsp.HandlerContext
-            vim.lsp.handlers[methods.client_registerCapability] = function(err, res, ctx)
+            vim.lsp.handlers["client/registerCapability"] = function(err, res, ctx)
                 local client_id = ctx.client_id
                 local client = vim.lsp.get_client_by_id(client_id)
 
@@ -142,7 +140,7 @@ return {
 
             vim.lsp.on_type_formatting.enable()
 
-            nvim.lsp.on_supports_method(methods.textDocument_documentColor, function(_, buffer)
+            nvim.lsp.on_supports_method("textDocument/documentColor", function(_, buffer)
                 vim.lsp.document_color.enable(true, buffer)
 
                 keys.map("grc", vim.lsp.document_color.color_presentation, "vim.lsp.document_color.color_presentation()")
@@ -158,11 +156,11 @@ return {
                 }):map("<space>tc")
             end)
 
-            nvim.lsp.on_supports_method(methods.textDocument_inlayHint, function()
+            nvim.lsp.on_supports_method("textDocument/inlayHint", function()
                 vim.lsp.inlay_hint.enable(false)
             end)
 
-            nvim.lsp.on_supports_method(methods.textDocument_semanticTokens_full, function()
+            nvim.lsp.on_supports_method("textDocument/semanticTokens/full", function()
                 Snacks.toggle({
                     name = "Semantic Tokens",
                     get = function()
@@ -174,7 +172,7 @@ return {
                 }):map("<space>tS")
             end)
 
-            nvim.lsp.on_supports_method(methods.textDocument_codeLens, function()
+            nvim.lsp.on_supports_method("textDocument/codeLens", function()
                 --
                 ev.on({ ev.BufEnter, ev.CursorHold, ev.InsertLeave }, function()
                     if vim.g.codelens then

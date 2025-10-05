@@ -18,7 +18,7 @@ return require("schema-companion").setup_client(
                 extra = vim.json.decode(schemas),
             })
 
-            client:notify(vim.lsp.protocol.Methods.workspace_didChangeConfiguration, { settings = client.config.settings })
+            client:notify("workspace/didChangeConfiguration", { settings = client.config.settings })
         end,
         settings = {
             flags = {

@@ -1,7 +1,5 @@
 local M = {}
 
-local methods = vim.lsp.protocol.Methods
-
 local code_actions = {
     "",
     "quickfix",
@@ -246,13 +244,13 @@ M.commands = function()
         local bufnr = vim.api.nvim_get_current_buf()
         local lines = {}
 
-        for _, client in ipairs(vim.lsp.get_clients({ bufnr = bufnr, method = methods.textDocument_codeAction })) do
+        for _, client in ipairs(vim.lsp.get_clients({ bufnr = bufnr, method = "textDocument/codeAction" })) do
             local name = client and client.name or ""
 
             local params = vim.lsp.util.make_range_params(0, client.offset_encoding)
             params.context = { diagnostics = vim.lsp.diagnostic.get_line_diagnostics() }
 
-            client:request(methods.textDocument_codeAction, params, function(_, result)
+            client:request("textDocument/codeAction", params, function(_, result)
                 if not vim.tbl_contains(defaults.ignored.lsp, name) and result.result ~= nil then
                     --
                     table.insert(lines, name .. " Code Actions:")
