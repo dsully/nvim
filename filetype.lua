@@ -61,7 +61,6 @@ vim.filetype.add({
         [".*Dockerfile.*"] = function(path)
             return path:match("%.dockerignore%*?$") and "gitignore" or "dockerfile"
         end,
-        ["helmfile.*%.ya?ml"] = "helm",
         ["requirements[%w_.-]+%.txt"] = "requirements",
     },
 } --[[@as vim.filetype.add.filetypes ]])

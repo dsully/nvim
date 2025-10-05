@@ -14,7 +14,7 @@ return require("schema-companion").setup_client(
             local schemas = nvim.file.read(nvim.file.xdg_config("schemas.json")) or "{}"
 
             ---@diagnostic disable-next-line: inject-field, need-check-nil
-            client.config.settings.json.schemas = require("schemastore").json.schemas({
+            client.config.settings.json.schemas = require("schemastore").yaml.schemas({
                 extra = vim.json.decode(schemas),
             })
 
@@ -24,12 +24,25 @@ return require("schema-companion").setup_client(
             flags = {
                 debounce_text_changes = 50,
             },
+
             ["helm-ls"] = {
+                helmLint = {
+                    enabled = true,
+                    ignoredMessages = {},
+                },
+                logLevel = "info",
+                valuesFiles = {
+                    additionalValuesFilesGlobPattern = "values*.yaml",
+                    lintOverlayValuesFile = "values.lint.yaml",
+                    mainValuesFile = "values.yaml",
+                },
                 yamlls = {
                     enabled = true,
+                    enabledForFilesGlob = "*.{yaml,yml,yaml.gotmpl,tpl}",
                     diagnosticsLimit = 50,
                     showDiagnosticsDirectly = false,
                     path = "yaml-language-server",
+                    initTimeoutSeconds = 3,
                     config = {
                         completion = true,
                         format = {
