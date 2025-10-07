@@ -17,15 +17,15 @@ return {
         return {
             base_path = nvim.file.git_root(true) or nvim.file.cwd(),
             hl = {
-                border = "FloatBorder",
-                normal = "Normal",
-                cursor = "CursorLine",
-                matched = "IncSearch",
-                title = "Title",
-                prompt = "Question",
                 active_file = "Visual",
-                frecency = "Number",
+                border = "FloatBorder",
+                cursor = "CursorLine",
                 debug = "Comment",
+                frecency = "Number",
+                matched = "IncSearch",
+                normal = "Normal",
+                prompt = "Question",
+                title = "Title",
             },
             keymaps = {
                 close = "<Esc>",
