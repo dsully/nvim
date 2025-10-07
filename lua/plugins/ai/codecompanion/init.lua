@@ -95,17 +95,17 @@ return {
                             })
                         end,
                     },
-                    -- http = {
-                    --     adapter = function()
-                    --         return require("codecompanion.adapters").extend("anthropic", {
-                    --             schema = {
-                    --                 extended_thinking = {
-                    --                     default = false,
-                    --                 },
-                    --             },
-                    --         })
-                    --     end,
-                    -- },
+                    http = {
+                        adapter = function()
+                            return require("codecompanion.adapters").extend("anthropic", {
+                                schema = {
+                                    extended_thinking = {
+                                        default = false,
+                                    },
+                                },
+                            })
+                        end,
+                    },
                 },
                 display = {
                     action_palette = {
