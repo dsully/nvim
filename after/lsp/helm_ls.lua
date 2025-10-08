@@ -14,7 +14,7 @@ return require("schema-companion").setup_client(
             local schemas = nvim.file.read(nvim.file.xdg_config("schemas.json")) or "{}"
 
             ---@diagnostic disable-next-line: inject-field, need-check-nil
-            client.config.settings.json.schemas = require("schemastore").yaml.schemas({
+            client.config.settings["helm-ls"].yamlls.schemas = require("schemastore").yaml.schemas({
                 extra = vim.json.decode(schemas),
             })
 
