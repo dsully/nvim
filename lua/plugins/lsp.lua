@@ -64,26 +64,16 @@ return {
                 },
             }
 
-            local diagnostic_goto = function(next, severity)
-                return function()
-                    vim.diagnostic.jump({
-                        count = (next and 1 or -1) * vim.v.count1,
-                        severity = severity and vim.diagnostic.severity[severity] or nil,
-                        float = true,
-                    })
-                end
-            end
-
             ev.on_load("which-key.nvim", function()
                 vim.schedule(function()
                     -- stylua: ignore
                     require("which-key").add({
-                        -- { "]d", function() diagnostic_goto(true) end, desc = "Next Diagnostic" },
-                        -- { "[d", function() diagnostic_goto(false) end, desc = "Prev Diagnostic" },
-                        { "]e", function() diagnostic_goto(true, "ERROR") end, desc = "Next Error" },
-                        { "[e", function() diagnostic_goto(false, "ERROR") end, desc = "Prev Error" },
-                        { "]w", function() diagnostic_goto(true, "WARN") end, desc = "Next Warning" },
-                        { "[w", function() diagnostic_goto(false, "WARN") end, desc = "Prev Warning" },
+                        { "]d", require("lib.lsp").diagnostic_goto(true), desc = "Next Diagnostic" },
+                        { "[d", require("lib.lsp").diagnostic_goto(false), desc = "Prev Diagnostic" },
+                        { "]e", require("lib.lsp").diagnostic_goto(true, vim.diagnostic.severity.ERROR), desc = "Next Error" },
+                        { "[e", require("lib.lsp").diagnostic_goto(false, vim.diagnostic.severity.ERROR), desc = "Prev Error" },
+                        { "]w", require("lib.lsp").diagnostic_goto(true, vim.diagnostic.severity.WARN), desc = "Next Warning" },
+                        { "[w", require("lib.lsp").diagnostic_goto(false, vim.diagnostic.severity.WARN), desc = "Prev Warning" },
 
                         { "<C-S>", vim.lsp.buf.signature_help, desc = "Signature Help", mode = "i", icon = "󰠗 " },
                         { "<leader>l", group = "LSP", icon = " " },

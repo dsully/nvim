@@ -12,6 +12,19 @@ local code_actions = {
     "source.organizeImports",
 }
 
+---@param next boolean
+---@param severity vim.diagnostic.Severity?
+---@return function
+M.diagnostic_goto = function(next, severity)
+    return function()
+        vim.diagnostic.jump({
+            count = (next and 1 or -1) * vim.v.count1,
+            severity = severity and vim.diagnostic.severity[severity] or nil,
+            float = true,
+        })
+    end
+end
+
 ---@class LspClientBuffers
 ---@field client vim.lsp.Client
 ---@field buffers integer[]
@@ -359,7 +372,7 @@ M.commands = function()
                         for _, cmd in ipairs(formatted_value.values) do
                             table.insert(lines, "      " .. cmd)
                         end
-                    elseif formatted_value.type == "kinds" then
+                    elseif formatted_value.type ~= nil and formatted_value.type == "kinds" then
                         table.insert(lines, "  • " .. lsp_name .. ": kinds:")
                         for _, kind in ipairs(formatted_value.values) do
                             table.insert(lines, "      " .. kind)
