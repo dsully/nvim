@@ -227,7 +227,6 @@ return {
                 "jsonls",
                 "just-lsp",
                 "lemminx",
-                "marksman",
                 "nil_ls",
                 "nixd",
                 "pkl",

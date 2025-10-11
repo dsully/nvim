@@ -37,6 +37,7 @@ vim.opt.shiftwidth = 4
 vim.opt.signcolumn = "yes" -- Always show the gutter.
 vim.opt.showbreak = ">"
 vim.opt.showmatch = true -- Match brackets
+vim.opt.showtabline = 2 -- https://github.com/zeioth/heirline-components.nvim/issues/11
 vim.opt.smartcase = false
 vim.opt.smartindent = true
 vim.opt.smoothscroll = true

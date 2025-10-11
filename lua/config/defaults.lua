@@ -145,6 +145,7 @@ local M = {
             arrow_right = "",
             block = "▌",
             bookmark = " ",
+            bullet = "•",
             bug = " ", --  '󰠭'
             calendar = " ",
             caret_right = "",
@@ -176,9 +177,10 @@ local M = {
             lightbulb = "󰌶 ",
             line = "", -- 'ℓ'
             list = " ",
-            lock = "",
+            lock = "",
             modified = "●",
             newline = "",
+            node = "╼",
             note = "󰎞 ",
             package = " ",
             pencil = " ", -- '󰏫',
@@ -206,17 +208,19 @@ local M = {
                 right = "",
                 down = "",
             },
-            circle = {
-                left = "",
-                right = "",
-            },
             arrow = {
                 left = "",
                 right = "",
             },
             slant = {
-                left = "",
-                right = "",
+                left = {
+                    lower = "",
+                    upper = "",
+                },
+                right = {
+                    lower = "",
+                    upper = "",
+                },
             },
             bar = {
                 left = "⎸",
