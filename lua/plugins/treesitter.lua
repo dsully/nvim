@@ -5,8 +5,8 @@ return {
         "nvim-treesitter/nvim-treesitter",
         branch = "main",
         build = ":TSUpdate",
-        config = function()
-            require("nvim-treesitter").update({
+        init = function()
+            local languages = {
                 "bash",
                 "css",
                 "diff",
@@ -37,78 +37,37 @@ return {
                 "vimdoc",
                 "vimwiki",
                 "yaml",
-            })
-        end,
-        init = function()
-            local config = {
-                highlight = {
-                    skip = {
-                        "bigfile",
-                    },
-                },
-                indent = {
-                    skip = {
-                        "javascript",
-                        "markdown",
-                        "python",
-                        "typescript",
-                    },
-                },
-                languages = {
-                    bash = { "direnv" },
-                    ruby = { "brewfile" },
-                    gotmpl = { "gotexttmpl" },
-                    -- https://github.com/MeanderingProgrammer/render-markdown.nvim#vimwiki
-                    markdown = { "vimwiki" },
-                },
             }
 
-            -- Map languages to my created file types.
-            for lang, filetypes in pairs(config.languages) do
-                vim.treesitter.language.register(lang, filetypes)
+            local isnt_installed = function(lang)
+                return #vim.api.nvim_get_runtime_file("parser/" .. lang .. ".*", false) == 0
             end
 
-            vim.hl.priorities.semantic_tokens = 100
-            vim.hl.priorities.treesitter = 125
+            local to_install = vim.tbl_filter(isnt_installed, languages)
 
-            -- https://github.com/neovim/neovim/issues/32660
-            vim.g._ts_force_sync_parsing = true
+            if #to_install > 0 then
+                require("nvim-treesitter").install(to_install)
+            end
 
-            -- How to address https://github.com/nvim-treesitter/nvim-treesitter/issues/7881#issuecomment-2907762259 ?
-            ev.on(ev.FileType, function(ctx)
-                local filetype = ctx.match
+            local filetypes = {}
 
-                -- Skip bigfile, etc.
-                if vim.list_contains(config.highlight.skip, filetype) then
-                    return
+            for _, lang in ipairs(languages) do
+                for _, ft in ipairs(vim.treesitter.language.get_filetypes(lang)) do
+                    table.insert(filetypes, ft)
                 end
+            end
 
-                pcall(vim.treesitter.start)
-
-                local treesitter = require("nvim-treesitter")
-                local available = treesitter.get_available()
-                local language = vim.treesitter.language.get_lang(filetype)
-
-                if vim.list_contains(available, language) then
-                    --
-                    treesitter.install(language):await(function()
-                        -- vim.wo.foldexpr = "v:lua.vim.treesitter.foldexpr()"
-
-                        if not vim.list_contains(config.indent.skip, filetype) then
-                            vim.bo.indentexpr = "v:lua.require'nvim-treesitter'.indentexpr()"
-                        end
-
-                        pcall(vim.treesitter.start)
-                    end)
-                end
-            end)
+            ev.on(ev.FileType, function(event)
+                vim.treesitter.start(event.buf)
+            end, {
+                pattern = filetypes,
+            })
         end,
         lazy = false,
         keys = {
             -- stylua: ignore
             { "<leader>i", function() vim.cmd.Inspect() end, desc = "Inspect Position" },
         },
-        priority = 500,
     },
     {
         "nvim-treesitter/nvim-treesitter-textobjects",
