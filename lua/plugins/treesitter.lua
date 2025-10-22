@@ -17,6 +17,7 @@ return {
                 "gitcommit",
                 "gitignore",
                 "go",
+                "helm",
                 "html",
                 "javascript",
                 "json",
