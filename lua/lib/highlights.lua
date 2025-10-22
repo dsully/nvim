@@ -149,13 +149,36 @@ function M.lighten(hex, amount, fg)
     return require("snacks.util").blend(hex, fg or colors.fg, amount)
 end
 
+---@param hl string
+---@param str string|integer|number
+---@return string
+function M.as_string(hl, str)
+    return "%#" .. hl .. "#" .. str .. "%*"
+end
+
 ---@type table<string,boolean>
 M.groups = {}
 
-M.group = function(hl)
-    local group = vim.inspect(hl):gsub("%W+", "_")
+---Get a hl group's hex
+---@param hl_group string
+---@return table<string, string?>
+function M.get_hl_hex(hl_group)
+    local hl = vim.api.nvim_get_hl(0, { name = hl_group })
 
-    if not M.groups[group] then
+    return {
+        fg = hl.fg and ("#%06x"):format(hl.fg) or nil,
+        bg = hl.bg and ("#%06x"):format(hl.bg) or nil,
+    }
+end
+
+---@param hl vim.api.keyset.highlight|string
+---@return string
+M.group = function(hl)
+    --@type string
+    local name = vim.inspect(hl):gsub("%W+", "_")
+
+    if not M.groups[name] then
+        ---@type vim.api.keyset.highlight
         hl = type(hl) == "string" and { link = hl } or hl
         hl = vim.deepcopy(hl, true)
 
@@ -165,12 +188,12 @@ M.group = function(hl)
             hl.fg = nil
         end
 
-        vim.api.nvim_set_hl(0, group, hl)
+        vim.api.nvim_set_hl(0, name, hl)
 
-        M.groups[group] = true
+        M.groups[name] = true
     end
 
-    return group
+    return name
 end
 
 ---Apply a list of highlights

@@ -413,4 +413,61 @@ return {
         },
         virtual = true,
     },
+    {
+        "nvim-mini/mini.statusline",
+        init = function()
+            hl.apply({
+                MiniStatuslineModeNormal = { fg = colors.black.base, bg = colors.cyan.base, bold = true },
+                MiniStatuslineModeVisual = { fg = colors.black.base, bg = colors.magenta.base, bold = true },
+                MiniStatuslineModeInsert = { fg = colors.black.base, bg = colors.green.base, bold = true },
+                MiniStatuslineModeReplace = { fg = colors.black.base, bg = colors.red.base, bold = true },
+                MiniStatuslineModeCommand = { fg = colors.black.base, bg = colors.cyan.base, bold = true },
+                MiniStatuslineModeOther = { fg = colors.black.base, bg = colors.cyan.base, bold = true },
+
+                DiagnosticErrorStatus = { fg = colors.red.base, bold = true },
+                DiagnosticHintStatus = { fg = colors.blue.bright, bold = true },
+                DiagnosticInfoStatus = { fg = colors.blue.base, bold = true },
+                DiagnosticWarnStatus = { fg = colors.yellow.base, bold = true },
+                StatuslineSeparator = { fg = colors.white.base, bold = true },
+            })
+        end,
+        opts = {
+            use_icons = true,
+            content = {
+                active = function()
+                    local mini_status = require("mini.statusline")
+                    local sl = require("lib.statusline")
+
+                    local aerial = sl.aerial()
+                    local counts = sl.counts()
+                    local diagnostics = sl.diagnostics()
+                    local git = sl.git()
+                    local schema = sl.schema()
+                    local sep = hl.as_string("StatuslineSeparator", " ┃ ")
+
+                    -- Long truncate width to show short mode.
+                    local mode, mode_hl = mini_status.section_mode({ trunc_width = 256 })
+
+                    return table.concat({
+                        hl.as_string(mode_hl, " " .. mode .. " "),
+                        sl.fileinfo(),
+                        diagnostics ~= "" and sep or "",
+                        diagnostics,
+                        (diagnostics ~= "" or aerial ~= "") and sep or "",
+                        aerial,
+                        "%=",
+                        schema,
+                        schema ~= "" and sep or "",
+                        git,
+                        git ~= "" and sep or "",
+                        counts,
+                    }, "")
+                end,
+                use_icons = true,
+                set_vim_settings = true,
+            },
+        },
+        lazy = false,
+        virtual = true,
+    },
 }

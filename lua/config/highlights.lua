@@ -153,7 +153,7 @@ M.ui = {
         Search = { bg = colors.gray.base, fg = colors.white.dim },
         SignColumn = { fg = colors.gray.base },
         SpecialKey = { link = hl.NonText },
-        StatusLine = { bg = colors.gray.base, fg = colors.cyan.bright },
+        StatusLine = { bg = colors.black.base, fg = colors.white.base },
         StatusLineNC = { bg = colors.black.base, fg = colors.gray.base },
         Substitute = { bg = colors.red.base, fg = colors.black.dim },
         TabLine = { bg = colors.black.dark, fg = colors.white.base },

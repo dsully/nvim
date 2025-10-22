@@ -1,56 +1,38 @@
 ---@type LazySpec[]
 return {
     {
-        "SmiteshP/nvim-navic",
+        "stevearc/aerial.nvim",
+        event = ev.LspAttach,
         highlights = {
-            NavicIconsArray = { bg = colors.gray.base, fg = colors.yellow.base },
-            NavicIconsBoolean = { bg = colors.gray.base, fg = colors.orange.base },
-            NavicIconsClass = { bg = colors.gray.base, fg = colors.yellow.base },
-            NavicIconsConstant = { bg = colors.gray.base, fg = colors.orange.base },
-            NavicIconsConstructor = { bg = colors.gray.base, fg = colors.yellow.base },
-            NavicIconsEnum = { bg = colors.gray.base, fg = colors.yellow.base },
-            NavicIconsEnumMember = { bg = colors.gray.base, fg = colors.cyan.base },
-            NavicIconsEvent = { bg = colors.gray.base, fg = colors.magenta.base },
-            NavicIconsField = { bg = colors.gray.base, fg = colors.blue.base },
-            NavicIconsFile = { bg = colors.gray.base, fg = colors.blue.base },
-            NavicIconsFunction = { bg = colors.gray.base, fg = colors.magenta.base },
-            NavicIconsInterface = { bg = colors.gray.base, fg = colors.yellow.base },
-            NavicIconsKey = { bg = colors.gray.base, fg = colors.magenta.base },
-            NavicIconsMethod = { bg = colors.gray.base, fg = colors.magenta.base },
-            NavicIconsModule = { bg = colors.gray.base, fg = colors.blue.base },
-            NavicIconsNamespace = { bg = colors.gray.base, fg = colors.yellow.base },
-            NavicIconsNull = { bg = colors.gray.base, fg = colors.red.base },
-            NavicIconsNumber = { bg = colors.gray.base, fg = colors.orange.base },
-            NavicIconsObject = { bg = colors.gray.base, fg = colors.orange.base },
-            NavicIconsOperator = { bg = colors.gray.base, fg = colors.magenta.base },
-            NavicIconsPackage = { bg = colors.gray.base, fg = colors.orange.base },
-            NavicIconsProperty = { bg = colors.gray.base, fg = colors.blue.base },
-            NavicIconsString = { bg = colors.gray.base, fg = colors.green.base },
-            NavicIconsStruct = { bg = colors.gray.base, fg = colors.yellow.base },
-            NavicIconsTypeParameter = { bg = colors.gray.base, fg = colors.yellow.base },
-            NavicIconsVariable = { bg = colors.gray.base, fg = colors.blue.base },
-            NavicSeparator = { bg = colors.gray.base, fg = colors.cyan.base },
-            NavicText = { bg = colors.gray.base, fg = colors.white.base },
+            AerialArrayIcon = { fg = colors.yellow.base },
+            AerialBooleanIcon = { fg = colors.orange.base },
+            AerialClassIcon = { fg = colors.yellow.base },
+            AerialConstantIcon = { fg = colors.orange.base },
+            AerialConstructorIcon = { fg = colors.yellow.base },
+            AerialEnumIcon = { fg = colors.yellow.base },
+            AerialEnumMemberIcon = { fg = colors.cyan.base },
+            AerialEventIcon = { fg = colors.magenta.base },
+            AerialFieldIcon = { fg = colors.blue.base },
+            AerialFileIcon = { fg = colors.blue.base },
+            AerialFunctionIcon = { fg = colors.magenta.base },
+            AerialInterfaceIcon = { fg = colors.yellow.base },
+            AerialKeyIcon = { fg = colors.magenta.base },
+            AerialMethodIcon = { fg = colors.magenta.base },
+            AerialModuleIcon = { fg = colors.blue.base },
+            AerialNamespaceIcon = { fg = colors.yellow.base },
+            AerialNullIcon = { fg = colors.red.base },
+            AerialNumberIcon = { fg = colors.orange.base },
+            AerialObjectIcon = { fg = colors.orange.base },
+            AerialOperatorIcon = { fg = colors.magenta.base },
+            AerialPackageIcon = { fg = colors.orange.base },
+            AerialPropertyIcon = { fg = colors.blue.base },
+            AerialStringIcon = { fg = colors.green.base },
+            AerialStructIcon = { fg = colors.yellow.base },
+            AerialTypeParameterIcon = { fg = colors.yellow.base },
+            AerialVariableIcon = { fg = colors.blue.base },
         },
-        init = function()
-            vim.g.navic_silence = true
-
-            vim.schedule(function()
-                ---@param client vim.lsp.Client
-                ---@param buffer number
-                nvim.lsp.on_supports_method("textDocument/documentSymbol", function(client, buffer)
-                    require("nvim-navic").attach(client, buffer)
-                end)
-            end)
-        end,
         opts = {
-            click = true,
-            highlight = true,
-            lazy_update_context = true,
-            lsp = {
-                auto_attach = true,
-                preference = { "basedpyright" },
-            },
+            backends = { "lsp", "treesitter", "markdown", "man" },
         },
     },
     {
