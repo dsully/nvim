@@ -28,7 +28,7 @@ return {
             })
 
             ---@type table<string, string[]|boolean>?
-            kind_filter = {
+            local kind_filter = {
                 default = {
                     "Class",
                     "Constructor",
@@ -95,6 +95,9 @@ return {
                         { "gi", function() Snacks.picker.lsp_implementations() end, desc = "Goto Implementation" },
                         { "grf", function() Snacks.rename.rename_file() end, desc = "Rename File", icon = " ", },
                         { "grr", function() Snacks.picker.lsp_references() end, nowait = true, desc = "References" },
+
+                        { "gai", function() Snacks.picker.lsp_incoming_calls() end, desc = "C[a]lls Incoming" },
+                        { "gao", function() Snacks.picker.lsp_outgoing_calls() end, desc = "C[a]lls Outgoing" },
                     } --[[@as wk.Spec]], { notify = false })
                 end)
             end)

@@ -95,6 +95,10 @@ return {
             on_attach = function(buffer)
                 local gs = package.loaded.gitsigns
 
+                if gs == nil then
+                    return
+                end
+
                 Snacks.toggle({
                     name = "Git Signs",
                     get = function()

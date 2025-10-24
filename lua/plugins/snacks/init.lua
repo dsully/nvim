@@ -12,6 +12,7 @@ return {
         -- this is needed to have early notifications show up in noice history
         vim.notify = notify
 
+        ---@diagnostic disable-next-line: global-in-non-module
         _G.notify = snacks.notify
 
         ev.on(ev.User, function()
@@ -26,10 +27,12 @@ return {
             snacks.toggle.profiler():map("<leader>dpp")
             snacks.toggle.profiler_highlights():map("<leader>dph")
 
+            ---@diagnostic disable-next-line: global-in-non-module
             _G.dd = function(...)
                 Snacks.debug.inspect(...)
             end
 
+            ---@diagnostic disable-next-line: global-in-non-module
             _G.bt = function()
                 Snacks.debug.backtrace()
             end
@@ -123,15 +126,12 @@ return {
                 bo = { filetype = "dashboard" },
             },
             input = {
-                border = defaults.ui.border.name,
                 relative = "cursor",
             },
             notification = {
-                border = defaults.ui.border.name,
                 wo = { wrap = true },
             },
             scratch = {
-                border = defaults.ui.border.name,
                 height = 0.8,
                 width = 0.8,
             },

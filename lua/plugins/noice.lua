@@ -228,7 +228,6 @@ return {
                     height = 10,
                 },
                 border = {
-                    style = defaults.ui.border.name,
                     padding = { 0, 1 },
                 },
             },

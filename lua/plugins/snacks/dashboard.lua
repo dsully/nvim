@@ -9,7 +9,7 @@ return {
             formats = {
                 icon = function(item)
                     if item.file and item.icon == "file" or item.icon == "directory" then
-                        return Snacks.dashboard.icon(item.file, item.icon)
+                        return Snacks.dashboard.icon(item.file or "", item.icon)
                     end
 
                     local icon_to_hl = {
