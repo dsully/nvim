@@ -76,6 +76,8 @@ return {
     opts = {
         bigfile = {
             enabled = true,
+            line_length = 10000,
+            size = 5 * 1024 * 1024,
         },
         explorer = {
             replace_netrw = true,
