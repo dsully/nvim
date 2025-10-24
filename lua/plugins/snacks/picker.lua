@@ -8,8 +8,15 @@ return {
         { "<leader>fB", function() Snacks.picker.smart({
             title = 'Buffers',
             multi = false,
-            finder = 'buffers',
-            current = false,
+            -- finder = 'buffers',
+            -- current = false,
+            format = "file", -- use `file` format for all sources
+            matcher = {
+                cwd_bonus = true, -- boost cwd matches
+                frecency = true, -- use frecency boosting
+                sort_empty = true, -- sort even when the filter is empty
+            },
+            transform = "unique_file",
         }) end, desc = "Buffers" },
         { "<leader>fC", function() Snacks.picker.git_log({ current_file = true }) end, desc = "Commits" },
         { "<leader>fD", function() Snacks.picker.diagnostics_buffer({ format = "file" }) end, desc = "Diagnostics (Buffer)" },
