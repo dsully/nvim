@@ -92,7 +92,7 @@ return {
                     text = { "[ Recent Files ]", hl = "Function" } --[[@as snacks.dashboard.Text]],
                     padding = 1,
                 },
-                { section = "recent_files", indent = 1, padding = 1 },
+                { section = "recent_files", cwd = true, indent = 1, padding = 1 },
                 {
                     align = "center",
                     text = { string.rep("─", 50), hl = "FloatBorder" } --[[@as snacks.dashboard.Text]],

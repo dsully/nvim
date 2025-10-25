@@ -348,6 +348,7 @@ return {
             },
             lsp = defaults.icons.lsp,
         },
+        lazy = false,
         virtual = true,
     },
     {

@@ -17,7 +17,7 @@ function M.aerial()
     local depth = 5
     local parts = {}
 
-    for _, symbol in ipairs({ unpack(require("aerial").get_location(true), 1, depth) }) do
+    for _, symbol in ipairs({ unpack(require("aerial").get_location(), 1, depth) }) do
         local hl_group = ahl.get_highlight(symbol, false, false)
         local name = hl_group and hl.as_string(hl_group, symbol.name) or symbol.name
 
