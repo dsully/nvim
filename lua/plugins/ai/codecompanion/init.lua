@@ -79,7 +79,7 @@ return {
             },
         },
         opts = function()
-            local adapter = vim.env.CODECOMPANION_ADAPTER or "acp"
+            local adapter = vim.env.CODECOMPANION_ADAPTER or "claude_code"
             local model = vim.env.CODECOMPANION_MODEL or "claude-sonnet-4-5-20250929"
 
             ---@type CodeCompanion.Config
@@ -89,9 +89,8 @@ return {
                         claude_code = function()
                             return require("codecompanion.adapters").extend("claude_code", {
                                 env = {
-                                    ANTHROPIC_API_KEY = vim.env.ANTHROPIC_OAUTH_API_KEY,
+                                    CLAUDE_CODE_OAUTH_TOKEN = "CLAUDE_CODE_OAUTH_TOKEN"
                                 },
-                                model = model
                             })
                         end,
                     },
