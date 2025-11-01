@@ -14,6 +14,8 @@ vim.cmd.inoreabbrev("<buffer> null None")
 vim.cmd.inoreabbrev("<buffer> none None")
 vim.cmd.inoreabbrev("<buffer> nil None")
 
+vim.g.indent_guide = true
+
 -- Automatically make the current string an f-string when typing `{`.
 ev.on(ev.InsertCharPre, function(params)
     if vim.v.char ~= "{" then
