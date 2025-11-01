@@ -365,23 +365,21 @@ return {
             BlinkIndentScope = { fg = colors.blue.bright },
         },
         init = function()
-            vim.g.indent_guide = true
+            vim.g.indent_guide = false
         end,
         opts = function()
             Snacks.toggle({
                 name = "Indent",
                 get = function()
-                    return vim.g.indent_guide
+                    return not require("blink.indent").is_enabled()
                 end,
-                set = require("blink.indent").toggle,
+                set = function()
+                    require("blink.indent").enable(not require("blink.indent").is_enabled())
+                end,
             }):map("<space>tI")
 
             --- @type blink.indent.Config
             return {
-                blocked = {
-                    buftypes = defaults.ignored.buffer_types,
-                    filetypes = defaults.ignored.file_types,
-                },
                 static = {
                     enabled = false,
                 },
