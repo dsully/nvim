@@ -89,7 +89,7 @@ return {
                         claude_code = function()
                             return require("codecompanion.adapters").extend("claude_code", {
                                 env = {
-                                    CLAUDE_CODE_OAUTH_TOKEN = "CLAUDE_CODE_OAUTH_TOKEN"
+                                    CLAUDE_CODE_OAUTH_TOKEN = vim.env.ANTHROPIC_API_KEY,
                                 },
                             })
                         end,

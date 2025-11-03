@@ -359,14 +359,10 @@ return {
     },
     {
         "Saghen/blink.indent",
-        event = ev.LazyFile,
+        ft = "python",
         highlights = {
             BlinkIndent = { fg = colors.blue.bright },
-            BlinkIndentScope = { fg = colors.blue.bright },
         },
-        init = function()
-            vim.g.indent_guide = false
-        end,
         opts = function()
             Snacks.toggle({
                 name = "Indent",
