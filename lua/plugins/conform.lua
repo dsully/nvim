@@ -39,7 +39,6 @@ return {
                 bash = { "shellharden", "shfmt" },
                 caddy = { "caddy" },
                 direnv = { "shellharden", "shfmt" },
-                fish = { "fish_indent" },
                 go = { "gofumpt" },
                 json = { "jq" },
                 lua = { "stylua" },
