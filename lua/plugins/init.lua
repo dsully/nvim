@@ -8,7 +8,7 @@ return {
     { "fei6409/log-highlight.nvim", event = "BufRead *.log", opts = {} },
 
     -- For adding words to typos.toml
-    { "vhyrro/toml-edit.lua", build = "cargo build --features luajit --release", priority = 1000 },
+    { "faithanalog/toml.lua", priority = 1000 },
 
     -- Color palette management.
     { "bhugovilela/palette.nvim", cmd = "Palette" },

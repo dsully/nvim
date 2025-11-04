@@ -10,6 +10,7 @@ M.add_word_to_typos = function(word)
     --
     local path = vim.fs.abspath("~/.typos.toml")
     local config = nvim.file.read_toml(path)
+    local toml = require("toml")
 
     if not config then
         return
@@ -38,7 +39,7 @@ M.add_word_to_typos = function(word)
 
     config[word] = word
 
-    nvim.file.write(path, tostring(config))
+    nvim.file.write(path, toml.encode(config))
 end
 
 return M

@@ -69,9 +69,8 @@ end
 ---@return table
 M.read_toml = function(path)
     --
-    -- This comes from vhyrro/luarocks.nvim / the toml-edit rock.
-    local toml = require("toml_edit")
-    local parsed = toml.parse(M.read(path))
+    local toml = require("toml")
+    local parsed = toml.decode(M.read(path))
 
     if not parsed then
         Snacks.notify.error("Couldn't read " .. path)
