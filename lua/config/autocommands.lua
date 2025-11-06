@@ -1,13 +1,3 @@
-ev.on({ ev.BufEnter, ev.BufWinEnter, ev.BufWinLeave, ev.FocusGained, ev.TermClose, ev.TermLeave }, function()
-    --
-    -- if vim.buf.is_regular(buffer) then
-    if vim.o.buftype ~= defaults.ignored.buffer_types and vim.api.nvim_get_mode().mode ~= "c" then
-        vim.cmd.checktime()
-    end
-end, {
-    desc = "Check if we need to reload the file when it changed.",
-})
-
 ev.on(ev.BufEnter, function(event)
     if vim.fn.winnr("$") == 1 and vim.bo.buftype == "quickfix" then
         Snacks.bufdelete({ buf = event.buf, force = true } --[[@as snacks.bufdelete.Opts]])
