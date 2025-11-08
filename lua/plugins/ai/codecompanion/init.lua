@@ -79,8 +79,8 @@ return {
             },
         },
         opts = function()
-            local adapter = vim.env.CODECOMPANION_ADAPTER or "claude_code"
-            local model = vim.env.CODECOMPANION_MODEL or "claude-sonnet-4-5-20250929"
+            local adapter_name = vim.env.CODECOMPANION_ADAPTER or "claude_code"
+            local model_name = vim.env.CODECOMPANION_MODEL or "claude-sonnet-4-5-20250929"
 
             ---@type CodeCompanion.Config
             return {
@@ -95,7 +95,7 @@ return {
                         end,
                     },
                     http = {
-                        adapter = function()
+                        anthropic = function()
                             return require("codecompanion.adapters").extend("anthropic", {
                                 schema = {
                                     extended_thinking = {
@@ -174,12 +174,12 @@ return {
                 },
                 strategies = {
                     agent = {
-                        adapter = adapter,
-                        model = model,
+                        adapter = adapter_name,
+                        model = model_name,
                     },
                     chat = {
-                        adapter = adapter,
-                        model = model,
+                        adapter = adapter_name,
+                        model = model_name,
                         slash_commands = {
                             buffer = { opts = { provider = "snacks" } },
                             file = { opts = { provider = "snacks" } },
@@ -188,8 +188,8 @@ return {
                         },
                     },
                     inline = {
-                        adapter = adapter,
-                        model = model,
+                        adapter = adapter_name,
+                        model = model_name,
                     },
                 },
             }
