@@ -43,9 +43,9 @@ return {
                 json = { "jq" },
                 lua = { "stylua" },
                 make = { "bake" },
-                markdown = function(bufnr)
-                    return { require("lib.formatting").first(bufnr, "prettierd", "prettier"), "injected" }
-                end,
+                -- markdown = function(bufnr)
+                --     return { require("lib.formatting").first(bufnr, "prettierd", "prettier"), "injected" }
+                -- end,
                 pyproject = { "pyproject-fmt" },
                 python = { "ruff_organize_imports", "ruff_format", "ruff_fix" },
                 sh = { "shellharden", "shfmt" },

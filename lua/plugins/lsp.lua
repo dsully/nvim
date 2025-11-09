@@ -232,6 +232,7 @@ return {
                 "just-lsp",
                 "lemminx",
                 "markdown-lsp",
+                "rumdl",
                 "nil_ls",
                 "nixd",
                 "pkl",
