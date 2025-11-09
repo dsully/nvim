@@ -67,7 +67,6 @@ return {
                 ---@type blink.cmp.CompletionDocumentationConfig
                 documentation = {
                     auto_show = true,
-                    auto_show_delay_ms = 100,
                 },
                 ghost_text = {
                     enabled = true,
@@ -376,6 +375,10 @@ return {
 
             --- @type blink.indent.Config
             return {
+                blocked = {
+                    buftypes = defaults.ignored.buffer_types,
+                    filetypes = defaults.ignored.file_types,
+                },
                 static = {
                     enabled = false,
                 },
