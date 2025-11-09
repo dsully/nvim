@@ -3,24 +3,25 @@ return {
     "age",
     config = function()
         local path = nvim.file.xdg_config("/chezmoi/chezmoi.toml")
-        local config = nvim.file.read_toml(path)
 
-        if not config then
-            return
+        local identity = vim.system({ "tomlq", "-r", ".age.identity", path }, { text = true }):wait().stdout
+        local recipient = vim.system({ "tomlq", "-r", ".age.recipient", path }, { text = true }):wait().stdout
+
+        if identity ~= nil then
+            identity = identity:gsub("\r?\n$", "")
         end
 
-        ---@class Age
-        ---@field identity string
-        ---@field recipient string
-        local age = config.age
+        if recipient ~= nil then
+            recipient = recipient:gsub("\r?\n$", "")
+        end
 
-        if not age or not age.identity then
+        if not identity then
             Snacks.notify.error("Could not find [age] identity in chezmoi.toml")
             return
         end
 
         ev.on({ ev.BufReadPost, ev.FileReadPost }, function()
-            vim.cmd(string.format("silent '[,']!age --decrypt -i %s", vim.fs.normalize(age.identity)))
+            vim.cmd(string.format("silent '[,']!age --decrypt -i %s", vim.fs.normalize(identity)))
 
             vim.bo.binary = false
 
@@ -33,7 +34,7 @@ return {
         ev.on({ ev.BufWritePre, ev.FileWritePre }, function()
             vim.bo.binary = true
 
-            vim.cmd(string.format("silent '[,']!age --encrypt -r %s -a", age.recipient))
+            vim.cmd(string.format("silent '[,']!age --encrypt -r %s -a", recipient))
         end, {
             desc = "Encrypt age file",
             pattern = "*.age",
