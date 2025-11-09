@@ -6,5 +6,10 @@ return {
         "fish",
         "fish.gotmpl",
     },
+    on_attach = function(client)
+        if client.server_capabilities then
+            client.server_capabilities.documentOnTypeFormattingProvider = nil
+        end
+    end,
     single_file_support = true,
 }

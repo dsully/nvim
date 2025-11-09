@@ -9,18 +9,19 @@ return {
         if client.server_capabilities then
             -- client.server_capabilities.callHierarchyProvider = nil
             -- -- client.server_capabilities.codeActionProvider = nil
-            -- -- client.server_capabilities.completionProvider = nil
+            client.server_capabilities.completionProvider = nil
             -- -- client.server_capabilities.declarationProvider = nil
             -- -- client.server_capabilities.definitionProvider = nil
             -- -- client.server_capabilities.documentHighlightProvider = nil
-            client.server_capabilities.documentOnTypeFormattingProvider = nil
+            -- client.server_capabilities.documentOnTypeFormattingProvider = nil
             -- client.server_capabilities.documentSymbolProvider = nil
             -- client.server_capabilities.executeCommandProvider = nil
-            -- -- client.server_capabilities.hoverProvider = nil
+            -- client.server_capabilities.hoverProvider = nil
             -- client.server_capabilities.inlayHintProvider = nil
             -- client.server_capabilities.notebookDocumentSync = nil
-            -- -- client.server_capabilities.referencesProvider = nil
-            -- client.server_capabilities.renameProvider = nil
+            client.server_capabilities.renameProvider = nil
+
+            -- client.server_capabilities.referencesProvider = nil
             -- client.server_capabilities.semanticTokensProvider = nil
             -- client.server_capabilities.signatureHelpProvider = nil
             -- client.server_capabilities.typeDefinitionProvider = nil
@@ -67,7 +68,7 @@ return {
                     reportUnusedCallResult = false,
                     reportUnusedFunction = false,
                     reportUnusedImport = false,
-                    -- reportUnusedParameter = false,
+                    reportUnusedParameter = false,
                 },
                 -- exclude = { "crt" },
                 -- ignore = { ".venv" },
