@@ -69,7 +69,7 @@ M.buffers_for_client = function(filter)
         ipairs(vim.lsp.get_clients(filter) --[[@as vim.lsp.Client[] ]])
     do
         if not M.should_ignore(client) then
-            local buffers = vim.lsp.get_buffers_by_client_id(client.id)
+            local buffers = vim.lsp.get_client_by_id(client.id).attached_buffers
 
             if #buffers > 0 then
                 clients[#clients + 1] = {
