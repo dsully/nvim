@@ -358,7 +358,11 @@ return {
     },
     {
         "Saghen/blink.indent",
-        ft = "python",
+        ft = {
+            "python",
+            "yaml",
+            "yaml.*",
+        },
         highlights = {
             BlinkIndent = { fg = colors.blue.bright },
         },
