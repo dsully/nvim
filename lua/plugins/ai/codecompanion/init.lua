@@ -132,7 +132,7 @@ return {
                 extensions = {
                     history = {
                         enabled = true,
-                        auto_generate_title = true,
+                        auto_generate_title = false,
                         auto_save = false,
                         chat_filter = function(chat_data)
                             local seven_days_ago = os.time() - (7 * 24 * 60 * 60)

@@ -5,22 +5,6 @@ return {
         vim.schedule(function()
             local lint = require("lint")
 
-            lint.linters.mado = {
-                cmd = "mado",
-                args = {
-                    "--config",
-                    nvim.file.xdg_config("/mado.toml"),
-                    "check",
-                },
-                ignore_exitcode = true,
-                stream = "stdout",
-                stdin = true,
-                parser = require("lint.parser").from_errorformat("(stdin):%l:%c: %m", {
-                    source = "mado",
-                    severity = vim.diagnostic.severity.WARN,
-                }),
-            } --[[@as lint.Linter]]
-
             lint.linters.yamllint.args = {
                 "--config",
                 nvim.file.xdg_config("/yamllint.yaml"),
@@ -32,7 +16,7 @@ return {
                 gitcommit = { "commitlint" },
                 github = { "actionlint" },
                 go = { "revive" },
-                markdown = { "mado", "write_good" },
+                markdown = { "write_good" },
                 nix = { "deadnix", "statix" },
                 rst = { "rstcheck", "sphinx-lint" },
                 text = { "write_good" },
