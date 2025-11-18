@@ -232,6 +232,7 @@ return {
                 "just-lsp",
                 "lemminx",
                 "markdown-lsp",
+                "pytest-language-server",
                 "rumdl",
                 "nil_ls",
                 "nixd",
