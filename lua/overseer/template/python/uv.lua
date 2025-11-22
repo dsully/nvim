@@ -42,7 +42,8 @@ return {
     end,
     condition = {
         callback = function()
-            return vim.uv.fs_stat("uv.lock") == nil
+            return nvim.file.stem(nvim.file.filename()) == "pyproject.toml" and vim.uv.fs_stat("uv.lock") ~= nil
         end,
+        filetype = { "toml" },
     },
 }
