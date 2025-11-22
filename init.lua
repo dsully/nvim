@@ -15,6 +15,8 @@ if vim.env.PROF ~= nil or vim.env.PROFILE ~= nil or vim.env.NVIM_PROFILE ~= nil 
     } --[[@as snacks.profiler.Config]])
 end
 
+vim.deprecate = function() end
+
 require("config.options")
 require("config.globals")
 require("config.lazy").init()
