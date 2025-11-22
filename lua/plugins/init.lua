@@ -100,7 +100,7 @@ return {
     -- Pretty screen shots.
     {
         "mistricky/codesnap.nvim",
-        build = "make",
+        branch = "refactor/v2",
         cmd = {
             "CodeSnap",
             "CodeSnapSave",
