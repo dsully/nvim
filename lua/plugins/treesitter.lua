@@ -40,9 +40,6 @@ return {
                 "yaml",
             }
 
-            -- https://github.com/neovim/neovim/issues/32660
-            vim.g._ts_force_sync_parsing = true
-
             local isnt_installed = function(lang)
                 return #vim.api.nvim_get_runtime_file("parser/" .. lang .. ".*", false) == 0
             end
