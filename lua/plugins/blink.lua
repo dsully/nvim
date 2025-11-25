@@ -335,11 +335,7 @@ return {
         },
     },
     { "bydlw98/blink-cmp-env" },
-    { "disrupted/blink-cmp-conventional-commits" },
-    { "Kaiser-Yang/blink-cmp-dictionary" },
-    { "Kaiser-Yang/blink-cmp-git" },
     { "MahanRahmati/blink-nerdfont.nvim" },
-    { "saghen/blink.compat", opts = { impersonate_nvim_cmp = true } },
     { "xzbdmw/colorful-menu.nvim" },
     {
         "chrisgrieser/nvim-scissors",
