@@ -199,7 +199,6 @@ return {
                         "codecompanion",
                     },
                     gitcommit = {
-                        "conventional_commits",
                         "dictionary",
                     },
                     lua = {
@@ -220,24 +219,6 @@ return {
                         max_items = 4,
                         min_keyword_length = 4,
                         score_offset = -3,
-                    },
-                    conventional_commits = {
-                        name = "Conventional Commits",
-                        module = "blink-cmp-conventional-commits",
-                        enabled = function()
-                            return vim.bo.filetype == "gitcommit"
-                        end,
-                    },
-                    dictionary = {
-                        module = "blink-cmp-dictionary",
-                        name = "Dict",
-                        min_keyword_length = 3,
-                        opts = {
-                            dictionary_files = { "/usr/share/dict/words" },
-                        },
-                        should_show_items = function()
-                            return vim.tbl_contains({ "gitcommit", "markdown", "txt" }, vim.o.filetype)
-                        end,
                     },
                     env = {
                         name = "Env",
@@ -356,8 +337,8 @@ return {
         "Saghen/blink.indent",
         ft = {
             "python",
-            "yaml",
-            "yaml.*",
+            -- "yaml",
+            -- "yaml.*",
         },
         highlights = {
             BlinkIndent = { fg = colors.blue.bright },
