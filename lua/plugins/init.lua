@@ -42,7 +42,6 @@ return {
     -- Pretty screen shots.
     {
         "mistricky/codesnap.nvim",
-        branch = "refactor/v2",
         cmd = {
             "CodeSnap",
             "CodeSnapSave",
