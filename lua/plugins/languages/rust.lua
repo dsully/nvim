@@ -1,6 +1,17 @@
 ---@type LazySpec[]
 return {
     {
+        "alexpasmantier/krust.nvim",
+        cmd = "Krust",
+        ft = "rust",
+        opts = {
+            keymap = "<leader>xs",
+            float_win = {
+                border = defaults.ui.border.name,
+            },
+        },
+    },
+    {
         "Saecki/crates.nvim",
         event = "BufReadPost Cargo.toml",
         opts = {
