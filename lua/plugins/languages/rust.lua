@@ -2,8 +2,7 @@
 return {
     {
         "alexpasmantier/krust.nvim",
-        cmd = "Krust",
-        ft = "rust",
+        lazy = false,
         opts = {
             keymap = "<leader>xs",
             float_win = {
