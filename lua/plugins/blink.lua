@@ -198,9 +198,6 @@ return {
                     codecompanion = {
                         "codecompanion",
                     },
-                    gitcommit = {
-                        "dictionary",
-                    },
                     lua = {
                         "lsp",
                         "path",
@@ -209,9 +206,6 @@ return {
                     toml = {
                         "lsp",
                         "path",
-                    },
-                    txt = {
-                        "dictionary",
                     },
                 },
                 providers = {
