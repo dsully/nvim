@@ -41,7 +41,6 @@ return {
             diagnosticMode = "workspace",
             disableLanguageServices = false,
             experimental = {
-                autoImport = true,
                 rename = true,
             },
             inlayHints = {
