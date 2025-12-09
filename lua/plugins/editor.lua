@@ -2,7 +2,7 @@
 return {
     {
         "stevearc/aerial.nvim",
-        event = ev.LspAttach,
+        event = ev.LazyFile,
         highlights = {
             AerialArrayIcon = { fg = colors.yellow.base },
             AerialBooleanIcon = { fg = colors.orange.base },
@@ -31,8 +31,23 @@ return {
             AerialTypeParameterIcon = { fg = colors.yellow.base },
             AerialVariableIcon = { fg = colors.blue.base },
         },
+        keys = {
+            {
+                "<leader>fS",
+                function()
+                    require("aerial").snacks_picker({ layout = { preset = "dropdown", preview = false } })
+                end,
+                desc = "Symbols (Aerial)",
+            },
+        },
         opts = {
-            backends = { "lsp", "treesitter", "markdown", "man" },
+            filter_kind = false,
+            ignore = {
+                buftypes = defaults.ignored.buffer_types,
+                filetypes = defaults.ignored.file_types,
+            },
+            lazy_load = false,
+            nerd_font = true,
         },
     },
     {
