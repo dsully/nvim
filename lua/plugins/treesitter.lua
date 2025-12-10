@@ -59,6 +59,8 @@ return {
 
             ev.on(ev.FileType, function(event)
                 vim.treesitter.start(event.buf)
+
+                vim.bo[event.buf].indentexpr = "v:lua.require'nvim-treesitter'.indentexpr()"
             end, {
                 pattern = filetypes,
             })
