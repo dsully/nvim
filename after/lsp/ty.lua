@@ -40,9 +40,6 @@ return {
         ty = {
             diagnosticMode = "workspace",
             disableLanguageServices = false,
-            experimental = {
-                rename = true,
-            },
             inlayHints = {
                 callArgumentNames = true,
                 variableTypes = true,
