@@ -151,7 +151,7 @@ return {
                         },
                     },
                 },
-                memory = {
+                rules = {
                     opts = {
                         chat = { enabled = true },
                     },
@@ -172,7 +172,7 @@ return {
                     ["Refactor"] = require("plugins.ai.codecompanion.prompts.refactor"),
                     ["Spelling"] = require("plugins.ai.codecompanion.prompts.spelling"),
                 },
-                strategies = {
+                interactions = {
                     agent = {
                         adapter = adapter_name,
                         model = model_name,

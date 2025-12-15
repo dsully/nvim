@@ -3,7 +3,6 @@ return {
     {
         ---@module "nvim-treesitter"
         "nvim-treesitter/nvim-treesitter",
-        branch = "main",
         build = ":TSUpdate",
         init = function()
             local languages = {
