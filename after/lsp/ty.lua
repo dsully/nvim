@@ -39,11 +39,6 @@ return {
     settings = {
         ty = {
             diagnosticMode = "workspace",
-            disableLanguageServices = false,
-            inlayHints = {
-                callArgumentNames = true,
-                variableTypes = true,
-            },
         },
     },
     single_file_support = true,
