@@ -81,7 +81,7 @@ return {
                         { "<leader>li", nvim.lsp.info, desc = "LSP Info", icon = " " },
                         { "<leader>ll", vim.cmd.LspLog, desc = "LSP Log", icon = " " },
                         { "<leader>lr", vim.cmd.LspRestartBuffer, desc = "LSP Restart", icon = " " },
-                        { "<leader>ls", vim.cmd.LspStop, desc = "LSP Stop", icon = " " },
+                        { "<leader>ls", function() vim.cmd.lsp("stop") end, desc = "LSP Stop", icon = " " },
                         { "<leader>xr", vim.diagnostic.reset, desc = "Reset", icon = " " },
                         { "<leader>xs", vim.diagnostic.open_float, desc = "Show", icon = "󰙨" },
                         { "gra", nvim.lsp.code_action, desc = "Actions", icon = "󰅯 " },
