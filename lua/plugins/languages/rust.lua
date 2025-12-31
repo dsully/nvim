@@ -28,28 +28,6 @@ return {
     {
         "mrcjkb/rustaceanvim",
         config = function()
-            --
-            local clippy_args = {
-                "--",
-                "--no-deps", -- run Clippy only on the given crate
-            }
-
-            if nvim.file.is_local_dev() then
-                vim.list_extend(clippy_args, {
-                    -- Deny, Warn, Allow, Forbid
-                    "-Wclippy::correctness", -- code that is outright wrong or useless
-                    "-Wclippy::complexity", -- code that does something simple but in a complex way
-                    "-Wclippy::suspicious", -- code that is most likely wrong or useless
-                    "-Wclippy::style", -- code that should be written in a more idiomatic way
-                    "-Wclippy::perf", -- code that can be written to run faster
-                    "-Wclippy::pedantic", -- lints which are rather strict or have occasional false positives
-                    -- Allow overly pedantic lints
-                    "-Aclippy::doc_markdown",
-                    "-Aclippy::missing_errors_doc",
-                    "-Aclippy::missing_panics_doc",
-                })
-            end
-
             ---@module "rustaceanvim"
             vim.g.rustaceanvim = {
                 dap = {
@@ -101,22 +79,20 @@ return {
                         -- https://rust-analyzer.github.io/manual.html#configuration
                         ["rust-analyzer"] = {
                             cargo = {
-                                buildScripts = {
-                                    enable = true,
-                                },
+                                features = "all",
                                 -- Build in sub directory to prevent locking
                                 targetDir = true,
                             },
                             check = {
                                 command = "clippy",
                                 enable = true,
-                                extraArgs = clippy_args,
+                                features = "all",
                             },
                             completion = {
                                 fullFunctionSignatures = { enable = true },
                             },
                             diagnostics = {
-                                disabled = { "inactive-code", "macro-error", "unresolved-macro-call" },
+                                -- disabled = { "inactive-code", "macro-error", "unresolved-macro-call" },
                                 enable = true,
                                 experimental = { enable = true },
                                 styleLints = { enable = true },
@@ -161,6 +137,7 @@ return {
                                 },
                             },
                             procMacro = {
+                                enabled = true,
                                 -- Don't expand some problematic proc_macros
                                 ignored = {
                                     ["async-trait"] = { "async_trait" },
@@ -185,7 +162,7 @@ return {
                 },
             } --[[@as rustaceanvim.Opts]]
         end,
-        ft = "rust",
+        lazy = false,
         version = "^6", -- Recommended
     },
 }
