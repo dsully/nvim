@@ -7,25 +7,25 @@ return {
         --
         -- Use treesitter highlighting, as it supports injections.
         if client.server_capabilities then
-            -- client.server_capabilities.callHierarchyProvider = nil
-            -- -- client.server_capabilities.codeActionProvider = nil
+            client.server_capabilities.callHierarchyProvider = nil
+            -- client.server_capabilities.codeActionProvider = nil
             client.server_capabilities.completionProvider = nil
-            -- -- client.server_capabilities.declarationProvider = nil
-            -- -- client.server_capabilities.definitionProvider = nil
-            -- -- client.server_capabilities.documentHighlightProvider = nil
-            -- client.server_capabilities.documentOnTypeFormattingProvider = nil
-            -- client.server_capabilities.documentSymbolProvider = nil
-            -- client.server_capabilities.executeCommandProvider = nil
-            -- client.server_capabilities.hoverProvider = nil
-            -- client.server_capabilities.inlayHintProvider = nil
-            -- client.server_capabilities.notebookDocumentSync = nil
+            client.server_capabilities.declarationProvider = nil
+            client.server_capabilities.definitionProvider = nil
+            client.server_capabilities.documentHighlightProvider = nil
+            client.server_capabilities.documentOnTypeFormattingProvider = nil
+            client.server_capabilities.documentSymbolProvider = nil
+            client.server_capabilities.executeCommandProvider = nil
+            client.server_capabilities.hoverProvider = nil
+            client.server_capabilities.inlayHintProvider = nil
+            client.server_capabilities.notebookDocumentSync = nil
             client.server_capabilities.renameProvider = nil
 
-            -- client.server_capabilities.referencesProvider = nil
-            -- client.server_capabilities.semanticTokensProvider = nil
-            -- client.server_capabilities.signatureHelpProvider = nil
-            -- client.server_capabilities.typeDefinitionProvider = nil
-            -- client.server_capabilities.workspaceSymbolProvider = nil
+            client.server_capabilities.referencesProvider = nil
+            client.server_capabilities.semanticTokensProvider = nil
+            client.server_capabilities.signatureHelpProvider = nil
+            client.server_capabilities.typeDefinitionProvider = nil
+            client.server_capabilities.workspaceSymbolProvider = nil
         end
     end,
     -- root_dir = function(_bufnr, _on_dir)
