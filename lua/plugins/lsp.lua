@@ -241,7 +241,7 @@ return {
                 "ruff",
                 "sourcekit",
                 "superhtml",
-                "systemd_ls",
+                "systemd_lsp",
                 "tombi",
                 "ts_query_ls",
                 "tsgo",

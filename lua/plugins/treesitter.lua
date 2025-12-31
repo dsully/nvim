@@ -74,6 +74,9 @@ return {
         "nvim-treesitter/nvim-treesitter-textobjects",
         branch = "main",
         event = ev.LazyFile,
+        init = function()
+            vim.g.no_plugin_maps = true
+        end,
     },
     {
         "maxbol/treesorter.nvim",
