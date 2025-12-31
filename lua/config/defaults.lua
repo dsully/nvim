@@ -235,6 +235,7 @@ local M = {
             "gitcommit",
             "health",
             "help",
+            "krust",
             "nofile",
             "quickfix",
             "terminal",
