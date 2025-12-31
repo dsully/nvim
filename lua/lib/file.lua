@@ -101,6 +101,7 @@ M.is_local_dev = function()
         vim.env.XDG_CONFIG_HOME,
         vim.env.XDG_DATA_HOME .. "/chezmoi",
         vim.fs.abspath("~/dev/home"),
+        vim.fs.abspath("~/dev/work"),
     }) do
         if vim.startswith(cwd, path) then
             return true
