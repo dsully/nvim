@@ -44,9 +44,9 @@ return {
                     },
                 },
                 server = {
-                    ---@param _client vim.lsp.Client
+                    ---@param client vim.lsp.Client
                     ---@param bufnr integer
-                    on_attach = function(_client, bufnr)
+                    on_attach = function(client, bufnr)
                         --
                         keys.bmap("<leader>cC", function()
                             vim.cmd.RustLsp("flyCheck")
@@ -64,15 +64,11 @@ return {
                             vim.cmd.RustLsp("openDocs")
                         end, "Open external documentation", bufnr, { "n", "v" })
 
-                        -- keys.bmap("gra", function()
-                        --     vim.cmd.RustLsp("codeAction")
-                        -- end, "󱘗 Code Action", bufnr)
-
-                        keys.bmap("K", function()
-                            vim.cmd.RustLsp({ "hover", "actions" })
-                        end, "󱘗 Documentation", bufnr)
-
                         vim.cmd.compiler("cargo")
+
+                        if client.server_capabilities then
+                            client.server_capabilities.semanticTokensProvider = nil
+                        end
                     end,
                     default_settings = {
                         -- https://github.com/rust-lang/rust-analyzer/blob/master/docs/user/generated_config.adoc

@@ -237,7 +237,6 @@ return {
                 "nil_ls",
                 "nixd",
                 "pkl",
-                "pyrefly",
                 "ruff",
                 "sourcekit",
                 "superhtml",

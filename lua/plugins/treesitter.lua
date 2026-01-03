@@ -56,6 +56,9 @@ return {
                 end
             end
 
+            vim.highlight.priorities.semantic_tokens = 100
+            vim.highlight.priorities.treesitter = 125
+
             ev.on(ev.FileType, function(event)
                 vim.treesitter.start(event.buf)
 
