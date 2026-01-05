@@ -4,7 +4,7 @@ return {
         "neovim/nvim-lspconfig",
         event = ev.VeryLazy,
         config = function()
-            vim.lsp.log.set_level(vim.lsp.log.levels.WARN)
+            vim.lsp.log.set_level(vim.log.levels.WARN)
 
             vim.diagnostic.config({
                 float = {
