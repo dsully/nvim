@@ -219,7 +219,6 @@ return {
                 "bashls",
                 "basedpyright",
                 -- "codebook",
-                "config-lsp",
                 "crates-lsp",
                 "dockerls",
                 "emmylua_ls",
