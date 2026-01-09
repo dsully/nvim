@@ -159,6 +159,6 @@ return {
             } --[[@as rustaceanvim.Opts]]
         end,
         lazy = false,
-        version = "^6", -- Recommended
+        version = "^7",
     },
 }
