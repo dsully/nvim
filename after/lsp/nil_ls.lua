@@ -8,6 +8,7 @@ return {
     on_attach = function(client)
         if client.server_capabilities then
             client.server_capabilities.renameProvider = nil
+            client.server_capabilities.referencesProvider = nil
         end
     end,
     root_markers = {
