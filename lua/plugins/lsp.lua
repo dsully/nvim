@@ -244,7 +244,7 @@ return {
                 "ts_query_ls",
                 "tsgo",
                 "ty",
-                "yamlls",
+                "version-lsp",
                 "zls",
             }
 
