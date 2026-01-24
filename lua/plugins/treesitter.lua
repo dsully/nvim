@@ -34,7 +34,6 @@ return {
                 "typescript",
                 "vim",
                 "vimdoc",
-                "vimwiki",
                 "yaml",
             }
 
