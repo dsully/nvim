@@ -5,35 +5,15 @@ return {
         {
             "<leader>os",
             function()
-                local otterkeeper = require("otter.keeper")
-                local main_nr = vim.api.nvim_get_current_buf()
-                local langs = {}
-
-                for i, l in ipairs(otterkeeper.rafts[main_nr].languages) do
-                    langs[i] = i .. ": " .. l
-                end
-
-                -- Prompt to choose one of langs
-                local i = vim.fn.inputlist(langs)
-                local lang = otterkeeper.rafts[main_nr].languages[i]
-                local params = {
-                    textDocument = vim.lsp.util.make_text_document_params(),
-                    otter = {
-                        lang = lang,
-                    },
-                }
-                local clients = vim.lsp.get_clients({
-                    -- the client is always named otter-ls[<buffnr>]
-                    name = "otter-ls" .. "[" .. main_nr .. "]",
-                })
-
-                if #clients == 1 then
-                    local otter_client = clients[1]
-                    otter_client:request("textDocument/documentSymbol", params, nil)
-                end
+                require("otter").activate()
             end,
-            desc = "Otter Symbols",
+            desc = "Otter Activate",
         },
+    },
+    ft = {
+        "just",
+        "markdown",
+        "nix",
     },
     event = ev.VeryLazy,
     opts = {
@@ -49,9 +29,9 @@ return {
             end,
         },
         -- Add event listeners for LSP events for debugging
-        debug = true,
-        verbose = { -- set to false to disable all verbose messages
-            no_code_found = true, -- warn if otter.activate is called, but no injected code was found
-        },
+        -- debug = true,
+        -- verbose = { -- set to false to disable all verbose messages
+        --     no_code_found = true, -- warn if otter.activate is called, but no injected code was found
+        -- },
     },
 }
