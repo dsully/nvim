@@ -235,6 +235,8 @@ return {
                 "rumdl",
                 "nil_ls",
                 "nixd",
+                "oxfmt",
+                "oxlint",
                 "pkl",
                 "ruff",
                 "sourcekit",
