@@ -4,7 +4,6 @@ return {
     filetypes = {
         "bash",
         "bash.gotmpl",
-        "direnv",
         "sh",
         "zsh",
     },

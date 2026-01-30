@@ -18,6 +18,7 @@ return {
                 "go",
                 "helm",
                 "html",
+                "ini",
                 "javascript",
                 "json",
                 "just",

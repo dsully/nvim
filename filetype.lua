@@ -2,7 +2,8 @@
 vim.filetype.add({
     filename = {
         [".duckdbrc"] = "sql",
-        [".envrc"] = "direnv",
+        [".env"] = "ini",
+        [".envrc"] = "sh",
         [".flake8"] = "ini",
         [".rgignore"] = "gitignore",
         ["Brewfile"] = "brewfile",
@@ -10,7 +11,7 @@ vim.filetype.add({
         ["Chart.yaml"] = "yaml.helm-chartfile",
         ["config.custom"] = "sshconfig",
         ["PklProject"] = "pkl",
-        ["direnvrc"] = "direnv",
+        ["direnvrc"] = "sh",
         ["fish_history"] = "yaml",
         ["poetry.lock"] = "toml",
         ["uv.lock"] = "toml",
@@ -44,6 +45,7 @@ vim.filetype.add({
         end,
     },
     pattern = {
+        ["%.env%..*"] = "ini",
         [".*/%.github[%w/]+workflows[%w/]+.*%.ya?ml"] = "yaml.github",
         [".*/layouts/.*%.html"] = "gohtmltmpl",
         [".*/zed/settings.json"] = "jsonc",
