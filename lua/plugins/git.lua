@@ -157,7 +157,7 @@ return {
                 -- bmap("<leader>gcb", "0v/|||<CR>$x/====<CR>0v/>>><CR>$x", "Git Conflict Choose Base")
                 -- bmap("<leader>gcs", "0v/====<CR>$x/>>><CR>dd", "Git Conflict Choose Stashed")
 
-                bmap("<leader>gd", gs.diffthis, "Git Diff")
+                -- bmap("<leader>gd", gs.diffthis, "Git Diff")
 
                 bmap("<leader>gR", gs.reset_buffer, "Reset Git Buffer")
                 bmap("<leader>gp", gs.preview_hunk, "Preview Git Hunk")
@@ -216,6 +216,83 @@ return {
             hide_cursor = true,
             show_current_branch = true,
             use_git_username_as_author = true,
+        },
+    },
+    {
+        "esmuellert/codediff.nvim",
+        cmd = "CodeDiff",
+        keys = {
+            {
+                "<leader>gdr",
+                function()
+                    vim.ui.input({ prompt = "CodeDiff Revision" }, function(revision)
+                        if revision and revision ~= "" then
+                            vim.cmd.CodeDiff(revision)
+                        else
+                            vim.cmd.CodeDiff() -- No revision = git status
+                        end
+                    end)
+                end,
+                desc = "Revision",
+            },
+            {
+                "<Leader>gdf",
+                function()
+                    vim.cmd.CodeDiff("history HEAD~50 %")
+                end,
+                desc = "File history",
+            },
+            {
+                "<Leader>gdb",
+                function()
+                    vim.cmd.CodeDiff("history origin/HEAD..HEAD")
+                end,
+                desc = "Review branch changes",
+            },
+        },
+        opts = {
+            explorer = {
+                position = "left",
+                width = 40,
+                view_mode = "tree",
+                indent_markers = true,
+            },
+            keymaps = {
+                view = {
+                    quit = "q",
+                    toggle_explorer = "<C-e>",
+                    next_hunk = "]c",
+                    prev_hunk = "[c",
+                    next_file = "]q",
+                    prev_file = "[q",
+                    diff_get = "do",
+                    diff_put = "dp",
+                    toggle_stage = "s",
+                },
+                explorer = {
+                    select = "<CR>",
+                    hover = "K",
+                    refresh = "R",
+                    toggle_view_mode = "i",
+                    stage_all = "S",
+                    unstage_all = "U",
+                    restore = "x",
+                },
+                history = {
+                    select = "<CR>",
+                    toggle_view_mode = "i",
+                },
+                conflict = {
+                    accept_incoming = "<leader>ct", -- theirs
+                    accept_current = "<leader>co", -- ours
+                    accept_both = "<leader>cb", -- all
+                    discard = "<leader>cb", -- discard both
+                    next_conflict = "]x",
+                    prev_conflict = "[x",
+                    diffget_incoming = "2do",
+                    diffget_current = "3do",
+                },
+            },
         },
     },
 }
