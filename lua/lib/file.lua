@@ -46,22 +46,37 @@ end
 
 ---Read the content of a file.
 ---@param path string
+---@param mode string? The mode to read the file in.
+---@param size integer? The number of bytes to read. If not provided, reads the entire file.
 ---@return string?
-M.read = function(path)
-    local fd = vim.uv.fs_open(path, "r", 438)
+M.read = function(path, mode, size)
+    local fd = vim.uv.fs_open(path, mode or "r", 438)
     local content
 
     if fd then
         local stat = vim.uv.fs_fstat(fd)
 
         if stat then
-            content = vim.uv.fs_read(fd, stat.size, 0)
+            content = vim.uv.fs_read(fd, size or stat.size, 0)
         end
 
         vim.uv.fs_close(fd)
     end
 
     return content
+end
+
+---Is this a binary file?
+---@param path string
+---@return bool
+M.is_binary = function(path)
+    local content = M.read(path, "r", 1024)
+
+    if content and content:find("\0") then
+        return true
+    end
+
+    return false
 end
 
 ---Read the content of a TOML file.
