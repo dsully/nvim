@@ -15,7 +15,9 @@ M.first = function(bufnr, ...)
         end
     end
 
-    return select(1, ...)
+    local result = select(1, ...)
+
+    return result
 end
 
 return M

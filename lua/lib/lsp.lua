@@ -69,9 +69,9 @@ M.buffers_for_client = function(filter)
         ipairs(vim.lsp.get_clients(filter) --[[@as vim.lsp.Client[] ]])
     do
         if not M.should_ignore(client) then
-            local buffers = vim.lsp.get_client_by_id(client.id).attached_buffers
+            local buffers = client.attached_buffers
 
-            if #buffers > 0 then
+            if buffers and vim.tbl_count(buffers) > 0 then
                 clients[#clients + 1] = {
                     client = client,
                     buffers = buffers,
@@ -354,6 +354,10 @@ M.commands = function()
 
             -- Sort LSP names for consistent output
             local sorted_lsps = {}
+            if not providers then
+                goto continue
+            end
+
             for lsp_name in pairs(providers) do
                 table.insert(sorted_lsps, lsp_name)
             end
@@ -418,7 +422,8 @@ M.commands = function()
             local name = client and client.name or ""
 
             local params = vim.lsp.util.make_range_params(0, client.offset_encoding)
-            params.context = { diagnostics = vim.lsp.diagnostic.get_line_diagnostics() }
+            ---@diagnostic disable-next-line: inject-field
+            params.context = { diagnostics = vim.diagnostic.get(0, { lnum = vim.api.nvim_win_get_cursor(0)[1] - 1 }) }
 
             client:request("textDocument/codeAction", params, function(_, result)
                 if not vim.tbl_contains(defaults.ignored.lsp, name) and result.result ~= nil then
@@ -459,8 +464,7 @@ M.commands = function()
         M.apply_to_buffers(function(bufnr, client)
             --
             if client then
-                vim.lsp.stop_client(client.id, true)
-
+                client:stop(true)
                 Snacks.notify.info(("Restarting LSP %s for %s"):format(client.name, nvim.file.filename(bufnr)))
             end
         end, { bufnr = vim.api.nvim_get_current_buf() })
@@ -492,7 +496,9 @@ M.info = function()
             --
             local info = debug.getinfo(cmd, "S")
 
-            return ("<function %s:%s>"):format(info.source, info.linedefined)
+            if info ~= nil then
+                return ("<function %s:%s>"):format(info.source, info.linedefined)
+            end
         else
             return tostring(config.cmd)
         end

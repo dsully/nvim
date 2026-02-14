@@ -54,7 +54,7 @@ vim.ui.float = function(options, lines)
     ---@param self snacks.win
     local on_buf = function(self)
         ---@diagnostic disable-next-line: param-type-not-match
-        vim.api.nvim_buf_set_lines(self.buf, 0, -1, false, lines)
+        vim.api.nvim_buf_set_lines(self.buf --[[@as integer]], 0, -1, false, lines)
     end
 
     return snacks.win.new(vim.tbl_deep_extend("force", defaults.ui.float or {}, options or {}, { on_buf = on_buf }))

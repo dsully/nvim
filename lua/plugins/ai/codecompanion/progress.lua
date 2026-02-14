@@ -23,6 +23,8 @@ function M.client(adapter)
     return table.concat(parts, " ")
 end
 
+---@param request vim.api.keyset.create_autocmd.callback_args
+---@param opts table<string, any>?
 function M.progress(request, opts)
     opts = opts or {}
 
@@ -82,12 +84,14 @@ function M.setup()
         end,
     })
 
+    ---@param request vim.api.keyset.create_autocmd.callback_args
     ev.on(ev.User, function(request)
         M.progress(request, { title = "Code Companion", kind = "start" })
     end, {
         pattern = "CodeCompanionRequestStarted",
     })
 
+    ---@param request vim.api.keyset.create_autocmd.callback_args
     ev.on(ev.User, function(request)
         M.progress(request, {
             title = M.state[request.data.status] or "Cancelled",

@@ -7,7 +7,6 @@ return require("schema-companion").setup_client(
             require("schema-companion").sources.matchers.kubernetes.setup({ version = "master" }),
         },
     }),
-    ---@diagnostic disable-next-line: param-type-not-match
     {
         --- @param client vim.lsp.Client
         on_init = function(client)
@@ -58,5 +57,5 @@ return require("schema-companion").setup_client(
                 },
             },
         },
-    }
+    } -- [[@as vim.lsp.ClientConfig ]]
 )

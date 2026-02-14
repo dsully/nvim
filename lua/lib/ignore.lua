@@ -154,7 +154,8 @@ function M.ignore()
         local handler = handlers[source:lower()]
 
         if not handler then
-            vim.notify("Unsupported diagnostic source: " .. diagnostic.source, vim.log.levels.WARN)
+            vim.notify("Unsupported diagnostic source: " .. source, vim.log.levels.WARN)
+
             return
         end
 

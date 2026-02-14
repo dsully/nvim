@@ -88,7 +88,6 @@ function M.init()
         if args.data ~= nil and args.data.plugin ~= nil then
             local pl = require("lazy.core.config").plugins[args.data.plugin] or {}
 
-            ---@diagnostic disable: undefined-field
             if pl.highlights then
                 hl.apply(pl.highlights)
             end
