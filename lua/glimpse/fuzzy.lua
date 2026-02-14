@@ -8,7 +8,8 @@ function M.register_items(items)
     local blink_items = {}
 
     for _, item in ipairs(items) do
-        table.insert(blink_items, { label = item, sortText = item })
+        local filename = item:match("[^/]+$") or item
+        table.insert(blink_items, { label = item, filterText = filename, sortText = item })
     end
 
     blink.set_provider_items("glimpse", blink_items)

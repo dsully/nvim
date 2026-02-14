@@ -123,6 +123,27 @@ return {
                     end
                 end
 
+                -- Filter out file watchers with non-file URI schemes (e.g. bundled:///)
+                -- that Neovim's glob parser cannot handle. ts_go has this proble.
+                for _, reg in ipairs(res.registrations) do
+                    if reg.method == "workspace/didChangeWatchedFiles" and reg.registerOptions then
+                        ---@type table[]?
+                        local watchers = reg.registerOptions.watchers
+
+                        if watchers ~= nil then
+                            for i = #watchers, 1, -1 do
+                                local glob = watchers[i].globPattern
+                                local pattern = type(glob) == "string" and glob
+                                    or type(glob) == "table" and (type(glob.baseUri) == "string" and glob.baseUri or (glob.baseUri or {}).uri)
+
+                                if type(pattern) == "string" and pattern:match("^%w+://") and not pattern:match("^file://") then
+                                    table.remove(watchers, i)
+                                end
+                            end
+                        end
+                    end
+                end
+
                 return register_capability(err, res, ctx)
             end
 
@@ -153,6 +174,10 @@ return {
                 vim.lsp.inlay_hint.enable(false)
             end)
 
+            -- nvim.lsp.on_supports_method("textDocument/completion", function(client, buffer)
+            --     vim.lsp.completion.enable(true, client.id, buffer, { autotrigger = true })
+            -- end)
+
             nvim.lsp.on_supports_method("textDocument/semanticTokens/full", function()
                 Snacks.toggle({
                     name = "Semantic Tokens",
@@ -166,10 +191,9 @@ return {
             end)
 
             nvim.lsp.on_supports_method("textDocument/codeLens", function()
-                --
                 ev.on({ ev.BufEnter, ev.CursorHold, ev.InsertLeave }, function()
                     if vim.g.codelens then
-                        vim.lsp.codelens.refresh({ bufnr = 0 })
+                        vim.lsp.codelens.enable(true, { bufnr = 0 })
                     end
                 end, {
                     group = ev.group("vim.lsp.codelens.refresh", true),
@@ -182,12 +206,7 @@ return {
                     end,
                     set = function(state)
                         vim.g.codelens = state
-
-                        if state == true then
-                            vim.lsp.codelens.refresh()
-                        else
-                            vim.lsp.codelens.clear()
-                        end
+                        vim.lsp.codelens.enable(state, { bufnr = 0 })
                     end,
                 }):map("<space>tL")
             end)
