@@ -59,10 +59,14 @@ return {
             vim.highlight.priorities.semantic_tokens = 100
             vim.highlight.priorities.treesitter = 125
 
+            local disabled_indent = { "yaml", "bash", "python" }
+
             ev.on(ev.FileType, function(event)
                 vim.treesitter.start(event.buf)
 
-                vim.bo[event.buf].indentexpr = "v:lua.require'nvim-treesitter'.indentexpr()"
+                if vim.tbl_contains(disabled_indent, event.filetype) then
+                    vim.bo[event.buf].indentexpr = "v:lua.require'nvim-treesitter'.indentexpr()"
+                end
             end, {
                 pattern = filetypes,
             })
