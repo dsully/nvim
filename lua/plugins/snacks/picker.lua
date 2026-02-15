@@ -3,6 +3,7 @@ return {
     "folke/snacks.nvim",
     keys = {
         --stylua: ignore start
+        { "<leader>f/", function() Snacks.picker.grep_word({ dirs = { nvim.file.filename() } }) end, desc = "Buffer Word" },
         { "<leader>f;", function() Snacks.picker.resume() end, desc = "Resume Picker" },
         { "<leader>fB", function() Snacks.picker.buffers() end, desc = "Buffers" },
         { "<leader>fC", function() Snacks.picker.git_log({ current_file = true }) end, desc = "Commits" },
@@ -13,6 +14,8 @@ return {
         { "<leader>fe", function() Snacks.picker.icons({ icon_sources = { "emoji" }}) end, desc = "Emoji" },
         { "<leader>fh", function() Snacks.picker.highlights() end, desc = "Highlights" },
         { "<leader>fi", function() Snacks.picker.icons({ icon_sources = { "nerd_fonts" }}) end, desc = "Nerd Icons" },
+        -- { "<leader>ff", function() Snacks.picker.smart({ hidden = true }) end, desc = "Files", },
+        { "<leader>fg", function() Snacks.picker.grep() end, desc = "Grep" },
         { "<leader>fk", function() Snacks.picker.keymaps() end, desc = "Keymaps" },
         { "<leader>fl", function() Snacks.picker.lazy() end, desc = "Lazy Plugins" },
         { "<leader>fL", function() Snacks.picker.lsp_config() end, desc = "LSP Config" },
