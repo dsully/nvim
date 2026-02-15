@@ -2,33 +2,37 @@ local M = {}
 
 local blink = require("glimpse.blink")
 
+---@type string[]?
+local registered_items = nil
+
 --- Register items with Blink's Rust engine
 ---@param items string[] List of strings
 function M.register_items(items)
+    if items == registered_items then
+        return
+    end
+
+    registered_items = items
+
     local blink_items = {}
 
     for _, item in ipairs(items) do
-        local filename = item:match("[^/]+$") or item
-        table.insert(blink_items, { label = item, filterText = filename, sortText = item })
+        table.insert(blink_items, { label = item, sortText = item })
     end
 
     blink.set_provider_items("glimpse", blink_items)
 end
 
 --- Filter items based on query
----@param items_or_provider table|function List of strings or a function(query)
+---@param items table List of strings
 ---@param query string The search query
----@return table matches List of matching strings
-function M.filter(items_or_provider, query)
-    if type(items_or_provider) == "function" then
-        return items_or_provider(query)
-    end
-
+---@return string[] matches List of matching strings
+function M.filter(items, query)
     if query == "" then
-        return items_or_provider
+        return items
     end
 
-    M.register_items(items_or_provider)
+    M.register_items(items)
 
     local _, matched_indices = blink.fuzzy(query, "glimpse")
 
@@ -36,7 +40,7 @@ function M.filter(items_or_provider, query)
         local matches = {}
 
         for _, idx in ipairs(matched_indices) do
-            table.insert(matches, items_or_provider[idx + 1])
+            table.insert(matches, items[idx + 1])
         end
 
         return matches

@@ -378,7 +378,7 @@ function Picker:refresh()
                 return
             end
 
-            self.current_matches = fuzzy.filter(self.items_or_provider, input)
+            self.current_matches = fuzzy.filter(self.items_or_provider --[[@as string[] ]], input)
 
             self.selected_index = 1
             self:render()

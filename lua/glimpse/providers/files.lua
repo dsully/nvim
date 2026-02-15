@@ -58,7 +58,10 @@ function M.live_grep()
     return glimpse.pick_async(function(query)
         return {
             "rg",
-            "--vimgrep",
+            "--no-heading",
+            "--with-filename",
+            "--line-number",
+            "--column",
             "--smart-case",
             "--color=never",
             "--max-columns=500",
@@ -91,7 +94,10 @@ function M.grep_word(opts)
 
     local rg_cmd = {
         "rg",
-        "--vimgrep",
+        "--no-heading",
+        "--with-filename",
+        "--line-number",
+        "--column",
         "--smart-case",
         "--color=never",
         "--max-columns=500",

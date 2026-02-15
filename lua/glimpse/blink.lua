@@ -12,7 +12,9 @@ end
 ---@param id string Context ID
 ---@return table|nil matches, table|nil indices
 function M.fuzzy(query, id)
-    return require("blink.cmp.fuzzy.rust").fuzzy(query, #query, { id }, {
+    local sanitized = query:gsub("[^%w_%-]", "")
+
+    return require("blink.cmp.fuzzy.rust").fuzzy(sanitized, #sanitized, { id }, {
         max_typos = 1,
         use_frecency = true,
         use_proximity = false,
