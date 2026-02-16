@@ -114,7 +114,6 @@ M.is_local_dev = function()
 
     for _, path in ipairs({
         vim.env.XDG_CONFIG_HOME,
-        vim.env.XDG_DATA_HOME .. "/chezmoi",
         vim.fs.abspath("~/dev/home"),
         vim.fs.abspath("~/dev/work"),
     }) do
@@ -186,9 +185,6 @@ end
 ---@return string?
 M.template_type = function(filename, extension, combined)
     --
-    -- Remove the chezmoi 'dot_' if it exists.
-    filename = tostring(filename:gsub("." .. extension, ""):gsub("dot_", "."))
-
     -- Attempt with buffer content and filename
     --- @type string?
     local filetype = vim.filetype.match({ filename = filename }) or ""

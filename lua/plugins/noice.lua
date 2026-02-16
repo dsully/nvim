@@ -196,9 +196,6 @@ return {
                         -- Diagnostics
                         { find = "No more valid diagnostics to move to", event = "msg_show" },
                         { find = "No code actions available" },
-
-                        -- Route chezmoi updates
-                        { find = "chezmoi:", event = "notify" },
                     },
                 },
                 view = "mini",
