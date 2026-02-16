@@ -15,6 +15,8 @@ local M = setmetatable({}, {
 
 ---@alias RootFn fun(buf: number): (string|string[])
 
+---@alias RootOpts { buf?: number, spec?: RootSpec[], all?: boolean }
+
 ---@alias RootSpec string[]|RootFn
 
 ---@type RootSpec[]
@@ -103,11 +105,13 @@ function M.resolve(spec)
     end
 end
 
----@param opts? { buf?: number, spec?: RootSpec[], all?: boolean }
+---@param opts? RootOpts
 ---@return Root[]
 function M.detect(opts)
     --
     opts = opts or {}
+
+    ---@cast opts.buf number
     opts.buf = (opts.buf == nil or opts.buf == 0) and vim.api.nvim_get_current_buf() or opts.buf
 
     local ret = {} ---@type Root[]
@@ -121,6 +125,7 @@ function M.detect(opts)
 
         local roots = {} ---@type string[]
 
+        ---@diagnostic disable-next-line: param-type-mismatch
         for _, p in ipairs(paths) do
             --
             local pp = nvim.file.realpath(p --[[@as string ]])
@@ -174,7 +179,7 @@ function M.info()
             height = 10,
             row = math.floor((vim.o.lines - 10) / 2),
             col = math.floor((vim.o.columns - 80) / 2),
-        }, lines)
+        } --[[@as snacks.win.Config]], lines)
         :show()
 
     local root = roots[1]
@@ -198,6 +203,7 @@ end, { group = ev.group("nvim.root.cache", true) })
 ---@param opts? {normalize?:boolean, buf?:number}
 ---@return string
 function M.get(opts)
+    ---@cast opts {normalize?:boolean, buf?:number}
     opts = opts or {}
 
     local buf = opts.buf or vim.api.nvim_get_current_buf()

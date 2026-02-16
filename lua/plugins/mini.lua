@@ -109,6 +109,7 @@ return {
                     for name, prefix in pairs(mappings) do
                         name = name:gsub("^around_", ""):gsub("^inside_", "")
 
+                        ---@diagnostic disable-next-line: inject-field
                         ret[#ret + 1] = { prefix, group = name }
 
                         for _, obj in ipairs(objects) do
@@ -389,6 +390,7 @@ return {
                 { opts.mappings.update_n_lines, desc = "Update `MiniSurround.config.n_lines`" },
             }
 
+            ---@diagnostic disable-next-line: param-type-mismatch,return-type-mismatch
             return vim.tbl_deep_extend("keep", mappings, keys)
         end,
         opts = {

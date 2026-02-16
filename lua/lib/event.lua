@@ -292,7 +292,7 @@ M.on = function(event, callback, opts)
         opts.callback = callback
     end
 
-    return vim.api.nvim_create_autocmd(event, opts --[[@as EventOpts]])
+    return vim.api.nvim_create_autocmd(event --[[@as Event]], opts --[[@as EventOpts]])
 end
 
 ---@param event string

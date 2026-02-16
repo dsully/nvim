@@ -53,7 +53,7 @@ do
                 local original = vim.fn.argidx()
                 local changed = false
 
-                ---@diagnostic disable-next-line: param-type-not-match
+                ---@diagnostic disable-next-line: param-type-mismatch
                 for _, arg in ipairs(vim.fn.argv()) do
                     --
                     if arg:match(pattern) then
