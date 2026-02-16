@@ -33,8 +33,10 @@ function M.progress(request, opts)
     local message = M.messages[id]
 
     if message == nil then
+        ---@cast message NoiceMessage
         message = require("noice.message")("lsp", "progress")
 
+        ---@diagnostic disable-next-line: inject-field
         message.opts.progress = {
             client_id = "client " .. id,
             client = M.client(request.data.adapter),

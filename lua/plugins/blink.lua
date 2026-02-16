@@ -258,7 +258,7 @@ return {
                 ---@param items blink.cmp.CompletionItem[]
                 transform_items = function(ctx, items)
                     --
-                    local types = require("blink.cmp.types").CompletionItemKind
+                    local types = require("blink.cmp.types").CompletionItemKind --[[@as vim.lsp.protocol.CompletionItemKind]]
                     local is_word_only = string.match(ctx.line, "^%s+%w+$")
                     local ft = vim.bo[ctx.bufnr].filetype
 
@@ -272,7 +272,7 @@ return {
                     ---@param item blink.cmp.CompletionItem
                     return vim.tbl_filter(function(item)
                         --
-                        if item.kind == types.Text or item.kind == types.Snippet or item.deprecated then
+                        if item.kind == types.Text or item.kind == types.Snippet or item.deprecated == true then
                             return false
                         end
 

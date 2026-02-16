@@ -119,6 +119,7 @@ return {
                                 desc = desc:gsub(" with ws", "")
                             end
 
+                            ---@diagnostic disable-next-line: inject-field
                             ret[#ret + 1] = { prefix .. obj[1], desc = desc }
                         end
                     end
