@@ -164,6 +164,12 @@ return {
                     },
                     chat = {
                         adapter = adapter_name,
+                        keymaps = {
+                            clear = {
+                                modes = { n = "gX" },
+                                description = "Clear chat",
+                            },
+                        },
                         model = model_name,
                         slash_commands = {
                             buffer = { opts = { provider = "snacks" } },
