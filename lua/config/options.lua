@@ -104,10 +104,10 @@ vim.g.colorscheme = "nordish"
 ---@type table<string, boolean>?
 vim.g.noice = {
     cmdline = true,
-    hover = false,
-    messages = false,
+    hover = true,
+    messages = true,
     notify = true,
-    progress = false,
+    progress = true,
 };
 
 vim.g.clipboard = {

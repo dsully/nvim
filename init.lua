@@ -19,6 +19,6 @@ vim.deprecate = function() end
 
 require("config.options")
 require("config.globals")
-require("config.ui2")
+-- require("config.ui2")
 require("config.lazy").init()
 
