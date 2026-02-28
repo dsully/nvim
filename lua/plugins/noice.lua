@@ -23,7 +23,7 @@ return {
     ---@type NoiceConfig
     opts = {
         cmdline = {
-            enabled = vim.g.noice,
+            enabled = vim.g.noice.cmdline,
             format = {
                 git = { pattern = { "^:Gitsigns%s+", "^:Neogit%s+", "^:GitLink%s+" }, icon = " ", lang = "vim", title = " git " },
                 input = { icon = " ", lang = "text", view = "cmdline_popup", title = "" },
@@ -41,7 +41,7 @@ return {
         },
         lsp = {
             hover = {
-                enabled = true,
+                enabled = vim.g.noice.hover,
                 silent = false, -- set to true to not show a message if hover is not available
                 ---@type NoiceViewOptions
                 opts = {
@@ -57,7 +57,7 @@ return {
                 ["cmp.entry.get_documentation"] = false,
             },
             progress = {
-                enabled = true,
+                enabled = vim.g.noice.progress,
                 -- Don't show the language server client (eg: rust-analyzer)
                 --- @type NoiceFormat|string
                 format = {
@@ -83,10 +83,10 @@ return {
             },
         },
         messages = {
-            enabled = vim.g.noice,
+            enabled = vim.g.noice.messages,
         },
         notify = {
-            enabled = true,
+            enabled = vim.g.noice.notify,
         },
         popupmenu = {
             enabled = true,
@@ -210,7 +210,7 @@ return {
                 format = { "{title} ", "{message}" }, -- leave out "{level}"
                 position = {
                     -- Position it 2 rows from the bottom (1 for statusline, 1 for cmdheight)
-                    row = vim.g.noice and -2 or -1,
+                    row = vim.g.noice.cmdlne and -2 or -1,
                 },
                 zindex = 10,
             },

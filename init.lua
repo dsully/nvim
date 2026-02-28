@@ -19,11 +19,6 @@ vim.deprecate = function() end
 
 require("config.options")
 require("config.globals")
+require("config.ui2")
 require("config.lazy").init()
 
----@type boolean?
-vim.g.noice = true
-
-if vim.g.noice == false then
-    require("vim._extui").enable({ msg = { pos = "box" } })
-end

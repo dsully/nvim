@@ -1,6 +1,5 @@
 vim.opt.autoread = true -- update file content if it has been modified on disk
 vim.opt.backup = false
-vim.opt.cmdheight = vim.g.noice == true and 0 or 1 -- Set to 0 if using Noice
 ---@diagnostic disable-next-line: assign-type-mismatch
 vim.opt.completeopt = {
     "menu",
@@ -101,6 +100,15 @@ vim.g.loaded_perl_provider = 0
 vim.g.loaded_ruby_provider = 0
 
 vim.g.colorscheme = "nordish"
+
+---@type table<string, boolean>?
+vim.g.noice = {
+    cmdline = true,
+    hover = false,
+    messages = false,
+    notify = true,
+    progress = false,
+};
 
 vim.g.clipboard = {
     name = "OSC 52",
