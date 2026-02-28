@@ -250,6 +250,7 @@ return {
                 "just-lsp",
                 "lemminx",
                 "markdown-lsp",
+                "pyrefly",
                 "pytest-language-server",
                 "rumdl",
                 "nil_ls",
