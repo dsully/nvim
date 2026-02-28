@@ -263,11 +263,16 @@ local M = {
     --- Triggered after `LazyDone` and processing `VimEnter` auto commands
     VeryLazy = "VeryLazy",
 
-    -- For dynamic registration: User pattern
+    --- For dynamic registration: User pattern
     LspDynamicCapability = "LspDynamicCapability",
 
-    -- Switch on LSP method support: User pattern.
+    --- Switch on LSP method support: User pattern.
     LspSupportsMethod = "LspSupportsMethod",
+
+    --- Built in Package Management
+    PackChangedPre = "PackChangedPre",
+    PackChanged = "PackChanged",
+    Progress = "Progress",
 }
 
 ---@alias Event vim.api.keyset.events | vim.api.keyset.events[]
