@@ -280,7 +280,6 @@ return {
     },
     {
         "oribarilan/lensline.nvim",
-        cond = false,
         event = ev.LspAttach,
         opts = {
             -- Profile configuration (first profile used as default)
@@ -314,7 +313,7 @@ return {
                         separator = " • ", -- separator between all lens attributes
                         highlight = "Comment", -- highlight group for lens text
                         prefix = "┃ ", -- prefix before lens content
-                        placement = "above", -- "above" | "inline" - where to render lenses (consider prefix = "" for inline)
+                        placement = "inline", -- "above" | "inline" - where to render lenses (consider prefix = "" for inline)
                         use_nerdfont = true, -- enable nerd font icons in built-in providers
                         render = "all", -- "all" | "focused" (only active window's focused function)
                     },
