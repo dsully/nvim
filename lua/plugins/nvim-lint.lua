@@ -16,10 +16,10 @@ return {
                 gitcommit = { "commitlint" },
                 github = { "actionlint" },
                 go = { "revive" },
-                markdown = { "write_good" },
+                -- markdown = { "write_good" },
                 nix = { "deadnix", "statix" },
                 rst = { "rstcheck", "sphinx-lint" },
-                text = { "write_good" },
+                -- text = { "write_good" },
                 yaml = { "yamllint" },
             }
 
