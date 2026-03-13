@@ -58,19 +58,9 @@ function M.lazy_notify()
     end
 end
 
-function M.bootstrap()
-    local lazypath = vim.fs.joinpath(M.data, "lazy/lazy.nvim")
-
-    if not vim.uv.fs_stat(lazypath) then
-        vim.system({ "git", "clone", "--filter=blob:none", "https://github.com/folke/lazy.nvim.git", lazypath }):wait()
-        vim.system({ "git", "-C", lazypath, "checkout", "tags/stable" }):wait()
-    end
-
-    vim.opt.runtimepath:prepend(lazypath)
-end
-
 function M.init()
-    M.bootstrap()
+    vim.pack.add({ "https://github.com/folke/lazy.nvim" }, { confirm = false })
+
     M.lazy_notify()
     M.lazy_file()
 
