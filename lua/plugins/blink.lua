@@ -309,6 +309,7 @@ return {
             "sources.default",
             "sources.per_filetype",
         },
+        version = "1.*",
     },
     { "bydlw98/blink-cmp-env" },
     { "MahanRahmati/blink-nerdfont.nvim" },
