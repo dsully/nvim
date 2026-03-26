@@ -45,6 +45,36 @@ return {
             local to_install = vim.tbl_filter(isnt_installed, languages)
 
             if #to_install > 0 then
+                -- Route per-parser install messages through Snacks notifier
+                -- instead of nvim_echo which floods the screen with a split pager.
+                local tlog = require("nvim-treesitter.log")
+                local done = 0
+
+                local installing = {} ---@type table<string, boolean>
+                for _, l in ipairs(to_install) do
+                    installing[l] = true
+                end
+
+                ---@diagnostic disable-next-line: duplicate-set-field
+                tlog.Logger.info = function(self, m, ...)
+                    local msg = m:format(...)
+                    local lang = self.ctx and self.ctx:match("^install/(.+)$")
+
+                    if not lang or not installing[lang] then
+                        return
+                    end
+
+                    if msg == "Language installed" then
+                        done = done + 1
+                        msg = lang .. " installed"
+                    end
+
+                    vim.notify(string.format("%s (%d/%d)", msg, done, #to_install), vim.log.levels.INFO, {
+                        id = "ts_install",
+                        title = "nvim-treesitter",
+                    })
+                end
+
                 require("nvim-treesitter").install(to_install)
             end
 
@@ -62,7 +92,11 @@ return {
             local disabled_indent = { "yaml", "bash", "python" }
 
             ev.on(ev.FileType, function(event)
-                vim.treesitter.start(event.buf)
+                --
+                -- Parsers may not be installed yet (async install in progress).
+                if not pcall(vim.treesitter.start, event.buf) then
+                    return
+                end
 
                 if vim.tbl_contains(disabled_indent, event.filetype) then
                     vim.bo[event.buf].indentexpr = "v:lua.require'nvim-treesitter'.indentexpr()"
