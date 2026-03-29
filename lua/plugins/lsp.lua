@@ -155,7 +155,6 @@ return {
             vim.lsp.on_type_formatting.enable()
 
             nvim.lsp.on_supports_method("textDocument/documentColor", function(_, buffer)
-                vim.lsp.document_color.enable(true, buffer)
 
                 keys.map("grc", vim.lsp.document_color.color_presentation, "vim.lsp.document_color.color_presentation()")
 
