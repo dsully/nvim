@@ -264,6 +264,7 @@ return {
                 "tsgo",
                 "ty",
                 "version-lsp",
+                "vimdoc-language-server",
                 "zls",
             }
 
