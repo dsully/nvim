@@ -127,8 +127,7 @@ return {
                 -- that Neovim's glob parser cannot handle. ts_go has this proble.
                 for _, reg in ipairs(res.registrations) do
                     if reg.method == "workspace/didChangeWatchedFiles" and reg.registerOptions then
-                        ---@type table[]?
-                        local watchers = reg.registerOptions.watchers
+                        local watchers = reg.registerOptions.watchers --[[@as table[]?]]
 
                         if watchers ~= nil then
                             for i = #watchers, 1, -1 do
@@ -154,8 +153,7 @@ return {
 
             vim.lsp.on_type_formatting.enable()
 
-            nvim.lsp.on_supports_method("textDocument/documentColor", function(_, buffer)
-
+            nvim.lsp.on_supports_method("textDocument/documentColor", function(_, _buffer)
                 keys.map("grc", vim.lsp.document_color.color_presentation, "vim.lsp.document_color.color_presentation()")
 
                 Snacks.toggle({

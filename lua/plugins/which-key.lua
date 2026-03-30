@@ -176,11 +176,7 @@ return {
             -- Inline completions
             {
                 "<C-a>",
-                function()
-                    if not vim.lsp.inline_completion.get() then
-                        return "<C-a>"
-                    end
-                end,
+                vim.lsp.inline_completion.get,
                 mode = "i",
                 expr = true,
                 replace_keycodes = true,
@@ -190,38 +186,34 @@ return {
             -- Space mappings
             {
                 "<space>n",
-                function()
-                    return nvim.file.edit
-                end,
+                nvim.file.edit,
                 desc = "New File",
                 expr = false,
             },
 
             -- macOS specific mappings
-            vim.fn.has("mac") == 1
-                    and {
-                        {
-                            "<space>o",
-                            function()
-                                if vim.bo.buftype ~= nil then
-                                    vim.system({ "open", nvim.file.filename() }):wait()
-                                end
-                            end,
-                            desc = "Open in App",
-                        },
-                        {
-                            "<space>T",
-                            function()
-                                local root = Snacks.git.get_root()
+            vim.fn.has("mac") == 1 and {
+                {
+                    "<space>o",
+                    function()
+                        if vim.bo.buftype ~= nil then
+                            vim.system({ "open", nvim.file.filename() }):wait()
+                        end
+                    end,
+                    desc = "Open in App",
+                },
+                {
+                    "<space>T",
+                    function()
+                        local root = Snacks.git.get_root()
 
-                                if root then
-                                    vim.system({ "/usr/bin/open", "-g", "-a", "Tower", root }):wait()
-                                end
-                            end,
-                            desc = "Open in Tower",
-                        },
-                    }
-                or nil,
+                        if root then
+                            vim.system({ "/usr/bin/open", "-g", "-a", "Tower", root }):wait()
+                        end
+                    end,
+                    desc = "Open in Tower",
+                },
+            } or nil,
 
             -- Spelling
             {

@@ -183,6 +183,7 @@ end
 ---@param extension string The extension to strip from the filename for detection.
 ---@param combined string The combined file type. eg: "jinja"
 ---@return string?
+---@diagnostic disable-next-line: unused
 M.template_type = function(filename, extension, combined)
     --
     -- Attempt with buffer content and filename
@@ -207,7 +208,7 @@ M.template_type = function(filename, extension, combined)
         end
     end
 
-    if filetype then
+    if filetype ~= nil then
         return filetype .. "." .. combined
     end
 end

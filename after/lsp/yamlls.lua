@@ -31,6 +31,7 @@ return require("schema-companion").setup_client(
     }),
     ---@diagnostic disable-next-line: param-type-not-match
     {
+        ---@diagnostic disable-next-line: param-type-mismatch
         --- @param client vim.lsp.Client
         on_init = function(client)
             --- Since formatting is disabled by default if you check `client:supports_method('textDocument/formatting')`

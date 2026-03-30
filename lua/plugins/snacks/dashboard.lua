@@ -26,7 +26,7 @@ return {
                 ---@param item snacks.dashboard.Item
                 ---@param ctx snacks.dashboard.Format.ctx
                 file = function(item, ctx)
-                    local fname = vim.fs.abspath(string.format("~/%s", item.file)) or item.file
+                    local fname = vim.fs.abspath(string.format("~/%s", item.file)) or item.file or ""
 
                     fname = ctx.width and #fname > ctx.width and vim.fn.pathshorten(fname) or fname
 

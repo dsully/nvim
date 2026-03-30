@@ -11,3 +11,9 @@ error("Cannot require a meta file")
 ---@field position lsp.TextDocumentPositionParams
 
 ---@alias RustData RustCompletionResolveData | nil
+
+---@class LazyPluginSpec
+---@field highlights? table<string, vim.api.keyset.highlight>
+
+---@class LazyPlugin
+---@field highlights? table<string, vim.api.keyset.highlight>

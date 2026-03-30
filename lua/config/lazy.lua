@@ -114,6 +114,7 @@ function M.init()
         spec = vim.tbl_extend("force", spec, { import = "plugins.work" })
     end
 
+    ---@diagnostic disable-next-line: missing-fields
     require("lazy").setup({
         spec = spec,
         change_detection = {

@@ -8,6 +8,7 @@ return require("schema-companion").setup_client(
         },
     }),
     {
+        ---@diagnostic disable-next-line: param-type-mismatch
         --- @param client vim.lsp.Client
         on_init = function(client)
             local schemas = nvim.file.read(nvim.file.xdg_config("schemas.json")) or "{}"

@@ -1,5 +1,9 @@
+# Managed by nix.
+.emmyrc.json
+
 lazy-lock.json
 lua/plugins/work
+nvim-pack-lock.json
 queries/caddyfile
 queries/ghostty
 queries/htmljinja

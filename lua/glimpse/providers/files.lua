@@ -43,7 +43,7 @@ function M.files(opts)
             vim.list_extend(all_files, vim.split(data, "\n", { trimempty = true }))
 
             vim.schedule(function()
-                if picker then
+                if picker ~= nil then
                     picker:set_items(all_files)
                 end
             end)

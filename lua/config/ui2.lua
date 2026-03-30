@@ -55,9 +55,9 @@ ev.on(ev.LspProgress, function(ev)
         {
             id = "lsp",
             kind = "progress",
-            title = value.title,
+            title = value.title --[[@as string?]],
             status = is_done and "success" or "running",
-            percent = value.percentage,
+            percent = value.percentage --[[@as integer?]],
         }
     )
 end)

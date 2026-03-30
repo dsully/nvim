@@ -6,6 +6,7 @@ return require("schema-companion").setup_client(
         },
     }),
     {
+        ---@diagnostic disable-next-line: param-type-mismatch
         ---@type table<vim.lsp.protocol.Method.ServerToClient.Notification, lsp.Handler>
         handlers = {
             ---@type lsp.Handler
