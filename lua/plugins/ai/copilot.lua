@@ -6,23 +6,24 @@ end
 return {
     {
         "zbirenbaum/copilot.lua",
-        init = function()
-            --
-            ev.on_load("blink.cmp", function()
-                ev.on(ev.User, function()
-                    require("copilot.suggestion").dismiss()
-                    vim.b.copilot_suggestion_hidden = true
-                end, {
-                    pattern = "BlinkCmpMenuOpen",
-                })
-
-                ev.on(ev.User, function()
-                    vim.b.copilot_suggestion_hidden = false
-                end, {
-                    pattern = "BlinkCmpMenuClose",
-                })
-            end)
-        end,
+        cond = false,
+        -- init = function()
+        --     --
+        --     ev.on_load("blink.cmp", function()
+        --         ev.on(ev.User, function()
+        --             require("copilot.suggestion").dismiss()
+        --             vim.b.copilot_suggestion_hidden = true
+        --         end, {
+        --             pattern = "BlinkCmpMenuOpen",
+        --         })
+        --
+        --         ev.on(ev.User, function()
+        --             vim.b.copilot_suggestion_hidden = false
+        --         end, {
+        --             pattern = "BlinkCmpMenuClose",
+        --         })
+        --     end)
+        -- end,
         opts = {
             copilot_model = "gpt-4o-copilot",
             filetypes = {
@@ -64,28 +65,29 @@ return {
     },
     {
         "fang2hou/blink-copilot",
+        cond = false,
     },
-    {
-        "Saghen/blink.cmp",
-        optional = true,
-        opts = {
-            completion = { menu = { draw = { treesitter = { "copilot" } } } },
-            sources = {
-                default = { "copilot" },
-                per_filetype = {
-                    lua = {
-                        "copilot",
-                    },
-                },
-                providers = {
-                    copilot = {
-                        name = "Copilot",
-                        async = true,
-                        module = "blink-copilot",
-                        score_offset = 100,
-                    },
-                },
-            },
-        },
-    },
+    -- {
+    --     "Saghen/blink.cmp",
+    --     optional = true,
+    --     opts = {
+    --         completion = { menu = { draw = { treesitter = { "copilot" } } } },
+    --         sources = {
+    --             default = { "copilot" },
+    --             per_filetype = {
+    --                 lua = {
+    --                     "copilot",
+    --                 },
+    --             },
+    --             providers = {
+    --                 copilot = {
+    --                     name = "Copilot",
+    --                     async = true,
+    --                     module = "blink-copilot",
+    --                     score_offset = 100,
+    --                 },
+    --             },
+    --         },
+    --     },
+    -- },
 }
