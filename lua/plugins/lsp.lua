@@ -227,6 +227,9 @@ return {
 
             -- Set defaults
             vim.lsp.config("*", {
+                before_init = function(_, config)
+                    require("codesettings").with_local_settings(config.name, config)
+                end,
                 capabilities = capabilities,
                 root_markers = { ".git" },
             } --[[@as vim.lsp.Config]])
@@ -338,6 +341,13 @@ return {
             focused_debounce_ms = 150, -- debounce delay for focus tracking in focused mode
             silence_lsp = true, -- suppress noisy LSP log messages (e.g., Pyright reference spam)
             debug_mode = false, -- enable debug output for development, see CONTRIBUTE.md
+        },
+    },
+    {
+        "mrjones2014/codesettings.nvim",
+        lazy = false,
+        opts = {
+            live_reload = true,
         },
     },
 }
