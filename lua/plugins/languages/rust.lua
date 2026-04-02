@@ -159,6 +159,6 @@ return {
             } --[[@as rustaceanvim.Opts]]
         end,
         lazy = false,
-        version = "^7",
+        version = "^8",
     },
 }
