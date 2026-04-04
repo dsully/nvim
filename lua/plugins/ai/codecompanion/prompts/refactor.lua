@@ -1,11 +1,11 @@
 return {
     description = "Refactor the selected code for readability, maintainability and performance",
-    strategy = "chat",
+    interaction = "chat",
     opts = {
+        alias = "refactor",
         auto_submit = true,
         is_slash_cmd = true,
         modes = { "v" },
-        short_name = "refactor",
         stop_context_insertion = true,
         user_prompt = false,
     },

@@ -1,9 +1,9 @@
 return {
-    strategy = "chat",
+    interaction = "chat",
     description = "Optimize the selected code",
     opts = {
         modes = { "v" },
-        short_name = "optimize",
+        alias = "optimize",
         auto_submit = true,
         stop_context_insertion = true,
         is_slash_cmd = true,

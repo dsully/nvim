@@ -1,11 +1,11 @@
 return {
     description = "Correct grammar and reformulate",
-    strategy = "inline",
+    interaction = "inline",
     opts = {
+        alias = "spell",
         auto_submit = true,
         is_slash_cmd = true,
         modes = { "v" },
-        short_name = "spell",
     },
     prompts = {
         {

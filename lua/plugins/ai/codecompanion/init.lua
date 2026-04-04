@@ -44,7 +44,7 @@ return {
             --stylua: ignore start
             -- { "<leader>a+", function() vim.cmd.CodeCompanionChat("Add") end, mode = "v", desc = "Add" },
             { "<leader>aD", function() require("codecompanion").prompt("docstring") end, mode = "v", desc = "Docstring" },
-            { "<leader>aa", function() require("codecompanion").actions() end, mode = { "n", "v" }, desc = "Actions" },
+            { "<leader>aa", function() require("codecompanion").actions({}) end, mode = { "n", "v" }, desc = "Actions" },
             { "<leader>ac", function() require("codecompanion").toggle() end, mode = { "n", "v" }, desc = "Chat" },
             { "<leader>ad", function() require("codecompanion").prompt("doc") end, mode = "v", desc = "Documentation" },
             { "<leader>af", function() require("codecompanion").prompt("fix") end, mode = "v", desc = "Fix Code" },
@@ -79,8 +79,8 @@ return {
             },
         },
         opts = function()
-            local adapter_name = vim.env.CODECOMPANION_ADAPTER or "claude_code"
-            local model_name = vim.env.CODECOMPANION_MODEL or "claude-sonnet-4-5-20250929"
+            local adapter_name = vim.env.CODECOMPANION_ADAPTER or "codex"
+            local model_name = vim.env.CODECOMPANION_MODEL or "gpt-5.4"
 
             ---@type CodeCompanion.Config
             return {
@@ -93,6 +93,23 @@ return {
                                 },
                             })
                         end,
+                        codex = function()
+                            return require("codecompanion.adapters").extend("codex", {
+                                env = {
+                                    OPENAI_API_KEY = "OPENAI_API_KEY",
+                                },
+                            })
+                        end,
+                        gemini = function()
+                            return require("codecompanion.adapters").extend("gemini_cli", {
+                                defaults = {
+                                    auth_method = "gemini-api-key", -- One of: "gemini-api-key" | "oauth-personal" | | "vertex-ai"
+                                },
+                                env = {
+                                    GEMINI_API_KEY = "GEMINI_API_KEY",
+                                },
+                            })
+                        end,
                     },
                     http = {
                         anthropic = function()
@@ -101,6 +118,27 @@ return {
                                     extended_thinking = {
                                         default = false,
                                     },
+                                },
+                            })
+                        end,
+                        gemini = function()
+                            return require("codecompanion.adapters").extend("gemini", {
+                                env = {
+                                    api_key = "GEMINI_API_KEY",
+                                },
+                            })
+                        end,
+                        openai = function()
+                            return require("codecompanion.adapters").extend("openai", {
+                                env = {
+                                    api_key = "OPENAI_API_KEY",
+                                },
+                            })
+                        end,
+                        openai_responses = function()
+                            return require("codecompanion.adapters").extend("openai_responses", {
+                                env = {
+                                    api_key = "OPENAI_API_KEY",
                                 },
                             })
                         end,

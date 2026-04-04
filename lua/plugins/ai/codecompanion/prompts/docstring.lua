@@ -1,10 +1,10 @@
 return {
-    strategy = "inline",
+    interaction = "inline",
     description = "Generate a docstring for this function",
     opts = {
-        modes = { "v" },
-        short_name = "docstring",
+        alias = "docstring",
         auto_submit = true,
+        modes = { "v" },
         stop_context_insertion = true,
         user_prompt = false,
     },

@@ -1,11 +1,11 @@
 return {
-    description = "Add documentation to the selected code",
+    interaction = "Add documentation to the selected code",
     strategy = "inline",
     opts = {
+        alias = "doc",
         auto_submit = true,
         is_slash_cmd = true,
         modes = { "v" },
-        short_name = "doc",
         stop_context_insertion = true,
         user_prompt = false,
     },

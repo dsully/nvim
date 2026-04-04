@@ -1,10 +1,10 @@
 return {
-    strategy = "chat",
+    interaction = "chat",
     description = "Get some special advice from an LLM",
     opts = {
-        modes = { "v" },
-        short_name = "expert",
+        alias = "expert",
         auto_submit = true,
+        modes = { "v" },
         stop_context_insertion = true,
         user_prompt = true,
     },

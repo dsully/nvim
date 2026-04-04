@@ -1,9 +1,9 @@
 return {
-    strategy = "inline",
+    interaction = "inline",
     description = "Give betting naming for the provided code snippet.",
     opts = {
         modes = { "v" },
-        short_name = "naming",
+        alias = "naming",
         auto_submit = true,
         user_prompt = false,
         stop_context_insertion = true,

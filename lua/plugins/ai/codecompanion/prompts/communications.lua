@@ -1,16 +1,13 @@
 return {
-    strategy = "inline",
+    interaction = "inline",
     description = "Create Communicatable Message",
     opts = {
-        placement = "replace",
-        short_name = "cm",
+        alias = "cm",
         auto_submit = true,
-        is_slash_cmd = true,
         is_default = true,
+        is_slash_cmd = true,
         modes = { "n" },
-        adapter = {
-            name = "anthropic",
-        },
+        placement = "replace",
     },
     prompts = {
         {

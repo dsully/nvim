@@ -1,6 +1,6 @@
 return {
     description = "Generate a Pull Request message description",
-    strategy = "chat",
+    interaction = "chat",
     opts = {
         auto_submit = true,
         is_slash_cmd = true,
