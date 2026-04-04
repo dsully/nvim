@@ -29,13 +29,13 @@ _G.nvim = {
 ---Create a Neovim command
 ---@param name string
 ---@param rhs string|fun(args: vim.api.keyset.create_user_command.command_args)
----@param opts vim.api.keyset.user_command
+---@param opts vim.api.keyset.user_command | table<string, string>
 _G.nvim.command = function(name, rhs, opts)
     if not opts then
-        opts = {} --[[@as vim.api.keyset.user_command]]
+        opts = {}
     end
 
-    vim.api.nvim_create_user_command(name, rhs, opts)
+    vim.api.nvim_create_user_command(name, rhs, opts --[[@as vim.api.keyset.user_command]])
 end
 
 --- Create a namespace.

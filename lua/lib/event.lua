@@ -1,3 +1,4 @@
+---@class lib.event
 local M = {
     --- after adding a buffer to the buffer list
     BufAdd = "BufAdd",
@@ -275,9 +276,9 @@ local M = {
     Progress = "Progress",
 }
 
----@alias Event vim.api.keyset.events | vim.api.keyset.events[]
+---@alias Event string | string[] | vim.api.keyset.events | vim.api.keyset.events[]
 
----@alias EventOpts vim.api.keyset.create_autocmd
+---@alias EventOpts vim.api.keyset.create_autocmd | table<string, any>
 ---@alias EventCallback string|(fun(args: vim.api.keyset.create_autocmd.callback_args): boolean?)
 
 ---@param event Event
@@ -285,23 +286,27 @@ local M = {
 ---@param opts EventOpts?
 ---@return integer
 M.on = function(event, callback, opts)
-    opts = opts or {}
+    local autocmd_opts = vim.deepcopy(opts or {}, true)
 
     if type(event) == "string" then
         event = { event }
     end
 
     if type(callback) == "table" then
-        opts = callback
-    else
-        opts.callback = callback
+        autocmd_opts = vim.deepcopy(callback, true)
+        callback = autocmd_opts.callback
+        autocmd_opts.callback = nil
     end
 
-    return vim.api.nvim_create_autocmd(event --[[@as Event]], opts --[[@as EventOpts]])
+    if callback ~= nil then
+        autocmd_opts.callback = callback
+    end
+
+    return vim.api.nvim_create_autocmd(event --[[@as Event]], autocmd_opts)
 end
 
 ---@param event string
----@param opts vim.api.keyset.exec_autocmds
+---@param opts? table<string, any>
 ---@return nil
 M.emit = function(event, opts)
     if M[event] then

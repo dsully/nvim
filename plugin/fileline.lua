@@ -11,7 +11,13 @@ local jump = function()
     local bufname = nvim.file.filename()
     local filename, capture = bufname:match(pattern)
 
-    if filename and capture and vim.uv.fs_access(filename, "R") then
+    if filename == nil or capture == nil then
+        return bufname
+    end
+
+    local readable = vim.uv.fs_access(filename, "R")
+
+    if readable then
         local pos = vim.tbl_map(tonumber, vim.split(capture, ":", { trimempty = true }))
 
         local current_buf = vim.api.nvim_get_current_buf()

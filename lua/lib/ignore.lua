@@ -113,9 +113,10 @@ local function handle_rust(diagnostic, cursor_line, line)
     end
 
     local existing_lines = vim.api.nvim_buf_get_lines(0, cursor_line - 1, cursor_line, false)
+    local previous_line = existing_lines[1]
+    local has_attribute = type(previous_line) == "string" and previous_line:match("^%s*#%[.*allow.*%]") ~= nil
 
-    ---@diagnostic disable-next-line: param-type-not-match, need-check-nil
-    if #existing_lines > 0 and existing_lines[1]:match("^%s*#%[.*allow.*%]") then
+    if has_attribute then
         vim.notify("Line above already has allow attribute", vim.log.levels.WARN)
         return false
     end
@@ -134,7 +135,7 @@ local handlers = {
     ruff = handle_python_lint,
     rustc = handle_rust,
     ty = handle_python_type,
-    zubanls = handle_python_type
+    zubanls = handle_python_type,
 }
 
 function M.ignore()
@@ -159,7 +160,8 @@ function M.ignore()
             return
         end
 
-        local cursor_line = vim.api.nvim_win_get_cursor(0)[1] - 1
+        local cursor_line = math.max(vim.api.nvim_win_get_cursor(0)[1] - 1, 0)
+        ---@cast cursor_line integer
         local line = vim.api.nvim_buf_get_lines(0, cursor_line, cursor_line + 1, false)[1]
 
         if not line then

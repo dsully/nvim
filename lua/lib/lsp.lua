@@ -53,7 +53,11 @@ M.should_ignore = function(client)
         return true
     end
 
-    if client and vim.tbl_contains(defaults.ignored.lsp, client.name) then
+    if client == nil then
+        return false
+    end
+
+    if vim.tbl_contains(defaults.ignored.lsp, client.name) then
         return true
     end
 
@@ -434,7 +438,7 @@ M.commands = function()
                     for _, code_action in pairs(result.result or {}) do
                         --
                         ---@cast code_action lsp.CodeAction
-                        if code_action ~= nil and code_action.title then
+                        if code_action.title then
                             table.insert(lines, "Title: " .. code_action.title)
                             table.insert(lines, "Kind: " .. code_action.kind)
                             table.insert(lines, "Preferred: " .. tostring(code_action.isPreferred))
@@ -461,13 +465,16 @@ M.commands = function()
 
     nvim.command("LspRestartBuffer", function()
         --
+        ---@type vim.lsp.get_clients.Filter
+        local filter = { bufnr = vim.api.nvim_get_current_buf() }
+
         M.apply_to_buffers(function(bufnr, client)
             --
             if client then
                 client:stop(true)
                 Snacks.notify.info(("Restarting LSP %s for %s"):format(client.name, nvim.file.filename(bufnr)))
             end
-        end, { bufnr = vim.api.nvim_get_current_buf() })
+        end, filter)
 
         vim.cmd.edit()
     end, { desc = "Restart Language Server for Buffer" })
@@ -525,11 +532,14 @@ M.info = function()
         ---@type vim.lsp.Config
         local config = vim.lsp.config[client.name] or {}
 
-        local buffers = vim.iter(pairs(client.attached_buffers)):map(tostring):join(", ")
+        local buffer_ids = vim.tbl_keys(client.attached_buffers)
+        table.sort(buffer_ids)
+
+        local buffers = vim.iter(buffer_ids):map(tostring):join(", ")
 
         vim.list_extend(lines, {
             "",
-            string.format("%s (id: %s) %s: %s", client.name, client.id, pluralize("buffer", client.attached_buffers), buffers),
+            string.format("%s (id: %s) %s: %s", client.name, client.id, pluralize("buffer", buffer_ids), buffers),
             "",
             "  - command: " .. client_command(client, config),
         })

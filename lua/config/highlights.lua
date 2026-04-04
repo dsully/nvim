@@ -97,10 +97,11 @@ local M = {
 }
 
 ---@alias HighlightName string
----@alias HighlightMap table<HighlightName, vim.api.keyset.highlight>>
----@alias HighlightMaps table<string, table<HighlightName, vim.api.keyset.highlight[]>>
+---@alias PaletteHighlightSpec table<string, any>
+---@alias HighlightMap table<HighlightName, PaletteHighlightSpec>
+---@alias HighlightSections table<string, HighlightMap>
 
----@type HighlightMap|HighlightMaps
+---@type HighlightSections
 M.ui = {
     -- ---@type Highlight
     core = {
@@ -413,7 +414,7 @@ M.ui = {
     },
 }
 
----@type table<string, table<string, vim.api.keyset.highlight>>
+---@type table<string, HighlightMap>
 M.languages = {
 
     bash = {

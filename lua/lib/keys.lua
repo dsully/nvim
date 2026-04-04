@@ -18,14 +18,14 @@ function M.safe_set(lhs, rhs, mode, opts)
         return not (lazy_keys.have and lazy_keys:have(lhs, m))
     end, modes --[[@as table<any,string>]])
 
-    opts = opts or {}
+    local options = vim.deepcopy(opts or {}, true)
 
     -- Do not create the keymap if a lazy keys handler exists
     -- But allow for buffer-local keymaps.
-    if #modes > 0 or opts and opts.buffer ~= nil then
-        opts.silent = opts.silent ~= false
+    if #modes > 0 or options.buffer ~= nil then
+        options.silent = options.silent ~= false
 
-        vim.keymap.set(modes, lhs, rhs, opts)
+        vim.keymap.set(modes, lhs, rhs, options)
     else
         vim.notify("Keymap already exists for " .. lhs .. " in: " .. (vim.fn.execute("map " .. lhs) or "?"), vim.log.levels.ERROR)
     end

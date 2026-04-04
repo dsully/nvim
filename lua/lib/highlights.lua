@@ -137,6 +137,8 @@ local M = {
     lCursor = "lCursor", --- Cursor in language mapping
 }
 
+---@alias HLSpec vim.api.keyset.highlight | table<string, any>
+
 function M.blend_bg(hex, amount)
     return require("snacks.util").blend(hex, colors.bg, amount)
 end
@@ -171,24 +173,22 @@ function M.get_hl_hex(hl_group)
     }
 end
 
----@param hl vim.api.keyset.highlight|string
+---@param hl HLSpec|string
 ---@return string
 M.group = function(hl)
     --@type string
     local name = vim.inspect(hl):gsub("%W+", "_")
 
     if not M.groups[name] then
-        ---@type vim.api.keyset.highlight
-        hl = type(hl) == "string" and { link = hl } or hl
-        hl = vim.deepcopy(hl, true)
+        local spec = type(hl) == "string" and { link = hl } or vim.deepcopy(hl, true)
 
-        hl.fg = hl.fg or colors.gray.base
+        spec.fg = spec.fg or colors.gray.base
 
-        if hl.fg == hl.bg then
-            hl.fg = nil
+        if spec.fg == spec.bg then
+            spec.fg = nil
         end
 
-        vim.api.nvim_set_hl(0, name, hl)
+        vim.api.nvim_set_hl(0, name, spec --[[@as vim.api.keyset.highlight]])
 
         M.groups[name] = true
     end
@@ -197,13 +197,13 @@ M.group = function(hl)
 end
 
 ---Apply a list of highlights
----@param highlights table<string, vim.api.keyset.highlight>
+---@param highlights table<string, HLSpec>
 M.apply = function(highlights)
     --
     ---@param name string
-    ---@param opts vim.api.keyset.highlight
+    ---@param opts HLSpec
     vim.iter(highlights):each(function(name, opts)
-        vim.api.nvim_set_hl(0, name, opts)
+        vim.api.nvim_set_hl(0, name, opts --[[@as vim.api.keyset.highlight]])
     end)
 end
 

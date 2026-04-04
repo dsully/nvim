@@ -234,6 +234,8 @@ return {
                 mode = "v",
             },
 
+            { [[<leader>\]], [[:.s/ -/ \\\r  -/g<cr>:noh<cr>]], silent = true, desc = "Split long command lines" },
+
             {
                 "<leader>cs",
                 function()

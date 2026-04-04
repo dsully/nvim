@@ -152,7 +152,7 @@ function UI:create_windows()
 
     vim.api.nvim_buf_set_lines(self.input_buf, 0, -1, false, { "" })
 
-    self.preview_win = vim.api.nvim_open_win(self.preview_buf, false, {
+    local preview_win = vim.api.nvim_open_win(self.preview_buf, false, {
         relative = "editor",
         width = layout.preview.width,
         height = layout.preview.height,
@@ -164,8 +164,9 @@ function UI:create_windows()
         title = " " .. self.base_prompt:gsub(">%s*$", "") .. " ",
         title_pos = "center",
     })
+    self.preview_win = preview_win
 
-    self.results_win = vim.api.nvim_open_win(self.results_buf, false, {
+    local results_win = vim.api.nvim_open_win(self.results_buf, false, {
         relative = "editor",
         width = layout.results.width,
         height = layout.results.height,
@@ -175,8 +176,9 @@ function UI:create_windows()
         border = borders.results,
         zindex = 50,
     })
+    self.results_win = results_win
 
-    self.input_win = vim.api.nvim_open_win(self.input_buf, true, {
+    local input_win = vim.api.nvim_open_win(self.input_buf, true, {
         relative = "editor",
         width = layout.input.width,
         height = 1,
@@ -186,13 +188,14 @@ function UI:create_windows()
         border = borders.input,
         zindex = 50,
     })
+    self.input_win = input_win
 
-    self:_configure_window(self.preview_win)
-    self:_configure_window(self.results_win)
-    self:_configure_window(self.input_win)
+    self:_configure_window(preview_win)
+    self:_configure_window(results_win)
+    self:_configure_window(input_win)
 
-    vim.wo[self.preview_win].number = true
-    vim.wo[self.results_win].cursorline = true
+    vim.wo[preview_win].number = true
+    vim.wo[results_win].cursorline = true
 
     self.augroup = vim.api.nvim_create_augroup("GlimpseUIResize", { clear = true })
     vim.api.nvim_create_autocmd("VimResized", {
@@ -202,39 +205,54 @@ function UI:create_windows()
         end,
     })
 
-    return self.input_buf, self.input_win
+    local input_buf = self.input_buf
+
+    assert(type(input_buf) == "number" and type(input_win) == "number", "failed to create Glimpse windows")
+
+    ---@cast input_buf integer
+    ---@cast input_win integer
+
+    return input_buf, input_win
 end
 
 function UI:_update_layout()
-    if not self.input_win or not vim.api.nvim_win_is_valid(self.input_win) then
+    local input_win = self.input_win
+
+    if type(input_win) ~= "number" or not vim.api.nvim_win_is_valid(input_win) then
         return
     end
 
     local layout = self:_calculate_layout()
 
-    if self.preview_win and vim.api.nvim_win_is_valid(self.preview_win) then
-        vim.api.nvim_win_set_config(self.preview_win, {
-            relative = "editor",
-            width = layout.preview.width,
-            height = layout.preview.height,
-            col = layout.preview.col,
-            row = layout.preview.row,
-            border = borders.preview,
-        })
+    local preview_win = self.preview_win
+    if preview_win ~= nil then
+        if vim.api.nvim_win_is_valid(preview_win) then
+            vim.api.nvim_win_set_config(preview_win, {
+                relative = "editor",
+                width = layout.preview.width,
+                height = layout.preview.height,
+                col = layout.preview.col,
+                row = layout.preview.row,
+                border = borders.preview,
+            })
+        end
     end
 
-    if self.results_win and vim.api.nvim_win_is_valid(self.results_win) then
-        vim.api.nvim_win_set_config(self.results_win, {
-            relative = "editor",
-            width = layout.results.width,
-            height = layout.results.height,
-            col = layout.results.col,
-            row = layout.results.row,
-            border = borders.results,
-        })
+    local results_win = self.results_win
+    if results_win ~= nil then
+        if vim.api.nvim_win_is_valid(results_win) then
+            vim.api.nvim_win_set_config(results_win, {
+                relative = "editor",
+                width = layout.results.width,
+                height = layout.results.height,
+                col = layout.results.col,
+                row = layout.results.row,
+                border = borders.results,
+            })
+        end
     end
 
-    vim.api.nvim_win_set_config(self.input_win, {
+    vim.api.nvim_win_set_config(input_win, {
         relative = "editor",
         width = layout.input.width,
         height = 1,
@@ -246,21 +264,28 @@ end
 
 ---@param count_str string
 function UI:update_count_display(count_str)
-    if self.input_buf and vim.api.nvim_buf_is_valid(self.input_buf) then
-        vim.api.nvim_buf_clear_namespace(self.input_buf, self.prompt_ns, 0, -1)
+    local input_buf = self.input_buf
+
+    if input_buf ~= nil then
+        if not vim.api.nvim_buf_is_valid(input_buf) then
+            return
+        end
+
+        vim.api.nvim_buf_clear_namespace(input_buf, self.prompt_ns, 0, -1)
 
         local chevron = defaults and defaults.icons and defaults.icons.separators and defaults.icons.separators.chevron
         local prompt_icon = (chevron and chevron.right or ">") .. " "
-        vim.api.nvim_buf_set_extmark(self.input_buf, self.prompt_ns, 0, 0, {
+        vim.api.nvim_buf_set_extmark(input_buf, self.prompt_ns, 0, 0, {
             virt_text = { { prompt_icon, "GlimpsePrompt" } },
             virt_text_pos = "inline",
             right_gravity = false,
         })
 
-        vim.api.nvim_buf_set_extmark(self.input_buf, self.prompt_ns, 0, 0, {
+        vim.api.nvim_buf_set_extmark(input_buf, self.prompt_ns, 0, 0, {
             virt_text = { { count_str, "GlimpseCounter" } },
             virt_text_pos = "right_align",
         })
+        return
     end
 end
 
@@ -277,11 +302,15 @@ end
 
 ---@param selection? string
 function UI:show_preview(selection)
-    if not self.preview_win or not vim.api.nvim_win_is_valid(self.preview_win) then
+    local preview_win = self.preview_win
+
+    if preview_win == nil or not vim.api.nvim_win_is_valid(preview_win) then
         return
     end
 
-    if not self.preview_buf or not vim.api.nvim_buf_is_valid(self.preview_buf) then
+    local preview_buf = self.preview_buf
+
+    if preview_buf == nil or not vim.api.nvim_buf_is_valid(preview_buf) then
         return
     end
 
@@ -309,7 +338,7 @@ function UI:show_preview(selection)
         self.current_preview_file = filename
 
         if nvim.file.is_binary(filename) then
-            vim.api.nvim_buf_set_lines(self.preview_buf, 0, -1, false, { "[Binary File - Preview Disabled]" })
+            vim.api.nvim_buf_set_lines(preview_buf, 0, -1, false, { "[Binary File - Preview Disabled]" })
         else
             local content = nvim.file.read(filename)
             local lines
@@ -323,32 +352,32 @@ function UI:show_preview(selection)
                 lines = { "File not found: " .. filename }
             end
 
-            vim.bo[self.preview_buf].modifiable = true
-            vim.api.nvim_buf_set_lines(self.preview_buf, 0, -1, false, lines)
-            vim.bo[self.preview_buf].modifiable = false
+            vim.bo[preview_buf].modifiable = true
+            vim.api.nvim_buf_set_lines(preview_buf, 0, -1, false, lines)
+            vim.bo[preview_buf].modifiable = false
 
             local ft = vim.filetype.match({ filename = filename })
 
             if ft then
-                vim.bo[self.preview_buf].filetype = ft
+                vim.bo[preview_buf].filetype = ft
             end
         end
     end
 
-    local line_count = vim.api.nvim_buf_line_count(self.preview_buf)
+    local line_count = vim.api.nvim_buf_line_count(preview_buf)
     if lnum > 0 and lnum <= line_count then
         ---@type integer
         local cursor_col = math.max(0, col - 1)
-        vim.api.nvim_win_set_cursor(self.preview_win, { lnum, cursor_col })
+        vim.api.nvim_win_set_cursor(preview_win, { lnum, cursor_col })
 
-        vim.api.nvim_win_call(self.preview_win, function()
+        vim.api.nvim_win_call(preview_win, function()
             vim.cmd("normal! zz")
         end)
 
-        vim.api.nvim_buf_clear_namespace(self.preview_buf, self.preview_ns, 0, -1)
-        vim.api.nvim_buf_set_extmark(self.preview_buf, self.preview_ns, lnum - 1, 0, {
+        vim.api.nvim_buf_clear_namespace(preview_buf, self.preview_ns, 0, -1)
+        vim.api.nvim_buf_set_extmark(preview_buf, self.preview_ns, lnum - 1, 0, {
             end_row = lnum - 1,
-            end_col = #(vim.api.nvim_buf_get_lines(self.preview_buf, lnum - 1, lnum, false)[1] or ""),
+            end_col = #(vim.api.nvim_buf_get_lines(preview_buf, lnum - 1, lnum, false)[1] or ""),
             hl_group = "Visual",
             priority = 100,
         })
@@ -404,8 +433,12 @@ function UI:render(matches, selected_index, marked, query)
     if selected_index > 0 and selected_index <= total then
         local selected_text = matches[selected_index]
 
-        if self.results_win and vim.api.nvim_win_is_valid(self.results_win) then
-            vim.api.nvim_win_set_cursor(self.results_win, { selected_index, 0 })
+        local results_win = self.results_win
+
+        if results_win ~= nil then
+            if vim.api.nvim_win_is_valid(results_win) then
+                vim.api.nvim_win_set_cursor(results_win, { selected_index, 0 })
+            end
         end
 
         self:show_preview(selected_text)
@@ -415,27 +448,38 @@ end
 ---@param text string
 function UI:set_prompt(text)
     self.base_prompt = text
-    if self.preview_win and vim.api.nvim_win_is_valid(self.preview_win) then
-        vim.api.nvim_win_set_config(self.preview_win, {
-            title = " " .. text:gsub(">%s*$", "") .. " ",
-            title_pos = "center",
-        })
+    local preview_win = self.preview_win
+
+    if preview_win ~= nil then
+        if vim.api.nvim_win_is_valid(preview_win) then
+            vim.api.nvim_win_set_config(preview_win, {
+                title = " " .. text:gsub(">%s*$", "") .. " ",
+                title_pos = "center",
+            })
+        end
     end
 end
 
 ---@param lines string[]
 function UI:update_input(lines)
-    if not self.input_buf or not self.input_win then
+    local input_buf = self.input_buf
+    local input_win = self.input_win
+
+    if type(input_buf) ~= "number" or type(input_win) ~= "number" then
         return
     end
 
-    vim.api.nvim_buf_set_lines(self.input_buf, 0, -1, false, lines)
-    vim.api.nvim_win_set_cursor(self.input_win, { 1, #lines[1] })
+    vim.api.nvim_buf_set_lines(input_buf, 0, -1, false, lines)
+    vim.api.nvim_win_set_cursor(input_win, { 1, #lines[1] })
 end
 
 ---@param win integer?
 local function close_win(win)
-    if win and vim.api.nvim_win_is_valid(win) then
+    if win == nil then
+        return
+    end
+
+    if vim.api.nvim_win_is_valid(win) then
         vim.api.nvim_win_close(win, true)
     end
 end

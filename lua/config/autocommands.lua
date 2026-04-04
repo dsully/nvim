@@ -44,10 +44,13 @@ end, {
 })
 
 ev.on(ev.FileType, function()
+    ---@type vim.keymap.set.Opts
+    local join_opts = { expr = true }
+
     keys.map("J", function()
         --
         return vim.endswith(vim.api.nvim_get_current_line(), [[\]]) and "$xJ" or "J"
-    end, "Remove trailing backslash when joining lines.", "n", { expr = true })
+    end, "Remove trailing backslash when joining lines.", "n", join_opts)
 end, {
     desc = "Keymap for removing backslashes when joining lines.",
     pattern = {
@@ -133,11 +136,18 @@ ev.on(ev.FileType, function()
             local filename = nvim.file.filename(args.buf)
             local fileinfo = vim.uv.fs_stat(filename)
 
-            if not fileinfo or bit.band(fileinfo.mode - 32768, 0x40) ~= 0 then
+            if not fileinfo then
                 return
             end
 
-            vim.uv.fs_chmod(filename, bit.bor(fileinfo.mode, 493))
+            ---@type integer
+            local mode = math.floor(fileinfo.mode)
+
+            if bit.band(mode - 32768, 0x40) ~= 0 then
+                return
+            end
+
+            vim.uv.fs_chmod(filename, bit.bor(mode, 493))
         end, { once = true })
     end)
 end, {

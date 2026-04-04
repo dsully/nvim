@@ -126,8 +126,11 @@ return {
                 -- Filter out file watchers with non-file URI schemes (e.g. bundled:///)
                 -- that Neovim's glob parser cannot handle. ts_go has this proble.
                 for _, reg in ipairs(res.registrations) do
-                    if reg.method == "workspace/didChangeWatchedFiles" and reg.registerOptions then
-                        local watchers = reg.registerOptions.watchers --[[@as table[]?]]
+                    local method = reg.method
+                    local options = reg.registerOptions
+
+                    if method == "workspace/didChangeWatchedFiles" and type(options) == "table" then
+                        local watchers = options.watchers --[[@as table[]?]]
 
                         if watchers ~= nil then
                             for i = #watchers, 1, -1 do

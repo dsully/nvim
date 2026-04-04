@@ -4,7 +4,10 @@ function _G._python_indent()
     local ind = vim.fn["python#GetIndent"](lnum)
 
     -- Walk up past blank lines and use the nearest non-blank line's indent.
-    if ind <= 0 and lnum > 1 and vim.fn.getline(lnum - 1):match("^%s*$") then
+    local previous_line = lnum > 1 and vim.fn.getline(lnum - 1) or nil
+    local previous_is_blank = previous_line ~= nil and previous_line:match("^%s*$") ~= nil
+
+    if ind <= 0 and previous_is_blank then
         local prev = lnum - 1
 
         while prev > 0 and vim.fn.getline(prev):match("^%s*$") do

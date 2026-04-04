@@ -79,7 +79,17 @@ local orig = ui2.check_targets
 ui2.check_targets = function()
     local ok, err = pcall(orig)
 
-    if not ok and err ~= nil and not err:find("E1159") then
-        error(err)
+    if ok then
+        return
     end
+
+    if type(err) == "string" then
+        if not err:find("E1159") then
+            error(err)
+        end
+
+        return
+    end
+
+    error(err)
 end

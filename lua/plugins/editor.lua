@@ -104,55 +104,64 @@ return {
         "dsully/search-and-replace.nvim",
         cmd = { "SearchAndReplace" },
         config = function()
-            nvim.command("SearchAndReplace", function(opts)
-                local args = vim.tbl_map(vim.trim, vim.split(opts.args, "%s+", { trimempty = true }))
-                local search = ""
-                local replace = ""
-                local glob = "*"
+            nvim.command(
+                "SearchAndReplace",
+                function(opts)
+                    local args = vim.tbl_map(vim.trim, vim.split(opts.args, "%s+", { trimempty = true }))
+                    local search = ""
+                    local replace = ""
+                    local glob = "*"
 
-                if opts.range > 0 then
-                    replace, glob = args[1], args[2]
+                    if opts.range > 0 then
+                        replace, glob = args[1], args[2]
 
-                    search = vim.trim(table.concat(nvim.buffer.visual_selection(), "\n"))
-                else
-                    search, replace, glob = args[1], args[2], args[3]
-                end
+                        search = vim.trim(table.concat(nvim.buffer.visual_selection(), "\n"))
+                    else
+                        search, replace, glob = args[1], args[2], args[3]
+                    end
 
-                if not search or not replace then
-                    vim.notify("Search string and replacement string are required.", vim.log.levels.ERROR)
-                    return
-                end
+                    if not search or not replace then
+                        vim.notify("Search string and replacement string are required.", vim.log.levels.ERROR)
+                        return
+                    end
 
-                local cmd = string.format(
-                    "fd --print0 --type f --glob '%s' | sad --read0 --fzf '%s' '%s' '%s'",
-                    glob,
-                    "\\--height=100% --border=none --preview-window=up,50%,wrap,border-bottom,+{2}/3",
-                    search,
-                    replace
-                )
+                    local cmd = string.format(
+                        "fd --print0 --type f --glob '%s' | sad --read0 --fzf '%s' '%s' '%s'",
+                        glob,
+                        "\\--height=100% --border=none --preview-window=up,50%,wrap,border-bottom,+{2}/3",
+                        search,
+                        replace
+                    )
 
-                local terminal = Snacks.terminal.open(cmd, { auto_close = false, cwd = nvim.file.cwd() })
+                    local terminal = Snacks.terminal.open(cmd, { auto_close = false, cwd = nvim.file.cwd() })
 
-                if terminal then
-                    terminal:on("TermClose", function()
-                        if type(vim.v.event) == "table" then
-                            local exit_code = vim.v.event.status
+                    if terminal then
+                        terminal:on("TermClose", function()
+                            if type(vim.v.event) == "table" then
+                                local exit_code = vim.v.event.status
 
-                            if exit_code ~= 0 and exit_code ~= 130 then
-                                vim.notify("Search and replace exited with code: " .. exit_code, vim.log.levels.WARN)
-                                return
+                                if exit_code ~= 0 and exit_code ~= 130 then
+                                    vim.notify("Search and replace exited with code: " .. exit_code, vim.log.levels.WARN)
+                                    return
+                                end
                             end
-                        end
 
-                        terminal:close()
-                        vim.cmd.checktime()
-                    end, { buf = true })
-                end
-            end, {
-                nargs = "+",
-                range = true,
-                desc = "Search and Replace",
-            })
+                            terminal:close()
+                            vim.cmd.checktime()
+                        end, { buf = true })
+                    end
+                end,
+                (function()
+                    ---@type vim.api.keyset.user_command
+                    local opts = {
+                        nargs = "+",
+                        range = true,
+                        desc = "Search and Replace",
+                    }
+
+                    return opts
+                end)()
+            )
         end,
         virtual = true,
     },
