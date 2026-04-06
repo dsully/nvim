@@ -22,7 +22,7 @@ end)
 
 local highlights = require("config.highlights")
 
-vim.iter(vim.tbl_extend("force", highlights.ui, highlights.languages)):each(function(_, group)
+vim.iter(vim.tbl_extend("force", highlights.ui, highlights.languages, highlights.plugins)):each(function(_, group)
     vim.iter(group):each(function(name, highlight)
         vim.api.nvim_set_hl(0, name, highlight)
     end)

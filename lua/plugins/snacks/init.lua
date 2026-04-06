@@ -40,43 +40,6 @@ return {
             once = true,
             pattern = ev.VeryLazy,
         })
-
-        hl.apply({
-            SnacksNormal = { link = "Normal" },
-            SnacksBackdrop = { link = "Normal" },
-
-            SnacksNotifierBorderDebug = { fg = colors.white.bright },
-            SnacksNotifierBorderError = { fg = colors.white.bright },
-            SnacksNotifierBorderInfo = { fg = colors.white.bright },
-            SnacksNotifierBorderTrace = { fg = colors.white.bright },
-            SnacksNotifierBorderWarn = { fg = colors.white.bright },
-            SnacksNotifierDebug = { bg = colors.bg },
-            SnacksNotifierError = { bg = colors.bg },
-            SnacksNotifierIconDebug = { fg = colors.white.base },
-            SnacksNotifierIconError = { fg = colors.red.base },
-            SnacksNotifierIconInfo = { fg = colors.cyan.base },
-            SnacksNotifierIconTrace = { fg = colors.gray.base },
-            SnacksNotifierIconWarn = { fg = colors.yellow.base },
-            SnacksNotifierInfo = { bg = colors.bg },
-            SnacksNotifierTrace = { bg = colors.bg },
-            SnacksNotifierWarn = { bg = colors.bg },
-
-            -- Picker
-            SnacksPicker = { fg = colors.none, bg = colors.black.dim },
-            SnacksPickerDir = { fg = colors.gray.bright },
-            SnacksPickerGitStatusAdded = { fg = colors.green.base },
-            SnacksPickerGitStatusDeleted = { fg = colors.red.base },
-            SnacksPickerGitStatusIgnored = { fg = colors.gray.base },
-            SnacksPickerGitStatusModified = { fg = colors.yellow.base },
-            SnacksPickerGitStatusRenamed = { fg = colors.magenta.base },
-            SnacksPickerGitStatusStaged = { fg = colors.green.base },
-            SnacksPickerGitStatusUnmerged = { fg = colors.red.bright },
-            SnacksPickerGitStatusUntracked = { fg = colors.green.base },
-            SnacksPickerInputBorder = { link = "FloatBorder" },
-            SnacksPickerListCursorLine = { bg = colors.black.base },
-            SnacksPickerMatch = { bg = colors.none, fg = colors.none },
-            SnacksPickerTotals = { bg = colors.black.dim },
-        })
     end,
     lazy = false,
     priority = 1000,

@@ -690,6 +690,154 @@ M.languages = {
     },
 }
 
+M.plugins = {
+
+    aerial = {
+        AerialArrayIcon = { fg = colors.yellow.base },
+        AerialBooleanIcon = { fg = colors.orange.base },
+        AerialClassIcon = { fg = colors.yellow.base },
+        AerialConstantIcon = { fg = colors.orange.base },
+        AerialConstructorIcon = { fg = colors.yellow.base },
+        AerialEnumIcon = { fg = colors.yellow.base },
+        AerialEnumMemberIcon = { fg = colors.cyan.base },
+        AerialEventIcon = { fg = colors.magenta.base },
+        AerialFieldIcon = { fg = colors.blue.base },
+        AerialFileIcon = { fg = colors.blue.base },
+        AerialFunctionIcon = { fg = colors.magenta.base },
+        AerialInterfaceIcon = { fg = colors.yellow.base },
+        AerialKeyIcon = { fg = colors.magenta.base },
+        AerialMethodIcon = { fg = colors.magenta.base },
+        AerialModuleIcon = { fg = colors.blue.base },
+        AerialNamespaceIcon = { fg = colors.yellow.base },
+        AerialNullIcon = { fg = colors.red.base },
+        AerialNumberIcon = { fg = colors.orange.base },
+        AerialObjectIcon = { fg = colors.orange.base },
+        AerialOperatorIcon = { fg = colors.magenta.base },
+        AerialPackageIcon = { fg = colors.orange.base },
+        AerialPropertyIcon = { fg = colors.blue.base },
+        AerialStringIcon = { fg = colors.green.base },
+        AerialStructIcon = { fg = colors.yellow.base },
+        AerialTypeParameterIcon = { fg = colors.yellow.base },
+        AerialVariableIcon = { fg = colors.blue.base },
+    },
+
+    blink = {
+        BlinkCmpGhostText = { link = hl.Comment },
+        BlinkIndent = { fg = colors.blue.bright },
+    },
+
+    lazy = {
+        LazyButton = { bg = colors.black.base },
+        LazyCommit = { fg = colors.white.bright },
+        LazyDimmed = { link = "Comment" },
+        LazyProp = { fg = colors.white.bright },
+    },
+
+    markdown = {
+        RenderMarkdownCode = { bg = colors.black.base },
+    },
+
+    mini_icons = {
+        MiniIconsAzure = { fg = colors.blue.bright },
+        MiniIconsBlue = { fg = colors.blue.base },
+        MiniIconsCyan = { fg = colors.cyan.base },
+        MiniIconsGreen = { fg = colors.green.base },
+        MiniIconsGrey = { fg = colors.gray.bright },
+        MiniIconsOrange = { fg = colors.orange.base },
+        MiniIconsPurple = { fg = colors.magenta.base },
+        MiniIconsRed = { fg = colors.red.base },
+        MiniIconsYellow = { fg = colors.yellow.base },
+    },
+
+    mini_statusline = {
+        MiniStatuslineModeNormal = { fg = colors.black.base, bg = colors.cyan.base, bold = true },
+        MiniStatuslineModeVisual = { fg = colors.black.base, bg = colors.magenta.base, bold = true },
+        MiniStatuslineModeInsert = { fg = colors.black.base, bg = colors.green.base, bold = true },
+        MiniStatuslineModeReplace = { fg = colors.black.base, bg = colors.red.base, bold = true },
+        MiniStatuslineModeCommand = { fg = colors.black.base, bg = colors.cyan.base, bold = true },
+        MiniStatuslineModeOther = { fg = colors.black.base, bg = colors.cyan.base, bold = true },
+
+        DiagnosticErrorStatus = { fg = colors.red.base, bold = true },
+        DiagnosticHintStatus = { fg = colors.blue.bright, bold = true },
+        DiagnosticInfoStatus = { fg = colors.blue.base, bold = true },
+        DiagnosticWarnStatus = { fg = colors.yellow.base, bold = true },
+        StatuslineSeparator = { fg = colors.white.base, bold = true },
+    },
+
+    neotest = {
+        NeotestAdapterName = { bold = true, fg = colors.magenta.base },
+        NeotestDir = { fg = colors.cyan.base },
+        NeotestExpandMarker = { link = "Conceal" },
+        NeotestFailed = { fg = colors.red.base },
+        NeotestFile = { fg = colors.blue.base },
+        NeotestFocused = { underline = true },
+        NeotestIndent = { link = "Conceal" },
+        NeotestMarked = { bold = true, fg = colors.white.dim },
+        NeotestNamespace = { fg = colors.cyan.base },
+        NeotestPassed = { fg = colors.green.base },
+        NeotestRunning = { fg = colors.orange.base },
+        NeotestSkipped = { fg = colors.yellow.base },
+        NeotestTest = { link = "Normal" },
+    },
+
+    noice = {
+        NoiceFormatProgressDone = { bg = colors.black.dim, fg = colors.white.bright },
+        NoiceFormatProgressTodo = { bg = colors.black.dim, fg = colors.white.bright },
+        NoiceLspProgressClient = { fg = colors.blue.base },
+        NoiceLspProgressSpinner = { fg = colors.cyan.bright },
+        NoiceLspProgressTitle = { fg = colors.white.bright },
+        NoiceSplit = { bg = colors.bg, fg = colors.white.dim },
+        NoiceVirtualText = { bg = colors.bg, fg = colors.blue.base },
+    },
+
+    snacks = {
+        SnacksNormal = { link = "Normal" },
+        SnacksBackdrop = { link = "Normal" },
+
+        SnacksNotifierBorderDebug = { fg = colors.white.bright },
+        SnacksNotifierBorderError = { fg = colors.white.bright },
+        SnacksNotifierBorderInfo = { fg = colors.white.bright },
+        SnacksNotifierBorderTrace = { fg = colors.white.bright },
+        SnacksNotifierBorderWarn = { fg = colors.white.bright },
+        SnacksNotifierDebug = { bg = colors.bg },
+        SnacksNotifierError = { bg = colors.bg },
+        SnacksNotifierIconDebug = { fg = colors.white.base },
+        SnacksNotifierIconError = { fg = colors.red.base },
+        SnacksNotifierIconInfo = { fg = colors.cyan.base },
+        SnacksNotifierIconTrace = { fg = colors.gray.base },
+        SnacksNotifierIconWarn = { fg = colors.yellow.base },
+        SnacksNotifierInfo = { bg = colors.bg },
+        SnacksNotifierTrace = { bg = colors.bg },
+        SnacksNotifierWarn = { bg = colors.bg },
+
+        -- Picker
+        SnacksPicker = { fg = colors.none, bg = colors.black.dim },
+        SnacksPickerDir = { fg = colors.gray.bright },
+        SnacksPickerGitStatusAdded = { fg = colors.green.base },
+        SnacksPickerGitStatusDeleted = { fg = colors.red.base },
+        SnacksPickerGitStatusIgnored = { fg = colors.gray.base },
+        SnacksPickerGitStatusModified = { fg = colors.yellow.base },
+        SnacksPickerGitStatusRenamed = { fg = colors.magenta.base },
+        SnacksPickerGitStatusStaged = { fg = colors.green.base },
+        SnacksPickerGitStatusUnmerged = { fg = colors.red.bright },
+        SnacksPickerGitStatusUntracked = { fg = colors.green.base },
+        SnacksPickerInputBorder = { link = "FloatBorder" },
+        SnacksPickerListCursorLine = { bg = colors.black.base },
+        SnacksPickerMatch = { bg = colors.none, fg = colors.none },
+        SnacksPickerTotals = { bg = colors.black.dim },
+    },
+
+    which_key = {
+        WhichKey = { link = "Identifier" },
+        WhichKeyBorder = { default = true, link = "FloatBorder" },
+        WhichKeyDesc = { link = "Keyword" },
+        WhichKeyFloat = { link = "NormalFloat" },
+        WhichKeyGroup = { link = "Function" },
+        WhichKeySeparator = { link = "Comment" },
+        WhichKeyValue = { link = "Comment" },
+    },
+}
+
 -- Emmylua highlights `nil` as keyword+readonly, change this to constant.builtin
 -- to match treesitter
 vim.api.nvim_set_hl(0, "@lsp.typemod.keyword.readonly", { link = "@constant.builtin" })

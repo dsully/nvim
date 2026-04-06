@@ -279,18 +279,6 @@ return {
     {
         "nvim-mini/mini.icons",
         init = function()
-            hl.apply({
-                MiniIconsAzure = { fg = colors.blue.bright },
-                MiniIconsBlue = { fg = colors.blue.base },
-                MiniIconsCyan = { fg = colors.cyan.base },
-                MiniIconsGreen = { fg = colors.green.base },
-                MiniIconsGrey = { fg = colors.gray.bright },
-                MiniIconsOrange = { fg = colors.orange.base },
-                MiniIconsPurple = { fg = colors.magenta.base },
-                MiniIconsRed = { fg = colors.red.base },
-                MiniIconsYellow = { fg = colors.yellow.base },
-            })
-
             package.preload["nvim-web-devicons"] = function()
                 require("mini.icons").mock_nvim_web_devicons()
                 return package.loaded["nvim-web-devicons"]
@@ -419,22 +407,6 @@ return {
     },
     {
         "nvim-mini/mini.statusline",
-        init = function()
-            hl.apply({
-                MiniStatuslineModeNormal = { fg = colors.black.base, bg = colors.cyan.base, bold = true },
-                MiniStatuslineModeVisual = { fg = colors.black.base, bg = colors.magenta.base, bold = true },
-                MiniStatuslineModeInsert = { fg = colors.black.base, bg = colors.green.base, bold = true },
-                MiniStatuslineModeReplace = { fg = colors.black.base, bg = colors.red.base, bold = true },
-                MiniStatuslineModeCommand = { fg = colors.black.base, bg = colors.cyan.base, bold = true },
-                MiniStatuslineModeOther = { fg = colors.black.base, bg = colors.cyan.base, bold = true },
-
-                DiagnosticErrorStatus = { fg = colors.red.base, bold = true },
-                DiagnosticHintStatus = { fg = colors.blue.bright, bold = true },
-                DiagnosticInfoStatus = { fg = colors.blue.base, bold = true },
-                DiagnosticWarnStatus = { fg = colors.yellow.base, bold = true },
-                StatuslineSeparator = { fg = colors.white.base, bold = true },
-            })
-        end,
         opts = {
             use_icons = true,
             content = {
