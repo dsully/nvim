@@ -66,34 +66,12 @@ function M.init()
 
     vim.cmd.colorscheme(vim.g.colorscheme)
 
-    hl.apply({
-        LazyButton = { bg = colors.black.base },
-        LazyCommit = { fg = colors.white.bright },
-        LazyDimmed = { link = "Comment" },
-        LazyProp = { fg = colors.white.bright },
-    })
-
-    ev.on(ev.User, function(args)
-        --
-        if args.data ~= nil and args.data.plugin ~= nil then
-            local pl = require("lazy.core.config").plugins[args.data.plugin] or {}
-
-            if pl.highlights then
-                hl.apply(pl.highlights)
-            end
-        end
-    end, {
-        desc = "Apply plugin highlights",
-        pattern = "LazyPlugin*",
-    })
-
     ev.on_load("which-key.nvim", function()
         vim.schedule(function()
             local lazy = require("lazy")
 
             require("which-key").add({
                 { "<leader>p", group = "Plugins", icon = " " },
-                { "<leader>ph", vim.cmd.LazyHealth, desc = "Health", icon = "󰄬 " },
                 { "<leader>pi", lazy.show, desc = "Info", icon = " " },
                 { "<leader>pp", lazy.profile, desc = "Profile", icon = " " },
                 { "<leader>ps", lazy.sync, desc = "Sync", icon = "󱋖 " },
@@ -202,43 +180,6 @@ function M.init()
             border = defaults.ui.border.name,
         },
     } --[[@as LazyConfig]])
-
-    vim.api.nvim_create_user_command("LazyHealth", function(...)
-        vim.cmd.Lazy({ "load all", bang = true })
-        vim.cmd.checkhealth()
-    end, { desc = "Load all plugins and run :checkhealth" })
-
-    vim.api.nvim_create_user_command("LazyPlugin", function(opts)
-        --
-        dd(lazy.opts(unpack(opts.fargs) --[[@as string ]]))
-    end, {
-        complete = function(_, line)
-            local words = vim.split(line, "%s+")
-
-            if #words <= 2 then
-                ---@type string
-                local prefix = words[2] or ""
-
-                ---@type string[]
-                local matches = {}
-
-                for
-                    _,
-                    plugin --[[@as LazyPlugin[] ]]
-                in ipairs(require("lazy").plugins()) do
-                    if vim.startswith(plugin.name, prefix) then
-                        matches[#matches + 1] = plugin.name
-                    end
-                end
-
-                table.sort(matches)
-
-                return matches
-            end
-        end,
-        desc = "Show the merged configuration for a given plugin.",
-        nargs = "*",
-    })
 end
 
 return M

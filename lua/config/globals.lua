@@ -53,7 +53,6 @@ vim.ui.float = function(options, lines)
 
     ---@param self snacks.win
     local on_buf = function(self)
-        ---@diagnostic disable-next-line: param-type-not-match
         vim.api.nvim_buf_set_lines(self.buf --[[@as integer]], 0, -1, false, lines)
     end
 
@@ -64,7 +63,7 @@ end
 local open = vim.ui.open
 
 ---@param uri string
-vim.ui.open = function(uri) ---@diagnostic disable-line: duplicate-set-field
+vim.ui.open = function(uri)
     --
     if not string.match(uri, "[a-z]*://[^ >,;]*") and string.match(uri, "[%w%p\\-]*/[%w%p\\-]*") then
         uri = string.format("https://github.com/%s", uri)
