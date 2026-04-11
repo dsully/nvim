@@ -2,15 +2,6 @@ vim.o.cmdheight = 0
 
 local ui2 = require("vim._core.ui2")
 
--- ui2.enable({
---     msg = {
---         ---@type 'cmd'|'msg' Where to place regular messages, either in the
---         ---cmdline or in a separate ephemeral message window.
---         target = "msg",
---         timeout = 3000, -- Time a message is visible in the message window.
---     },
--- })
-
 ui2.enable({
     enable = true,
     ---@type 'cmd'|'msg' Where to place regular messages, either in the
@@ -69,76 +60,29 @@ end, {
     pattern = "msg",
 })
 
--- LSP progress -> nvim_echo for ui2 display + Ghostty OSC 9;4 progress bar.
-ev.on(ev.ColorScheme, function()
-    vim.api.nvim_set_hl(0, "LspProgressClient", { fg = colors.blue.base })
-    vim.api.nvim_set_hl(0, "LspProgressDone", { bg = colors.black.dim, fg = colors.white.bright })
-    vim.api.nvim_set_hl(0, "LspProgressMessage", { fg = colors.white.bright })
-    vim.api.nvim_set_hl(0, "LspProgressSpinner", { fg = colors.cyan.bright })
-    vim.api.nvim_set_hl(0, "LspProgressTitle", { fg = colors.white.bright })
-    vim.api.nvim_set_hl(0, "LspProgressTodo", { bg = colors.black.dim, fg = colors.white.bright })
-end)
-
--- ev.on(ev.LspProgress, function(ev)
---     ---@type lsp.ProgressParams
---     local params = ev.data.params
---     local value = params.value or {}
---     local msg = value.message or "done"
---
---     -- if #msg > 40 then
---     --     msg = msg:sub(1, 37) .. "..."
---     -- end
---
---     local is_done = value.kind == "end"
---     local spinner = is_done and "✔ " or "⠋ "
---     local pct = value.percentage and ("(%d%%) "):format(value.percentage) or ""
---
---     vim.api.nvim_echo(
---         {
---             { spinner, is_done and "LspProgressDone" or "LspProgressSpinner" },
---             { (value.title or "") .. " ", "LspProgressTitle" },
---             { pct, "LspProgressMessage" },
---             { vim.trim(msg), "LspProgressMessage" },
---         },
---         false,
---         {
---             id = "lsp",
---             kind = "progress",
---             title = value.title --[[@as string?]],
---             status = is_done and "success" or "running",
---             percent = value.percentage --[[@as integer?]],
---         }
---     )
--- end)
---
--- -- In case Neovim is exiting while the LSP is still running, it will send an OSC
--- -- sequence to Ghostty to make sure the progress bar is removed.
--- ev.on({ ev.ExitPre, ev.VimLeavePre }, function()
---     if vim.env.TERM and vim.env.TERM:match("ghostty") then
---         local osc = "\27]9;4;0;100\a"
---
---         vim.api.nvim_chan_send(vim.v.stderr, osc)
---     end
--- end)
-
--- Workaround: nvim_open_win in check_targets can fail with E1159 when called during a
--- buffer close (e.g. session restore triggering LSP detach -> diagnostic reset -> redraw -> msg_ruler).
-local orig = ui2.check_targets
-
-ui2.check_targets = function()
-    local ok, err = pcall(orig)
-
-    if ok then
-        return
+ev.on(ev.FileType, function()
+    local ui2 = require("vim._core.ui2")
+    local win = ui2.wins and ui2.wins.msg
+    if win and vim.api.nvim_win_is_valid(win) then
+        vim.api.nvim_set_option_value("winhighlight", "Normal:NormalFloat,FloatBorder:FloatBorder", { scope = "local", win = win })
     end
+end, { pattern = "msg" })
 
-    if type(err) == "string" then
-        if not err:find("E1159") then
-            error(err)
-        end
+local msgs = require("vim._core.ui2.messages")
 
-        return
+local orig_set_pos = msgs.set_pos
+
+---@param tgt? 'cmd'|'dialog'|'msg'|'pager'
+msgs.set_pos = function(tgt)
+    orig_set_pos(tgt)
+
+    if vim.api.nvim_win_is_valid(ui2.wins.msg) then
+        pcall(vim.api.nvim_win_set_config, ui2.wins.msg, {
+            relative = "editor",
+            anchor = "NE",
+            row = 1,
+            col = vim.o.columns - 1,
+            border = "rounded",
+        })
     end
-
-    error(err)
 end
