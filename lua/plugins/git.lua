@@ -218,4 +218,10 @@ return {
             use_git_username_as_author = true,
         },
     },
+    {
+        "noamsto/resolved.nvim",
+        cmd = "Resolved",
+        event = ev.VeryLazy,
+        opts = {},
+    },
 }
