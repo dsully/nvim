@@ -265,4 +265,16 @@ return {
         event = ev.VeryLazy,
         opts = {},
     },
+    {
+        "rachartier/tiny-cmdline.nvim",
+        config = function()
+            vim.o.cmdheight = 0
+
+            ---@diagnostic disable-next-line: param-type-mismatch
+            require("tiny-cmdline").setup({
+                on_reposition = require("tiny-cmdline").adapters.blink,
+            })
+        end,
+        lazy = false,
+    },
 }
