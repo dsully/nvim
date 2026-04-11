@@ -7,6 +7,17 @@ return {
     -- Log file syntax highlighting.
     { "fei6409/log-highlight.nvim", event = "BufRead *.log", opts = {} },
 
+    {
+        "minigian/juan-logs.nvim",
+        build = function(plugin)
+            local path = plugin.dir .. "/build.lua"
+            if vim.fn.filereadable(path) == 1 then
+                dofile(path)
+            end
+        end,
+        lazy = false,
+    },
+
     -- For adding words to typos.toml
     { "faithanalog/toml.lua", lazy = false, priority = 1000 },
 
