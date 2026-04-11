@@ -3,17 +3,9 @@
 return {
     "folke/snacks.nvim",
     config = function(_, opts)
-        local notify = vim.notify
         local snacks = require("snacks")
 
         snacks.setup(opts)
-
-        -- Restore vim.notify after snacks setup and let noice.nvim take over
-        -- this is needed to have early notifications show up in noice history
-        vim.notify = notify
-
-        ---@diagnostic disable-next-line: global-in-non-module
-        _G.notify = snacks.notify
 
         ev.on(ev.User, function()
             -- Toggle mappings

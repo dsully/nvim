@@ -44,6 +44,14 @@ _G.nvim.ns = function(name)
     return vim.api.nvim_create_namespace("dsully." .. name)
 end
 
+-- Set up vim.notify to use snacks notifier
+-- @param msg: string,
+-- @paraam level: (snacks.notifier.level|number)?
+-- @param opts: snacks.notifier.Notif.opts?
+vim.notify = function(msg, level, opts_param)
+    require("snacks").notifier.notify(msg, level, opts_param)
+end
+
 --- Create a floating window using snacks.win
 ---@param options snacks.win.Config
 ---@param lines string[]

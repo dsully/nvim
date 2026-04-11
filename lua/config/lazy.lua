@@ -10,58 +10,9 @@ function M.lazy_file()
     Event.mappings["User LazyFile"] = Event.mappings.LazyFile
 end
 
-function M.lazy_notify()
-    local notifs = {}
-
-    local function temp(...)
-        table.insert(notifs, vim.F.pack_len(...))
-    end
-
-    local orig = vim.notify
-    vim.notify = temp
-
-    local timer = vim.uv.new_timer()
-    local check = vim.uv.new_check()
-
-    local replay = function()
-        if timer then
-            timer:stop()
-        end
-
-        if check ~= nil then
-            check:stop()
-        end
-
-        if vim.notify == temp then
-            vim.notify = orig -- Put back the original notify if needed
-        end
-
-        vim.schedule(function()
-            for _, notif in ipairs(notifs) do
-                vim.notify(vim.F.unpack_len(notif))
-            end
-        end)
-    end
-
-    -- Wait till vim.notify has been replaced
-    if check ~= nil then
-        check:start(function()
-            if vim.notify ~= temp then
-                replay()
-            end
-        end)
-    end
-
-    -- Or if it took more than 500ms, then something went wrong
-    if timer then
-        timer:start(500, 0, replay)
-    end
-end
-
 function M.init()
     vim.pack.add({ "https://github.com/folke/lazy.nvim" }, { confirm = false })
 
-    M.lazy_notify()
     M.lazy_file()
 
     vim.cmd.colorscheme(vim.g.colorscheme)
