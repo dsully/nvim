@@ -306,22 +306,18 @@ return {
         },
     },
     {
-        "dsully/undotree.nvim",
-        cmd = { "Undotree" },
-        config = function()
-            vim.cmd.packadd("nvim.undotree")
-
-            ev.on(ev.FileType, function()
-                vim.cmd.wincmd("H")
-                vim.api.nvim_win_set_width(0, 40)
-            end, {
-                desc = "Undotree handling",
-                pattern = "nvim-undotree",
-            })
-        end,
+        "XXiaoA/atone.nvim",
+        cmd = "Atone",
         keys = {
-            { "<leader>u", vim.cmd.Undotree, desc = "UndoTree" },
+            {
+                "<leader>u",
+                function()
+                    vim.cmd.Atone("toggle")
+                end,
+                desc = "UndoTree",
+            },
         },
-        virtual = true,
+        event = ev.VeryLazy,
+        opts = {},
     },
 }
