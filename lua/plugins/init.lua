@@ -49,27 +49,37 @@ return {
             },
         },
     },
-
-    -- Pretty screen shots.
     {
-        "mistricky/codesnap.nvim",
-        cmd = {
-            "CodeSnap",
-            "CodeSnapSave",
-        },
+        "mistweaverco/snap.nvim",
+        cmd = "Snap",
         enabled = function()
             return vim.env.HOSTNAME ~= "zap"
         end,
-        keys = {
-            { "<leader>cS", "", desc = "󰹑 Screen Shots", mode = { "v" } },
-            { "<leader>cSs", "<cmd>CodeSnap<cr>", mode = "v", desc = "Save selected code snapshot into clipboard" },
-            { "<leader>cSS", "<cmd>CodeSnapSave<cr>", mode = "v", desc = "Save selected code snapshot in ~/Pictures" },
-        },
+        ---@type SnapUserConfig
         opts = {
-            bg_theme = "dusk",
-            has_breadcrumbs = true,
-            save_path = vim.env.XDG_PICTURES_DIR,
-            watermark = "",
+            filename_pattern = "snap.nvim.%t",
+            font_settings = {
+                size = 16,
+                line_height = 1.0,
+                default = {
+                    name = "Monaspace Neon",
+                    file = nil,
+                },
+                bold = {
+                    name = "Monaspace Neon",
+                    file = nil,
+                },
+                italic = {
+                    name = "Monaspace Neon",
+                    file = nil,
+                },
+                bold_italic = {
+                    name = "Monaspace Neon",
+                    file = nil,
+                },
+            },
+            output_dir = vim.fs.abspath("~/Library/Mobile Documents/com~apple~CloudDocs/Screenshots"),
+            template = "macos",
         },
     },
 }
