@@ -255,4 +255,9 @@ return {
         event = ev.VeryLazy,
         opts = {},
     },
+    {
+        "Sang-it/fluoride",
+        cmd = "Fluoride",
+        opts = {},
+    },
 }
