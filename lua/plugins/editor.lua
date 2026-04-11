@@ -260,4 +260,9 @@ return {
         cmd = "Fluoride",
         opts = {},
     },
+    {
+        "nemanjamalesija/smart-paste.nvim",
+        event = ev.VeryLazy,
+        opts = {},
+    },
 }
