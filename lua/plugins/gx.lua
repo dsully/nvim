@@ -33,12 +33,38 @@ return {
             },
             package_json = true, -- open dependencies from package.json
             plugin = true,
+            pypi = {
+                name = "pypi",
+                filename = "pyproject.toml",
+                handle = function(mode, line, _)
+                    -- Match poetry dependencies (name = "version")
+                    local pkg = require("gx.helper").find(line, mode, "([^=%s]+)%s-=%s")
+                    if pkg then
+                        return "https://pypi.org/project/" .. pkg
+                    end
+                    -- Match builtin dependencies list format ("name>=version" or "name")
+                    local dep_pkg = require("gx.helper").find(line, mode, '"([^>=%s"]+)[^"]*"')
+                    if dep_pkg then
+                        return "https://pypi.org/project/" .. dep_pkg
+                    end
+                end,
+            },
             python_pep = true,
+            ruff = {
+                name = "ruff",
+                filetypes = { "python" },
+                handle = function(mode, line, _)
+                    local rule = require("gx.helper").find(line, mode, "# noqa: ([A-Z][0-9]+)")
+                    if rule then
+                        return "https://docs.astral.sh/ruff/rules/" .. rule
+                    end
+                end,
+            },
             rust = {
                 name = "rust",
                 filename = "Cargo.toml",
                 handle = function(mode, line, _)
-                    local crate = require("gx.helper").find(line, mode, "(%w+)%s-=%s")
+                    local crate = require("gx.helper").find(line, mode, "([^=%s]+)%s-=%s")
 
                     if crate then
                         return "https://crates.io/crates/" .. crate
