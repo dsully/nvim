@@ -167,6 +167,21 @@ M.filename = function(bufnr)
     return M.normalize(M.realpath(vim.api.nvim_buf_get_name(bufnr or 0)))
 end
 
+---Return a path relative to the home directory when possible.
+---@param path string
+---@return string
+M.relative_to_home = function(path)
+    local home = vim.env.HOME
+
+    if not home or home == "" then
+        return path
+    end
+
+    local relative_path = (path:gsub("^" .. vim.pesc(home) .. "/", "~/"))
+
+    return (relative_path:gsub("^" .. vim.pesc(home) .. "$", "~"))
+end
+
 -- Return the stem part of a path, ie: without any extension.
 ---@param path string
 ---@return string

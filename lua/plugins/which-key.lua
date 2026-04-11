@@ -162,6 +162,17 @@ return {
             { "<C-a>", "gg<S-v>G", desc = "Select All" },
             { "<C-c>", "ciw", desc = "Change In Word" },
 
+            {
+                "<C-g>",
+                function()
+                    local path = nvim.file.relative_to_home(nvim.file.filename())
+
+                    vim.fn.setreg("+", path)
+                    vim.notify(path)
+                end,
+                desc = "Show the current file and copy to the system clipboard",
+            },
+
             -- Duplicate and comment
             { "yc", "<cmd>norm yygcc<cr>p", desc = "Duplicate line and comment original" },
 
