@@ -83,7 +83,6 @@ function M.init()
         { import = "config.autocommands" },
         { import = "plugins" },
         { import = "plugins.ai" },
-        { import = "plugins.filetypes" },
         { import = "plugins.languages" },
         { import = "plugins.snacks" },
     }
