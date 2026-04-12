@@ -105,8 +105,9 @@ vim.g.colorscheme = "nordish"
 vim.g.noice = {
     cmdline = true,
     hover = true,
-    messages = true,
-    notify = true,
+    messages = false,
+    notify = false,
+    popupmenu = false,
     progress = true,
 };
 

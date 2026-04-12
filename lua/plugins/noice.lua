@@ -6,15 +6,6 @@ return {
         "NoiceDismiss",
     },
     event = ev.VeryLazy,
-    highlights = {
-        NoiceFormatProgressDone = { bg = colors.black.dim, fg = colors.white.bright },
-        NoiceFormatProgressTodo = { bg = colors.black.dim, fg = colors.white.bright },
-        NoiceLspProgressClient = { fg = colors.blue.base },
-        NoiceLspProgressSpinner = { fg = colors.cyan.bright },
-        NoiceLspProgressTitle = { fg = colors.white.bright },
-        NoiceSplit = { bg = colors.bg, fg = colors.white.dim },
-        NoiceVirtualText = { bg = colors.bg, fg = colors.blue.base },
-    },
     -- stylua: ignore
     keys = {
         { "<leader>fN", function() vim.cmd.Noice("pick") end, desc = "Noice" },
@@ -89,7 +80,7 @@ return {
             enabled = vim.g.noice.notify,
         },
         popupmenu = {
-            enabled = true,
+            enabled = vim.g.noice.popupmenu,
             backend = "nui",
             kind_icons = true,
         },
