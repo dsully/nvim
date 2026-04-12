@@ -267,6 +267,7 @@ return {
     },
     {
         "rachartier/tiny-cmdline.nvim",
+        cond = false,
         config = function()
             vim.o.cmdheight = 0
 
