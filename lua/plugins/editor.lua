@@ -194,7 +194,7 @@ return {
             { "<leader>dlj", desc = "Insert Below" },
             { "<leader>dlk", desc = "Insert Above" },
             { "<leader>dlc", function() require("timber.actions").clear_log_statements({ global = false }) end, desc = "Clear" },
-            { "<leader>dlf", function() return require("timber.buffers").open_float({ sort = "newest_first" }) end, desc = "Open Float" },
+            { "<leader>dlf", function() require("timber.buffers").open_float({ sort = "newest_first" }) end, desc = "Open Float" },
             { "<leader>dlS", function() require("timber.summary").open({ focus = true }) end, desc = "Summary" },
             { "<leader>dlt", function() require("timber.actions").toggle_comment_log_statements({ global = false }) end, desc = "Toggle" },
             { "<leader>dlT", function() require("timber.actions").toggle_comment_log_statements({ global = true }) end, desc = "Toggle: Global" },
