@@ -17,6 +17,8 @@ end
 
 vim.deprecate = function() end
 
+vim.o.cmdheight = 0
+
 require("config.options")
 require("config.globals")
 -- require("config.ui2")
