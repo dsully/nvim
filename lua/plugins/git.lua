@@ -220,6 +220,7 @@ return {
     },
     {
         "noamsto/resolved.nvim",
+        cond = not vim.env.WORK,
         cmd = "Resolved",
         event = ev.VeryLazy,
         opts = {},
