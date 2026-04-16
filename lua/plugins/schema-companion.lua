@@ -2,7 +2,14 @@
 return {
     {
         "cenk1cenk2/schema-companion.nvim",
-        ft = { "yaml", "helm", "yaml.*", "json*", "toml" },
+        ft = {
+            "helm",
+            "json",
+            "jsonc",
+            "toml",
+            "yaml",
+            "yaml.*",
+        },
         keys = {
             {
                 "<leader>vs",
@@ -19,6 +26,8 @@ return {
                 desc = "Select a Schema",
             },
         },
-        opts = {},
+        opts = {
+            log_level = vim.log.levels.ERROR,
+        },
     },
 }

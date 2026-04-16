@@ -275,9 +275,18 @@ return {
             }
 
             vim.iter(configured):each(vim.schedule_wrap(function(server_name)
-                -- if disabled[server_name] then
-                --     return
-                -- end
+                local config = vim.lsp.config[server_name] or {}
+
+                if type(config.override) == "function" then
+                    vim.lsp.config(server_name, config.override(config) or {})
+                end
+
+                if type(config.condition) == "function" then
+                    if not config.condition(config) then
+                        return
+                    end
+                end
+
                 vim.lsp.enable(server_name)
             end))
         end,
