@@ -127,9 +127,12 @@ return {
                                 parameterHints = { enable = false },
                             },
                             lens = {
+                                implementations = { enable = true },
                                 references = {
                                     adt = { enable = true },
+                                    enumVariant = { enable = true },
                                     method = { enable = true },
+                                    trait = { enable = true },
                                 },
                             },
                             procMacro = {
