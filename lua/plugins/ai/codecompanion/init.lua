@@ -79,8 +79,8 @@ return {
             },
         },
         opts = function()
-            local adapter_name = vim.env.CODECOMPANION_ADAPTER or "claude_code"
-            local model_name = vim.env.CODECOMPANION_MODEL or "opus-4.6"
+            local adapter_name = vim.env.CODECOMPANION_ADAPTER or "codex"
+            local model_name = vim.env.CODECOMPANION_MODEL or "gpt-5.5"
 
             ---@type CodeCompanion.Config
             return {
