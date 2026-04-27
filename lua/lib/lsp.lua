@@ -15,7 +15,7 @@ local code_actions = {
 ---@param next boolean
 ---@param severity vim.diagnostic.Severity?
 ---@return function
-M.diagnostic_goto = function(next, severity)
+function M.diagnostic_goto(next, severity)
     return function()
         vim.diagnostic.jump({
             count = (next and 1 or -1) * vim.v.count1,
@@ -33,7 +33,7 @@ end
 --
 ---@param server_name string
 ---@return boolean
-M.should_enable = function(server_name)
+function M.should_enable(server_name)
     local is_local = nvim.file.is_local_dev()
 
     if vim.tbl_contains(defaults.ignored.lsp, server_name) or not is_local then
@@ -46,7 +46,7 @@ end
 ---Return false if the buffer or client is ignored.
 ---@param client vim.lsp.Client?
 ---@return boolean
-M.should_ignore = function(client)
+function M.should_ignore(client)
     --
     -- Skip ignored file types and buffer types.
     if vim.tbl_contains(defaults.ignored.file_types, vim.bo.filetype) or vim.tbl_contains(defaults.ignored.buffer_types, vim.bo.buftype) then
@@ -66,7 +66,7 @@ end
 
 ---@param filter? vim.lsp.get_clients.Filter
 ---@return LspClientBuffers[]
-M.buffers_for_client = function(filter)
+function M.buffers_for_client(filter)
     local clients = {}
 
     for _, client in
@@ -89,7 +89,7 @@ end
 
 ---@param callback fun(buf: integer, client: vim.lsp.Client?)
 ---@param filter? vim.lsp.get_clients.Filter
-M.apply_to_buffers = function(callback, filter)
+function M.apply_to_buffers(callback, filter)
     --
     for _, m in ipairs(M.buffers_for_client(filter)) do
         for _, buf in ipairs(m.buffers) do
@@ -118,7 +118,7 @@ M.supports_method = {}
 
 ---@param client vim.lsp.Client
 ---@param buffer integer
-M.validate_client = function(client, buffer)
+function M.validate_client(client, buffer)
     if not vim.api.nvim_buf_is_valid(buffer) then
         return
     end
@@ -181,13 +181,13 @@ function M.on_dynamic_capability(fn)
 end
 
 ---@param method string
----@param fn fun(client:vim.lsp.Client, buffer)
+---@param fn fun(client:vim.lsp.Client, buffer:integer)
 function M.on_supports_method(method, fn)
     M.supports_method[method] = M.supports_method[method] or setmetatable({}, { __mode = "k" })
 
     return ev.on(ev.User, function(args)
         local client = vim.lsp.get_client_by_id(args.data.client_id) --[[@as vim.lsp.Client]]
-        local buffer = args.data.buffer ---@type number
+        local buffer = args.data.buffer ---@type integer
 
         if client and method == args.data.method then
             return fn(client, buffer)
@@ -197,7 +197,7 @@ function M.on_supports_method(method, fn)
     })
 end
 
-M.code_action = function()
+function M.code_action()
     vim.lsp.buf.code_action({
         context = {
             diagnostics = {},
@@ -206,7 +206,7 @@ M.code_action = function()
     })
 end
 
-M.apply_quickfix = function()
+function M.apply_quickfix()
     vim.lsp.buf.code_action({
         apply = true,
         context = {
@@ -307,7 +307,7 @@ local function format_capability_value(value, key)
     end
 end
 
-M.commands = function()
+function M.commands()
     nvim.command("LspCapabilities", function()
         --
         local clients = vim.lsp.get_clients({ bufnr = vim.api.nvim_get_current_buf() }) --[[@as vim.lsp.Client[] ]]
@@ -482,7 +482,7 @@ end
 
 ---@param f fun(cfg: table):any
 ---@param cfg table
-M.with = function(f, cfg)
+function M.with(f, cfg)
     --
     ---@param c table
     return function(c)
@@ -490,7 +490,7 @@ M.with = function(f, cfg)
     end
 end
 
-M.info = function()
+function M.info()
     ---@param client vim.lsp.Client
     ---@param config vim.lsp.Config
     ---@return string

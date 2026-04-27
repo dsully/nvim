@@ -4,7 +4,7 @@ local M = {}
 ---
 ---@param bufnr integer?
 ---@return string[] Selected text as a string, or nil if not in visual mode or selection is empty.
-M.visual_selection = function(bufnr)
+function M.visual_selection(bufnr)
     vim.cmd.normal({ "v", bang = true })
 
     bufnr = bufnr or 0
@@ -20,7 +20,7 @@ M.visual_selection = function(bufnr)
 end
 
 ---@param bufnr integer?
-M.code_block = function(bufnr)
+function M.code_block(bufnr)
     local lines = M.visual_selection(bufnr)
 
     -- Find minimum indentation

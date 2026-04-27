@@ -6,7 +6,7 @@ end
 
 ---Add a word to the ~/.typos.toml file.
 ---@param word string
-M.add_word_to_typos = function(word)
+function M.add_word_to_typos(word)
     --
     local path = vim.fs.abspath("~/.typos.toml")
     local config = nvim.file.read_toml(path)

@@ -285,7 +285,7 @@ local M = {
 ---@param callback EventCallback
 ---@param opts EventOpts?
 ---@return integer
-M.on = function(event, callback, opts)
+function M.on(event, callback, opts)
     local autocmd_opts = vim.deepcopy(opts or {}, true)
 
     if type(event) == "string" then
@@ -308,7 +308,7 @@ end
 ---@param event string
 ---@param opts? table<string, any>
 ---@return nil
-M.emit = function(event, opts)
+function M.emit(event, opts)
     if M[event] then
         vim.api.nvim_exec_autocmds(event --[[@as vim.api.keyset.events]], opts)
     else
@@ -320,7 +320,7 @@ end
 --- @param name string The name of the group.
 --- @param clear boolean? Whether to clear the group. Defaults to true.
 --- @return integer
-M.group = function(name, clear)
+function M.group(name, clear)
     if clear == nil then
         clear = true
     end
@@ -330,14 +330,14 @@ end
 
 ---@param name string
 ---@return boolean?
-M.is_loaded = function(name)
+function M.is_loaded(name)
     local config = require("lazy.core.config")
     return config.plugins[name] and config.plugins[name]._.loaded ~= nil
 end
 
 ---@param name string
 ---@param fn fun(name:string?)
-M.on_load = function(name, fn)
+function M.on_load(name, fn)
     if M.is_loaded(name) then
         fn(name)
     else

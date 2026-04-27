@@ -49,7 +49,7 @@ end
 ---@param mode string? The mode to read the file in.
 ---@param size integer? The number of bytes to read. If not provided, reads the entire file.
 ---@return string?
-M.read = function(path, mode, size)
+function M.read(path, mode, size)
     local fd = vim.uv.fs_open(path, mode or "r", 438)
     local content
 
@@ -69,7 +69,7 @@ end
 ---Is this a binary file?
 ---@param path string
 ---@return bool
-M.is_binary = function(path)
+function M.is_binary(path)
     local content = M.read(path, "r", 1024)
 
     if content and content:find("\0") then
@@ -82,7 +82,7 @@ end
 ---Read the content of a TOML file.
 ---@param path string
 ---@return table
-M.read_toml = function(path)
+function M.read_toml(path)
     --
     local toml = require("toml")
     local parsed = toml.decode(M.read(path))
@@ -98,7 +98,7 @@ end
 ---Write data to a file.
 ---@param path string
 ---@param data string|string[]
-M.write = function(path, data)
+function M.write(path, data)
     local fd = vim.uv.fs_open(path, "w", 438)
 
     if fd then
@@ -109,7 +109,7 @@ end
 
 ---Return true if the current working directory is in my local source directory.
 ---@return boolean
-M.is_local_dev = function()
+function M.is_local_dev()
     local cwd = M.cwd()
 
     for _, path in ipairs({
@@ -129,7 +129,7 @@ end
 ---
 ---@param quiet boolean?
 ---@return string?
-M.git_root = function(quiet)
+function M.git_root(quiet)
     local obj = vim.system({ "git", "rev-parse", "--show-toplevel" }, { text = true }):wait()
 
     if obj.code ~= 0 and not quiet then
@@ -143,7 +143,7 @@ end
 --- Escape special pattern matching characters in a string
 ---@param input string
 ---@return string
-M.escape_pattern = function(input)
+function M.escape_pattern(input)
     local magic_chars = { "%", "(", ")", ".", "+", "-", "*", "?", "[", "^", "$" }
 
     for _, char in ipairs(magic_chars) do
@@ -156,21 +156,21 @@ end
 -- Return a normalized filename, with characters escaped.
 ---@param input string
 ---@return string
-M.normalize = function(input)
+function M.normalize(input)
     return vim.fs.normalize(vim.fn.fnameescape(input))
 end
 
 -- Return the current filename.
 ---@param bufnr integer?
 ---@return string
-M.filename = function(bufnr)
+function M.filename(bufnr)
     return M.normalize(M.realpath(vim.api.nvim_buf_get_name(bufnr or 0)))
 end
 
 ---Return a path relative to the home directory when possible.
 ---@param path string
 ---@return string
-M.relative_to_home = function(path)
+function M.relative_to_home(path)
     local home = vim.env.HOME
 
     if not home or home == "" then
@@ -185,7 +185,7 @@ end
 -- Return the stem part of a path, ie: without any extension.
 ---@param path string
 ---@return string
-M.stem = function(path)
+function M.stem(path)
     local filename = vim.fs.basename(path)
 
     local last_dot = filename:reverse():find("%.")
@@ -199,7 +199,7 @@ end
 ---@param combined string The combined file type. eg: "jinja"
 ---@return string?
 ---@diagnostic disable-next-line: unused
-M.template_type = function(filename, extension, combined)
+function M.template_type(filename, extension, combined)
     --
     -- Attempt with buffer content and filename
     --- @type string?

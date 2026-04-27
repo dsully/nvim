@@ -1,6 +1,6 @@
 local M = {}
 
-M.popup = function(event)
+function M.popup(event)
     --
     local filetype = vim.bo[event.buf].filetype
     local file_path = event.match

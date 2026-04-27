@@ -175,11 +175,12 @@ end
 
 ---@param hl HLSpec|string
 ---@return string
-M.group = function(hl)
+function M.group(hl)
     --@type string
     local name = vim.inspect(hl):gsub("%W+", "_")
 
     if not M.groups[name] then
+        ---@diagnostic disable-next-line: generic-constraint-mismatch
         local spec = type(hl) == "string" and { link = hl } or vim.deepcopy(hl, true)
 
         spec.fg = spec.fg or colors.gray.base
@@ -198,7 +199,7 @@ end
 
 ---Apply a list of highlights
 ---@param highlights table<string, HLSpec>
-M.apply = function(highlights)
+function M.apply(highlights)
     --
     ---@param name string
     ---@param opts HLSpec

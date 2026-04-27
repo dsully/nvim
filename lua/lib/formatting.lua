@@ -4,7 +4,7 @@ local M = {}
 ---@param bufnr integer
 ---@param ... string
 ---@return string
-M.first = function(bufnr, ...)
+function M.first(bufnr, ...)
     local conform = require("conform")
 
     for i = 1, select("#", ...) do
