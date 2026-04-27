@@ -84,7 +84,7 @@ return {
                         { "<leader>ls", function() vim.cmd.lsp("stop") end, desc = "LSP Stop", icon = " " },
                         { "<leader>xr", vim.diagnostic.reset, desc = "Reset", icon = " " },
                         { "<leader>xs", vim.diagnostic.open_float, desc = "Show", icon = "󰙨" },
-                        { "gra", nvim.lsp.code_action, desc = "Actions", icon = "󰅯 " },
+                        { "gra", vim.lsp.buf.code_action, desc = "Actions", icon = "󰅯 " },
                         { "grn", vim.lsp.buf.rename, desc = "Rename", icon = " " },
                         { "grq", nvim.lsp.apply_quickfix, desc = "Apply Quick Fix", icon = "󱖑 " },
 
