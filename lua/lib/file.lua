@@ -20,6 +20,7 @@ function M.xdg_config(path)
     return vim.fs.joinpath(vim.env.XDG_CONFIG_HOME or vim.fs.abspath("~/.config"), path)
 end
 
+---Return the current working directory.
 ---@return string
 function M.cwd()
     return M.realpath(vim.uv.cwd() or ".")

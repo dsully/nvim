@@ -58,7 +58,7 @@ return {
             {
                 "<leader>aq",
                 function()
-                    if vim.tbl_contains({ "v", "V", "x" }, vim.fn.mode()) then
+                    if vim.tbl_contains({ "v", "V", "x" }, vim.api.nvim_get_mode().mode) then
                         ---@diagnostic disable-next-line: param-type-not-match
                         vim.ui.input({ prompt = "CodeCompanion: " }, function(input)
                             if input then

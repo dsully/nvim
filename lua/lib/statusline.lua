@@ -35,11 +35,13 @@ function M.aerial()
 end
 
 function M.counts()
-    local line_percent = math.floor(100 * vim.fn.line(".") / vim.fn.line("$"))
+    local current_line = vim.api.nvim_win_get_cursor(0)[1]
+    local total_lines = vim.api.nvim_buf_line_count(0)
+    local line_percent = math.floor(100 * current_line / total_lines)
 
     return table.concat({
         hl.as_string("MiniIconsBlue", " "),
-        string.format("%d/%d:%-2d", vim.fn.line("."), vim.fn.line("$"), vim.fn.virtcol(".")),
+        string.format("%d/%d:%-2d", current_line, total_lines, vim.fn.virtcol(".")),
         line_percent == 100 and "All" or (line_percent == 0 and "Top" or string.format("%2d%%%%", line_percent)),
     }, " ")
 end

@@ -167,11 +167,17 @@ return {
                 bmap("<leader>gB", gs.toggle_current_line_blame, "Git Blame Toggle")
 
                 bmap("<leader>gs", function()
-                    gs.stage_hunk({ vim.fn.line("."), vim.fn.line("v") })
+                    gs.stage_hunk({
+                        vim.api.nvim_buf_get_mark(0, "<")[1],
+                        vim.api.nvim_win_get_cursor(0)[1],
+                    })
                 end, "Stage Lines(s)", { "n", "v" })
 
                 bmap("<leader>gr", function()
-                    gs.reset_hunk({ vim.fn.line("."), vim.fn.line("v") })
+                    gs.reset_hunk({
+                        vim.api.nvim_buf_get_mark(0, "<")[1],
+                        vim.api.nvim_win_get_cursor(0)[1],
+                    })
                 end, "Reset Stage Lines(s)", { "n", "v" })
             end,
             signs = {

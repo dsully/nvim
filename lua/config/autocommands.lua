@@ -1,11 +1,3 @@
-ev.on(ev.BufEnter, function(event)
-    if vim.fn.winnr("$") == 1 and vim.bo.buftype == "quickfix" then
-        Snacks.bufdelete({ buf = event.buf, force = true } --[[@as snacks.bufdelete.Opts]])
-    end
-end, {
-    desc = "Close quick fix window if the file containing it was closed.",
-})
-
 ev.on({ ev.BufEnter, ev.ModeChanged }, function()
     -- Equivalent to modicator but fast
     local mode_hl_groups = {

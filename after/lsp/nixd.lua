@@ -34,11 +34,11 @@ return {
                 enable = true,
             }, vim.fn.has("mac") and {
                 ["nix-darwin"] = {
-                    expr = string.format("(builtins.getFlake (toString ./.)).darwinConfigurations.%s.options", vim.fn.hostname()),
+                    expr = string.format("(builtins.getFlake (toString ./.)).darwinConfigurations.%s.options", vim.uv.os_gethostname()),
                 },
             } or {
                 nixos = {
-                    expr = string.format("(builtins.getFlake (toString ./.)).nixosConfigurations.%s.options", vim.fn.hostname()),
+                    expr = string.format("(builtins.getFlake (toString ./.)).nixosConfigurations.%s.options", vim.uv.os_gethostname()),
                 },
             }),
         },
