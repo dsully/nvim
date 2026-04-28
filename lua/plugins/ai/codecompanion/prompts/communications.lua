@@ -46,7 +46,7 @@ return {
         {
             role = "user",
             content = function(context)
-                local text = require("codecompanion.helpers.actions").get_code(context.start_line, context.end_line)
+                local text = require("codecompanion.helpers.code").get_code(context.start_line, context.end_line)
                 return "Based on the above guidelines, please organize the following text so that it can be used as is.\n" .. "```\n" .. text .. "```\n"
             end,
         },

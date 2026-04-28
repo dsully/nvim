@@ -25,12 +25,12 @@ return {
         local schemas = nvim.file.read(nvim.file.xdg_config("schemas.json"))
 
         if schemas ~= nil then
-            ---@diagnostic disable-next-line: inject-field, need-check-nil
-            client.config.settings.json.schemas = require("schemastore").json.schemas({
+            local settings = client.config.settings --[[@as table]]
+            settings.json.schemas = require("schemastore").json.schemas({
                 extra = vim.json.decode(schemas),
             })
 
-            client:notify("workspace/didChangeConfiguration", { settings = client.config.settings })
+            client:notify("workspace/didChangeConfiguration", { settings = settings })
         end
     end,
     override = function(config)
@@ -49,13 +49,6 @@ return {
             format = {
                 enable = false,
             },
-            schemas = vim.tbl_deep_extend("force", require("schemastore").json.schemas(), {
-                {
-                    description = "JSON Schema.",
-                    fileMatch = { "*.schema.json" },
-                    url = "http://json-schema.org/draft-07/schema#",
-                },
-            }),
             schemaDownload = {
                 enable = true,
             },

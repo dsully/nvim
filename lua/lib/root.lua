@@ -113,12 +113,13 @@ function M.detect(opts)
 
     ---@cast opts.buf number
     opts.buf = (opts.buf == nil or opts.buf == 0) and vim.api.nvim_get_current_buf() or opts.buf
+    local buf = opts.buf --[[@as number]]
 
     local ret = {} ---@type Root[]
 
     for _, spec in ipairs(M.spec) do
         --
-        local paths = M.resolve(spec)(opts.buf)
+        local paths = M.resolve(spec)(buf)
 
         paths = paths or {}
         paths = type(paths) == "table" and paths or { paths }

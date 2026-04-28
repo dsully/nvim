@@ -35,7 +35,7 @@ return {
                         if buf and vim.api.nvim_buf_is_valid(buf) then
                             local name = vim.api.nvim_buf_get_name(buf)
 
-                            if name ~= "" and vim.fn.filereadable(name) == 1 then
+                            if name ~= "" and vim.uv.fs_access(name, "R") == 1 then
                                 current_file_cache = name
                             end
                         end

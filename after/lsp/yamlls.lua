@@ -18,12 +18,12 @@ return {
         local schemas = nvim.file.read(nvim.file.xdg_config("schemas.json"))
 
         if schemas ~= nil then
-            ---@diagnostic disable-next-line: inject-field, need-check-nil
-            client.config.settings.yaml.schemas = require("schemastore").yaml.schemas({
+            local settings = client.config.settings --[[@as table]]
+            settings.yaml.schemas = require("schemastore").yaml.schemas({
                 extra = vim.json.decode(schemas),
             })
 
-            client:notify("workspace/didChangeConfiguration", { settings = client.config.settings })
+            client:notify("workspace/didChangeConfiguration", { settings = settings })
         end
 
         client:notify("yaml/supportSchemaSelection" --[[@as vim.lsp.protocol.Method.ClientToServer.Notification]], { {} })

@@ -282,27 +282,29 @@ local M = {
 ---@alias EventCallback string|(fun(args: vim.api.keyset.create_autocmd.callback_args): boolean?)
 
 ---@param event Event
----@param callback EventCallback
+---@param callback EventCallback|EventOpts
 ---@param opts EventOpts?
 ---@return integer
 function M.on(event, callback, opts)
     local autocmd_opts = vim.deepcopy(opts or {}, true)
+    local autocmd_callback = callback --[[@as EventCallback?]]
 
+    local events = event --[[@as vim.api.keyset.events|vim.api.keyset.events[] ]]
     if type(event) == "string" then
-        event = { event }
+        events = { event } --[[@as vim.api.keyset.events[] ]]
     end
 
     if type(callback) == "table" then
         autocmd_opts = vim.deepcopy(callback, true)
-        callback = autocmd_opts.callback
+        autocmd_callback = autocmd_opts.callback --[[@as EventCallback?]]
         autocmd_opts.callback = nil
     end
 
-    if callback ~= nil then
-        autocmd_opts.callback = callback
+    if autocmd_callback ~= nil then
+        autocmd_opts.callback = autocmd_callback
     end
 
-    return vim.api.nvim_create_autocmd(event --[[@as Event]], autocmd_opts)
+    return vim.api.nvim_create_autocmd(events, autocmd_opts --[[@as vim.api.keyset.create_autocmd]])
 end
 
 ---@param event string
@@ -310,7 +312,8 @@ end
 ---@return nil
 function M.emit(event, opts)
     if M[event] then
-        vim.api.nvim_exec_autocmds(event --[[@as vim.api.keyset.events]], opts)
+        local autocmd_opts = (opts or {}) --[[@as vim.api.keyset.exec_autocmds]]
+        vim.api.nvim_exec_autocmds(event --[[@as vim.api.keyset.events]], autocmd_opts)
     else
         Snacks.notify.error("Unknown event: " .. event)
     end

@@ -32,7 +32,7 @@ return {
         {
             role = "user",
             content = function(context)
-                local code = require("codecompanion.helpers.actions").get_code(context.start_line, context.end_line)
+                local code = require("codecompanion.helpers.code").get_code(context.start_line, context.end_line)
 
                 return "Please document the selected code:\n\n```" .. context.filetype .. "\n" .. code .. "\n```\n\n"
             end,

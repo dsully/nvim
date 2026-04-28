@@ -61,7 +61,6 @@ end, {
 })
 
 ev.on(ev.FileType, function()
-    local ui2 = require("vim._core.ui2")
     local win = ui2.wins and ui2.wins.msg
     if win and vim.api.nvim_win_is_valid(win) then
         vim.api.nvim_set_option_value("winhighlight", "Normal:NormalFloat,FloatBorder:FloatBorder", { scope = "local", win = win })
@@ -73,7 +72,7 @@ local msgs = require("vim._core.ui2.messages")
 local orig_set_pos = msgs.set_pos
 
 ---@param tgt? 'cmd'|'dialog'|'msg'|'pager'
-msgs.set_pos = function(tgt)
+rawset(msgs, "set_pos", function(tgt)
     orig_set_pos(tgt)
 
     if vim.api.nvim_win_is_valid(ui2.wins.msg) then
@@ -85,4 +84,4 @@ msgs.set_pos = function(tgt)
             border = "rounded",
         })
     end
-end
+end)

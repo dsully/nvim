@@ -20,7 +20,7 @@ return {
         {
             role = "user",
             content = function(context)
-                return require("codecompanion.helpers.actions").get_code(context.start_line, context.end_line)
+                return require("codecompanion.helpers.code").get_code(context.start_line, context.end_line)
             end,
             opts = {
                 visible = false,

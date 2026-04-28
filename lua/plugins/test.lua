@@ -10,9 +10,11 @@ return {
             { "<leader>tx", function() require("neotest").run.stop() end, desc = "Stop the test." },
         },
         opts = function()
+            local python_adapter = require("neotest-python") --[[@as fun(config: table): table]]
+
             return {
                 adapters = {
-                    require("neotest-python")({
+                    python_adapter({
                         -- Use whatever Python is on the path from the virtualenv.
                         python = "python3",
                         runner = "pytest",
