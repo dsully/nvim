@@ -154,9 +154,11 @@ return {
             nvim.lsp.on_dynamic_capability(function() end)
             nvim.lsp.commands()
 
+            vim.lsp.codelens.enable()
+            -- vim.lsp.inlay_hint.enable()
             vim.lsp.on_type_formatting.enable()
 
-            nvim.lsp.on_supports_method("textDocument/documentColor", function(_, _buffer)
+            nvim.lsp.on_supports_method("textDocument/documentColor", function()
                 keys.map("grc", vim.lsp.document_color.color_presentation, "vim.lsp.document_color.color_presentation()")
 
                 Snacks.toggle({
@@ -165,18 +167,10 @@ return {
                         return vim.lsp.document_color.is_enabled()
                     end,
                     set = function(state)
-                        vim.lsp.document_color.enable(not state)
+                        vim.lsp.document_color.enable(state)
                     end,
                 }):map("<space>tc")
             end)
-
-            nvim.lsp.on_supports_method("textDocument/inlayHint", function()
-                vim.lsp.inlay_hint.enable(false)
-            end)
-
-            -- nvim.lsp.on_supports_method("textDocument/completion", function(client, buffer)
-            --     vim.lsp.completion.enable(true, client.id, buffer, { autotrigger = true })
-            -- end)
 
             nvim.lsp.on_supports_method("textDocument/semanticTokens/full", function()
                 Snacks.toggle({
@@ -185,28 +179,19 @@ return {
                         return vim.lsp.semantic_tokens.is_enabled()
                     end,
                     set = function(state)
-                        vim.lsp.semantic_tokens.enable(not state)
+                        vim.lsp.semantic_tokens.enable(state)
                     end,
                 }):map("<space>tS")
             end)
 
             nvim.lsp.on_supports_method("textDocument/codeLens", function()
-                ev.on({ ev.BufEnter, ev.CursorHold, ev.InsertLeave }, function()
-                    if vim.g.codelens then
-                        vim.lsp.codelens.enable(true, { bufnr = 0 })
-                    end
-                end, {
-                    group = ev.group("vim.lsp.codelens.refresh", true),
-                })
-
                 Snacks.toggle({
                     name = "Code Lens",
                     get = function()
-                        return vim.g.codelens
+                        return vim.lsp.codelens.is_enabled()
                     end,
                     set = function(state)
-                        vim.g.codelens = state
-                        vim.lsp.codelens.enable(state, { bufnr = 0 })
+                        vim.lsp.codelens.enable(state)
                     end,
                 }):map("<space>tL")
             end)
