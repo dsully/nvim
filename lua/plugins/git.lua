@@ -168,15 +168,15 @@ return {
 
                 bmap("<leader>gs", function()
                     gs.stage_hunk({
-                        vim.api.nvim_buf_get_mark(0, "<")[1],
                         vim.api.nvim_win_get_cursor(0)[1],
+                        vim.fn.line("v"), -- No vim.api.* equivalent
                     })
                 end, "Stage Lines(s)", { "n", "v" })
 
                 bmap("<leader>gr", function()
                     gs.reset_hunk({
-                        vim.api.nvim_buf_get_mark(0, "<")[1],
                         vim.api.nvim_win_get_cursor(0)[1],
+                        vim.fn.line("v"),
                     })
                 end, "Reset Stage Lines(s)", { "n", "v" })
             end,
