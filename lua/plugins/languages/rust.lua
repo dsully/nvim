@@ -48,7 +48,7 @@ return {
                     ---@param bufnr integer
                     on_attach = function(client, bufnr)
                         -- This semantic token has way too many false positives when working with macros.
-                        vim.cmd.hi("clear @lsp.type.unresolvedReference.rust")
+                        vim.api.nvim_set_hl(0, '@lsp.type.unresolvedReference.rust', {})
 
                         --
                         keys.bmap("<leader>cC", function()
