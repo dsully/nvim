@@ -142,7 +142,7 @@ return {
                                 enabled = true,
                                 -- Don't expand some problematic proc_macros
                                 ignored = {
-                                    ["async-trait"] = { "async_trait" },
+                                    -- ["async-trait"] = { "async_trait" },
                                     ["napi-derive"] = { "napi" },
                                     ["async-recursion"] = { "async_recursion" },
                                     ["async-std"] = { "async_std" },
