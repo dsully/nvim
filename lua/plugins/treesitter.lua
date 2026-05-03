@@ -7,6 +7,7 @@ return {
         init = function()
             local languages = {
                 "bash",
+                "comment",
                 "css",
                 "diff",
                 "editorconfig",

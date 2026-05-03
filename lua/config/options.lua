@@ -51,7 +51,7 @@ vim.opt.softtabstop = 4
 vim.opt.termguicolors = true
 vim.opt.textwidth = 160
 vim.opt.ttimeout = true
-vim.opt.updatetime = 100 -- milliseconds to write the swap file.
+vim.opt.updatetime = 250 -- milliseconds to write the swap file.
 vim.opt.wildignore:append({ ".DS_Store" })
 vim.opt.winborder = "single"
 
