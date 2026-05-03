@@ -7,9 +7,12 @@ return {
     ---@param client vim.lsp.Client
     on_attach = function(client)
         if client.server_capabilities then
+            client.server_capabilities.definitionProvider = false
             client.server_capabilities.documentFormattingProvider = false
             client.server_capabilities.documentHighlightProvider = false
+            client.server_capabilities.documentLinkProvider = { resolveProvider = false }
             client.server_capabilities.documentRangeFormattingProvider = false
+            client.server_capabilities.documentSymbolProvider = false
             client.server_capabilities.hoverProvider = nil
         end
     end,
