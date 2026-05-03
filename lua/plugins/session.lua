@@ -67,6 +67,12 @@ return {
                 end
             end
 
+            -- Don't save buffers that are currently readonly — avoids
+            -- persisting transient readonly state.
+            if vim.bo[bufnr].readonly then
+                return false
+            end
+
             return vim.bo[bufnr].buflisted
         end,
     },
