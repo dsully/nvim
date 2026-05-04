@@ -48,7 +48,7 @@ return {
             { "<leader>ac", function() require("codecompanion").toggle() end, mode = { "n", "v" }, desc = "Chat" },
             { "<leader>ad", function() require("codecompanion").prompt("doc") end, mode = "v", desc = "Documentation" },
             { "<leader>af", function() require("codecompanion").prompt("fix") end, mode = "v", desc = "Fix Code" },
-            { "<leader>al", function() require("codecompanion").prompt("lsp") end, mode = "v", desc = "LSP Diagnostics" },
+            { "<leader>al", function() require("codecompanion").prompt("lspx") end, mode = "v", desc = "LSP Diagnostics" },
             { "<leader>ao", function() require("codecompanion").prompt("optimize") end, mode = "v", desc = "Optimize" },
             { "<leader>ap", function() require("codecompanion").prompt("pr") end, desc = "Pull Request" },
             { "<leader>ar", function() require("codecompanion").prompt("refactor") end, mode = "v", desc = "Refactor" },
@@ -86,8 +86,15 @@ return {
             return {
                 adapters = {
                     acp = {
+                        opts = {
+                            show_presets = true,
+                            show_model_choices = true,
+                        },
                         claude_code = function()
                             return require("codecompanion.adapters").extend("claude_code", {
+                                defaults = {
+                                    mcpServers = "inherit_from_config",
+                                },
                                 env = {
                                     CLAUDE_CODE_OAUTH_TOKEN = "cmd:op read op://Services/Anthropic/oauth --no-newline",
                                 },
@@ -95,8 +102,12 @@ return {
                         end,
                         codex = function()
                             return require("codecompanion.adapters").extend("codex", {
-                                env = {
-                                    OPENAI_API_KEY = "OPENAI_API_KEY",
+                                defaults = {
+                                    auth_method = "chatgpt", -- "openai-api-key"|"codex-api-key"|"chatgpt"
+                                    mcpServers = "inherit_from_config",
+                                    session_config_options = {
+                                        model = "gpt-5.5",
+                                    },
                                 },
                             })
                         end,
@@ -110,8 +121,25 @@ return {
                                 },
                             })
                         end,
+                        opencode = function()
+                            return require("codecompanion.adapters").extend("opencode", {
+                                defaults = {
+                                    mcpServers = "inherit_from_config",
+                                },
+                                commands = {
+                                    default = { -- this will use your opencode/opencode.json setting
+                                        "opencode",
+                                        "acp",
+                                    },
+                                },
+                            })
+                        end,
                     },
                     http = {
+                        opts = {
+                            show_presets = true,
+                            show_model_choices = true,
+                        },
                         anthropic = function()
                             return require("codecompanion.adapters").extend("anthropic", {
                                 schema = {
@@ -186,6 +214,29 @@ return {
                         },
                     },
                     ["Communication"] = require("plugins.ai.codecompanion.prompts.communications"),
+                    ["Diagnose Errors"] = {
+                        strategy = "workflow",
+                        description = "Explain LSP diagnostics with source code context",
+                        opts = {
+                            alias = "lspx",
+                        },
+                        prompts = {
+                            {
+                                {
+                                    content = function(context)
+                                        return string.format("You are an expert coder...The programming language is %s.", context.filetype)
+                                    end,
+                                    opts = { visible = false },
+                                    role = "system",
+                                },
+                                {
+                                    content = "Please explain the following LSP diagnostics and suggest fixes:\n\n#{lsp}",
+                                    opts = { auto_submit = true },
+                                    role = "user",
+                                },
+                            },
+                        },
+                    },
                     ["Docstring"] = require("plugins.ai.codecompanion.prompts.docstring"),
                     ["Documentation"] = require("plugins.ai.codecompanion.prompts.documentation"),
                     ["Expert"] = require("plugins.ai.codecompanion.prompts.expert"),
