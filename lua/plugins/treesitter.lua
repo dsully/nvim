@@ -7,7 +7,6 @@ return {
         init = function()
             local languages = {
                 "bash",
-                "comment",
                 "css",
                 "diff",
                 "editorconfig",
@@ -87,8 +86,8 @@ return {
                 end
             end
 
-            vim.highlight.priorities.semantic_tokens = 100
-            vim.highlight.priorities.treesitter = 125
+            -- vim.highlight.priorities.semantic_tokens = 100
+            -- vim.highlight.priorities.treesitter = 125
 
             local disabled_indent = { "yaml", "bash", "python" }
 
