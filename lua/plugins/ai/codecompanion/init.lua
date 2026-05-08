@@ -1,7 +1,7 @@
 ---@type LazySpec[]
 return {
     {
-        vim.env.CODECOMPANION_REPO or "olimorris/codecompanion.nvim",
+        "olimorris/codecompanion.nvim",
         cmd = {
             "CodeCompanion",
             "CodeCompanionAdd",
@@ -83,7 +83,7 @@ return {
             local model_name = vim.env.CODECOMPANION_MODEL or "gpt-5.5"
 
             ---@type CodeCompanion.Config
-            return {
+            local config = {
                 adapters = {
                     acp = {
                         opts = {
@@ -273,7 +273,19 @@ return {
                     },
                 },
             }
+
+            for name, factory in pairs(_G.adapters or {}) do
+                config.adapters.http[name] = factory
+            end
+
+            return config
         end,
+    },
+    {
+        cond = vim.env.CODECOMPANION_ADAPTER,
+        dir = vim.env.CODECOMPANION_PATH,
+        lazy = false,
+        name = "local",
     },
     {
         -- Index and search code in your repositories
