@@ -282,10 +282,12 @@ return {
         end,
     },
     {
-        cond = vim.env.CODECOMPANION_ADAPTER,
+        "local",
+        cond = vim.env.CODECOMPANION_ADAPTER ~= nil,
         dir = vim.env.CODECOMPANION_PATH,
         lazy = false,
         name = "local",
+        virtual = true
     },
     {
         -- Index and search code in your repositories
