@@ -264,7 +264,7 @@ return {
                 nvim_hl_colors = nvim_hl_colors,
             }
 
-            if not vim.lsp.document_color.is_enabled() then
+            if not vim.g.lsp_color then
                 highlighters.hex = hex
                 highlighters.separated = separated
                 highlighters.shorthand = shorthand

@@ -3,6 +3,10 @@ return {
     {
         "neovim/nvim-lspconfig",
         event = ev.VeryLazy,
+        init = function()
+            -- flag for mini.hipatterns
+            vim.g.lsp_color = false
+        end,
         config = function()
             vim.lsp.log.set_level(vim.log.levels.WARN)
 
@@ -160,6 +164,8 @@ return {
 
             nvim.lsp.on_supports_method("textDocument/documentColor", function()
                 keys.map("grc", vim.lsp.document_color.color_presentation, "vim.lsp.document_color.color_presentation()")
+
+                vim.g.lsp_color = true
 
                 Snacks.toggle({
                     name = "Color",
