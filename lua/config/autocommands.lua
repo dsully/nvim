@@ -215,4 +215,18 @@ end, {
     group = ev.group("SmartYank", true),
 })
 
+ev.on(ev.SwapExists, function()
+    local swapname = vim.v.swapname
+    local info = swapname and vim.fn.swapinfo(swapname) or {}
+    local pid = info.pid or 0
+
+    if pid > 0 and vim.uv.kill(pid, 0) == 0 then
+        vim.v.swapchoice = "o"
+    else
+        vim.v.swapchoice = "d"
+    end
+end, {
+    desc = "Automatically handle swap files to prevent E325 prompt.",
+})
+
 return {}
