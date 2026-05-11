@@ -506,9 +506,9 @@ function M.info()
             if info ~= nil then
                 return ("<function %s:%s>"):format(info.source, info.linedefined)
             end
-        else
-            return tostring(config.cmd)
         end
+
+        return tostring(config.cmd)
     end
 
     ---@param word string
@@ -528,40 +528,40 @@ function M.info()
         string.format("%s %s attached to this buffer:", tostring(#clients), pluralize("client", clients)),
     }
 
-    for _, client in ipairs(clients) do
+    for _, c in ipairs(clients) do
         ---@type vim.lsp.Config
-        local config = vim.lsp.config[client.name] or {}
+        local cfg = vim.lsp.config[c.name] or {}
 
-        local buffer_ids = vim.tbl_keys(client.attached_buffers)
+        local buffer_ids = vim.tbl_keys(c.attached_buffers)
         table.sort(buffer_ids)
 
         local buffers = vim.iter(buffer_ids):map(tostring):join(", ")
 
         vim.list_extend(lines, {
             "",
-            string.format("%s (id: %s) %s: %s", client.name, client.id, pluralize("buffer", buffer_ids), buffers),
+            string.format("%s (id: %s) %s: %s", c.name, c.id, pluralize("buffer", buffer_ids), buffers),
             "",
-            "  - command: " .. client_command(client, config),
+            "  - command: " .. client_command(c, cfg),
         })
 
-        if client.workspace_folders and #client.workspace_folders > 1 then
+        if c.workspace_folders and #c.workspace_folders > 1 then
             --
             vim.list_extend(lines, {
                 "  - paths  : ",
             })
 
-            for _, dir in ipairs(client.workspace_folders) do
+            for _, dir in ipairs(c.workspace_folders) do
                 vim.list_extend(lines, { "            -" .. dir.name })
             end
-        elseif client.root_dir then
+        elseif c.root_dir then
             --
             vim.list_extend(lines, {
-                "  - path   : " .. vim.fs.relpath("~", client.root_dir) or client.root_dir,
+                "  - path   : " .. vim.fs.relpath("~", c.root_dir) or c.root_dir,
             })
         end
 
-        if config.filetypes then
-            vim.list_extend(lines, { "  - types  : " .. table.concat(config.filetypes, ", ") })
+        if cfg.filetypes then
+            vim.list_extend(lines, { "  - types  : " .. table.concat(cfg.filetypes, ", ") })
         end
     end
 

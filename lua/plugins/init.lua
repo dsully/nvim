@@ -10,9 +10,11 @@ return {
     {
         "minigian/juan-logs.nvim",
         build = function(plugin)
-            local path = plugin.dir .. "/build.lua"
-            if vim.uv.fs_access(path, "R") == 1 then
-                dofile(path)
+            if plugin then
+                local path = plugin.dir .. "/build.lua"
+                if vim.uv.fs_access(path, "R") == 1 then
+                    dofile(path)
+                end
             end
         end,
         lazy = false,

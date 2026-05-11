@@ -18,7 +18,6 @@ return {
                 map(string.format("<M-%d>", i), function() mappings.by_index("focus", i) end, "which_key_ignore")
         end
 
-        ---@type Component
         local components = {
             space = {
                 text = " ",

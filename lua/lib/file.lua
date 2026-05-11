@@ -52,7 +52,7 @@ end
 ---@return string?
 function M.read(path, mode, size)
     local fd = vim.uv.fs_open(path, mode or "r", 438)
-    local content
+    local content = nil
 
     if fd then
         local stat = vim.uv.fs_fstat(fd)
@@ -64,7 +64,7 @@ function M.read(path, mode, size)
         vim.uv.fs_close(fd)
     end
 
-    return content
+    return content --[[@as string?]]
 end
 
 ---Is this a binary file?

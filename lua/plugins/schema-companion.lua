@@ -21,7 +21,7 @@ return {
             {
                 "<leader>vS",
                 function()
-                    return require("schema-companion").select_schema()
+                    require("schema-companion").select_schema()
                 end,
                 desc = "Select a Schema",
             },

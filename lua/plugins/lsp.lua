@@ -222,7 +222,9 @@ return {
             -- Set defaults
             vim.lsp.config("*", {
                 before_init = function(_, config)
-                    require("codesettings").with_local_settings(config.name, config)
+                    if config.name then
+                        require("codesettings").with_local_settings(config.name, config)
+                    end
                 end,
                 capabilities = capabilities,
                 root_markers = { ".git" },

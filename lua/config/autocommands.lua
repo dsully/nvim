@@ -196,7 +196,9 @@ ev.on(ev.TextYankPost, function()
         end
     end
 
-    local present, yank_data = pcall(vim.fn.getreg, '"')
+    local present, yank_data = pcall(function()
+        return vim.fn.getreg('"')
+    end)
 
     if not present then
         Snacks.notify.error('Failed to get content from register ": ' .. yank_data)
