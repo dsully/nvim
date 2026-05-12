@@ -133,12 +133,17 @@ end
 function M.git_root(quiet)
     local obj = vim.system({ "git", "rev-parse", "--show-toplevel" }, { text = true }):wait()
 
-    if obj.code ~= 0 and not quiet then
-        Snacks.notify.error("Not in a Git repository!", { icon = "󰏋" })
+    if obj.code ~= 0 then
+        if not quiet then
+            Snacks.notify.error("Not in a Git repository!", { icon = "󰏋" })
+        end
+
         return
     end
 
-    return vim.trim(obj.stdout or "")
+    local root = vim.trim(obj.stdout or "")
+
+    return root ~= "" and root or nil
 end
 
 --- Escape special pattern matching characters in a string

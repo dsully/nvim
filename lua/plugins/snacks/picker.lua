@@ -19,7 +19,7 @@ return {
         { "<leader>fk", function() Snacks.picker.keymaps() end, desc = "Keymaps" },
         { "<leader>fl", function() Snacks.picker.lazy() end, desc = "Lazy Plugins" },
         { "<leader>fL", function() Snacks.picker.lsp_config() end, desc = "LSP Config" },
-        { "<leader>fn", function() Snacks.picker.notifications({ confirm = { "copy" } }) end, desc = "Notifications" },
+        { "<leader>fn", function() Snacks.picker.notifications({ confirm = { action = "copy", reg = "+" } }) end, desc = "Notifications" },
         { "<leader>fo", function() Snacks.picker.recent({ filter = { cwd = true }}) end, desc = "Recently Opened" },
         { "<leader>fq", function() Snacks.picker.qflist() end, desc = "Quickfix List" },
         { "<leader>fs", function() Snacks.picker.lsp_workspace_symbols() end, desc = "Symbols" },

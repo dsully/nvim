@@ -72,6 +72,7 @@ return {
                             } --[[@as snacks.picker.finder.Item]]
 
                             if config.base_path and config.base_path ~= "" and vim.fs.normalize(file) ~= file then
+                                ---@diagnostic disable-next-line: inject-field
                                 item.cwd = config.base_path
                             end
 
