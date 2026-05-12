@@ -274,7 +274,7 @@ return {
                 },
             }
 
-            for name, factory in pairs(_G.adapters or {}) do
+            for name, factory in pairs(_G.codecompaion_local_adapters or {}) do
                 config.adapters.http[name] = factory
             end
 
@@ -282,12 +282,16 @@ return {
         end,
     },
     {
-        "local",
-        cond = vim.env.CODECOMPANION_ADAPTER ~= nil,
-        dir = vim.env.CODECOMPANION_PATH,
+        -- Local, out-of-tree codecompanion extensions (adapters, utils).
+        -- The directory is optional; loaded only when CODECOMPANION_PATH is set so the public repo works standalone.
+        --
+        -- When present, its plugin/*.lua is auto-sourced by lazy.nvim and populates
+        -- _G.codecompanion_local_adapters, which the codecompanion opts() function merges into adapters.http.
+        "codecompanion-local",
+        cond = vim.env.CODECOMPANION_PATH ~= nil,
+        dir = vim.env.CODECOMPANION_PATH or "",
         lazy = false,
-        name = "local",
-        virtual = true
+        name = "codecompanion-local",
     },
     {
         -- Index and search code in your repositories
