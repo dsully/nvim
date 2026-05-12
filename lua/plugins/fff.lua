@@ -13,9 +13,13 @@ return {
         { "<leader>ff", function() Snacks.picker.fff() end, desc = "Find Files" },
         --stylua: ignore end
     },
-    opts = function()
+    config = function()
+        if vim.uv.fs_stat(vim.fn.stdpath("data") .. "/lazy/fff.nvim/target") == nil then
+            require("fff.download").download_or_build_binary()
+        end
+
+        require("fff").setup({})
         local conf = require("fff.conf")
-        local file_picker = require("fff.file_picker")
 
         if Snacks and pcall(require, "snacks.picker") then
             --- FFF -> Snacks picker integration.
@@ -45,16 +49,34 @@ return {
                     local query = ctx.filter.search or ""
                     local max_results = config.max_results or 100
                     local max_threads = config.max_threads or 4
-                    local results = file_picker.search_files(query, current_file_cache, max_results, max_threads, nil)
+
+                    local results = {}
+                    local ok, file_picker = pcall(require, "fff.file_picker")
+
+                    if ok and file_picker and type(file_picker.search_files) == "function" then
+                        local search_files = file_picker.search_files
+                        results = search_files(query, current_file_cache, max_results, max_threads, nil)
+                    end
 
                     ---@type snacks.picker.finder.Item[]
                     local items = {}
 
-                    for _, fff_item in ipairs(results) do
-                        items[#items + 1] = {
-                            text = fff_item.relative_path or fff_item.name,
-                            file = fff_item.path,
-                        } --[[@as snacks.picker.finder.Item]]
+                    for _, entry in ipairs(results) do
+                        ---@type string?
+                        local file = entry.relative_path or entry.name
+
+                        if file and file ~= "" then
+                            local item = {
+                                text = file,
+                                file = file,
+                            } --[[@as snacks.picker.finder.Item]]
+
+                            if config.base_path and config.base_path ~= "" and vim.fs.normalize(file) ~= file then
+                                item.cwd = config.base_path
+                            end
+
+                            items[#items + 1] = item
+                        end
                     end
 
                     return items
@@ -73,10 +95,9 @@ return {
             }
         end
 
-        require("fff.file_picker").setup()
-
-        return {
-            base_path = nvim.file.git_root(true) or nvim.file.cwd(),
-        }
+        if pcall(require, "fff.file_picker") then
+            require("fff.file_picker").setup()
+        end
     end,
+    lazy = false,
 }
