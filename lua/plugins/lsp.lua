@@ -158,7 +158,7 @@ return {
             nvim.lsp.on_dynamic_capability(function() end)
             nvim.lsp.commands()
 
-            vim.lsp.codelens.enable()
+            -- vim.lsp.codelens.enable()
             -- vim.lsp.inlay_hint.enable()
             vim.lsp.on_type_formatting.enable()
 
