@@ -15,8 +15,6 @@ function M.init()
 
     M.lazy_file()
 
-    vim.cmd.colorscheme(vim.g.colorscheme)
-
     ev.on_load("which-key.nvim", function()
         vim.schedule(function()
             local lazy = require("lazy")

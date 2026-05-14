@@ -7,19 +7,6 @@ vim.cmd.highlight("clear")
 ---@field modifiers table<lsp.SemanticTokenModifiers,bool>
 ---@field type string
 
-ev.on(ev.LspTokenUpdate, function(args)
-    ---@type LSPSemanticToken
-    local token = args.data.token
-
-    if token.modifiers.defaultLibrary and token.modifiers.readonly then
-        vim.lsp.semantic_tokens.highlight_token(token, args.buf, args.data.client_id, "@lsp.mod.defaultLibrary")
-    end
-
-    if token.type == "variable" and token.modifiers.readonly and token.modifiers.definition then
-        vim.lsp.semantic_tokens.highlight_token(token, args.buf, args.data.client_id, "@lsp.type.variable")
-    end
-end)
-
 local highlights = require("config.highlights")
 
 vim.iter(vim.tbl_extend("force", highlights.ui, highlights.languages, highlights.plugins)):each(function(_, group)
