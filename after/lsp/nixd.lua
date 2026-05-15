@@ -22,6 +22,7 @@ return {
         "flake.nix",
         "shell.nix",
     },
+    ---@type lspconfig.settings.nixd
     settings = {
         nixd = {
             flake = {

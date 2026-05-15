@@ -16,6 +16,7 @@ return {
         "flake.nix",
         "shell.nix",
     },
+    ---@type lspconfig.settings.nil_ls
     settings = {
         ["nil"] = {
             formatting = {

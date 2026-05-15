@@ -6,6 +6,7 @@ return {
         usePlaceholders = true,
     },
     root_markers = { "go.mod", "go.work" },
+    ---@type lspconfig.settings.gopls
     settings = {
         gopls = {
             analyses = {

@@ -39,6 +39,7 @@ return {
             config
         )
     end,
+    ---@type lspconfig.settings.yamlls
     settings = {
         flags = {
             debounce_text_changes = 50,

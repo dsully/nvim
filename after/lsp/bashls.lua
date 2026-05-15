@@ -15,6 +15,7 @@ return {
             client.server_capabilities.documentRangeFormattingProvider = false
         end
     end,
+    ---@type lspconfig.settings.bashls
     settings = {
         bashIde = {
             globPattern = vim.env.GLOB_PATTERN or "*@(.sh|.inc|.bash|.command)",

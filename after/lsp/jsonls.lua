@@ -44,6 +44,7 @@ return {
             config
         )
     end,
+    ---@type lspconfig.settings.jsonls
     settings = {
         json = {
             format = {

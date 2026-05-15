@@ -39,6 +39,7 @@ return {
         "setup.cfg",
         "setup.py",
     },
+    ---@type lspconfig.settings.basedpyright
     settings = {
         basedpyright = {
             analysis = {
