@@ -274,7 +274,7 @@ return {
                 },
             }
 
-            for name, factory in pairs(_G.codecompaion_local_adapters or {}) do
+            for name, factory in pairs(_G.codecompanion_local_adapters or {}) do
                 config.adapters.http[name] = factory
             end
 
