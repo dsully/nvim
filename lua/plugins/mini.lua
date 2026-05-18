@@ -204,6 +204,11 @@ return {
                 pattern = "()#%x%x%x()%f[%W]",
                 group = function(_, _, data)
                     local match = data.full_match
+
+                    if match == "#add" then
+                        return
+                    end
+
                     local r, g, b = match:byte(2), match:byte(3), match:byte(4)
                     local hex_color = string.format("#%c%c%c%c%c%c", r, r, g, g, b, b)
                     return compute_hex_color_group(hex_color, "bg")
