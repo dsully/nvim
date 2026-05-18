@@ -8,7 +8,7 @@ return {
             vim.g.lsp_color = false
         end,
         config = function()
-            vim.lsp.log.set_level(vim.log.levels.WARN)
+            vim.lsp.log.set_level(vim.log.levels.ERROR)
 
             vim.diagnostic.config({
                 float = {

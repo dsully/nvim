@@ -91,7 +91,7 @@ return {
                                 fullFunctionSignatures = { enable = true },
                             },
                             diagnostics = {
-                                -- disabled = { "inactive-code", "macro-error", "unresolved-macro-call" },
+                                disabled = { "inactive-code", "macro-error", "unresolved-macro-call" },
                                 enable = true,
                                 experimental = { enable = true },
                                 styleLints = { enable = true },

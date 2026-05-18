@@ -669,7 +669,7 @@ M.languages = {
     },
 
     yaml = {
-        ["@comment.yaml"] = { fg = colors.yellow.base, bg = colors.none },
+        ["@comment.yaml"] = { fg = colors.white.dimmed, bg = colors.none },
         ["@constant.builtin.yaml"] = { fg = colors.blue.base, bg = colors.none },
         ["@field.yaml"] = { fg = colors.yellow.base, bg = colors.none },
         ["@label.yaml"] = { fg = colors.yellow.base, bg = colors.none },
@@ -677,7 +677,7 @@ M.languages = {
         ["@property.yaml"] = { fg = colors.cyan.base, bg = colors.none },
         ["@punctuation.delimiter.yaml"] = { fg = colors.yellow.base, bg = colors.none },
         ["@punctuation.special.yaml"] = { fg = colors.cyan.bright, bg = colors.none, bold = true },
-        ["@spell.yaml"] = { fg = colors.gray.base, bg = colors.none },
+        ["@spell.yaml"] = { fg = colors.white.dimmed, bg = colors.none },
         ["@string.yaml"] = { fg = colors.green.base, bg = colors.none },
         ["@type.yaml"] = { fg = colors.fg, bg = colors.none, bold = true },
         ["yamlBlockMappingKey"] = { fg = colors.blue.base, bg = colors.none },

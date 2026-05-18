@@ -59,6 +59,7 @@ return {
         "pyproject.toml",
         ".git",
     },
+    ---@param client vim.lsp.Client
     on_attach = function(client, bufnr)
         vim.api.nvim_create_autocmd("LspTokenUpdate", {
             buffer = bufnr,

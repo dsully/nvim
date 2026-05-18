@@ -28,6 +28,9 @@ return {
                         ignore_errors = true,
                     },
                 },
+                jq = {
+                    prepend_args = { "--sort-keys" },
+                },
                 shfmt = {
                     prepend_args = { "-i", "4", "-ci", "-sr", "-s", "-bn" },
                 },
