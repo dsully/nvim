@@ -22,11 +22,39 @@ return {
                 filetype = { "nix" },
                 handle = function(mode, line, _)
                     local find = require("gx.helper").find
-                    local user = find(line, mode, "github:(.-)/.*") --[[@as string?]]
-                    local repo = find(line, mode, 'github:.-/([%w_-]+)"?.*') --[[@as string?]]
 
-                    if user and repo then
-                        return ("https://github.com/%s/%s"):format(user, repo)
+                    -- Flake-style: github:owner/repo
+                    local gh_user = find(line, mode, "github:([%w%._-]+)/[%w%._-]+") --[[@as string?]]
+                    local gh_repo = find(line, mode, "github:[%w%._-]+/([%w%._-]+)") --[[@as string?]]
+
+                    if gh_user and gh_repo then
+                        return ("https://github.com/%s/%s"):format(gh_user, gh_repo)
+                    end
+
+                    -- Strip optional git+ prefix and trailing .git for the matchers below.
+                    -- HTTPS with optional user info: [git+]https://[user@]host/owner/repo[.git]
+                    local https_host, https_owner, https_repo = line:match('https?://[^/%s"]-@?([%w%.%-]+)/([%w%._-]+)/([%w%._-]+)')
+
+                    if not https_host then
+                        https_host, https_owner, https_repo = line:match("https?://([%w%.%-]+)/([%w%._-]+)/([%w%._-]+)")
+                    end
+
+                    if https_host and https_owner and https_repo then
+                        return ("https://%s/%s/%s"):format(https_host, https_owner, https_repo:gsub("%.git$", ""))
+                    end
+
+                    -- SSH scheme: [git+]ssh://git@host[:port]/owner/repo[.git]
+                    local ssh_host, ssh_owner, ssh_repo = line:match("ssh://[^@%s]+@([%w%.%-]+)[:/]([%w%._-]+)/([%w%._-]+)")
+
+                    if ssh_host and ssh_owner and ssh_repo then
+                        return ("https://%s/%s/%s"):format(ssh_host, ssh_owner, ssh_repo:gsub("%.git$", ""))
+                    end
+
+                    -- SCP-like SSH: git@host:owner/repo[.git]
+                    local scp_host, scp_owner, scp_repo = line:match("git@([%w%.%-]+):([%w%._-]+)/([%w%._-]+)")
+
+                    if scp_host and scp_owner and scp_repo then
+                        return ("https://%s/%s/%s"):format(scp_host, scp_owner, scp_repo:gsub("%.git$", ""))
                     end
                 end,
                 name = "nix",
