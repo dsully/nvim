@@ -117,7 +117,6 @@ return {
                     end
                 end,
                 bold = true,
-                delete_buffer_on_left_click = true,
                 ---@param buffer Buffer
                 fg = function(buffer)
                     return buffer.is_modified and "DiagnosticOk" or nil
@@ -142,17 +141,4 @@ return {
         })
     end,
     event = ev.UIEnter,
-    keys = {
-        {
-            "<leader>bd",
-            function()
-                local current = require("cokeline.buffers").get_current()
-
-                if current then
-                    current:delete()
-                end
-            end,
-            desc = "Delete Buffer",
-        },
-    },
 }

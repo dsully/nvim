@@ -21,6 +21,7 @@ _G.lazy = {
 
 _G.nvim = {
     buffer = require("lib.buffer"),
+    confirm = require("lib.confirm"),
     file = require("lib.file"),
     lsp = require("lib.lsp"),
     root = require("lib.root"),

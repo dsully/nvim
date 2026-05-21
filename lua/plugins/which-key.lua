@@ -215,6 +215,12 @@ return {
                 desc = "Add word to spell list",
             },
 
+            {
+                "<leader>bd",
+                nvim.confirm.delete_buffer,
+                desc = "Delete Buffer",
+            },
+
             -- Code block functions
             {
                 "<leader>cc",
