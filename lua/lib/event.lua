@@ -249,19 +249,11 @@ local M = {
     --- after scrolling a window
     WinScrolled = "WinScrolled",
 
-    --- When lazy has finished starting up and loaded your config
-    LazyDone = "LazyDone",
+    --- Startup event after a file is loaded.
+    --- Expands to { BufReadPost, BufNewFile, BufWritePre } for zpack event triggers.
+    LazyFile = { "BufReadPost", "BufNewFile", "BufWritePre" },
 
-    --- Startup event after a file is loaded
-    LazyFile = "LazyFile",
-
-    --- After loading a plugin. The `data` attribute will contain the plugin name.
-    LazyLoad = "LazyLoad",
-
-    --- Triggered after `UIEnter` when `require("lazy").stats().startuptime` has been calculated.
-    LazyVimStarted = "LazyVimStarted",
-
-    --- Triggered after `LazyDone` and processing `VimEnter` auto commands
+    --- Triggered after UIEnter + vim.schedule (supported natively by zpack)
     VeryLazy = "VeryLazy",
 
     --- For dynamic registration: User pattern
@@ -333,9 +325,9 @@ end
 
 ---@param name string
 ---@return boolean?
-function M.is_loaded(name)
-    local config = require("lazy.core.config")
-    return config.plugins[name] and config.plugins[name]._.loaded ~= nil
+M.is_loaded = function(name)
+    local state = require("zpack.state")
+    return not state.unloaded_plugin_names[name]
 end
 
 ---@param name string
@@ -344,11 +336,26 @@ function M.on_load(name, fn)
     if M.is_loaded(name) then
         fn(name)
     else
-        M.on(M.User, function(event)
-            if event.data == name then
-                fn(name)
-            end
-        end, { pattern = "LazyLoad" })
+        -- Poll until the plugin is loaded. zpack doesn't emit per-plugin load events.
+        local timer = vim.uv.new_timer()
+
+        if timer then
+            timer:start(50, 50, vim.schedule_wrap(function()
+                if M.is_loaded(name) then
+                    timer:stop()
+                    timer:close()
+                    fn(name)
+                end
+            end))
+
+            -- Give up after 30 seconds
+            vim.defer_fn(function()
+                if not timer:is_closing() then
+                    timer:stop()
+                    timer:close()
+                end
+            end, 30000)
+        end
     end
 end
 

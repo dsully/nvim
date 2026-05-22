@@ -1,4 +1,4 @@
----@type LazySpec
+---@type zpack.Spec
 return {
     ---@module "snacks"
     "folke/snacks.nvim",
@@ -59,8 +59,15 @@ return {
                         label = "[f]",
                     },
                     { icon = " ", key = "g", desc = "Find Text", action = ":lua Snacks.dashboard.pick('grep')", label = "[g]" },
-                    { icon = " ", key = "p", desc = "Profile Plugins", action = ":Lazy profile", enabled = package.loaded.lazy ~= nil, label = "[p]" },
-                    { icon = " ", key = "u", desc = "Update Plugins", action = ":Lazy sync", enabled = package.loaded.lazy ~= nil, label = "[u]" },
+                    {
+                        icon = " ",
+                        key = "u",
+                        desc = "Manage Plugins",
+                        action = function()
+                            require("lib.pack").open()
+                        end,
+                        label = "[u]",
+                    },
                     { icon = " ", key = "q", desc = "Quit", action = ":qa!", label = "[q]" },
                 },
                 pick = "snacks",
@@ -104,7 +111,6 @@ return {
                     text = { string.rep("─", 50), hl = "FloatBorder" } --[[@as snacks.dashboard.Text]],
                     padding = 1,
                 },
-                { section = "startup" },
             },
             width = 80,
         },

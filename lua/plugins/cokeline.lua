@@ -1,4 +1,4 @@
----@type LazySpec
+---@type zpack.Spec
 return {
     "willothy/nvim-cokeline",
     config = function()

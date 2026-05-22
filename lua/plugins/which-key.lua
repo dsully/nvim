@@ -1,4 +1,4 @@
----@type LazySpec
+---@type zpack.Spec
 return {
     "folke/which-key.nvim",
     event = ev.VeryLazy,
@@ -83,6 +83,7 @@ return {
             { "<leader>gh", group = "GitHub", mode = { "n", "v" } },
             { "<leader>gm", group = "Merge", mode = { "n", "v" } },
             { "<leader>n", group = "Notifications" },
+            { "<leader>p", group = "Plugins", icon = " " },
             { "<leader>r", group = "Rules" },
             { "<leader>s", group = "Substitute" },
             { "<leader>S", group = "Snippets" },
@@ -282,5 +283,4 @@ return {
             no_overlap = true,
         },
     },
-    opts_extend = { "spec" },
 }

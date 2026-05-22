@@ -1,4 +1,4 @@
----@type LazySpec
+---@type zpack.Spec
 return {
     "folke/snacks.nvim",
     keys = {
@@ -17,7 +17,6 @@ return {
         -- { "<leader>ff", function() Snacks.picker.smart({ hidden = true }) end, desc = "Files", },
         { "<leader>fg", function() Snacks.picker.grep() end, desc = "Grep" },
         { "<leader>fk", function() Snacks.picker.keymaps() end, desc = "Keymaps" },
-        { "<leader>fl", function() Snacks.picker.lazy() end, desc = "Lazy Plugins" },
         { "<leader>fL", function() Snacks.picker.lsp_config() end, desc = "LSP Config" },
         { "<leader>fn", function() Snacks.picker.notifications({ confirm = { action = "copy", reg = "+" } }) end, desc = "Notifications" },
         { "<leader>fo", function() Snacks.picker.recent({ filter = { cwd = true }}) end, desc = "Recently Opened" },

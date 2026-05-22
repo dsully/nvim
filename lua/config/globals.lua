@@ -5,20 +5,6 @@ _G.ev = require("lib.event")
 _G.hl = require("lib.highlights")
 _G.keys = require("lib.keys")
 
-_G.lazy = {
-    ---@param name string
-    ---@return table
-    opts = function(name)
-        local plugin = require("lazy.core.config").spec.plugins[name]
-
-        if not plugin then
-            return {}
-        end
-
-        return require("lazy.core.plugin").values(plugin, "opts", false) --[[@as table]]
-    end,
-}
-
 _G.nvim = {
     buffer = require("lib.buffer"),
     confirm = require("lib.confirm"),

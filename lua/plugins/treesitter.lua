@@ -1,4 +1,3 @@
----@type LazySpec[]
 local parsers = {
     "bash",
     "caddy",
@@ -125,8 +124,7 @@ return {
         end,
         lazy = false,
         keys = {
-            -- stylua: ignore
-            { "<leader>i", function() vim.cmd.Inspect() end, desc = "Inspect Position" },
+            { "<leader>i", vim.cmd.Inspect, desc = "Inspect Position" },
         },
     },
     {
@@ -153,7 +151,6 @@ return {
         config = function()
             keys.map("%", require("treesitter-jump").jump)
         end,
-        dev = false,
         ft = {
             "lua",
             "python",

@@ -1,4 +1,4 @@
----@type LazySpec[]
+---@type zpack.Spec[]
 return {
     {
         "stevearc/aerial.nvim",
@@ -186,6 +186,7 @@ return {
         end,
         -- stylua: ignore
         keys = {
+            ---@diagnostic disable: redundant-return-value,return-type-mismatch
             { "<C-Up>", function() return require("dial.map").inc_normal() end, desc = "Increment Pattern", expr = true },
             { "<C-Down>", function() return require("dial.map").dec_normal() end, desc = "Decrement Pattern", expr = true },
         },

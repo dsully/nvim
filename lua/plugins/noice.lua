@@ -1,4 +1,4 @@
----@type LazySpec
+---@type zpack.Spec
 return {
     "folke/noice.nvim",
     cmd = {
@@ -232,8 +232,5 @@ return {
                 },
             },
         },
-    },
-    opts_extend = {
-        "routes",
     },
 }

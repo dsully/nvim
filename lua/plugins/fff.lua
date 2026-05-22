@@ -1,12 +1,9 @@
 ---@type string?
 local current_file_cache = nil
 
----@type LazySpec
+---@type zpack.Spec
 return {
     "dmtrKovalenko/fff.nvim",
-    build = function()
-        require("fff.download").download_or_build_binary()
-    end,
     keys = {
         --stylua: ignore start
         { "ff", function() Snacks.picker.fff() end, desc = "Find Files" },
@@ -14,11 +11,12 @@ return {
         --stylua: ignore end
     },
     config = function()
-        if vim.uv.fs_stat(vim.fn.stdpath("data") .. "/lazy/fff.nvim/target") == nil then
+        require("fff").setup({ base_path = nvim.file.git_root(true) or nvim.file.cwd() })
+
+        if vim.uv.fs_stat(vim.fn.stdpath("data") .. "/site/pack/core/opt/fff.nvim/target") == nil then
             require("fff.download").download_or_build_binary()
         end
 
-        require("fff").setup({})
         local conf = require("fff.conf")
 
         if Snacks and pcall(require, "snacks.picker") then

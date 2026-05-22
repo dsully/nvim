@@ -1,4 +1,4 @@
----@type LazySpec[]
+---@type zpack.Spec[]
 return {
     {
         "olimorris/codecompanion.nvim",

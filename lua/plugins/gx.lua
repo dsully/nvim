@@ -1,4 +1,4 @@
----@type LazySpec
+---@type zpack.Spec
 return {
     "chrishrb/gx.nvim",
     cmd = { "Browse" },
@@ -6,7 +6,6 @@ return {
         -- stylua: ignore
         { "gx", function() require("gx").open() end, mode = { "n", "x" } },
     },
-    submodules = false,
     ---@module "gx.nvim"
     ---@type GxOptions
     opts = {

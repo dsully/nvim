@@ -114,6 +114,8 @@ do
         vim.api.nvim_set_hl(0, group, vim.tbl_extend("force", { default = true }, hl))
     end
 
+    vim.keymap.set("n", "<leader>ps", M.open, { desc = "Sync" })
+
     vim.api.nvim_create_user_command("Pack", function(command)
         M.open({ fetch = not command.bang })
     end, {

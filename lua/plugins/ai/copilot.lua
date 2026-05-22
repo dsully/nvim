@@ -2,7 +2,7 @@ if vim.env.WORK then
     return {}
 end
 
----@type LazySpec[]
+---@type zpack.Spec[]
 return {
     {
         "zbirenbaum/copilot.lua",

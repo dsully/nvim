@@ -1,4 +1,4 @@
----@type LazySpec[]
+---@type zpack.Spec[]
 return {
     {
         "alexpasmantier/krust.nvim",
@@ -165,6 +165,6 @@ return {
             } --[[@as rustaceanvim.Opts]]
         end,
         lazy = false,
-        version = "^8",
+        sem_version = "^9",
     },
 }

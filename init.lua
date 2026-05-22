@@ -1,20 +1,6 @@
 -- https://github.com/neovim/neovim/pull/24044
 vim.loader.enable()
 
-if vim.env.PROF ~= nil or vim.env.PROFILE ~= nil or vim.env.NVIM_PROFILE ~= nil then
-    local snacks = vim.fs.joinpath(tostring(vim.fn.stdpath("data")), "lazy/snacks.nvim")
-
-    vim.opt.runtimepath:append(snacks)
-
-    require("snacks.profiler").startup({
-        startup = {
-            -- Stop profiler on this event. Defaults to `VimEnter`
-            event = "User",
-            pattern = "VeryLazy",
-        },
-    } --[[@as snacks.profiler.Config]])
-end
-
 vim.deprecate = function() end
 
 vim.o.cmdheight = 0
@@ -22,4 +8,4 @@ vim.o.cmdheight = 0
 require("config.options")
 require("config.globals")
 -- require("config.ui2")
-require("config.lazy").init()
+require("config.pack")

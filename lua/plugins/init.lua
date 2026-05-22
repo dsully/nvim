@@ -1,4 +1,4 @@
----@type LazySpec[]
+---@type zpack.Spec[]
 return {
     { "nvim-lua/plenary.nvim" },
     { "MunifTanjim/nui.nvim" },
@@ -10,8 +10,8 @@ return {
     {
         "minigian/juan-logs.nvim",
         build = function(plugin)
-            if plugin then
-                local path = plugin.dir .. "/build.lua"
+            if plugin and plugin.path then
+                local path = plugin.path .. "/build.lua"
                 if vim.uv.fs_access(path, "R") == 1 then
                     dofile(path)
                 end
@@ -29,7 +29,7 @@ return {
             -- stylua: ignore
             { "<leader>hx", function() require("hex_reader").toggle() end, desc = "Toggle hex reader." },
         },
-        opts = true,
+        opts = {},
     },
 
     {
@@ -38,7 +38,6 @@ return {
             -- stylua: ignore
             { "<leader>di", function() require("lib.ignore").ignore() end },
         },
-        virtual = true,
     },
 
     -- Better vim help.

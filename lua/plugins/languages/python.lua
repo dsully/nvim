@@ -1,4 +1,4 @@
----@type LazySpec[]
+---@type zpack.Spec[]
 return {
     {
         "Davidyz/inlayhint-filler.nvim",
@@ -15,7 +15,7 @@ return {
         },
     },
     {
-        "https://codeberg.org/mraspaud/smellycat.nvim",
+        src = "https://codeberg.org/mraspaud/smellycat.nvim",
         ft = "python",
         opts = {
             debounce_ms = 500,

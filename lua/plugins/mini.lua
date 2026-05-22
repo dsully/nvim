@@ -24,7 +24,7 @@
 
 ------@field group string|MiniHipatterns.GroupFunction Name of highlight group to use. Can be string or callable returning string
 
----@type LazySpec[]
+---@type zpack.Spec[]
 return {
     { "nvim-mini/mini.nvim" },
     {
@@ -129,7 +129,6 @@ return {
             end)
         end,
         event = ev.LazyFile,
-        virtual = true,
     },
     {
         "nvim-mini/mini.align",
@@ -143,7 +142,6 @@ return {
                 start_with_preview = "g+",
             },
         },
-        virtual = true,
     },
     {
         -- Use [ and ] to move between various things.
@@ -169,7 +167,6 @@ return {
             undo = { suffix = "" },
             yank = { suffix = "" },
         },
-        virtual = true,
     },
     {
         "nvim-mini/mini.hipatterns",
@@ -279,7 +276,6 @@ return {
                 highlighters = highlighters,
             }
         end,
-        virtual = true,
     },
     {
         "nvim-mini/mini.icons",
@@ -289,62 +285,67 @@ return {
                 return package.loaded["nvim-web-devicons"]
             end
         end,
-        opts = {
-            style = "glyph",
-            default = {
-                extension = { glyph = " " },
-                file = { glyph = " ", color = "#6F839E" },
-                filetype = { glyph = " " },
-            },
-            filetype = {
-                brewfile = { glyph = "🍺" },
-            },
-            file = {
-                ["init.lua"] = { glyph = "󰢱 ", hl = "MiniIconsAzure" },
-                ["package.json"] = { glyph = " ", hl = "MiniIconsGreen" },
-                ["tsconfig.build.json"] = { glyph = " ", hl = "MiniIconsAzure" },
-                ["tsconfig.json"] = { glyph = " ", hl = "MiniIconsAzure" },
+        config = function()
+            -- Defer setup: mini.icons calls vim.filetype.match() on a scratch
+            -- buffer during cache init, which crashes during early startup.
+            vim.schedule(function()
+                require("mini.icons").setup({
+                    style = "glyph",
+                    default = {
+                        extension = { glyph = " " },
+                        file = { glyph = " ", color = "#6F839E" },
+                        filetype = { glyph = " " },
+                    },
+                    filetype = {
+                        brewfile = { glyph = "🍺" },
+                    },
+                    file = {
+                        ["init.lua"] = { glyph = "󰢱 ", hl = "MiniIconsAzure" },
+                        ["package.json"] = { glyph = " ", hl = "MiniIconsGreen" },
+                        ["tsconfig.build.json"] = { glyph = " ", hl = "MiniIconsAzure" },
+                        ["tsconfig.json"] = { glyph = " ", hl = "MiniIconsAzure" },
 
-                [".pre-commit-config.yaml"] = { glyph = "󰜘", color = "#eda73d" },
-                [".pre-commit-hooks.yaml"] = { glyph = "󰜘", color = "#eda73d" },
-                [".python-version"] = { glyph = "󰌠 ", color = "#ffe873" },
-                [".ruff.toml"] = { glyph = "󱐋", color = "#fbc11a" },
-                [".shellcheckrc"] = { glyph = " ", color = "#7ACECE" },
-                [".yamllint"] = { glyph = "", color = "#fbc02d" },
-                ["cargo.toml"] = { glyph = "󰏗 ", color = "#C27E42" },
-                ["changelog.md"] = { glyph = "󰄴 ", color = "#99BE77" },
-                ["go.mod"] = { glyph = " ", color = "#00ADD8" },
-                ["go.sum"] = { glyph = " ", color = "#ec407a" },
-                ["hosts"] = { glyph = " ", color = "#bbbbbb" },
-                ["post-commit"] = { glyph = " ", color = "#f56b67" },
-                ["post-receive"] = { glyph = " ", color = "#f56b67" },
-                ["pre-commit"] = { glyph = " ", color = "#f56b67" },
-                ["pre-push"] = { glyph = " ", color = "#f56b67" },
-                ["pre-receive"] = { glyph = " ", color = "#f56b67" },
-                ["pyproject.toml"] = { glyph = " ", color = "#4B8DDE" },
-                ["readme.md"] = { glyph = "󰍔 ", color = "#69a3df" },
-                ["requirements.txt"] = { glyph = " ", color = "#3572A5" },
-                ["robots.txt"] = { glyph = "󰚩 " },
-                ["ruff.toml"] = { glyph = "󱐋", color = "#fbc11a" },
-                ["setup.py"] = { glyph = " ", color = "#4B8DDE" },
-                ["sonar-project.properties"] = { glyph = "󰼮 ", color = "#CB2029" },
-                ["tox.ini"] = { glyph = " ", color = "#b5c761" },
-                ["yamllint.yaml"] = { glyph = "", color = "#fbc02d" },
-            },
-            extension = {
-                cert = { glyph = "󰄤 ", color = "#3BD9DD" },
-                crt = { glyph = "󰄤 " },
-                env = { glyph = "󰙪 " },
-                lock = { glyph = " ", color = "#eb4034" },
-                log = { glyph = "󱞎 ", color = "#afb42b" },
-                makefile = { glyph = " ", color = "#F54842" },
-                out = { glyph = " " },
-                properties = { glyph = " ", color = "#3970B4" },
-            },
-            lsp = defaults.icons.lsp,
-        },
+                        [".pre-commit-config.yaml"] = { glyph = "󰜘", color = "#eda73d" },
+                        [".pre-commit-hooks.yaml"] = { glyph = "󰜘", color = "#eda73d" },
+                        [".python-version"] = { glyph = "󰌠 ", color = "#ffe873" },
+                        [".ruff.toml"] = { glyph = "󱐋", color = "#fbc11a" },
+                        [".shellcheckrc"] = { glyph = " ", color = "#7ACECE" },
+                        [".yamllint"] = { glyph = "", color = "#fbc02d" },
+                        ["cargo.toml"] = { glyph = "󰏗 ", color = "#C27E42" },
+                        ["changelog.md"] = { glyph = "󰄴 ", color = "#99BE77" },
+                        ["go.mod"] = { glyph = " ", color = "#00ADD8" },
+                        ["go.sum"] = { glyph = " ", color = "#ec407a" },
+                        ["hosts"] = { glyph = " ", color = "#bbbbbb" },
+                        ["post-commit"] = { glyph = " ", color = "#f56b67" },
+                        ["post-receive"] = { glyph = " ", color = "#f56b67" },
+                        ["pre-commit"] = { glyph = " ", color = "#f56b67" },
+                        ["pre-push"] = { glyph = " ", color = "#f56b67" },
+                        ["pre-receive"] = { glyph = " ", color = "#f56b67" },
+                        ["pyproject.toml"] = { glyph = " ", color = "#4B8DDE" },
+                        ["readme.md"] = { glyph = "󰍔 ", color = "#69a3df" },
+                        ["requirements.txt"] = { glyph = " ", color = "#3572A5" },
+                        ["robots.txt"] = { glyph = "󰚩 " },
+                        ["ruff.toml"] = { glyph = "󱐋", color = "#fbc11a" },
+                        ["setup.py"] = { glyph = " ", color = "#4B8DDE" },
+                        ["sonar-project.properties"] = { glyph = "󰼮 ", color = "#CB2029" },
+                        ["tox.ini"] = { glyph = " ", color = "#b5c761" },
+                        ["yamllint.yaml"] = { glyph = "", color = "#fbc02d" },
+                    },
+                    extension = {
+                        cert = { glyph = "󰄤 ", color = "#3BD9DD" },
+                        crt = { glyph = "󰄤 " },
+                        env = { glyph = "󰙪 " },
+                        lock = { glyph = " ", color = "#eb4034" },
+                        log = { glyph = "󱞎 ", color = "#afb42b" },
+                        makefile = { glyph = " ", color = "#F54842" },
+                        out = { glyph = " " },
+                        properties = { glyph = " ", color = "#3970B4" },
+                    },
+                    lsp = defaults.icons.lsp,
+                })
+            end)
+        end,
         lazy = false,
-        virtual = true,
     },
     {
         -- Add/delete/replace surroundings (brackets, quotes, etc.)
@@ -401,7 +402,6 @@ return {
                 update_n_lines = "<leader>sn", -- Update `n_lines`
             },
         },
-        virtual = true,
     },
     {
         "nvim-mini/mini.statusline",
@@ -442,6 +442,5 @@ return {
             },
         },
         lazy = false,
-        virtual = true,
     },
 }

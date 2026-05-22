@@ -13,7 +13,7 @@ end, {
     pattern = "BlinkCmpAccept",
 })
 
----@type LazySpec[]
+---@type zpack.Spec[]
 return {
     {
         "Saghen/blink.cmp",
@@ -309,12 +309,7 @@ return {
                 end,
             },
         },
-        opts_extend = {
-            "completion.menu.draw.treesitter",
-            "sources.default",
-            "sources.per_filetype",
-        },
-        version = "1.*",
+        sem_version = "1.*",
     },
     { "bydlw98/blink-cmp-env" },
     { "MahanRahmati/blink-nerdfont.nvim" },

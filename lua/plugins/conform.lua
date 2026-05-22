@@ -1,4 +1,4 @@
----@type LazySpec
+---@type zpack.Spec
 return {
     ---@module "conform"
     "stevearc/conform.nvim",
