@@ -1,4 +1,4 @@
-check:
+check *args=".":
     #!/usr/bin/env fish
 
     set -l nvim_bin (command -v nvim)
@@ -22,4 +22,4 @@ check:
         exit 1
     end
 
-    VIMRUNTIME=$runtime_dir emmylua_check --config ./.emmyrc.json .
+    VIMRUNTIME=$runtime_dir emmylua_check --config ./.emmyrc.json {{ args }}
