@@ -111,8 +111,15 @@ vim.api.nvim_create_autocmd("FileReadCmd", {
 
 vim.api.nvim_create_autocmd({ "BufWriteCmd", "FileWriteCmd" }, {
     callback = function(args)
-        vim.cmd.doautocmd(args.event)
+        local pre, post = "BufWritePre", "BufWritePost"
+
+        if args.event == "FileWriteCmd" then
+            pre, post = "FileWritePre", "FileWritePost"
+        end
+
+        vim.cmd.doautocmd(pre)
         write_command(args)
+        vim.cmd.doautocmd(post)
     end,
     nested = true,
     pattern = pattern,
