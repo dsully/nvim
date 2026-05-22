@@ -45,12 +45,19 @@ _G.nvim.ns = function(name)
     return vim.api.nvim_create_namespace("dsully." .. name)
 end
 
--- Set up vim.notify to use snacks notifier
+-- Set up vim.notify to use snacks notifier, falling back to the builtin while
+-- snacks is not yet loaded (e.g. during early plugin installation at startup).
 -- @param msg: string,
 -- @paraam level: (snacks.notifier.level|number)?
 -- @param opts: snacks.notifier.Notif.opts?
+local builtin_notify = vim.notify
+
 vim.notify = function(msg, level, opts_param)
-    require("snacks").notifier.notify(msg, level, opts_param)
+    if package.loaded.snacks then
+        require("snacks").notifier.notify(msg, level, opts_param)
+    else
+        builtin_notify(msg, level, opts_param)
+    end
 end
 
 --- Create a floating window using snacks.win
