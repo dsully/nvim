@@ -1,49 +1,66 @@
 ---@type LazySpec[]
+local parsers = {
+    "bash",
+    "caddy",
+    "css",
+    "diff",
+    "editorconfig",
+    "fish",
+    "git_config",
+    "git_rebase",
+    "gitcommit",
+    "gitignore",
+    "go",
+    "helm",
+    "html",
+    "ini",
+    "javascript",
+    "json",
+    "just",
+    "lua",
+    "markdown",
+    "markdown_inline",
+    "nix",
+    "pkl",
+    "python",
+    "query",
+    "regex",
+    "rust",
+    "toml",
+    "typescript",
+    "vim",
+    "vimdoc",
+    "yaml",
+}
+
+local wait = 60000 -- # ms
+
+---@type zpack.Spec[]
 return {
     {
         ---@module "nvim-treesitter"
         "nvim-treesitter/nvim-treesitter",
-        build = ":TSUpdate",
+        build = function()
+            -- Re-install (picks up any newly-added parsers from the list above)
+            -- and update existing ones.
+            require("nvim-treesitter").install(parsers):wait(wait)
+            require("nvim-treesitter").update():wait(wait)
+        end,
         init = function()
-            local languages = {
-                "bash",
-                "caddy",
-                "css",
-                "diff",
-                "editorconfig",
-                "fish",
-                "git_config",
-                "git_rebase",
-                "gitcommit",
-                "gitignore",
-                "go",
-                "helm",
-                "html",
-                "ini",
-                "javascript",
-                "json",
-                "just",
-                "lua",
-                "markdown",
-                "markdown_inline",
-                "nix",
-                "pkl",
-                "python",
-                "query",
-                "regex",
-                "rust",
-                "toml",
-                "typescript",
-                "vim",
-                "vimdoc",
-                "yaml",
-            }
+            -- Main-branch nvim-treesitter ships queries under `runtime/queries/`,
+            -- which isn't on rtp by default. Prepend it so highlights/folds/indents
+            -- are visible to `vim.treesitter.start`.
+            local init = vim.api.nvim_get_runtime_file("lua/nvim-treesitter/init.lua", false)[1]
 
-            local isnt_installed = function(lang)
-                return #vim.api.nvim_get_runtime_file("parser/" .. lang .. ".*", false) == 0
+            if init then
+                vim.opt.runtimepath:prepend(vim.fn.fnamemodify(init, ":h:h:h") .. "/runtime")
             end
 
-            local to_install = vim.tbl_filter(isnt_installed, languages)
+            local isnt_installed = function(p)
+                return #vim.api.nvim_get_runtime_file("parser/" .. p .. ".*", false) == 0
+            end
+
+            local to_install = vim.tbl_filter(isnt_installed, parsers)
 
             if #to_install > 0 then
                 -- Route per-parser install messages through Snacks notifier
@@ -76,13 +93,13 @@ return {
                     })
                 end
 
-                require("nvim-treesitter").install(to_install)
+                require("nvim-treesitter").install(to_install):wait(wait)
             end
 
             local filetypes = {}
 
-            for _, lang in ipairs(languages) do
-                for _, ft in ipairs(vim.treesitter.language.get_filetypes(lang)) do
+            for _, p in ipairs(parsers) do
+                for _, ft in ipairs(vim.treesitter.language.get_filetypes(p)) do
                     table.insert(filetypes, ft)
                 end
             end
