@@ -1,34 +1,18 @@
 ---@class lib.keys
 local M = {}
 
--- Wrapper around vim.keymap.set that will not create a keymap if a lazy.nvim key handler exists.
--- It will also set `silent` to true by default.
+-- Wrapper around vim.keymap.set. Sets `silent` to true by default.
 ---@param lhs string
 ---@param rhs function|string
 ---@param mode string[]
 ---@param opts vim.keymap.set.Opts?
 function M.safe_set(lhs, rhs, mode, opts)
-    local lazy_keys = require("lazy.core.handler").handlers.keys or {}
-
-    ---@cast lazy_keys LazyKeysHandler
     local modes = type(mode) == "string" and { mode } or mode
-
-    ---@param m string
-    modes = vim.tbl_filter(function(m)
-        return not (lazy_keys.have and lazy_keys:have(lhs, m))
-    end, modes --[[@as table<any,string>]])
-
     local options = vim.deepcopy(opts or {}, true)
 
-    -- Do not create the keymap if a lazy keys handler exists
-    -- But allow for buffer-local keymaps.
-    if #modes > 0 or options.buffer ~= nil then
-        options.silent = options.silent ~= false
+    options.silent = options.silent ~= false
 
-        vim.keymap.set(modes, lhs, rhs, options)
-    else
-        vim.notify("Keymap already exists for " .. lhs .. " in: " .. (vim.cmd.map(lhs) or "?"), vim.log.levels.ERROR)
-    end
+    vim.keymap.set(modes, lhs, rhs, options)
 end
 
 ---Create a global key mapping. Defaults to normal mode.
