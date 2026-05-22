@@ -17,14 +17,19 @@ end, {
 return {
     {
         "Saghen/blink.cmp",
-        build = "cargo build --release",
+        build = function()
+            vim.fn.system({ "cargo", "build", "--release" })
+        end,
         cmd = {
             "BlinkCmp",
         },
+        config = function(_, opts)
+            hl.apply({
+                BlinkCmpGhostText = { link = hl.Comment },
+            })
+            require("blink.cmp").setup(opts)
+        end,
         event = { ev.CmdlineEnter, ev.InsertEnter },
-        highlights = {
-            BlinkCmpGhostText = { link = hl.Comment },
-        },
         keys = {
             -- Inside a snippet, use backspace to remove the placeholder.
             { "<bs>", "<C-O>s", desc = "Remove Snippet Placeholder", mode = "s" },
@@ -332,13 +337,16 @@ return {
     },
     {
         "Saghen/blink.indent",
+        config = function(_, opts)
+            hl.apply({
+                BlinkIndent = { fg = colors.blue.bright },
+            })
+            require("blink.indent").setup(opts)
+        end,
         ft = {
             "python",
             "yaml",
             "yaml.*",
-        },
-        highlights = {
-            BlinkIndent = { fg = colors.blue.bright },
         },
         opts = function()
             Snacks.toggle({

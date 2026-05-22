@@ -2,16 +2,16 @@
 return {
     "folke/which-key.nvim",
     event = ev.VeryLazy,
-    highlights = {
-        WhichKey = { link = "Identifier" },
-        WhichKeyBorder = { default = true, link = "FloatBorder" },
-        WhichKeyDesc = { link = "Keyword" },
-        WhichKeyFloat = { link = "NormalFloat" },
-        WhichKeyGroup = { link = "Function" },
-        WhichKeySeparator = { link = "Comment" },
-        WhichKeyValue = { link = "Comment" },
-    },
     init = function()
+        hl.apply({
+            WhichKey = { link = "Identifier" },
+            WhichKeyBorder = { default = true, link = "FloatBorder" },
+            WhichKeyDesc = { link = "Keyword" },
+            WhichKeyFloat = { link = "NormalFloat" },
+            WhichKeyGroup = { link = "Function" },
+            WhichKeySeparator = { link = "Comment" },
+            WhichKeyValue = { link = "Comment" },
+        })
         -- Common misspellings
         vim.cmd.cnoreabbrev("qw", "wq")
         vim.cmd.cnoreabbrev("Wq", "wq")

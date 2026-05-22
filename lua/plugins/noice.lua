@@ -5,6 +5,18 @@ return {
         "Noice",
         "NoiceDismiss",
     },
+    config = function(_, opts)
+        hl.apply({
+            NoiceFormatProgressDone = { bg = colors.black.dim, fg = colors.white.bright },
+            NoiceFormatProgressTodo = { bg = colors.black.dim, fg = colors.white.bright },
+            NoiceLspProgressClient = { fg = colors.blue.base },
+            NoiceLspProgressSpinner = { fg = colors.cyan.bright },
+            NoiceLspProgressTitle = { fg = colors.white.bright },
+            NoiceSplit = { bg = colors.bg, fg = colors.white.dim },
+            NoiceVirtualText = { bg = colors.bg, fg = colors.blue.base },
+        })
+        require("noice").setup(opts)
+    end,
     event = ev.VeryLazy,
     -- stylua: ignore
     keys = {

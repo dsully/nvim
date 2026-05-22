@@ -2,15 +2,18 @@
 return {
     {
         "MeanderingProgrammer/render-markdown.nvim",
+        config = function(_, opts)
+            hl.apply({
+                RenderMarkdownCode = { bg = colors.black.base },
+            })
+            require("render-markdown").setup(opts)
+        end,
         ft = {
             "codecompanion",
             "markdown",
             "opencode_output",
             "snacks_notif",
             "vimwiki",
-        },
-        highlights = {
-            RenderMarkdownCode = { bg = colors.black.base },
         },
         ---@type render.md.UserConfig
         opts = {

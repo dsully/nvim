@@ -372,21 +372,14 @@ return {
                 keys.map("of", function() keys.feed("<esc>m6", "n") keys.feed("daf", "m") keys.feed("`6", "n") end, "Surround Delete Function Call", "o")
             end)
         end,
-        keys = function(plugin, keys)
-            local opts = require("lazy.core.plugin").values(plugin, "opts", false) or { mappings = {} }
-
-            local mappings = {
-                { opts.mappings.add, desc = "Add surrounding", mode = { "n", "v" } },
-                { opts.mappings.delete, desc = "Delete surrounding" },
-                { opts.mappings.find, desc = "Find right surrounding" },
-                { opts.mappings.find_left, desc = "Find left surrounding" },
-                { opts.mappings.replace, desc = "Replace surrounding" },
-                { opts.mappings.update_n_lines, desc = "Update `MiniSurround.config.n_lines`" },
-            }
-
-            ---@diagnostic disable-next-line: param-type-mismatch,return-type-mismatch
-            return vim.tbl_deep_extend("keep", mappings, keys)
-        end,
+        keys = {
+            { "<leader>sa", desc = "Add surrounding", mode = { "n", "v" } },
+            { "<leader>sd", desc = "Delete surrounding" },
+            { "<leader>sf", desc = "Find right surrounding" },
+            { "<leader>sF", desc = "Find left surrounding" },
+            { "<leader>sr", desc = "Replace surrounding" },
+            { "<leader>sn", desc = "Update `MiniSurround.config.n_lines`" },
+        },
         opts = {
             custom_surroundings = {
                 -- ["("] = { input = { "%b()", "^.().*().$" }, output = { left = "(", right = ")" } },
