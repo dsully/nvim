@@ -282,30 +282,10 @@ return {
         end,
     },
     {
-        -- Local, out-of-tree codecompanion extensions (adapters, utils).
-        -- The directory is optional; loaded only when CODECOMPANION_PATH is set so the public repo works standalone.
-        --
-        -- When present, its plugin/*.lua is auto-sourced by lazy.nvim and populates
-        -- _G.codecompanion_local_adapters, which the codecompanion opts() function merges into adapters.http.
-        "codecompanion-local",
-        cond = vim.env.CODECOMPANION_PATH ~= nil,
-        dir = vim.env.CODECOMPANION_PATH or "",
-        lazy = false,
-        name = "codecompanion-local",
-    },
-    {
         -- Index and search code in your repositories
         "Davidyz/VectorCode",
-        build = "uv tool install --upgrade vectorcode",
-        version = "*",
-    },
-    {
-        "folke/which-key.nvim",
-        optional = true,
-        opts = {
-            spec = {
-                { "<leader>a", group = "AI", mode = { "n", "v" } },
-            },
-        },
+        build = function()
+            vim.fn.system({ "uv", "tool", "install", "--upgrade", "vectorcode" })
+        end,
     },
 }
