@@ -74,6 +74,9 @@ return {
 
             return vim.bo[bufnr].buflisted
         end,
+        extensions = {
+            tabline = {},
+        },
     },
     priority = 100, -- Load before the dashboard.
 }

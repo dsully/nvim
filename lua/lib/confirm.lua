@@ -1,12 +1,12 @@
 -- Local handling for unsaved-buffer confirmation.
 --
--- cokeline routes its unsaved-buffer prompt through `vim.ui.select` (snacks),
--- which renders a broken/empty picker. Custom floating-window prompts don't
--- survive this config either: a blocking `getchar` float is never flushed while
--- noice owns rendering, and a focused async float is auto-closed by focus
--- changes. Neovim's native `confirm()` dialog renders reliably, so we use it for
--- the decision and let `mini.bufremove` perform the layout-preserving deletion
--- (with `force`, since we've already handled the unsaved changes).
+-- An unsaved-buffer prompt via `vim.ui.select` (snacks) renders a broken/empty
+-- picker. Custom floating-window prompts don't survive this config either: a
+-- blocking `getchar` float is never flushed while noice owns rendering, and a
+-- focused async float is auto-closed by focus changes. Neovim's native
+-- `confirm()` dialog renders reliably, so we use it for the decision and let
+-- `mini.bufremove` perform the layout-preserving deletion (with `force`, since
+-- we've already handled the unsaved changes).
 
 local M = {}
 
