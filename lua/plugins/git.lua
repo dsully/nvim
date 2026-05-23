@@ -138,9 +138,6 @@ return {
                 bmap("[H", function() gs.nav_hunk("first") end, "First Hunk")
                 -- stylua: ignore end
 
-                -- { 'n', ']g', function () actions.nav_hunk('next', { navigation_message = false }) end },
-                -- { 'n', '[g', function () actions.nav_hunk('prev', { navigation_message = false }) end },
-
                 bmap("<leader>gb", function()
                     gs.blame_line({ full = true, ignore_whitespace = true })
                 end, "Git Blame")
@@ -150,14 +147,6 @@ return {
                         gs.show_commit(vim.b.gitsigns_blame_line_dict.sha)
                     end
                 end, "Git Commit")
-
-                -- Git conflict mappings
-                -- bmap("<leader>mc", "^[<>=]", "Merge Conflicts")
-                -- bmap("<leader>gcu", "dd/|||<CR>0v/>>><CR>$x", "Git Conflict Choose Upstream")
-                -- bmap("<leader>gcb", "0v/|||<CR>$x/====<CR>0v/>>><CR>$x", "Git Conflict Choose Base")
-                -- bmap("<leader>gcs", "0v/====<CR>$x/>>><CR>dd", "Git Conflict Choose Stashed")
-
-                -- bmap("<leader>gd", gs.diffthis, "Git Diff")
 
                 bmap("<leader>gR", gs.reset_buffer, "Reset Git Buffer")
                 bmap("<leader>gp", gs.preview_hunk, "Preview Git Hunk")

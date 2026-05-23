@@ -314,7 +314,6 @@ return {
     { "bydlw98/blink-cmp-env" },
     { "MahanRahmati/blink-nerdfont.nvim" },
     { "xzbdmw/colorful-menu.nvim" },
-    { "yus-works/csc.nvim", opts = {} },
     {
         "chrisgrieser/nvim-scissors",
         cmd = {

@@ -195,13 +195,6 @@ return {
                         layout = "vertical", ---@type "vertical"|"horizontal"|"buffer"
                     },
                 },
-                extensions = {
-                    vectorcode = {
-                        opts = {
-                            add_tool = true,
-                        },
-                    },
-                },
                 rules = {
                     opts = {
                         chat = { enabled = true },
@@ -279,13 +272,6 @@ return {
             end
 
             return config
-        end,
-    },
-    {
-        -- Index and search code in your repositories
-        "Davidyz/VectorCode",
-        build = function()
-            vim.fn.system({ "uv", "tool", "install", "--upgrade", "vectorcode" })
         end,
     },
 }

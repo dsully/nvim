@@ -4,7 +4,8 @@ This file provides guidance to Claude Code (claude.ai/code) when working with co
 
 ## Overview
 
-This is a Neovim configuration repository using Lazy.nvim as the plugin manager. The configuration is structured in a modular way with custom LSP configurations and plugin specifications.
+This is a Neovim configuration repository using zpack.nvim as the plugin manager on top of native vim.pack.
+The configuration is structured in a modular way with custom LSP configurations and plugin specifications.
 
 ## Common Development Commands
 
@@ -40,14 +41,14 @@ return {
 
 ### Plugin Management
 
-- Plugins defined in `lua/plugins/` using LazySpec format
-- Main entry point: `init.lua` → `lua/config/lazy.lua`
+- Plugins defined in `lua/plugins/` using ZSpec format
+- Main entry point: `init.lua` -> `lua/config/pack.lua`
 - Custom utilities in `lua/lib/` for shared functionality
 - Snacks.nvim integration for UI components (dashboard, picker, etc.)
 
 ### Directory Structure
 
-- `/lua/config/` - Core configuration (options, globals, lazy bootstrap)
+- `/lua/config/` - Core configuration (options, globals)
 - `/lua/plugins/` - Plugin specifications
 - `/lua/lib/` - Utility libraries (lsp, highlights, formatting, etc.)
 - `/lsp/` - LSP server base configurations
@@ -60,4 +61,3 @@ return {
 - Follow LuaJIT syntax and existing code style (check stylua.toml)
 - Custom event system available via `ev` global (e.g., `ev.VeryLazy`, `ev.LazyFile`)
 - Global utilities: `defaults` (icons/settings), `hl` (highlights), `keys` (keymaps)
-

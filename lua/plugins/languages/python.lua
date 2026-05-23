@@ -19,6 +19,7 @@ return {
         ft = "python",
         opts = {
             debounce_ms = 500,
+            max_concurrent_lsp_requests = 4,
             smells = {
                 arrow_code = { enabled = true, max_depth = 4 },
                 brain_method = { enabled = true, max_lines = 50, max_branches = 10 },
@@ -33,7 +34,6 @@ return {
                 middle_man = { enabled = true, min_delegation_ratio = 0.75 },
                 switch_statements = { enabled = true, min_cases = 5 },
             },
-            max_concurrent_lsp_requests = 4,
         },
     },
 }

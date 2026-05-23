@@ -12,6 +12,7 @@ return {
         build = function(plugin)
             if plugin and plugin.path then
                 local path = plugin.path .. "/build.lua"
+
                 if vim.uv.fs_access(path, "R") == 1 then
                     dofile(path)
                 end

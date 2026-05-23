@@ -65,7 +65,7 @@ else
     -- Disable global shada; create separate shadafile for each workspace
     -- Ensures project-scoped jumplist, marks, etc.
     --
-    --—@return string
+    ---@return string
     local shadafile = function()
         local file = require("lib.file")
         local cwd = file.cwd()

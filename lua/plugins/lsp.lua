@@ -29,7 +29,7 @@ return {
                 },
                 underline = true,
                 update_in_insert = false, -- https://www.reddit.com/r/neovim/comments/pfk209/nvimlsp_too_fast/
-            })
+            } --[[@as vim.diagnostic.Opts]])
 
             ---@type table<string, string[]|boolean>?
             local kind_filter = {

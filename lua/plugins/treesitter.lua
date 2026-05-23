@@ -141,12 +141,6 @@ return {
         opts = {},
     },
     {
-        -- Broken right now on nightly / interaction with snacks indent scope.
-        "calops/hmts.nvim",
-        cond = false,
-        ft = "nix",
-    },
-    {
         "dsully/treesitter-jump.nvim",
         config = function()
             keys.map("%", require("treesitter-jump").jump)
@@ -160,13 +154,5 @@ return {
         "folke/ts-comments.nvim",
         event = ev.LazyFile,
         opts = {},
-    },
-    {
-        "Hdoc1509/gh-actions.nvim",
-        config = function()
-            require("gh-actions.tree-sitter").setup()
-            require("nvim-treesitter").install("gh_actions_expressions")
-        end,
-        ft = "yaml.github",
     },
 }

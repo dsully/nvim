@@ -39,7 +39,7 @@ return {
 
                         if dir and file and ctx.width ~= nil then
                             file = file:sub(-(math.floor(ctx.width) - #dir - 2))
-                            fname = dir .. "/…" .. file
+                            fname = dir .. "/..." .. file
                         end
                     end
 
