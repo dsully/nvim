@@ -3,7 +3,6 @@ return {
     {
         "cenk1cenk2/schema-companion.nvim",
         ft = {
-            "helm",
             "json",
             "jsonc",
             "toml",

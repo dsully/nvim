@@ -93,7 +93,7 @@ function M.git()
 end
 
 function M.schema()
-    if vim.tbl_contains({ "helm", "json", "toml", "yaml" }, vim.bo.filetype) then
+    if vim.tbl_contains({ "json", "toml", "yaml" }, vim.bo.filetype) then
         local current_schema = require("schema-companion").get_current_schemas()
 
         if current_schema then

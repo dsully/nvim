@@ -248,7 +248,6 @@ return {
                 "fish-ls",
                 "gopls",
                 -- "harper_ls",
-                "helm_ls",
                 "jinja_lsp",
                 "jsonls",
                 "just-lsp",

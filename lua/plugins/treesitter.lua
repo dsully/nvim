@@ -10,7 +10,6 @@ local parsers = {
     "gitcommit",
     "gitignore",
     "go",
-    "helm",
     "html",
     "ini",
     "javascript",

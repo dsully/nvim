@@ -8,7 +8,6 @@ vim.filetype.add({
         [".rgignore"] = "gitignore",
         ["Brewfile"] = "brewfile",
         ["Caddyfile"] = "caddy",
-        ["Chart.yaml"] = "yaml.helm-chartfile",
         ["config.custom"] = "sshconfig",
         ["PklProject"] = "pkl",
         ["direnvrc"] = "sh",
