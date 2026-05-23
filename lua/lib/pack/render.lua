@@ -152,7 +152,7 @@ local function build_content()
 
     add(header, "PackFloatTitle")
 
-    local help = " [r] refresh  [u] update plugin  [U] update all  [x] remove  [Enter] details  [K] open on github  [q] close"
+    local help = " [r] refresh  [u] update plugin  [U] update all  [x] remove  [c] clean unused  [Enter] details  [K] open on github  [q] close"
     local help_row = add(help)
 
     for start_pos, end_pos in help:gmatch("()%b[]()") do

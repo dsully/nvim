@@ -64,8 +64,7 @@ local function update_plugins(names)
         end, {
             group = group,
             pattern = "vim.pack",
-        }
-)
+        })
 
         local ok, err = pcall(vim.pack.update, names, { force = true, offline = false })
 
@@ -123,6 +122,38 @@ function M.delete_current()
     end
 
     local ok, err = pcall(vim.pack.del, { name }, { force = true })
+
+    if not ok then
+        vim.notify("vim.pack: " .. tostring(err), vim.log.levels.ERROR)
+        return
+    end
+
+    git.refresh(false)
+end
+
+-- Remove every inactive plugin from disk: those on disk but not added via
+-- vim.pack.add this session (the "Not Loaded" section).
+function M.clean()
+    local names = {}
+
+    for _, plugin in ipairs(state.not_loaded) do
+        names[#names + 1] = plugin.spec.name
+    end
+
+    if #names == 0 then
+        vim.notify("vim.pack: no unused plugins", vim.log.levels.INFO)
+        return
+    end
+
+    table.sort(names)
+
+    local prompt = ("Remove %d unused plugin(s)?\n%s"):format(#names, table.concat(names, "\n"))
+
+    if vim.fn.confirm(prompt, "&Yes\n&No", 2) ~= 1 then
+        return
+    end
+
+    local ok, err = pcall(vim.pack.del, names)
 
     if not ok then
         vim.notify("vim.pack: " .. tostring(err), vim.log.levels.ERROR)

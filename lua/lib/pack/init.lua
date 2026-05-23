@@ -23,7 +23,7 @@ local function setup_keymaps()
     bmap("U", actions.update_all, "Update all pending")
 
     bmap("x", actions.delete_current, "Remove plugin")
-    bmap("c", actions.delete_current, "Remove plugin")
+    bmap("c", actions.clean, "Remove unused plugins")
 
     bmap("<CR>", actions.toggle_details, "Toggle details")
 
