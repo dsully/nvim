@@ -241,7 +241,7 @@ return {
             local configured = {
                 "bashls",
                 "basedpyright",
-                -- "codebook",
+                "codebook",
                 "crates-lsp",
                 "dockerls",
                 "emmylua_ls",

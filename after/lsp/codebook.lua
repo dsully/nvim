@@ -19,4 +19,17 @@ return {
         "codebook.toml",
         ".codebook.toml",
     },
+    override = function(config)
+        Snacks.toggle({
+            name = "Codebook",
+            get = function()
+                return vim.lsp.is_enabled("codebook")
+            end,
+            set = function(state)
+                vim.lsp.enable("codebook", state)
+            end,
+        }):map("<space>tk")
+
+        return config
+    end,
 }
