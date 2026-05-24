@@ -3,7 +3,6 @@ return {
     cmd = { "bash-language-server", "start" },
     filetypes = {
         "bash",
-        "bash.gotmpl",
         "sh",
         "zsh",
     },

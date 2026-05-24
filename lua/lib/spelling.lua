@@ -18,7 +18,7 @@ function M.add_word_to_typos(word)
 
     local chosen = vim.fn.confirm("Choose section: ", ("&Default\n&%s\n&Cancel"):format(uppercase_first(vim.bo.filetype)))
 
-    if chosen == nil then
+    if chosen == 0 then
         return
     end
 

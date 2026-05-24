@@ -37,9 +37,11 @@ function M.code_block(bufnr)
     end
 
     -- Dedent lines
-    for i, line in ipairs(lines) do
-        if line:match("%S") then
-            lines[i] = line:sub(math.floor(min_indent) + 1)
+    if min_indent ~= math.huge then
+        for i, line in ipairs(lines) do
+            if line:match("%S") then
+                lines[i] = line:sub(math.floor(min_indent) + 1)
+            end
         end
     end
 

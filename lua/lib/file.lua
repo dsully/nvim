@@ -69,15 +69,11 @@ end
 
 ---Is this a binary file?
 ---@param path string
----@return bool
+---@return boolean
 function M.is_binary(path)
     local content = M.read(path, "r", 1024)
 
-    if content and content:find("\0") then
-        return true
-    end
-
-    return false
+    return content ~= nil and content:find("\0") ~= nil
 end
 
 ---Read the content of a TOML file.
@@ -204,32 +200,11 @@ end
 ---@param extension string The extension to strip from the filename for detection.
 ---@param combined string The combined file type. eg: "jinja"
 ---@return string?
----@diagnostic disable-next-line: unused
 function M.template_type(filename, extension, combined)
-    --
-    -- Attempt with buffer content and filename
-    --- @type string?
-    local filetype = vim.filetype.match({ filename = filename }) or ""
+    local stem = (filename:gsub("%." .. vim.pesc(extension) .. "$", ""))
+    local filetype = vim.filetype.match({ filename = stem })
 
-    if not filetype then
-        local lines = vim.api.nvim_buf_get_lines(0, 0, -1, false)
-
-        for index, line in ipairs(lines) do
-            if string.match(line, "{{") then
-                table.remove(lines, index) -- remove template lines
-            end
-        end
-
-        if not filetype then
-            filetype = vim.filetype.match({ filename = filename, contents = lines }) -- attempt without template lines
-
-            if not filetype then
-                filetype = vim.filetype.match({ contents = lines }) -- attempt without filename
-            end
-        end
-    end
-
-    if filetype ~= nil then
+    if filetype then
         return filetype .. "." .. combined
     end
 end

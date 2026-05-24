@@ -556,7 +556,7 @@ function M.info()
         elseif c.root_dir then
             --
             vim.list_extend(lines, {
-                "  - path   : " .. vim.fs.relpath("~", c.root_dir) or c.root_dir,
+                "  - path   : " .. (vim.fs.relpath("~", c.root_dir) or c.root_dir),
             })
         end
 

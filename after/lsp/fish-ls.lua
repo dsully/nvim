@@ -7,7 +7,6 @@ return {
     },
     filetypes = {
         "fish",
-        "fish.gotmpl",
     },
     single_file_support = true,
 }

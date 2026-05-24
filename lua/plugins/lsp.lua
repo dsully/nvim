@@ -251,7 +251,7 @@ return {
                 "jinja_lsp",
                 "jsonls",
                 "just-lsp",
-                "lemminx",
+                -- "lemminx",
                 -- "markdown-lsp",
                 "pyrefly",
                 "pytest-language-server",

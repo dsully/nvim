@@ -146,7 +146,7 @@ local function refresh_fetch_async()
             "origin",
         }, {}, function(fetch_result)
             vim.schedule(function()
-                if check_id ~= check_id or not window.valid_buffer() then
+                if not window.valid_buffer() then
                     return
                 end
 
