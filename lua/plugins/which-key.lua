@@ -212,7 +212,7 @@ return {
             {
                 "zg",
                 function()
-                    require("lib.spelling").add_word_to_typos(vim.fn.expand("<cword>", false, false))
+                    require("lib.spelling").add_word()
                 end,
                 desc = "Add word to spell list",
             },
