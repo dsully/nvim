@@ -14,14 +14,14 @@ return {
             end
         end
     end,
-    root_dir = function(bufnr, on_dir)
-        local nvim_config = nvim.file.realpath(nvim.file.xdg_config("nvim"))
-        local bufname = nvim.file.filename(bufnr)
-
-        if bufname == nvim_config or vim.startswith(bufname, nvim_config .. "/") then
-            on_dir(nvim_config)
-        end
-    end,
+    -- root_dir = function(bufnr, on_dir)
+    --     local nvim_config = nvim.file.realpath(nvim.file.xdg_config("nvim"))
+    --     local bufname = nvim.file.filename(bufnr)
+    --
+    --     if bufname == nvim_config or vim.startswith(bufname, nvim_config .. "/") then
+    --         on_dir(nvim_config)
+    --     end
+    -- end,
     ---@type lspconfig.settings.emmylua_ls
     settings = {
         emmylua = {
@@ -41,8 +41,6 @@ return {
                     -- https://github.com/neovim/nvim-lspconfig#lsp-settings-type-annotations
                     vim.api.nvim_get_runtime_file("lua/lspconfig", false)[1],
                 },
-                -- Or pull in all of 'runtimepath'. May be slower!
-                -- library = vim.api.nvim_get_runtime_file('', true),
             },
         },
     },
