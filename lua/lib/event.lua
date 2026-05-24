@@ -340,13 +340,17 @@ function M.on_load(name, fn)
         local timer = vim.uv.new_timer()
 
         if timer then
-            timer:start(50, 50, vim.schedule_wrap(function()
-                if M.is_loaded(name) then
-                    timer:stop()
-                    timer:close()
-                    fn(name)
-                end
-            end))
+            timer:start(
+                50,
+                50,
+                vim.schedule_wrap(function()
+                    if M.is_loaded(name) then
+                        timer:stop()
+                        timer:close()
+                        fn(name)
+                    end
+                end)
+            )
 
             -- Give up after 30 seconds
             vim.defer_fn(function()

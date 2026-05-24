@@ -23,3 +23,6 @@ check *args=".":
     end
 
     VIMRUNTIME=$runtime_dir emmylua_check --config ./.emmyrc.json {{ args }}
+
+format:
+    @stylua **/*.lua

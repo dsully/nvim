@@ -25,7 +25,6 @@ function M.map(lhs, rhs, desc, mode, opts)
     --
     if type(mode) == "string" then
         mode = { mode } --[[@as string[] ]]
-
     end
 
     M.safe_set(

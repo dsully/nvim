@@ -110,7 +110,7 @@ vim.g.noice = {
     notify = false,
     popupmenu = false,
     progress = true,
-};
+}
 
 vim.g.clipboard = {
     name = "OSC 52",

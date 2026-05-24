@@ -26,7 +26,7 @@ end
 function M.report_missing_lock_packs()
     local lock_data = nvim.file.read(pack_lock)
 
-    if lock_data ~= nil  and lock_data ~= "" then
+    if lock_data ~= nil and lock_data ~= "" then
         local lock = vim.json.decode(lock_data)
 
         if type(lock.plugins) ~= "table" then
