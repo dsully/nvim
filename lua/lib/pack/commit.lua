@@ -2,6 +2,18 @@ local config = require("lib.pack.config")
 
 local M = {}
 
+---@param subject string
+---@return boolean
+local function ignored(subject)
+    for _, pattern in ipairs(config.ignored_commit_subjects) do
+        if subject:find(pattern) then
+            return true
+        end
+    end
+
+    return false
+end
+
 ---Parse a conventional-commit subject ("type(scope)!: summary").
 ---@param subject string
 ---@return { type: string, type_len: integer, scope_start: integer?, scope_end: integer?, breaking: boolean }?
@@ -46,7 +58,7 @@ function M.shown_commits(commits)
 
         if not hash then
             shown[#shown + 1] = { raw = entry }
-        else
+        elseif not ignored(subject or "") then
             local conv = M.parse_conventional(subject or "")
             local is_dimmed = conv ~= nil and config.dimmed_commit_types[conv.type:lower()] == true
 

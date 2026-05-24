@@ -91,32 +91,9 @@ function M.open(opts)
 end
 
 do
-    for group, spec in pairs({
-        PackFloatTitle = "Title",
-        PackFloatBorder = "FloatBorder",
-        PackFloatSection = "Label",
-        PackFloatPending = "DiagnosticWarn",
-        PackFloatClean = "String",
-        PackFloatMuted = "Comment",
-        PackFloatHash = "Number",
-        PackFloatKey = "Function",
-        PackFloatError = "DiagnosticError",
+    keys.map("<leader>P", M.open, "Pack Plugins")
 
-        -- Conventional-commit log highlighting (mirrors lazy.nvim's view).
-        PackFloatCommit = "@variable.builtin", -- commit ref
-        PackFloatCommitType = "Title", -- conventional type
-        PackFloatCommitScope = { italic = true }, -- conventional scope
-        PackFloatCommitIssue = "Number", -- #123 references
-        PackFloatCommitBreaking = "DiagnosticError", -- breaking change (`!`)
-        PackFloatDimmed = "Conceal", -- low-signal commit types
-    }) do
-        local hl = type(spec) == "table" and spec or { link = spec }
-        vim.api.nvim_set_hl(0, group, vim.tbl_extend("force", { default = true }, hl))
-    end
-
-    vim.keymap.set("n", "<leader>ps", M.open, { desc = "Sync" })
-
-    vim.api.nvim_create_user_command("Pack", function(command)
+    nvim.command("Pack", function(command)
         M.open({ fetch = not command.bang })
     end, {
         bang = true,

@@ -350,6 +350,23 @@ M.ui = {
         LspSignatureActiveParameter = { fg = colors.gray.base },
     },
 
+    pack = {
+        PackFloatTitle = { link = "Title" },
+        PackFloatSection = { link = "Label" },
+        PackFloatPending = { link = "DiagnosticWarn" },
+        PackFloatClean = { link = "String" },
+        PackFloatMuted = { link = "Comment" },
+        PackFloatKey = { link = "Function" },
+
+        -- Conventional-commit log highlighting
+        PackFloatCommit = { link = "@variable.builtin" },
+        PackFloatCommitType = { link = "Title" },
+        PackFloatCommitScope = { italic = true },
+        PackFloatCommitIssue = { link = "Number" },
+        PackFloatCommitBreaking = { link = "DiagnosticError" },
+        PackFloatDimmed = { link = "Conceal" },
+    },
+
     semantic_tokens = {
         ["@lsp.type.boolean"] = { link = "@boolean" },
         ["@lsp.type.builtinType"] = { link = "@type.builtin" },

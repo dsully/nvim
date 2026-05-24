@@ -7,6 +7,13 @@ M.max_commits = 12
 -- entirely; when false they are shown but dimmed (lazy.nvim's behaviour).
 M.hide_dimmed_commits = true
 
+-- Commit subjects matching any of these Lua patterns are dropped from the log
+-- entirely. These are automated/noise commits that aren't conventional commits.
+M.ignored_commit_subjects = {
+    "^%[docgen%]",
+    "^Update SchemaStore catalog",
+}
+
 -- Conventional-commit types that carry little signal in a changelog.
 M.dimmed_commit_types = {
     bot = true,
