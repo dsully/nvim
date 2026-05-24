@@ -25,6 +25,10 @@ return {
             return Snacks.git.get_root() or nvim.file.cwd()
         end
 
+        -- Written on exit only when leaving via Neovim 0.12+'s `:restart`
+        -- (v:exitreason == "restart"), then consumed on the next launch.
+        local restart_marker = vim.fn.stdpath("state") .. "/restart"
+
         nvim.command("SessionLoad", function()
             local resession = require("resession")
 
@@ -41,9 +45,55 @@ return {
         end, { desc = "Session Load" })
 
         ev.on(ev.VimLeavePre, function()
-            require("resession").save(root(), { notify = false })
+            local name = root()
+            require("resession").save(name, { notify = false })
+
+            local listed = 0
+
+            for _, b in ipairs(vim.api.nvim_list_bufs()) do
+                if vim.bo[b].buflisted then
+                    listed = listed + 1
+                end
+            end
+
+            -- Record the exact session name so the relaunch loads *this* session,
+            -- not whatever root() resolves to in the new process (`:restart` may
+            -- change cwd / git root, which would load a stale session).
+            if vim.v.exitreason == "restart" then
+                nvim.file.write(restart_marker, name)
+            end
         end, {
             desc = "Save session on exit.",
+        })
+
+        -- After `:restart`, bypass the dashboard and restore the just-saved
+        -- session. VimEnter runs before snacks opens the dashboard on UIEnter;
+        -- loading the session repopulates the first window so the dashboard's
+        -- open check bails out. File args (always dropped by :restart) skip this.
+        ev.on(ev.VimEnter, function()
+            local name = nvim.file.read(restart_marker)
+
+            if vim.fn.argc(-1) ~= 0 then
+                return
+            end
+
+            if not name or name == "" then
+                return
+            end
+
+            vim.uv.fs_unlink(restart_marker)
+
+            pcall(require("resession").load, vim.trim(name), { silence_errors = true })
+
+            local listed = 0
+
+            for _, b in ipairs(vim.api.nvim_list_bufs()) do
+                if vim.bo[b].buflisted then
+                    listed = listed + 1
+                end
+            end
+        end, {
+            desc = "Restore session after :restart.",
         })
     end,
     opts = {
