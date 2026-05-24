@@ -219,7 +219,7 @@ return {
 
             {
                 "<leader>bd",
-                nvim.confirm.delete_buffer,
+                nvim.buffer.delete_buffer,
                 desc = "Delete Buffer",
             },
 

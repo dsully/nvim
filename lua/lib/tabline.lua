@@ -387,6 +387,20 @@ function M.focus(i)
     end
 end
 
+---The buffer to focus after deleting `bufnr`, in display order.
+---Prefers the next buffer, falling back to the previous one.
+---@param bufnr integer
+---@return integer?
+function M.sibling(bufnr)
+    local bufs = ordered()
+
+    for i, b in ipairs(bufs) do
+        if b == bufnr then
+            return bufs[i + 1] or bufs[i - 1]
+        end
+    end
+end
+
 ---Current display order as buffer names, refreshed from open buffers.
 ---@return string[]
 function M.snapshot()
