@@ -44,7 +44,7 @@ return {
             require("nvim-treesitter").install(parsers):wait(wait)
             require("nvim-treesitter").update():wait(wait)
         end,
-        init = function()
+        config = function()
             -- Main-branch nvim-treesitter ships queries under `runtime/queries/`,
             -- which isn't on rtp by default. Prepend it so highlights/folds/indents
             -- are visible to `vim.treesitter.start`.
