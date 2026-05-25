@@ -289,7 +289,7 @@ return {
                             local data = item.data --[[@as RustData]]
 
                             -- Only filter out imported methods.
-                            if data == nil or #data.imports == 0 or item.kind ~= types.Method then
+                            if data == nil or data.imports == nil or #data.imports == 0 or item.kind ~= types.Method then
                                 return true
                             end
 
