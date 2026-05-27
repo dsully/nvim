@@ -6,15 +6,10 @@ return {
             hl.apply({
                 RenderMarkdownCode = { bg = colors.black.base },
             })
+
             require("render-markdown").setup(opts)
         end,
-        ft = {
-            "codecompanion",
-            "markdown",
-            "opencode_output",
-            "snacks_notif",
-            "vimwiki",
-        },
+        lazy = false,
         ---@type render.md.UserConfig
         opts = {
             ---@type render.md.code.UserConfig
@@ -36,6 +31,13 @@ return {
             },
             -- Disable by default. Use <space>tm to toggle on.
             enabled = true,
+            file_types = {
+                "codecompanion",
+                "markdown",
+                "opencode_output",
+                "snacks_notif",
+                "vimwiki",
+            },
             heading = {
                 position = "inline",
                 sign = false,
