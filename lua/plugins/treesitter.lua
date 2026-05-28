@@ -7,7 +7,6 @@ local parsers = {
     "fish",
     "git_config",
     "git_rebase",
-    "gitcommit",
     "gitignore",
     "go",
     "html",
@@ -30,6 +29,11 @@ local parsers = {
     "vimdoc",
     "yaml",
 }
+
+-- https://github.com/gbprod/tree-sitter-gitcommit/issues/88
+if vim.env.HOSTNAME ~= "zap" then
+    table.insert(parsers, "gitcommit")
+end
 
 local wait = 60000 -- # ms
 
