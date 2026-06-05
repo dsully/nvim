@@ -184,6 +184,15 @@ return {
                 expr = false,
             },
 
+            {
+                "<space>sf",
+                function()
+                    require("lua.lib.treesort")
+                    vim.cmd.TSort("@function.outer")
+                end,
+                desc = "Sort Functions",
+            },
+
             -- macOS specific mappings
             vim.fn.has("mac") == 1 and {
                 {

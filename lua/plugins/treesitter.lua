@@ -139,11 +139,6 @@ return {
         end,
     },
     {
-        "maxbol/treesorter.nvim",
-        cmd = "TSort",
-        opts = {},
-    },
-    {
         "dsully/treesitter-jump.nvim",
         config = function()
             keys.map("%", require("treesitter-jump").jump)
