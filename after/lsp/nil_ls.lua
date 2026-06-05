@@ -25,7 +25,7 @@ return {
             nix = {
                 flake = {
                     autoArchive = false,
-                    autoEvalInputs = true,
+                    autoEvalInputs = false,
                 },
             },
         },
