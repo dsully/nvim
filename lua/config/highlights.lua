@@ -421,6 +421,29 @@ M.ui = {
         ["@lsp.typemod.variable.defaultLibrary"] = { link = "@variable.builtin" },
         ["@lsp.typemod.variable.injected"] = { link = "@variable" },
         ["@lsp.typemod.variable.static"] = { link = "@constant" },
+
+        -- sourcekit-lsp (Swift/Objective-C) token curation. Scoped with .objc /
+        -- .swift suffixes so it does not affect other servers. Based on the
+        -- token legend sourcekit advertises (initialize -> semanticTokensProvider).
+        --
+        -- Neutered ({}) -> defer to tree-sitter, which already highlights these
+        -- correctly and (for comment) does not grey out inactive #if branches.
+        ["@lsp.type.comment.objc"] = {}, -- inactive #if region marker; let tree-sitter highlight the code
+        ["@lsp.type.comment.swift"] = {},
+        ["@lsp.type.identifier.objc"] = {}, -- sourcekit fallback bucket, noisy
+        ["@lsp.type.identifier.swift"] = {},
+        ["@lsp.type.unknown.objc"] = {},
+        ["@lsp.type.unknown.swift"] = {},
+        ["@lsp.type.bracket.objc"] = {}, -- tree-sitter owns brackets
+        ["@lsp.type.bracket.swift"] = {},
+
+        -- Kept -> sourcekit resolves these better than tree-sitter.
+        ["@lsp.type.label.objc"] = { link = "@label" },
+        ["@lsp.type.label.swift"] = { link = "@label" },
+        ["@lsp.type.concept.objc"] = { link = "@type" },
+        ["@lsp.type.concept.swift"] = { link = "@type" },
+        ["@lsp.type.macro.objc"] = { link = "@constant.macro" },
+        ["@lsp.type.macro.swift"] = { link = "@constant.macro" },
     },
 
     spelling = {

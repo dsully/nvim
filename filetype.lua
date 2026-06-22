@@ -26,11 +26,19 @@ vim.filetype.add({
         pcf = "pkl",
         pkl = "pkl",
         plist = "xml.plist", -- macOS PropertyList files
+        -- .m defaults to MATLAB in Neovim; in this (Apple) context it is
+        -- Objective-C. sourcekit-lsp attaches on the "objc" filetype, so this
+        -- mapping is required for both LSP and the correct tree-sitter grammar.
+        m = "objc",
         -- We always want LaTeX, avoid slow detection logic
         tex = "latex",
-        -- Heuristic that only sets the filetype to C++ if the header file includes
-        -- another C++-style header (i.e. one without a trailing .h):
+        -- Objective-C headers first (Apple codebase), then fall back to the
+        -- C-vs-C++ heuristic: C++ only if the header includes an extensionless
+        -- C++-style header (i.e. one without a trailing .h):
         h = function(_, _)
+            if vim.fn.search("\\C\\(@interface\\|@protocol\\|@property\\|#import\\|NS_ASSUME_NONNULL\\)", "nw") ~= 0 then
+                return "objc"
+            end
             if vim.fn.search("\\C^#include <[^>.]\\+>$", "nw") ~= 0 then
                 return "cpp"
             end
