@@ -241,6 +241,7 @@ return {
             local configured = {
                 "bashls",
                 "basedpyright",
+                "clangd",
                 -- "codebook",
                 "crates-lsp",
                 "dockerls",
