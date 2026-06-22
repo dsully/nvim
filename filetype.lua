@@ -18,11 +18,10 @@ vim.filetype.add({
     extension = {
         age = "age",
         conf = "conf",
-        gotmpl = function(filename, _)
-            return require("lib.file").template_type(filename, "gotmpl", "gotmpl")
-        end,
         jinja = "jinja",
         jinja2 = "jinja",
+        jsonl = "json",
+        ndjson = "json",
         pcf = "pkl",
         pkl = "pkl",
         plist = "xml.plist", -- macOS PropertyList files
@@ -46,9 +45,6 @@ vim.filetype.add({
         end,
         j2 = function(filename, _)
             return require("lib.file").template_type(filename, "j2", "jinja")
-        end,
-        tmpl = function(filename, _)
-            return require("lib.file").template_type(filename, "tmpl", "gotmpl")
         end,
     },
     pattern = {

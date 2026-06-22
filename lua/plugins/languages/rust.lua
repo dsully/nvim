@@ -1,16 +1,6 @@
 ---@type zpack.Spec[]
 return {
     {
-        "alexpasmantier/krust.nvim",
-        lazy = false,
-        opts = {
-            keymap = "<leader>xs",
-            float_win = {
-                border = defaults.ui.border.name,
-            },
-        },
-    },
-    {
         "Saecki/crates.nvim",
         event = "BufReadPost Cargo.toml",
         opts = {
