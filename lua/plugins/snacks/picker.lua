@@ -14,7 +14,7 @@ return {
         { "<leader>fe", function() Snacks.picker.icons({ icon_sources = { "emoji" }}) end, desc = "Emoji" },
         { "<leader>fh", function() Snacks.picker.highlights() end, desc = "Highlights" },
         { "<leader>fi", function() Snacks.picker.icons({ icon_sources = { "nerd_fonts" }}) end, desc = "Nerd Icons" },
-        -- { "<leader>ff", function() Snacks.picker.smart({ hidden = true }) end, desc = "Files", },
+        { "<leader>ff", function() Snacks.picker.smart({ hidden = true }) end, desc = "Files", },
         { "<leader>fg", function() Snacks.picker.grep() end, desc = "Grep" },
         { "<leader>fk", function() Snacks.picker.keymaps() end, desc = "Keymaps" },
         { "<leader>fL", function() Snacks.picker.lsp_config() end, desc = "LSP Config" },
