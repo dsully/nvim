@@ -54,7 +54,19 @@ vim.ui.float = function(options, lines)
 
     ---@param self snacks.win
     local on_buf = function(self)
-        vim.api.nvim_buf_set_lines(self.buf --[[@as integer]], 0, -1, false, lines)
+        -- nvim_buf_set_lines rejects any entry containing a newline, so split
+        -- multi-line strings (e.g. vim.inspect output) into individual lines.
+        local flattened = {}
+
+        for _, line in ipairs(lines) do
+            if type(line) == "string" and line:find("\n") then
+                vim.list_extend(flattened, vim.split(line, "\n", { plain = true }))
+            else
+                flattened[#flattened + 1] = line
+            end
+        end
+
+        vim.api.nvim_buf_set_lines(self.buf --[[@as integer]], 0, -1, false, flattened)
     end
 
     return snacks.win.new(vim.tbl_deep_extend("force", defaults.ui.float or {}, options or {}, { on_buf = on_buf }))
