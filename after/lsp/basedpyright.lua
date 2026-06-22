@@ -18,6 +18,7 @@ return {
             client.server_capabilities.executeCommandProvider = nil
             client.server_capabilities.hoverProvider = nil
             client.server_capabilities.inlayHintProvider = nil
+            client.server_capabilities.implementationProvider = nil
             client.server_capabilities.notebookDocumentSync = nil
             client.server_capabilities.renameProvider = nil
 
@@ -48,15 +49,25 @@ return {
                 diagnosticMode = "openFilesOnly",
                 diagnosticSeverityOverrides = {
                     reportAny = false,
+                    reportArgumentType = false,
+                    reportAssignmentType = false,
+                    reportAttributeAccessIssue = false,
+                    reportCallIssue = false,
                     reportDeprecated = false,
                     reportExplicitAny = false,
+                    reportGeneralTypeIssues = false,
                     -- reportImplicitStringConcatenation = false,
+                    reportIndexIssue = false,
+                    reportInvalidTypeForm = false,
+                    reportMissingImports = false,
+                    reportMissingModuleSource = false,
                     -- reportMissingParameterType = false,
                     -- reportMissingTypeArgument = false,
                     reportMissingTypeStubs = false,
                     reportOptionalMemberAccess = false,
-                    reportAssignmentType = false,
-                    reportAttributeAccessIssue = false,
+                    reportPrivateImportUsage = false,
+                    reportReturnType = false,
+                    reportTypedDictNotRequiredAccess = false,
                     -- reportUnannotatedClassAttribute = false,
                     -- reportUninitializedInstanceVariable = false,
                     -- reportUnknownArgumentType = false,
@@ -71,8 +82,6 @@ return {
                     reportUnusedImport = false,
                     reportUnusedParameter = false,
                 },
-                -- exclude = { "crt" },
-                -- ignore = { ".venv" },
                 logLevel = "error",
                 typeCheckingMode = "basic",
                 useLibraryCodeForTypes = true,

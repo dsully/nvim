@@ -16,14 +16,15 @@ return {
     },
     {
         src = "https://codeberg.org/mraspaud/smellycat.nvim",
+        cond = false,
         ft = "python",
         opts = {
             debounce_ms = 500,
             max_concurrent_lsp_requests = 4,
             smells = {
-                arrow_code = { enabled = true, max_depth = 4 },
-                brain_method = { enabled = true, max_lines = 50, max_branches = 10 },
-                data_class = { enabled = true, min_non_dunder_methods = 1 },
+                arrow_code = { enabled = false, max_depth = 4 },
+                brain_method = { enabled = false, max_lines = 50, max_branches = 10 },
+                data_class = { enabled = false, min_non_dunder_methods = 1 },
                 data_clumps = { enabled = true, min_clump_size = 3, min_occurrences = 2 },
                 feature_envy = { enabled = true, external_call_ratio_threshold = 0.75 },
                 god_object = { enabled = true, max_methods = 20, max_references = 100 },
