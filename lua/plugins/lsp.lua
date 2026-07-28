@@ -31,6 +31,45 @@ return {
                 update_in_insert = false, -- https://www.reddit.com/r/neovim/comments/pfk209/nvimlsp_too_fast/
             } --[[@as vim.diagnostic.Opts]])
 
+            -- 0.12.4 predates neovim/neovim#40839. The underline handler defers
+            -- drawing until BufRead but never checks `lnum` against the buffer, so
+            -- a buffer that loads shorter than its cached diagnostics (snacks
+            -- pickers open files via `bufadd` + `:buffer`) throws E5108 out of
+            -- BufReadPost. That aborts the read, which leaves the buffer flagged
+            -- `[Read errors]` and makes a plain `:w` fail with E13. Upstream's own
+            -- cleanup can't cancel the pending autocmd, so filter before handing
+            -- off. Drop this once nvim ships the fix.
+            local underline = vim.diagnostic.handlers.underline
+            local show = assert(underline.show)
+
+            ---@param namespace integer
+            ---@param bufnr integer
+            ---@param diagnostics vim.Diagnostic[]
+            ---@param opts vim.diagnostic.OptsResolved
+            underline.show = function(namespace, bufnr, diagnostics, opts)
+                bufnr = bufnr == 0 and vim.api.nvim_get_current_buf() or bufnr
+
+                local function in_range()
+                    local last = vim.api.nvim_buf_line_count(bufnr) - 1
+
+                    return vim.tbl_filter(function(d)
+                        return d.lnum <= last
+                    end, diagnostics)
+                end
+
+                if vim.api.nvim_buf_is_loaded(bufnr) then
+                    return show(namespace, bufnr, in_range(), opts)
+                end
+
+                vim.api.nvim_create_autocmd(ev.BufReadPost, {
+                    buffer = bufnr,
+                    once = true,
+                    callback = function()
+                        show(namespace, bufnr, in_range(), opts)
+                    end,
+                })
+            end
+
             ---@type table<string, string[]|boolean>?
             local kind_filter = {
                 default = {
