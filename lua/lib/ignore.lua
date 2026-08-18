@@ -41,6 +41,28 @@ local function handle_python_lint(diagnostic, cursor_line, line)
         return false
     end
 
+    -- Ruff 0.16+ dropped the numeric code from LSP diagnostics and ships a ready
+    -- suppression edit (e.g. "# ruff: ignore[assert-raises-exception]"). Apply it
+    -- directly so the comment matches ruff's own placement and format.
+    local lsp = diagnostic.user_data and diagnostic.user_data.lsp
+    local data = lsp and type(lsp.data) == "table" and lsp.data or nil
+    local noqa_edit = data and data.noqa_edit or nil
+
+    if type(noqa_edit) == "table" then
+        local clients = vim.lsp.get_clients({ bufnr = 0, name = "ruff" })
+
+        if #clients == 0 then
+            clients = vim.lsp.get_clients({ bufnr = 0 })
+        end
+
+        local encoding = clients[1] and clients[1].offset_encoding or "utf-16"
+
+        vim.lsp.util.apply_text_edits({ noqa_edit }, vim.api.nvim_get_current_buf(), encoding)
+        vim.notify("Added: " .. (data.code or diagnostic.code), vim.log.levels.INFO)
+
+        return true
+    end
+
     return replace(cursor_line, 1, (line .. "  # noqa: " .. diagnostic.code), diagnostic.code)
 end
 
