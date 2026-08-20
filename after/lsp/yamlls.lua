@@ -33,7 +33,7 @@ return {
             require("schema-companion").adapters.yamlls.setup({
                 sources = {
                     require("schema-companion").sources.lsp.setup(),
-                    require("schema-companion").sources.schemas.setup(),
+                    require("schema-companion").sources.schemas.setup({}),
                 },
             }),
             config

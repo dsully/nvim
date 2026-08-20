@@ -311,6 +311,7 @@ return {
                 "ty",
                 "version-lsp",
                 "vimdoc-language-server",
+                "yamlls",
                 "zls",
             }
 
