@@ -307,7 +307,7 @@ return {
                 "systemd_lsp",
                 "tombi",
                 "ts_query_ls",
-                "tsgo",
+                "tsc",
                 "ty",
                 "version-lsp",
                 "vimdoc-language-server",
