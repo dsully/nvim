@@ -195,6 +195,14 @@ return {
                         layout = "vertical", ---@type "vertical"|"horizontal"|"buffer"
                     },
                 },
+                extensions = {
+                    fs_monitor = {
+                        enabled = true,
+                        opts = {
+                            keymap = "gD",
+                        },
+                    },
+                },
                 rules = {
                     opts = {
                         chat = { enabled = true },
@@ -273,5 +281,8 @@ return {
 
             return config
         end,
+    },
+    {
+        "bassamsdata/fs-monitor.nvim",
     },
 }
