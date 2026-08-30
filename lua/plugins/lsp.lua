@@ -240,6 +240,32 @@ return {
                         vim.lsp.semantic_tokens.enable(state)
                     end,
                 }):map("<space>tS")
+
+                -- From petertriho
+                --
+                -- Workaround for a Neovim bug in the built-in semantic-tokens engine:
+                -- STHighlighter's LspNotify autocmd routes every client's didOpen/didChange
+                -- to send_request()/reset(), but clients without semantic-token support
+                -- (e.g. harper_ls, typos_lsp) never get on_attach(), so client_state[id]
+                -- is nil and reset_timer() crashes ("attempt to index local 'state'").
+                -- No-op those calls for clients that don't participate in semantic tokens.
+                -- Upstream still unfixed as of nightly 4de7038; remove once patched.
+                local semantic_tokens = require("vim.lsp.semantic_tokens")
+                local semantic_highliter = semantic_tokens.__STHighlighter
+
+                if semantic_highliter then
+                    for _, method in ipairs({ "reset_timer", "reset" }) do
+                        local original = semantic_highliter[method]
+
+                        semantic_highliter[method] = function(self, client_id)
+                            if not self.client_state[client_id] then
+                                return
+                            end
+
+                            return original(self, client_id)
+                        end
+                    end
+                end
             end)
 
             nvim.lsp.on_supports_method("textDocument/codeLens", function()
