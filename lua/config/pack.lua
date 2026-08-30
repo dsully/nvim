@@ -1,10 +1,9 @@
 do
     require("lib.pack")
-    local progress = require("lib.pack.progress")
 
     -- Out-of-tree config layer managed by Nix/home-manager at ~/.config/nix/nvim.
     -- It's a local, non-git tree, so it can't go through vim.pack/zpack; wire it into the runtimepath manually.
-    local nix = vim.fs.joinpath(nvim.file.xdg_config(), "nix", "nvim")
+    local nix = nvim.file.xdg_config(vim.fs.joinpath("nix", "nvim"))
 
     if vim.uv.fs_stat(nix) then
         vim.opt.runtimepath:prepend(nix)
@@ -24,11 +23,7 @@ do
         end
     end
 
-    progress.setup()
-
-    progress.with_pack_progress(function()
-        progress.report_missing_lock_packs()
-
+    do
         vim.pack.add({ "https://github.com/zuqini/zpack.nvim" }, { confirm = false })
 
         -- Disable built-in plugins (was in lazy.nvim performance.rtp.disabled_plugins)
@@ -87,5 +82,5 @@ do
             },
             spec = spec,
         })
-    end)
+    end
 end

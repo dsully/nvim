@@ -65,6 +65,7 @@ function M.open(opts)
 
     vim.wo[state.winid].cursorline = true
     vim.wo[state.winid].wrap = false
+    vim.wo[state.winid].winhighlight = "CursorLine:PackFloatCursorLine"
 
     plugins.reset_data()
     plugins.load_fast_plugin_list()

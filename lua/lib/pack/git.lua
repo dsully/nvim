@@ -109,6 +109,31 @@ local function resolve_target(plugin)
     return nil
 end
 
+-- Re-read local state for the named plugins only. A full `vim.pack.get` never
+-- reports `rev_to`, so rebuilding every plugin would drop the remaining pending
+-- updates from the view until the next fetch.
+---@param names string[]
+local function refresh_names(names)
+    for _, name in ipairs(names) do
+        state.commits[name] = nil
+
+        local ok, plugin_data = pcall(vim.pack.get, { name }, { offline = true } --[[@as vim.pack.keyset.get]])
+
+        if ok and plugin_data[1] then
+            local fresh = plugin_data[1] --[[@as PackInterfacePlugin]]
+            fresh.rev_to = resolve_target(fresh)
+            plugins.replace_plugin(fresh)
+
+            if plugins.is_pending(fresh) then
+                load_commits(fresh, state.check_id)
+            end
+        end
+    end
+
+    state.status = "ready"
+    render.render()
+end
+
 local function refresh_fetch_async()
     if state.checking then
         return
@@ -187,6 +212,12 @@ function M.refresh(fetch)
     else
         refresh_local()
     end
+end
+
+---Re-read local state for the named plugins, leaving the other plugins untouched.
+---@param names string[]
+function M.refresh_names(names)
+    refresh_names(names)
 end
 
 return M

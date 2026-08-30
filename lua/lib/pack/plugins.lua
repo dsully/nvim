@@ -54,6 +54,28 @@ function M.replace_plugin(plugin)
     M.set_plugins(state.plugins)
 end
 
+---Drop the named plugins from the view after `vim.pack.del` removes them.
+---@param names string[]
+function M.remove_plugins(names)
+    local removed = {}
+
+    for _, name in ipairs(names) do
+        removed[name] = true
+        state.commits[name] = nil
+        state.expanded[name] = nil
+    end
+
+    local kept = {}
+
+    for _, plugin in ipairs(state.plugins) do
+        if not removed[plugin.spec.name] then
+            kept[#kept + 1] = plugin
+        end
+    end
+
+    M.set_plugins(kept)
+end
+
 function M.reset_data()
     state.plugins = {}
     state.pending = {}

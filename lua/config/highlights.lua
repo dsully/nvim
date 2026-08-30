@@ -358,6 +358,8 @@ M.ui = {
         PackFloatMuted = { link = "Comment" },
         PackFloatKey = { link = "Function" },
 
+        PackFloatCursorLine = { link = "Visual" },
+
         -- Conventional-commit log highlighting
         PackFloatCommit = { link = "@variable.builtin" },
         PackFloatCommitType = { link = "Title" },

@@ -77,7 +77,7 @@ local function update_plugins(names)
             return
         end
 
-        git.refresh(false)
+        git.refresh_names(names)
     end)
 end
 
@@ -128,7 +128,8 @@ function M.delete_current()
         return
     end
 
-    git.refresh(false)
+    plugins.remove_plugins({ name })
+    render.render()
 end
 
 -- Remove every inactive plugin from disk: those on disk but not added via
@@ -160,7 +161,8 @@ function M.clean()
         return
     end
 
-    git.refresh(false)
+    plugins.remove_plugins(names)
+    render.render()
 end
 
 ---@param direction integer Positive to jump to the next plugin, negative for previous.
