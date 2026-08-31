@@ -1,5 +1,6 @@
 local M = {}
 
+---@param event vim.api.keyset.create_autocmd.callback_args
 function M.popup(event)
     --
     local filetype = vim.bo[event.buf].filetype
@@ -7,7 +8,7 @@ function M.popup(event)
 
     if file_path:match("/doc/") ~= nil then
         --
-        if filetype == "help" or filetype == "markdown" then
+        if vim.tbl_contains({ "help", "markdown" }, filetype) then
             local help_win = vim.api.nvim_get_current_win()
             local lines = vim.api.nvim_buf_get_lines(event.buf, 0, -1, false)
 

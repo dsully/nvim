@@ -277,7 +277,9 @@ return {
                     ---@param item blink.cmp.CompletionItem
                     return vim.tbl_filter(function(item)
                         --
-                        if item.kind == types.Text or item.kind == types.Snippet or item.deprecated == true then
+                        local is_deprecated = item.tags == true or vim.tbl_contains(item.tags or {}, 1)
+
+                        if item.kind == types.Text or item.kind == types.Snippet or is_deprecated then
                             return false
                         end
 

@@ -201,11 +201,9 @@ end
 ---@param highlights table<string, HLSpec>
 function M.apply(highlights)
     --
-    ---@param name string
-    ---@param opts HLSpec
-    vim.iter(highlights):each(function(name, opts)
+    for name, opts in pairs(highlights) do
         vim.api.nvim_set_hl(0, name, opts --[[@as vim.api.keyset.highlight]])
-    end)
+    end
 end
 
 return M

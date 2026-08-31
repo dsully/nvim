@@ -44,7 +44,7 @@ function M.detectors.lsp(buf)
 
     clients = vim.tbl_filter(function(client)
         return not vim.tbl_contains(defaults.ignored.lsp, client.name)
-    end, clients)
+    end, clients) --[[@as vim.lsp.Client[] ]]
 
     for _, client in pairs(clients) do
         local workspace = client.config.workspace_folders

@@ -486,7 +486,8 @@ function M.with(f, cfg)
     --
     ---@param c table
     return function(c)
-        return f(vim.tbl_deep_extend("force", cfg, c or {}))
+        local merged = vim.tbl_deep_extend("force", cfg, c or {}) --[[@as table]]
+        return f(merged)
     end
 end
 
@@ -535,7 +536,13 @@ function M.info()
         local buffer_ids = vim.tbl_keys(c.attached_buffers)
         table.sort(buffer_ids)
 
-        local buffers = vim.iter(buffer_ids):map(tostring):join(", ")
+        local buffer_names = {}
+
+        for i, id in ipairs(buffer_ids) do
+            buffer_names[i] = tostring(id)
+        end
+
+        local buffers = table.concat(buffer_names, ", ")
 
         vim.list_extend(lines, {
             "",

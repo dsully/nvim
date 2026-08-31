@@ -9,8 +9,8 @@ vim.cmd.highlight("clear")
 
 local highlights = require("config.highlights")
 
-vim.iter(vim.tbl_extend("force", highlights.ui, highlights.languages, highlights.plugins)):each(function(_, group)
-    vim.iter(group):each(function(name, highlight)
+for _, group in pairs(vim.tbl_extend("force", highlights.ui, highlights.languages, highlights.plugins)) do
+    for name, highlight in pairs(group) do
         vim.api.nvim_set_hl(0, name, highlight)
-    end)
-end)
+    end
+end

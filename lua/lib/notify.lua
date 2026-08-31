@@ -17,16 +17,17 @@ local function attach()
         if event == "msg_history_show" then
             local msgs = ...
 
-            local out = vim.iter(msgs)
-                :map(function(entry)
-                    return vim.iter(entry[2])
-                        :map(function(msg)
-                            return msg[2]
-                        end)
-                        :totable()
-                end)
-                :map(table.concat)
-                :totable()
+            local out = {}
+
+            for _, entry in ipairs(msgs) do
+                local parts = {}
+
+                for _, msg in ipairs(entry[2]) do
+                    parts[#parts + 1] = msg[2]
+                end
+
+                out[#out + 1] = table.concat(parts)
+            end
 
             vim.notify(table.concat(out, "\n\n"), nil, {
                 title = ":messages",

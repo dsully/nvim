@@ -22,7 +22,13 @@ check *args=".":
         exit 1
     end
 
-    VIMRUNTIME=$runtime_dir emmylua_check --config ./.emmyrc.json {{ args }}
+    # plenary.nvim/lua/plenary/busted.lua globally redefines `assert` as
+    # Luassert, which is not fixed by our own workspace/library ignore config:
+    # emmylua_check's --config flag canonicalizes the (Nix-store-symlinked)
+    # config file and takes its *parent* as the config root, so relative
+    # excludes resolve against /nix/store instead of this project. Passing
+    # --ignore here avoids that path entirely.
+    VIMRUNTIME=$runtime_dir emmylua_check --ignore "**/plenary/busted.lua" {{ args }}
 
 format:
     @stylua **/*.lua

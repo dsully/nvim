@@ -287,7 +287,7 @@ function M.on(event, callback, opts)
     end
 
     if type(callback) == "table" then
-        autocmd_opts = vim.deepcopy(callback, true)
+        autocmd_opts = vim.deepcopy(callback --[[@as EventOpts]], true) --[[@as EventOpts]]
         autocmd_callback = autocmd_opts.callback --[[@as EventCallback?]]
         autocmd_opts.callback = nil
     end

@@ -733,7 +733,7 @@ do
 
             completions = vim.tbl_filter(function(type)
                 return type:find(arg_part) == 1
-            end, completions)
+            end, completions) --[[@as string[] ]]
 
             if #completions == 1 and completions[1] == arg_part then
                 history_part = history_part .. arg_part .. "+"

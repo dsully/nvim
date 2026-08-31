@@ -58,7 +58,8 @@ end
 ---@param buffer integer?
 ---@param opts vim.keymap.set.Opts?
 function M.vmap(lhs, rhs, desc, buffer, opts)
-    --
+    local merged_opts = vim.tbl_deep_extend("force", opts or {}, { buffer = buffer or true }) --[[@as table]]
+
     M.safe_set(
         lhs,
         rhs,
@@ -67,7 +68,7 @@ function M.vmap(lhs, rhs, desc, buffer, opts)
             desc = desc or "Undocumented",
             noremap = true,
             silent = true,
-        }, vim.tbl_deep_extend("force", opts or {}, { buffer = buffer or true }))
+        }, merged_opts) --[[@as vim.keymap.set.Opts]]
     )
 end
 

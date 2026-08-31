@@ -58,7 +58,7 @@ local function handle_python_lint(diagnostic, cursor_line, line)
         local encoding = clients[1] and clients[1].offset_encoding or "utf-16"
 
         vim.lsp.util.apply_text_edits({ noqa_edit }, vim.api.nvim_get_current_buf(), encoding)
-        vim.notify("Added: " .. (data.code or diagnostic.code), vim.log.levels.INFO)
+        vim.notify("Added: " .. ((data and data.code) or diagnostic.code), vim.log.levels.INFO)
 
         return true
     end

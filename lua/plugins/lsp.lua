@@ -42,10 +42,6 @@ return {
             local underline = vim.diagnostic.handlers.underline
             local show = assert(underline.show)
 
-            ---@param namespace integer
-            ---@param bufnr integer
-            ---@param diagnostics vim.Diagnostic[]
-            ---@param opts vim.diagnostic.OptsResolved
             underline.show = function(namespace, bufnr, diagnostics, opts)
                 bufnr = bufnr == 0 and vim.api.nvim_get_current_buf() or bufnr
 
@@ -58,7 +54,8 @@ return {
                 end
 
                 if vim.api.nvim_buf_is_loaded(bufnr) then
-                    return show(namespace, bufnr, in_range(), opts)
+                    show(namespace, bufnr, in_range(), opts)
+                    return
                 end
 
                 vim.api.nvim_create_autocmd(ev.BufReadPost, {
@@ -255,6 +252,7 @@ return {
 
                 if semantic_highliter then
                     for _, method in ipairs({ "reset_timer", "reset" }) do
+                        ---@type fun(self: any, client_id: integer)
                         local original = semantic_highliter[method]
 
                         semantic_highliter[method] = function(self, client_id)
@@ -341,7 +339,7 @@ return {
                 "zls",
             }
 
-            vim.iter(configured):each(vim.schedule_wrap(function(server_name)
+            local enable_server = vim.schedule_wrap(function(server_name)
                 local config = vim.lsp.config[server_name] or {}
 
                 if type(config.override) == "function" then
@@ -355,7 +353,11 @@ return {
                 end
 
                 vim.lsp.enable(server_name)
-            end))
+            end)
+
+            for _, server_name in ipairs(configured) do
+                enable_server(server_name)
+            end
         end,
     },
     {
