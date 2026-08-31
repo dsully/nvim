@@ -164,7 +164,7 @@ return {
                 end
 
                 -- Filter out file watchers with non-file URI schemes (e.g. bundled:///)
-                -- that Neovim's glob parser cannot handle. ts_go has this proble.
+                -- that Neovim's glob parser cannot handle. ts_go has this problem.
                 for _, reg in ipairs(res.registrations) do
                     local method = reg.method
                     local options = reg.registerOptions
