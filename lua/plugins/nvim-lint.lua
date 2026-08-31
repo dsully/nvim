@@ -13,19 +13,10 @@ return {
             lint.linters_by_ft = {
                 css = { "stylelint" },
                 fish = { "fish" },
-                gitcommit = { "commitlint" },
-                github = { "actionlint" },
                 go = { "revive" },
-                -- markdown = { "write_good" },
                 nix = { "deadnix", "statix" },
-                rst = { "rstcheck", "sphinx-lint" },
-                -- text = { "write_good" },
                 yaml = { "yamllint" },
             }
-
-            if vim.fn.has("linux") == 1 then
-                lint.linters_by_ft["systemd"] = { "systemd-analyze" }
-            end
 
             -- Set up a linting toggle.
             vim.g.linting = nvim.file.is_local_dev()

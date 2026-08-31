@@ -303,7 +303,6 @@ return {
 
             local configured = {
                 "bashls",
-                "basedpyright",
                 "clangd",
                 -- "codebook",
                 "crates-lsp",
@@ -315,8 +314,6 @@ return {
                 "jinja_lsp",
                 "jsonls",
                 "just-lsp",
-                -- "lemminx",
-                -- "markdown-lsp",
                 "pyrefly",
                 "pytest-language-server",
                 "rumdl",
@@ -328,7 +325,6 @@ return {
                 "ruff",
                 "sourcekit",
                 "superhtml",
-                "systemd_lsp",
                 "tombi",
                 "ts_query_ls",
                 "tsc",
