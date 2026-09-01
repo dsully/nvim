@@ -133,7 +133,7 @@ return {
                         -- When "Noice pick" doesn't have any entries.
                         { find = "No message found for entry" },
 
-                        -- When I'm offline, and Copilot wants to connect.
+                        -- When I'm offline, and a plugin wants to connect.
                         { find = "getaddrinfo", event = "msg_show" },
 
                         -- Ignore deprecated messages from plugins.

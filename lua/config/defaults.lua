@@ -31,7 +31,6 @@ local M = {
     ai = {
         sources = {
             "codecompanion",
-            "copilot",
         },
     },
 
