@@ -11,6 +11,15 @@ return {
                 return -- silence error notifications from ty
             end
         end,
+        -- ty exposes no server-side severity filter, so drop "info" diagnostics client-side.
+        ["textDocument/diagnostic"] = function(err, result, ctx)
+            if result and result.items then
+                result.items = vim.tbl_filter(function(diagnostic)
+                    return diagnostic.severity ~= vim.lsp.protocol.DiagnosticSeverity.Information
+                end, result.items)
+            end
+            return vim.lsp.diagnostic.on_diagnostic(err, result, ctx)
+        end,
     },
     ---@param client vim.lsp.Client
     on_attach = function(client)

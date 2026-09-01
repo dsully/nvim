@@ -105,7 +105,7 @@ vim.cmd.colorscheme(vim.g.colorscheme)
 ---@type table<string, boolean>?
 vim.g.noice = {
     cmdline = true,
-    hover = false,
+    hover = true,
     messages = true,
     notify = false,
     popupmenu = false,

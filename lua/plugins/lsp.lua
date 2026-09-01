@@ -333,6 +333,7 @@ return {
                 "vimdoc-language-server",
                 "yamlls",
                 "zls",
+                "zuban"
             }
 
             local enable_server = vim.schedule_wrap(function(server_name)
@@ -385,7 +386,11 @@ return {
                             enabled = true, -- enabled by default with caching optimization
                             cache_max_files = 50, -- maximum number of files to cache blame data for (default: 50)
                         },
-                        -- additional built-in or custom providers can be added here
+                        {
+                            name = "complexity",
+                            enabled = true,
+                            min_level = "L", -- only show L and XL complexity (default)
+                        },
                     },
                     style = {
                         separator = " • ", -- separator between all lens attributes
