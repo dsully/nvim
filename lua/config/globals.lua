@@ -33,7 +33,7 @@ end
 -- Set up vim.notify to use snacks notifier, falling back to the builtin while
 -- snacks is not yet loaded (e.g. during early plugin installation at startup).
 -- @param msg: string,
--- @paraam level: (snacks.notifier.level|number)?
+-- @param level: (snacks.notifier.level|number)?
 -- @param opts: snacks.notifier.Notif.opts?
 local builtin_notify = vim.notify
 
