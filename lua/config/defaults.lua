@@ -246,6 +246,7 @@ local M = {
             "checkhealth",
             "crates.nvim",
             "git",
+            "gitcommit",
             "gitrebase",
             "health",
             "help",
