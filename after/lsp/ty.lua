@@ -21,6 +21,11 @@ return {
             return vim.lsp.diagnostic.on_diagnostic(err, result, ctx)
         end,
     },
+    init_options = {
+        experimental = {
+            useUv = "scripts",
+        },
+    },
     ---@param client vim.lsp.Client
     on_attach = function(client)
         if client.server_capabilities then
