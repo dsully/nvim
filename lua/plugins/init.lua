@@ -52,7 +52,7 @@ return {
         },
     },
     {
-        "mistweaverco/snap.nvim",
+        "dont-be-evil-company/snap.nvim",
         cmd = "Snap",
         enabled = function()
             return vim.env.HOSTNAME ~= "zap"
