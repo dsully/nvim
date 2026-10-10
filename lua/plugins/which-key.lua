@@ -187,7 +187,7 @@ return {
             {
                 "<space>sf",
                 function()
-                    require("lua.lib.treesort")
+                    require("lib.treesort")
                     vim.cmd.TSort("@function.outer")
                 end,
                 desc = "Sort Functions",
