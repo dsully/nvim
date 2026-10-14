@@ -8,6 +8,9 @@ return {
         resession.setup(opts)
 
         resession.add_hook("post_load", function()
+            -- Loading closes ui2's windows; reopen them now, since resession's final `:edit` can make ui2 reopen them mid buffer-unload (E1159).
+            require("vim._core.ui2").check_targets()
+
             --
             -- Loop over all available buffer and attach to `help` buffers
             for _, buf in ipairs(vim.api.nvim_list_bufs()) do
