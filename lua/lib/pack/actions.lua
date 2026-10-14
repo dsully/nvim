@@ -117,10 +117,6 @@ function M.delete_current()
         return
     end
 
-    if vim.fn.confirm(("Remove plugin %q from disk?"):format(name), "&Yes\n&No", 2) ~= 1 then
-        return
-    end
-
     local ok, err = pcall(vim.pack.del, { name }, { force = true })
 
     if not ok then
@@ -143,14 +139,6 @@ function M.clean()
 
     if #names == 0 then
         vim.notify("vim.pack: no unused plugins", vim.log.levels.INFO)
-        return
-    end
-
-    table.sort(names)
-
-    local prompt = ("Remove %d unused plugin(s)?\n%s"):format(#names, table.concat(names, "\n"))
-
-    if vim.fn.confirm(prompt, "&Yes\n&No", 2) ~= 1 then
         return
     end
 
