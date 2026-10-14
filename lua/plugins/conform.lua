@@ -49,6 +49,7 @@ return {
                 -- markdown = function(bufnr)
                 --     return { require("lib.formatting").first(bufnr, "prettierd", "prettier"), "injected" }
                 -- end,
+                typescript = { "oxfmt" },
                 pyproject = { "pyproject-fmt" },
                 python = { "ruff_organize_imports", "ruff_format", "ruff_fix" },
                 sh = { "shellharden", "shfmt" },
