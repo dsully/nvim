@@ -77,9 +77,4 @@ return {
             "python",
         },
     },
-    {
-        "folke/ts-comments.nvim",
-        event = ev.LazyFile,
-        opts = {},
-    },
 }

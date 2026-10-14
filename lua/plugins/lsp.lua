@@ -303,7 +303,7 @@ return {
 
             local configured = {
                 "bashls",
-                "clangd",
+                -- "clangd",
                 -- "codebook",
                 "crates-lsp",
                 "dockerls",
@@ -334,7 +334,7 @@ return {
                 "vimdoc-language-server",
                 "yamlls",
                 "zls",
-                "zuban"
+                "zuban",
             }
 
             local enable_server = vim.schedule_wrap(function(server_name)
