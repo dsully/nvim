@@ -24,9 +24,14 @@
 
 ------@field group string|MiniHipatterns.GroupFunction Name of highlight group to use. Can be string or callable returning string
 
----@type zpack.Spec[]
-return {
-    { "nvim-mini/mini.nvim" },
+---@class MiniModuleSpec
+---@field [1] string Module name inside mini.nvim
+---@field opts? table|fun(): table
+---@field config? fun(_: nil, opts: table)
+---@field event? string[] Defer setup until the first of these events
+
+---@type MiniModuleSpec[]
+local modules = {
     {
         -- Better Around/Inside text-objects
         --
@@ -36,8 +41,7 @@ return {
         --  - ci'  - Change Inside [']quote
         --
         -- https://www.reddit.com/r/neovim/comments/10qmicv/help_understanding_miniai_custom_textobjects/
-        "nvim-mini/mini.ai",
-        -- cond = false,
+        "mini.ai",
         config = function(_, opts)
             --
             vim.schedule(function()
@@ -131,11 +135,8 @@ return {
         event = ev.LazyFile,
     },
     {
-        "nvim-mini/mini.align",
-        keys = {
-            { "g=", desc = "mini.align: align", mode = { "n", "v" } },
-            { "g+", desc = "mini.align: align with preview", mode = { "n", "" } },
-        },
+        "mini.align",
+        event = ev.LazyFile,
         opts = {
             mappings = {
                 start = "g=",
@@ -145,15 +146,8 @@ return {
     },
     {
         -- Use [ and ] to move between various things.
-        "nvim-mini/mini.bracketed",
-        keys = {
-            { "[c", desc = "comment previous " },
-            { "]c", desc = "comment next" },
-            { "[w", desc = "window previous" },
-            { "]w", desc = "window next" },
-            { "[x", desc = "conflict marker previous" },
-            { "]x", desc = "conflict marker next" },
-        },
+        "mini.bracketed",
+        event = ev.LazyFile,
         opts = {
             buffer = { suffix = "" },
             file = { suffix = "" },
@@ -169,7 +163,7 @@ return {
         },
     },
     {
-        "nvim-mini/mini.hipatterns",
+        "mini.hipatterns",
         event = ev.LazyFile,
         opts = function()
             local vtext = defaults.icons.misc.circle_filled_large
@@ -262,9 +256,9 @@ return {
                 extmark_opts = extmark_vtext,
             }
 
-            local highlighters = {
+            local highlighters = vim.tbl_extend("error", require("lib.todo").highlighters(), {
                 nvim_hl_colors = nvim_hl_colors,
-            }
+            })
 
             if not vim.g.lsp_color then
                 highlighters.hex = hex
@@ -278,13 +272,7 @@ return {
         end,
     },
     {
-        "nvim-mini/mini.icons",
-        init = function()
-            package.preload["nvim-web-devicons"] = function()
-                require("mini.icons").mock_nvim_web_devicons()
-                return package.loaded["nvim-web-devicons"]
-            end
-        end,
+        "mini.icons",
         config = function()
             -- Defer setup: mini.icons calls vim.filetype.match() on a scratch
             -- buffer during cache init, which crashes during early startup.
@@ -345,7 +333,6 @@ return {
                 })
             end)
         end,
-        lazy = false,
     },
     {
         -- Add/delete/replace surroundings (brackets, quotes, etc.)
@@ -357,30 +344,22 @@ return {
         -- sh}   - Surround Highlight [}]
         --
         -- vim.keymap.set({ "n", "v" }, "s", "<Nop>")
-        "nvim-mini/mini.surround",
+        "mini.surround",
+        event = ev.LazyFile,
         -- stylua: ignore
-        init = function()
+        config = function(_, opts)
+            require("mini.surround").setup(opts)
 
-            ev.on_load("mini.surround", function()
-                keys.vmap('"', function() keys.feed('ma"', "t") end, "Surround Add Double Quote")
-                keys.vmap("[", function() keys.feed("ma[<left>", "t") vim.schedule(function() keys.feed("%", "m") end) end, "Surround Add Square Bracket")
-                keys.vmap("{", function() keys.feed("ma{<left>", "t") vim.schedule(function() keys.feed("%", "m") end) end, "Surround Add Curly Bracket")
-                keys.vmap("(", function() keys.feed("ma(<left>", "t") vim.schedule(function() keys.feed("%", "m") end) end, "Surround Add Parenthesis")
-                keys.vmap("`", function() keys.feed("ma`", "t") end, "Surround Add Backtick")
+            keys.vmap('"', function() keys.feed('ma"', "t") end, "Surround Add Double Quote")
+            keys.vmap("[", function() keys.feed("ma[<left>", "t") vim.schedule(function() keys.feed("%", "m") end) end, "Surround Add Square Bracket")
+            keys.vmap("{", function() keys.feed("ma{<left>", "t") vim.schedule(function() keys.feed("%", "m") end) end, "Surround Add Curly Bracket")
+            keys.vmap("(", function() keys.feed("ma(<left>", "t") vim.schedule(function() keys.feed("%", "m") end) end, "Surround Add Parenthesis")
+            keys.vmap("`", function() keys.feed("ma`", "t") end, "Surround Add Backtick")
 
-                -- vim.defer_fn(function() keys.xmap("<", function() keys.feed("ma<", "t") end, "Surround Add Angle Bracket") end, 2000)
+            -- vim.defer_fn(function() keys.xmap("<", function() keys.feed("ma<", "t") end, "Surround Add Angle Bracket") end, 2000)
 
-                keys.map("of", function() keys.feed("<esc>m6", "n") keys.feed("daf", "m") keys.feed("`6", "n") end, "Surround Delete Function Call", "o")
-            end)
+            keys.map("of", function() keys.feed("<esc>m6", "n") keys.feed("daf", "m") keys.feed("`6", "n") end, "Surround Delete Function Call", "o")
         end,
-        keys = {
-            { "<leader>sa", desc = "Add surrounding", mode = { "n", "v" } },
-            { "<leader>sd", desc = "Delete surrounding" },
-            { "<leader>sf", desc = "Find right surrounding" },
-            { "<leader>sF", desc = "Find left surrounding" },
-            { "<leader>sr", desc = "Replace surrounding" },
-            { "<leader>sn", desc = "Update `MiniSurround.config.n_lines`" },
-        },
         opts = {
             custom_surroundings = {
                 -- ["("] = { input = { "%b()", "^.().*().$" }, output = { left = "(", right = ")" } },
@@ -404,7 +383,7 @@ return {
         },
     },
     {
-        "nvim-mini/mini.statusline",
+        "mini.statusline",
         opts = {
             use_icons = true,
             content = {
@@ -441,6 +420,49 @@ return {
                 set_vim_settings = true,
             },
         },
-        lazy = false,
     },
+}
+
+---@param spec MiniModuleSpec
+local function setup(spec)
+    local opts = spec.opts or {}
+
+    if type(opts) == "function" then
+        opts = opts()
+    end
+
+    if spec.config then
+        spec.config(nil, opts)
+    else
+        require(spec[1]).setup(opts)
+    end
+end
+
+---@type zpack.Spec
+return {
+    "nvim-mini/mini.nvim",
+    init = function()
+        package.preload["nvim-web-devicons"] = function()
+            require("mini.icons").mock_nvim_web_devicons()
+            return package.loaded["nvim-web-devicons"]
+        end
+    end,
+    config = function()
+        for _, spec in ipairs(modules) do
+            if spec.event then
+                local done = false
+
+                -- `once` is per event, so guard against a second event firing.
+                ev.on(spec.event, function()
+                    if not done then
+                        done = true
+                        setup(spec)
+                    end
+                end, { once = true })
+            else
+                setup(spec)
+            end
+        end
+    end,
+    lazy = false,
 }
