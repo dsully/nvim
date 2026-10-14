@@ -122,6 +122,20 @@ return {
                 end,
                 desc = "Previous paragraph (keepjumps)",
             },
+            {
+                "]t",
+                function()
+                    require("lib.todo").jump()
+                end,
+                desc = "Next todo comment",
+            },
+            {
+                "[t",
+                function()
+                    require("lib.todo").jump(true)
+                end,
+                desc = "Previous todo comment",
+            },
 
             -- Yank mappings
             { "Y", "y$", desc = "Yank to clipboard", mode = { "n", "v" } },

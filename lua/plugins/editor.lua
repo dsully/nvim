@@ -54,37 +54,6 @@ return {
         },
     },
     {
-        "folke/todo-comments.nvim",
-        event = ev.LazyFile,
-        keys = {
-            -- stylua: ignore start
-            { "]t", function() require("todo-comments").jump_next() end, desc = "Next todo comment" },
-            { "[t", function() require("todo-comments").jump_prev() end, desc = "Previous todo comment" },
-
-            { "<leader>ft", function() Snacks.picker.todo_comments() end, desc = "TODOs" },
-            { "<leader>fT", function() Snacks.picker.todo_comments({ keywords = { "TODO", "FIX", "FIXME" } }) end, desc = "Todo/Fix/Fixme" },
-            -- stylua: ignore end
-        },
-        opts = {
-            highlight = {
-                -- https://github.com/folke/todo-comments.nvim/pull/199
-                keyword = "bg",
-                pattern = [[.{-}<(\s?(KEYWORDS):)]],
-                -- pattern = [[(KEYWORDS)\s*(\([^\)]*\))?:]],
-            },
-            keywords = {
-                BUG = { icon = "🐛", color = "error", alt = { "BROKEN", "FIXME", "ISSUE" } },
-                HACK = { icon = "🔥", color = "warning" },
-                IDEA = { icon = "💡", color = "test" },
-                NOTE = { icon = "ℹ️", color = "hint", alt = { "INFO" } },
-                TEST = { icon = "🧪", color = "test", alt = { "EXPERIMENT", "TESTING" } },
-                TODO = { icon = "✅", color = "info" },
-                WARN = { icon = "⚠️", color = "warning", alt = { "WARNING", "XXX" } },
-                NB = { icon = "󰴄 ", color = "info" },
-            },
-        },
-    },
-    {
         "folke/trouble.nvim",
         cmd = { "Trouble" },
         keys = {

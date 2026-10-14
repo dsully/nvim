@@ -22,6 +22,8 @@ return {
         { "<leader>fo", function() Snacks.picker.recent({ filter = { cwd = true }}) end, desc = "Recently Opened" },
         { "<leader>fq", function() Snacks.picker.qflist() end, desc = "Quickfix List" },
         { "<leader>fs", function() Snacks.picker.lsp_workspace_symbols() end, desc = "Symbols" },
+        { "<leader>ft", function() require("lib.todo").pick() end, desc = "TODOs" },
+        { "<leader>fT", function() require("lib.todo").pick({ "TODO", "FIX", "FIXME" }) end, desc = "Todo/Fix/Fixme" },
         { "<leader>fu", function() Snacks.picker.undo() end, desc = "Undo Tree" },
         { "<leader>fw", function() Snacks.picker.grep_word() end, desc = "Words" },
         { "z=", function() Snacks.picker.spelling() end, desc = "Spelling" },

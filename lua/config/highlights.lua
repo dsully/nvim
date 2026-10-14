@@ -859,6 +859,14 @@ M.plugins = {
         SnacksPickerTotals = { bg = colors.black.dim },
     },
 
+    todo = {
+        TodoError = { fg = colors.black.base, bg = colors.red.base, bold = true },
+        TodoHint = { fg = colors.black.base, bg = colors.blue.bright, bold = true },
+        TodoInfo = { fg = colors.black.base, bg = colors.blue.base, bold = true },
+        TodoTest = { fg = colors.black.base, bg = colors.magenta.base, bold = true },
+        TodoWarn = { fg = colors.black.base, bg = colors.yellow.base, bold = true },
+    },
+
     which_key = {
         WhichKey = { link = "Identifier" },
         WhichKeyBorder = { default = true, link = "FloatBorder" },
