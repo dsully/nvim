@@ -33,14 +33,6 @@ return {
         opts = {},
     },
 
-    {
-        "dsully/ignore.nvim",
-        keys = {
-            -- stylua: ignore
-            { "<leader>di", function() require("lib.ignore").ignore() end },
-        },
-    },
-
     -- Better vim help.
     {
         "OXY2DEV/helpview.nvim",

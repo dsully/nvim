@@ -135,6 +135,13 @@ return {
 
             -- Leader mappings
             { "<leader>Y", "<cmd>%y<cr>", desc = "Yank All Lines" },
+            {
+                "<leader>di",
+                function()
+                    require("lib.ignore").ignore()
+                end,
+                desc = "Ignore diagnostic",
+            },
 
             -- Control mappings
             { "<C-a>", "gg<S-v>G", desc = "Select All" },
