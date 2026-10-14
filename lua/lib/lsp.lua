@@ -491,6 +491,45 @@ function M.with(f, cfg)
     end
 end
 
+---Apply the text edits of the inlay hint nearest the cursor on the current line.
+---Requests hints directly, so it works while inlay hint display is disabled.
+function M.fill_inlay_hint()
+    local buf = vim.api.nvim_get_current_buf()
+    local row, col = unpack(vim.api.nvim_win_get_cursor(0))
+    local line = vim.api.nvim_get_current_line()
+    local params = {
+        textDocument = vim.lsp.util.make_text_document_params(buf),
+        range = { start = { line = row - 1, character = 0 }, ["end"] = { line = row, character = 0 } },
+    }
+
+    ---@param results table<integer, { err: lsp.ResponseError?, result: lsp.InlayHint[]? }>
+    vim.lsp.buf_request_all(buf, "textDocument/inlayHint", params, function(results)
+        ---@type { edits: lsp.TextEdit[], encoding: "utf-8"|"utf-16"|"utf-32", distance: integer }?
+        local best
+
+        for client_id, response in pairs(results) do
+            local client = vim.lsp.get_client_by_id(client_id)
+
+            for _, hint in ipairs(client and response.result or {}) do
+                if client and hint.textEdits and hint.position.line == row - 1 then
+                    local distance = math.abs(vim.str_byteindex(line, client.offset_encoding, hint.position.character, false) - col)
+
+                    if not best or distance < best.distance then
+                        best = { edits = hint.textEdits, encoding = client.offset_encoding, distance = distance }
+                    end
+                end
+            end
+        end
+
+        if not best then
+            vim.notify("No insertable inlay hint on this line", vim.log.levels.WARN)
+            return
+        end
+
+        vim.lsp.util.apply_text_edits(best.edits, buf, best.encoding)
+    end)
+end
+
 function M.info()
     ---@param client vim.lsp.Client
     ---@param config vim.lsp.Config

@@ -52,3 +52,5 @@ vim.b.miniai_config = {
         t = require("mini.ai").gen_spec.treesitter({ a = "@annotation.outer", i = "@annotation.outer" }),
     },
 }
+
+keys.bmap("<leader>ci", nvim.lsp.fill_inlay_hint, "Insert inlay hint under cursor")
