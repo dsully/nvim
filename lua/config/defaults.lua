@@ -238,7 +238,6 @@ local M = {
             "nofile",
             "quickfix",
             "terminal",
-            "trouble",
         },
         file_types = {
             "",
@@ -260,7 +259,6 @@ local M = {
             "snacks_notif",
             "snacks_picker_input",
             "snacks_win",
-            "trouble",
             "vim",
         },
         lsp = {

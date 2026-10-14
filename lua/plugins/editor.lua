@@ -54,25 +54,6 @@ return {
         },
     },
     {
-        "folke/trouble.nvim",
-        cmd = { "Trouble" },
-        keys = {
-            -- stylua: ignore
-            { "<leader>xx", function() require("trouble").toggle("diagnostics") end, desc = "Trouble" },
-        },
-        opts = {
-            auto_preview = false,
-            focus = true,
-            modes = {
-                lsp_references = {
-                    params = {
-                        include_declaration = false,
-                    },
-                },
-            },
-        },
-    },
-    {
         "monaqa/dial.nvim",
         config = function()
             local augend = require("dial.augend")

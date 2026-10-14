@@ -184,7 +184,6 @@ return {
                 topdelete = { text = "" },
                 changedelete = { text = "▎" },
             },
-            trouble = true,
             worktrees = {
                 {
                     toplevel = vim.fs.abspath("~"),

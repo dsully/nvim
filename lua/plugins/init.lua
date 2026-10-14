@@ -1,7 +1,6 @@
 ---@type zpack.Spec[]
 return {
     { "nvim-lua/plenary.nvim" },
-    { "MunifTanjim/nui.nvim" },
     { "b0o/schemastore.nvim" },
 
     -- Log file syntax highlighting.
