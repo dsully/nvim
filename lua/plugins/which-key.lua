@@ -252,26 +252,6 @@ return {
             -- Command mode mappings
             { "<c-a>", "<home>", desc = "goto start of line", mode = "c" },
             { "<c-e>", "<end>", desc = "goto end of line", mode = "c" },
-            {
-                "<esc>",
-                ---@return string
-                function()
-                    local type = vim.fn.getcmdtype()
-
-                    -- <CR> goes to the next match in a search (see blink.lua), so <Esc> ends the search.
-                    if type == "/" or type == "?" then
-                        return "<cr>"
-                    end
-
-                    -- A mapped <Esc> executes the cmdline (:h c_<Esc>); a typed one cancels it.
-                    vim.api.nvim_feedkeys(vim.keycode("<esc>"), "nt", false)
-                    return ""
-                end,
-                desc = "End search at the current match",
-                expr = true,
-                mode = "c",
-                noremap = true,
-            },
 
             -- Don't delete into the system clipboard.
             { "dw", '"_dw', hidden = true, mode = { "n", "v" }, noremap = true },
