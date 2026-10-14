@@ -26,6 +26,15 @@ end, {
     desc = "Set the current line's color based on the current mode",
 })
 
+-- Not a "ms/" mapping: ui2 does not draw a cmdline that a mapping opens until the first key is typed.
+ev.on(ev.CmdlineEnter, function()
+    local pos = vim.api.nvim_win_get_cursor(0)
+    vim.api.nvim_buf_set_mark(0, "s", pos[1], pos[2], {})
+end, {
+    desc = "Set mark s before a search, to return with `s after several jumps",
+    pattern = { "/", "?" },
+})
+
 ev.on(ev.QuitPre, function()
     if vim.bo.filetype ~= "qf" then
         vim.cmd.lclose({ mods = { silent = true } })

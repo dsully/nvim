@@ -4,5 +4,5 @@ vim.o.cmdheight = 0
 
 require("config.options")
 require("config.globals")
--- require("config.ui2")
+require("config.ui2")
 require("config.pack")

@@ -822,16 +822,6 @@ M.plugins = {
         NeotestTest = { link = "Normal" },
     },
 
-    noice = {
-        NoiceFormatProgressDone = { bg = colors.black.dim, fg = colors.white.bright },
-        NoiceFormatProgressTodo = { bg = colors.black.dim, fg = colors.white.bright },
-        NoiceLspProgressClient = { fg = colors.blue.base },
-        NoiceLspProgressSpinner = { fg = colors.cyan.bright },
-        NoiceLspProgressTitle = { fg = colors.white.bright },
-        NoiceSplit = { bg = colors.bg, fg = colors.white.dim },
-        NoiceVirtualText = { bg = colors.bg, fg = colors.blue.base },
-    },
-
     snacks = {
         SnacksNormal = { link = "Normal" },
         SnacksBackdrop = { link = "Normal" },

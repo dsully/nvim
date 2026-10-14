@@ -102,16 +102,6 @@ vim.g.loaded_ruby_provider = 0
 vim.g.colorscheme = "nordish"
 vim.cmd.colorscheme(vim.g.colorscheme)
 
----@type table<string, boolean>?
-vim.g.noice = {
-    cmdline = true,
-    hover = true,
-    messages = true,
-    notify = false,
-    popupmenu = false,
-    progress = true,
-}
-
 vim.g.clipboard = {
     name = "OSC 52",
     copy = {

@@ -36,9 +36,7 @@ return {
                 pattern = "CodeCompanionChatCreated",
             })
 
-            ev.on_load("noice.nvim", function()
-                require("plugins.ai.codecompanion.progress").setup()
-            end)
+            require("plugins.ai.codecompanion.progress").setup()
         end,
         keys = {
             --stylua: ignore start

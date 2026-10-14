@@ -252,7 +252,6 @@ local M = {
             "help",
             "lazy",
             "log",
-            "noice",
             "notify",
             "oil",
             "qf",

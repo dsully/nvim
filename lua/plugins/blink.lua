@@ -56,7 +56,19 @@ return {
                 ---@type blink.cmp.KeymapConfig
                 keymap = {
                     preset = "cmdline",
-                    ["<CR>"] = { "accept", "fallback" },
+                    ["<CR>"] = {
+                        "accept",
+                        -- In a search, go to the next match like `n`. <Esc> ends the search (see which-key.lua).
+                        function()
+                            local type = vim.fn.getcmdtype()
+
+                            if (type == "/" or type == "?") and vim.fn.getcmdline() ~= "" then
+                                vim.api.nvim_feedkeys(vim.keycode(type == "/" and "<C-g>" or "<C-t>"), "n", false)
+                                return true
+                            end
+                        end,
+                        "fallback",
+                    },
                     ["<Tab>"] = { "show_and_insert", "select_next" },
                     ["<S-Tab>"] = { "show_and_insert", "select_prev" },
                     ["<Up>"] = { "select_prev", "fallback" },

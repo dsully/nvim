@@ -49,8 +49,7 @@ function M.code_block(bufnr)
 end
 
 -- Unsaved-buffer confirmation is handled with Neovim's native `confirm()`: a
--- `vim.ui.select` (snacks) prompt renders broken, and floating-window prompts
--- don't survive while noice owns rendering. We use `confirm()` for the decision
+-- `vim.ui.select` (snacks) prompt renders broken. We use `confirm()` for the decision
 -- and `mini.bufremove` for the layout-preserving deletion (with `force`, since
 -- we've already handled the unsaved changes).
 ---@param bufnr integer?
