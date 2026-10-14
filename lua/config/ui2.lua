@@ -190,7 +190,7 @@ local function highlight(text, lang, col)
         for id, node in query:iter_captures(tstree:root(), text) do
             local name = query.captures[id]
 
-            if name:sub(1, 1) ~= "_" then
+            if name and name:sub(1, 1) ~= "_" then
                 local _, start_col, _, end_col = node:range()
 
                 vim.api.nvim_buf_set_extmark(ui2.bufs.cmd, cmdline_ns, cmdline.srow, col + start_col, {
@@ -344,9 +344,10 @@ local function add_matches(state)
     local pos = vim.fn.searchpos(pattern, "bcnW")
 
     if pos[1] > 0 then
-        local length = #vim.fn.matchstr(vim.fn.getline(pos[1]):sub(pos[2]), pattern)
+        local line = vim.fn.getline(pos[1]) --[[@as string]]
+        local length = #vim.fn.matchstr(line:sub(pos[2]), pattern)
 
-        state.ids[#state.ids + 1] = vim.fn.matchaddpos("IncSearch", { { pos[1], pos[2], math.max(length, 1) } }, 11, -1, { window = state.win })
+        state.ids[#state.ids + 1] = vim.fn.matchaddpos("IncSearch", { { pos[1], pos[2], math.max(length, 1) } }, 11, -1, { window = state.win }) --[[@as integer]]
     end
 end
 

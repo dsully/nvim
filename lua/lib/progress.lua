@@ -112,7 +112,7 @@ local function render()
     )
 
     for i, line in ipairs(lines) do
-        local col = pads[i]
+        local col = pads[i] --[[@as integer]]
 
         for _, chunk in ipairs(line) do
             if chunk[2] then
