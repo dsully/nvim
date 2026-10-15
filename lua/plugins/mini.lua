@@ -42,7 +42,7 @@ local modules = {
         --
         -- https://www.reddit.com/r/neovim/comments/10qmicv/help_understanding_miniai_custom_textobjects/
         "mini.ai",
-        config = function(_, opts)
+        config = function()
             --
             vim.schedule(function()
                 local ai = require("mini.ai")
@@ -61,6 +61,8 @@ local modules = {
                         }),
                     },
                     n_lines = 2000,
+                    -- Leaves 0.12's visual `an`/`in` node selection and the `il`/`al` line textobject reachable.
+                    mappings = { around_next = "", inside_next = "", around_last = "", inside_last = "" },
                 })
 
                 ev.on_load("which-key.nvim", function()
@@ -95,24 +97,9 @@ local modules = {
                     }
 
                     ---@type wk.Spec
-                    local ret = { mode = { "o", "v" } }
+                    local ret = { mode = { "o", "x" } }
 
-                    ---@type table<string, string>
-                    local mappings = vim.tbl_extend("force", {}, {
-                        around = "a",
-                        inside = "i",
-                        around_next = "an",
-                        inside_next = "in",
-                        around_last = "al",
-                        inside_last = "il",
-                    }, opts.mappings or {})
-
-                    mappings.goto_left = nil
-                    mappings.goto_right = nil
-
-                    for name, prefix in pairs(mappings) do
-                        name = name:gsub("^around_", ""):gsub("^inside_", "")
-
+                    for name, prefix in pairs({ around = "a", inside = "i" }) do
                         ---@diagnostic disable-next-line: inject-field
                         ret[#ret + 1] = { prefix, group = name }
 
@@ -159,6 +146,7 @@ local modules = {
             quickfix = { suffix = "" },
             treesitter = { suffix = "" },
             undo = { suffix = "" },
+            window = { suffix = "" }, -- [w ]w are LSP warnings.
             yank = { suffix = "" },
         },
     },
@@ -350,11 +338,11 @@ local modules = {
         config = function(_, opts)
             require("mini.surround").setup(opts)
 
-            keys.vmap('"', function() keys.feed('ma"', "t") end, "Surround Add Double Quote")
-            keys.vmap("[", function() keys.feed("ma[<left>", "t") vim.schedule(function() keys.feed("%", "m") end) end, "Surround Add Square Bracket")
-            keys.vmap("{", function() keys.feed("ma{<left>", "t") vim.schedule(function() keys.feed("%", "m") end) end, "Surround Add Curly Bracket")
-            keys.vmap("(", function() keys.feed("ma(<left>", "t") vim.schedule(function() keys.feed("%", "m") end) end, "Surround Add Parenthesis")
-            keys.vmap("`", function() keys.feed("ma`", "t") end, "Surround Add Backtick")
+            keys.map('"', function() keys.feed('<leader>sa"', "t") end, "Surround Add Double Quote", "x")
+            keys.map("[", function() keys.feed("<leader>sa[<left>", "t") vim.schedule(function() keys.feed("%", "m") end) end, "Surround Add Square Bracket", "x")
+            keys.map("{", function() keys.feed("<leader>sa{<left>", "t") vim.schedule(function() keys.feed("%", "m") end) end, "Surround Add Curly Bracket", "x")
+            keys.map("(", function() keys.feed("<leader>sa(<left>", "t") vim.schedule(function() keys.feed("%", "m") end) end, "Surround Add Parenthesis", "x")
+            keys.map("`", function() keys.feed("<leader>sa`", "t") end, "Surround Add Backtick", "x")
 
             -- vim.defer_fn(function() keys.xmap("<", function() keys.feed("ma<", "t") end, "Surround Add Angle Bracket") end, 2000)
 
