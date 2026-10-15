@@ -129,10 +129,8 @@ return {
                         { "grq", nvim.lsp.apply_quickfix, desc = "Apply Quick Fix", icon = "󱖑 " },
 
                         -- Snacks pickers
-                        { "gD", function() Snacks.picker.lsp_type_definitions() end, desc = "Goto Type Definition" },
-                        { "gO", function() Snacks.picker.lsp_symbols({ filter = kind_filter }) end, desc = "References" },
+                        { "gO", function() Snacks.picker.lsp_symbols({ filter = kind_filter }) end, desc = "Document Symbols" },
                         { "gd", function() Snacks.picker.lsp_definitions({ unique_lines = true }) end, desc = "Goto Definition" },
-                        { "gi", function() Snacks.picker.lsp_implementations() end, desc = "Goto Implementation" },
                         { "grf", function() Snacks.rename.rename_file() end, desc = "Rename File", icon = " ", },
                         { "grr", function() Snacks.picker.lsp_references() end, nowait = true, desc = "References" },
 
