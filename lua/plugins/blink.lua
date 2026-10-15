@@ -61,6 +61,19 @@ return {
                     ["<S-Tab>"] = { "show_and_insert", "select_prev" },
                     ["<Up>"] = { "select_prev", "fallback" },
                     ["<Down>"] = { "select_next", "fallback" },
+                    -- Hide the auto-shown menu and still move the cursor.
+                    ["<C-e>"] = {
+                        function(cmp)
+                            cmp.hide()
+                        end,
+                        "fallback",
+                    },
+                    ["<End>"] = {
+                        function(cmp)
+                            cmp.hide()
+                        end,
+                        "fallback",
+                    },
                 },
             },
             completion = {
