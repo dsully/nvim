@@ -121,18 +121,18 @@ return {
     },
     keys = {
         -- stylua: ignore start
-        { "<leader>xd", function() Snacks.notifier.hide() end, desc = "Dismiss Notification" },
+        { "<leader>nd", function() Snacks.notifier.hide() end, desc = "Dismiss Notification" },
         { "]]", function() Snacks.words.jump(vim.v.count1) end, desc = "Snacks: goto next reference" },
         { "[[", function() Snacks.words.jump(-vim.v.count1) end, desc = "Snacks: goto prev reference" },
 
         { [[<C-\>]], function() Snacks.terminal.toggle(vim.env.SHELL) end, mode = { "n", "t" }, desc = "Terminal" },
 
         -- Git helpers.
-        { "<leader>go", function() Snacks.gitbrowse.open() end, desc = "Open Git URL", mode = { "n", "v" } },
+        { "<leader>go", function() Snacks.gitbrowse.open() end, desc = "Open Git URL", mode = { "n", "x" } },
 
         { "<leader>gC", function()
             Snacks.gitbrowse({ open = function(url) vim.fn.setreg("+", url) end, notify = false } --[[@as snacks.gitbrowse.Config]])
-        end, desc = "Copy Git URL", mode = { "n", "v" } },
+        end, desc = "Copy Git URL", mode = { "n", "x" } },
 
         -- Profiler
         { "<leader>dps", function() Snacks.profiler.scratch() end, desc = "Profiler Scratch Buffer" },

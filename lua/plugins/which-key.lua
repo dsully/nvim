@@ -83,9 +83,7 @@ return {
             { "<leader>g", group = "Git", mode = { "n", "x" } },
             { "<leader>gm", group = "Merge" },
             { "<leader>n", group = "Notifications" },
-            { "<leader>p", group = "Plugins", icon = " " },
-            { "<leader>r", group = "Rules" },
-            { "<leader>s", group = "Substitute" },
+            { "<leader>s", group = "Surround", icon = defaults.icons.misc.surround, mode = { "n", "x" } },
             { "<leader>S", group = "Snippets" },
             { "<leader>t", group = "Test" },
             { "<leader>x", group = "Diagnostics" },
@@ -95,17 +93,7 @@ return {
             { "[", group = "previous", icon = "󰒮" },
             { "]", group = "next", icon = "󰒭" },
             { "g", group = "go to", icon = defaults.icons.misc.exit },
-            { "s", group = "surround", icon = defaults.icons.misc.surround },
             { "z", group = "spelling & folds", icon = "󰀬 " },
-
-            -- {
-            --     "sh",
-            --     group = "Surround Highlighting",
-            --     {
-            --         { "shn", desc = "Highlight Next Surround" },
-            --         { "shl", desc = "Highlight Prev Surround" },
-            --     },
-            -- },
 
             -- Navigation mappings (don't count as jumps)
             {
@@ -179,8 +167,8 @@ return {
             { "<A-k>", ":m .-2<cr>==", desc = "Move line up" },
             { "<A-j>", "<Esc>:m .+1<cr>==gi", desc = "Move line down (insert mode)", mode = "i" },
             { "<A-k>", "<Esc>:m .-2<cr>==gi", desc = "Move line up (insert mode)", mode = "i" },
-            { "<A-j>", ":m '>+1<cr>gv=gv", desc = "Move block down", mode = "v" },
-            { "<A-k>", ":m '<-2<cr>gv=gv", desc = "Move block up", mode = "v" },
+            { "<A-j>", ":m '>+1<cr>gv=gv", desc = "Move block down", mode = "x" },
+            { "<A-k>", ":m '<-2<cr>gv=gv", desc = "Move block up", mode = "x" },
 
             -- Inline completions
             {
@@ -250,12 +238,12 @@ return {
 
             -- Code block functions
             {
-                "<leader>cc",
+                "<leader>cg",
                 function()
                     vim.fn.setreg("+", string.format("```%s\n%s\n```", vim.bo.filetype, require("lib.buffer").code_block()))
                 end,
                 desc = "Copy Code: GitHub",
-                mode = "v",
+                mode = "x",
             },
 
             { [[<leader>\]], [[:.s/ -/ \\\r  -/g<cr>:noh<cr>]], silent = true, desc = "Split long command lines" },
@@ -266,22 +254,21 @@ return {
                     vim.fn.setreg("+", require("lib.buffer").code_block())
                 end,
                 desc = "Copy Code: Slack",
-                mode = "v",
+                mode = "x",
             },
 
             -- Command mode mappings
             { "<c-a>", "<home>", desc = "goto start of line", mode = "c" },
-            { "<c-e>", "<end>", desc = "goto end of line", mode = "c" },
 
             -- Don't delete into the system clipboard.
-            { "dw", '"_dw', hidden = true, mode = { "n", "v" }, noremap = true },
+            { "dw", '"_dw', hidden = true, noremap = true },
 
             -- Ignore junk
             { "<2-LeftMouse>", hidden = true },
             { "<C-L>", hidden = true },
             { "<C-W>d", desc = "Open Float" },
             --
-            -- vim-matchup
+            -- treesitter-jump
             { "%", hidden = true },
 
             -- Builtins
@@ -300,7 +287,6 @@ return {
         },
         triggers = {
             { "<auto>", mode = "nixsotc" },
-            { "s", mode = { "n", "v" } },
         },
         win = {
             border = defaults.ui.border.name,
