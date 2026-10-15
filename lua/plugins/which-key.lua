@@ -72,9 +72,10 @@ return {
         spec = {
             { "<c-w>", group = "windows" },
             { "<leader>", group = "actions", icon = defaults.icons.misc.actions },
-            { "<leader>a", group = "AI", mode = { "n", "v" } },
+            { "<leader>a", group = "AI", mode = { "n", "x" } },
             { "<leader>b", group = "Buffers" },
             { "<leader>c", group = "Code", mode = { "n", "v" } },
+            { "<leader>cc", group = "Claude Code", icon = "", mode = { "n", "x" } },
             { "<leader>d", group = "Debug" },
             { "<leader>dl", group = "Log" },
             { "<leader>dp", group = "Profiler" },

@@ -41,15 +41,15 @@ return {
         keys = {
             --stylua: ignore start
             -- { "<leader>a+", function() vim.cmd.CodeCompanionChat("Add") end, mode = "v", desc = "Add" },
-            { "<leader>aD", function() require("codecompanion").prompt("docstring") end, mode = "v", desc = "Docstring" },
-            { "<leader>aa", function() require("codecompanion").actions({}) end, mode = { "n", "v" }, desc = "Actions" },
-            { "<leader>ac", function() require("codecompanion").toggle() end, mode = { "n", "v" }, desc = "Chat" },
-            { "<leader>ad", function() require("codecompanion").prompt("doc") end, mode = "v", desc = "Documentation" },
-            { "<leader>af", function() require("codecompanion").prompt("fix") end, mode = "v", desc = "Fix Code" },
-            { "<leader>al", function() require("codecompanion").prompt("lspx") end, mode = "v", desc = "LSP Diagnostics" },
-            { "<leader>ao", function() require("codecompanion").prompt("optimize") end, mode = "v", desc = "Optimize" },
+            { "<leader>aD", function() require("codecompanion").prompt("docstring") end, mode = "x", desc = "Docstring" },
+            { "<leader>aa", function() require("codecompanion").actions({}) end, mode = { "n", "x" }, desc = "Actions" },
+            { "<leader>ac", function() require("codecompanion").toggle() end, mode = { "n", "x" }, desc = "Chat" },
+            { "<leader>ad", function() require("codecompanion").prompt("doc") end, mode = "x", desc = "Documentation" },
+            { "<leader>af", function() require("codecompanion").prompt("fix") end, mode = "x", desc = "Fix Code" },
+            { "<leader>al", function() require("codecompanion").prompt("lspx") end, mode = "x", desc = "LSP Diagnostics" },
+            { "<leader>ao", function() require("codecompanion").prompt("optimize") end, mode = "x", desc = "Optimize" },
             { "<leader>ap", function() require("codecompanion").prompt("pr") end, desc = "Pull Request" },
-            { "<leader>ar", function() require("codecompanion").prompt("refactor") end, mode = "v", desc = "Refactor" },
+            { "<leader>ar", function() require("codecompanion").prompt("refactor") end, mode = "x", desc = "Refactor" },
             { "<leader>at", function() require("codecompanion").prompt("tests") end, desc = "Generate Tests" },
             { "<leader>aw", function() require("codecompanion").prompt("workflow") end, desc = "Code Workflow" },
             --stylua: ignore end
@@ -73,7 +73,7 @@ return {
                     end
                 end,
                 desc = "Prompt (CodeCompanion)",
-                mode = { "n", "v", "x" },
+                mode = { "n", "x" },
             },
         },
         opts = function()
