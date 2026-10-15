@@ -31,17 +31,12 @@ return {
                 jq = {
                     prepend_args = { "--sort-keys" },
                 },
-                shfmt = {
-                    prepend_args = { "-i", "4", "-ci", "-sr", "-s", "-bn" },
-                },
                 xmlformatter = {
                     prepend_args = { "--blanks", "--indent", "4" },
                 },
             },
             formatters_by_ft = {
-                bash = { "shellharden", "shfmt" },
                 caddy = { "caddy" },
-                direnv = { "shellharden", "shfmt" },
                 go = { "gofumpt" },
                 json = { "jq" },
                 lua = { "stylua" },
@@ -52,12 +47,10 @@ return {
                 typescript = { "oxfmt" },
                 pyproject = { "pyproject-fmt" },
                 python = { "ruff_organize_imports", "ruff_format", "ruff_fix" },
-                sh = { "shellharden", "shfmt" },
                 toml = function(bufnr)
                     return vim.fs.basename(nvim.file.filename(bufnr)) == "pyproject.toml" and { "pyproject-fmt" } or {}
                 end,
                 xml = { "xmlformatter" },
-                zsh = { "shellharden", "shfmt" },
             },
         }
     end,

@@ -302,7 +302,6 @@ return {
             } --[[@as vim.lsp.Config]])
 
             local configured = {
-                "bashls",
                 -- "clangd",
                 -- "codebook",
                 "crates-lsp",
@@ -323,6 +322,7 @@ return {
                 -- "oxlint",
                 "pkl",
                 "ruff",
+                "shell_lsp",
                 "sourcekit",
                 "superhtml",
                 "tombi",
