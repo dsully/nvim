@@ -217,7 +217,8 @@ return {
     {
         "nemanjamalesija/smart-paste.nvim",
         event = ev.VeryLazy,
-        opts = {},
+        -- which-key's `gp` clipboard paste remaps through `p`.
+        opts = { keys = { "p", "P", "]p", "[p" } },
     },
     {
         "rachartier/tiny-cmdline.nvim",

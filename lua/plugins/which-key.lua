@@ -138,10 +138,9 @@ return {
             },
 
             -- Yank mappings
-            { "Y", "y$", desc = "Yank to clipboard", mode = { "n", "v" } },
-            { "gY", '"*y$', desc = "Yank until end of line to system clipboard", mode = { "n", "v" } },
-            { "gy", '"*y', desc = "Yank to system clipboard", mode = { "n", "v" } },
-            { "gp", '"*p', desc = "Paste from system clipboard", mode = { "n", "v" } },
+            { "gY", '"*y$', desc = "Yank until end of line to system clipboard", mode = { "n", "x" } },
+            { "gy", '"*y', desc = "Yank to system clipboard", mode = { "n", "x" } },
+            { "gp", '"*p', desc = "Paste from system clipboard", mode = { "n", "x" }, remap = true },
 
             -- Comment mappings
             { "gco", "o<esc>Vcx<esc><cmd>normal gcc<cr>fxa<bs>", desc = "Add Comment Below" },
