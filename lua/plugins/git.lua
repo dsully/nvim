@@ -77,7 +77,7 @@ return {
                         remove_line(start_row, middle_row)
                     end
                 end,
-                "Select git conflict region",
+                desc = "Select git conflict region",
             },
         },
         ---@module "gitsigns"
