@@ -71,6 +71,41 @@ local msgs = require("vim._core.ui2.messages")
 
 local orig_set_pos = msgs.set_pos
 
+-- tiny-cmdline floats the cmdline, but ui2 keeps a prompt's message (e.g. confirm()) in the dialog window at the bottom.
+local function attach_dialog()
+    local dialog, cmd = ui2.wins.dialog, ui2.wins.cmd
+
+    if not (vim.api.nvim_win_is_valid(dialog) and vim.api.nvim_win_is_valid(cmd)) then
+        return
+    end
+
+    local cmd_cfg = vim.api.nvim_win_get_config(cmd)
+
+    local row = cmd_cfg.row
+
+    if vim.api.nvim_win_get_config(dialog).hide or cmd_cfg.hide or cmd_cfg.relative ~= "editor" or not row then
+        return
+    end
+
+    vim.api.nvim_win_set_config(dialog, { width = cmd_cfg.width })
+
+    local height = math.max(1, math.min(vim.api.nvim_win_text_height(dialog, {}).all, row - 2)) --[[@as integer]]
+
+    vim.api.nvim_win_set_config(dialog, {
+        relative = "editor",
+        anchor = "NW",
+        row = math.max(0, row - height - 2),
+        col = cmd_cfg.col,
+        width = cmd_cfg.width,
+        height = height,
+        border = cmd_cfg.border,
+    })
+
+    vim.wo[dialog].winhighlight = vim.wo[cmd].winhighlight
+    -- ui2 already flushed the screen in set_pos, before the window moved.
+    vim.api.nvim__redraw({ flush = true })
+end
+
 ---@param tgt? 'cmd'|'dialog'|'msg'|'pager'
 rawset(msgs, "set_pos", function(tgt)
     orig_set_pos(tgt)
@@ -83,6 +118,10 @@ rawset(msgs, "set_pos", function(tgt)
             col = vim.o.columns - 1,
             border = "rounded",
         })
+    end
+
+    if tgt == nil or tgt == "dialog" then
+        attach_dialog()
     end
 end)
 
