@@ -224,13 +224,16 @@ end, {
     group = ev.group("SmartYank", true),
 })
 
+-- Replaces Nvim's default handler, which picks the same choice but notifies "W325: Ignoring swapfile".
+pcall(vim.api.nvim_del_augroup_by_name, "nvim.swapfile")
+
 ev.on(ev.SwapExists, function()
     local swapname = vim.v.swapname
     local info = swapname and vim.fn.swapinfo(swapname) or {}
     local pid = info.pid or 0
 
     if pid > 0 and vim.uv.kill(pid, 0) == 0 then
-        vim.v.swapchoice = "o"
+        vim.v.swapchoice = "e"
     else
         vim.v.swapchoice = "d"
     end
