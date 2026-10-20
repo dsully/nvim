@@ -76,32 +76,21 @@ function M.is_binary(path)
     return content ~= nil and content:find("\0") ~= nil
 end
 
----Read the content of a TOML file.
----@param path string
----@return table
-function M.read_toml(path)
-    --
-    local toml = require("toml")
-    local parsed = toml.decode(M.read(path))
-
-    if not parsed then
-        Snacks.notify.error("Couldn't read " .. path)
-        return {}
-    end
-
-    return parsed
-end
-
 ---Write data to a file.
 ---@param path string
 ---@param data string|string[]
+---@return boolean written
 function M.write(path, data)
     local fd = vim.uv.fs_open(path, "w", 438)
 
-    if fd then
-        vim.uv.fs_write(fd, data, 0)
-        vim.uv.fs_close(fd)
+    if not fd then
+        return false
     end
+
+    local written = vim.uv.fs_write(fd, data, 0) ~= nil
+    vim.uv.fs_close(fd)
+
+    return written
 end
 
 ---Return true if the current working directory is in my local source directory.

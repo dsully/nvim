@@ -18,42 +18,68 @@ local function cursor_diagnostic_source()
     end
 end
 
----Add a word to the ~/.typos.toml file.
+---Strip comments and whitespace so TOML lines compare structurally.
+---@param line string
+---@return string
+local function normalize(line)
+    return (line:gsub("#.*", ""):gsub("%s", ""))
+end
+
+---Add a word to the ~/.typos.toml file, editing it as text so the rest of the file is untouched.
 ---@param word string
 function M.add_word_to_typos(word)
     --
     local path = vim.fs.abspath("~/.typos.toml")
-    local config = nvim.file.read_toml(path)
-    local toml = require("toml")
-
-    if not config then
-        return
-    end
-
     local chosen = vim.fn.confirm("Choose section: ", ("&Default\n&%s\n&Cancel"):format(uppercase_first(vim.bo.filetype)))
 
-    if chosen == 0 then
+    if chosen == 0 or chosen == 3 then
         return
     end
 
-    local choice = chosen == 1 and "default.extend-words" or "type." .. vim.bo.filetype .. ".extend-words"
+    local header = chosen == 1 and "[default.extend-words]" or ("[type.%s.extend-words]"):format(vim.bo.filetype)
+    local value = '"' .. word:gsub('[\\"]', "\\%0") .. '"'
+    local key = word:find("^[%w_-]+$") and word or value
+    local lines = vim.split(nvim.file.read(path) or "", "\n", { plain = true })
+    local start
 
-    -- Create the section if it doesn't exist
-    local sections = vim.split(choice, "%.")
-
-    for i = 1, #sections do
-        local section = sections[i]
-
-        if not config[section] then
-            config[section] = {}
+    for i, line in ipairs(lines) do
+        if normalize(line) == header then
+            start = i
+            break
         end
-
-        config = config[section]
     end
 
-    config[word] = word
+    if start then
+        local last = start
 
-    nvim.file.write(path, toml.encode(config))
+        for i = start + 1, #lines do
+            local line = normalize(lines[i])
+
+            if vim.startswith(line, "[") then
+                break
+            elseif vim.startswith(line, key .. "=") then
+                return
+            elseif line ~= "" then
+                last = i
+            end
+        end
+
+        table.insert(lines, last + 1, key .. " = " .. value)
+    else
+        if lines[#lines] == "" then
+            lines[#lines] = nil
+        end
+
+        if #lines > 0 then
+            lines[#lines + 1] = ""
+        end
+
+        vim.list_extend(lines, { header, key .. " = " .. value, "" })
+    end
+
+    if not nvim.file.write(path, table.concat(lines, "\n")) then
+        Snacks.notify.error("Couldn't write " .. path)
+    end
 end
 
 ---Add a word to the codebook global `words` allowlist, preserving comments.

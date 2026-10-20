@@ -20,9 +20,6 @@ return {
         lazy = false,
     },
 
-    -- For adding words to typos.toml
-    { "faithanalog/toml.lua", lazy = false, priority = 1000 },
-
     {
         "CameronDixon0/hex-reader.nvim",
         keys = {
