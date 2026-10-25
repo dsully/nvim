@@ -20,13 +20,13 @@ local detect_format = function(filename)
                 return "binary"
             end
 
-            if string.find(tostring(content), "^<!DOCTYPE plist") then
-                return "xml.plist"
+            if string.find(tostring(content), "^%s*[{%[]") then
+                return "json"
             end
         end
     end
 
-    return "json.plist"
+    return "xml"
 end
 
 ---@param args vim.api.keyset.create_autocmd.callback_args
@@ -38,9 +38,10 @@ local read_command = function(args)
         return
     end
 
-    vim.b.plist_original_format = detect_format(args.file)
+    local format = detect_format(args.file)
+    vim.b[bufnr].plist_original_format = format
 
-    if vim.b.plist_original_format == "binary" then
+    if format == "binary" then
         local xml = vim.system({ "plutil", "-convert", "xml1", "-r", args.file, "-o", "-" }, { text = true }):wait().stdout
 
         if xml then
@@ -48,14 +49,14 @@ local read_command = function(args)
 
             local size = (vim.uv.fs_stat(args.file) or {}).size or 0
 
-            vim.notify(string.format("%s, %dB [%s]", args.file, size, vim.b.plist_original_format))
+            vim.notify(string.format("%s, %dB [%s]", args.file, size, format))
         end
     else
-        vim.cmd.edit({ args.file, mods = { keepalt = true } })
+        vim.api.nvim_buf_set_lines(bufnr, -1, -1, false, vim.fn.readfile(args.file))
     end
 
     vim.bo[bufnr].buftype = ""
-    vim.bo[bufnr].filetype = "xml.plist"
+    vim.bo[bufnr].filetype = format == "json" and "json" or "xml.plist"
     vim.bo[bufnr].modifiable = true
     vim.bo[bufnr].modified = false
     vim.bo[bufnr].readonly = false
@@ -65,11 +66,17 @@ end
 ---@param args vim.api.keyset.create_autocmd.callback_args
 ---@return integer
 local write_command = function(args)
-    local save_format = mapping[vim.b.plist_original_format or vim.g.plist_save_format]
+    local save_format = mapping[vim.b[args.buf].plist_original_format or vim.g.plist_save_format or "xml"]
 
-    vim.system({ "plutil", "-convert", save_format, "-", "-o", args.file }, {
+    local result = vim.system({ "plutil", "-convert", save_format, "-", "-o", args.file }, {
         stdin = vim.api.nvim_buf_get_lines(args.buf, 0, -1, false),
+        text = true,
     }):wait()
+
+    if result.code ~= 0 then
+        vim.notify("plutil: " .. (result.stderr ~= "" and result.stderr or result.stdout), vim.log.levels.ERROR)
+        return 0
+    end
 
     vim.bo[args.buf].modifiable = true
     vim.bo[args.buf].modified = false
