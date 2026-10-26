@@ -132,7 +132,21 @@ return {
                         { "gO", function() Snacks.picker.lsp_symbols({ filter = kind_filter }) end, desc = "Document Symbols" },
                         { "gd", function() Snacks.picker.lsp_definitions({ unique_lines = true }) end, desc = "Goto Definition" },
                         { "grf", function() Snacks.rename.rename_file() end, desc = "Rename File", icon = " ", },
-                        { "grr", function() Snacks.picker.lsp_references() end, nowait = true, desc = "References" },
+                        {
+                            "grr",
+                            function()
+                                Snacks.picker.lsp_references({
+                                    -- Hide Xcode-generated sources such as <Module>-Swift.h, which re-declare @objc types.
+                                    filter = {
+                                        filter = function(item)
+                                            return not (Snacks.picker.util.path(item) or ""):find("/DerivedData/", 1, true)
+                                        end,
+                                    },
+                                })
+                            end,
+                            nowait = true,
+                            desc = "References",
+                        },
 
                         { "gai", function() Snacks.picker.lsp_incoming_calls() end, desc = "C[a]lls Incoming" },
                         { "gao", function() Snacks.picker.lsp_outgoing_calls() end, desc = "C[a]lls Outgoing" },
