@@ -18,6 +18,8 @@ vim.filetype.add({
     extension = {
         age = "age",
         conf = "conf",
+        gotmpl = "gotmpl",
+        j2 = "jinja",
         jinja = "jinja",
         jinja2 = "jinja",
         jsonl = "json",
@@ -42,9 +44,6 @@ vim.filetype.add({
                 return "cpp"
             end
             return "c"
-        end,
-        j2 = function(filename, _)
-            return require("lib.file").template_type(filename, "j2", "jinja")
         end,
     },
     pattern = {

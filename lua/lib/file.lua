@@ -184,18 +184,4 @@ function M.stem(path)
     return filename:sub(1, last_dot and -last_dot - 1 or #filename)
 end
 
----Create a combined file type for template languages.
----@param filename string
----@param extension string The extension to strip from the filename for detection.
----@param combined string The combined file type. eg: "jinja"
----@return string?
-function M.template_type(filename, extension, combined)
-    local stem = (filename:gsub("%." .. vim.pesc(extension) .. "$", ""))
-    local filetype = vim.filetype.match({ filename = stem })
-
-    if filetype then
-        return filetype .. "." .. combined
-    end
-end
-
 return M

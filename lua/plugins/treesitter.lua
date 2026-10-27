@@ -9,9 +9,11 @@ local parsers = {
     "gitignore",
     "git_rebase",
     "go",
+    "gotmpl",
     "html",
     "ini",
     "javascript",
+    "jinja",
     "json",
     "just",
     "nix",
@@ -50,6 +52,18 @@ return {
                     "vimdoc",
                 },
             })
+
+            -- Template queries inject the filetype under the template extension: `foo.yaml.j2` gets yaml.
+            vim.treesitter.query.add_directive("inject-underlying-filetype!", function(_, _, source, _, metadata)
+                local name = vim.fn.fnamemodify(vim.api.nvim_buf_get_name(source), ":r")
+                -- Shell detection returns nothing while `did_filetype()` is set, which holds during the first parse.
+                local ft = vim.filetype.match({ filename = name }) or vim.fn.fnamemodify(name, ":e")
+                local lang = ft ~= "" and vim.treesitter.language.get_lang(ft)
+
+                if lang and vim.treesitter.language.add(lang) then
+                    metadata["injection.language"] = lang
+                end
+            end, { force = true })
 
             -- vim.highlight.priorities.semantic_tokens = 100
             -- vim.highlight.priorities.treesitter = 125
