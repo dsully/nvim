@@ -1,7 +1,7 @@
--- Apple Notes through the apple-notes-editor CLI (~/dev/home/apple-notes-editor).
+-- Apple Notes through the apple-notes-mcp CLI.
 local M = {}
 
-local cmd = "apple-notes-editor"
+local cmd = "apple-notes-mcp"
 
 ---@param args string[]
 ---@param stdin string?
@@ -25,7 +25,7 @@ end
 
 ---@param buf integer
 function M.read(buf)
-    local out = run({ "read", id(buf) })
+    local out = run({ "notes", "read", id(buf) })
 
     if not out then
         return
@@ -61,7 +61,7 @@ function M.write(buf)
     end
 
     local markdown = table.concat(vim.api.nvim_buf_get_lines(buf, 0, -1, false), "\n")
-    local out = run({ "write", id(buf), vim.b[buf].apple_notes_version }, markdown)
+    local out = run({ "notes", "edit", id(buf), "--version", vim.b[buf].apple_notes_version, "--rewrite", "-" }, markdown)
 
     if out then
         vim.b[buf].apple_notes_version = out:match("id: %S+ | version: (%S+)")
@@ -90,7 +90,7 @@ function M.pick()
         matcher = { sort_empty = false },
         finder = function(opts, ctx)
             ---@type string[]
-            local args = { "list" }
+            local args = { "--list-json" }
 
             if opts.live and ctx.filter.search ~= "" then
                 args[2] = ctx.filter.search
@@ -116,7 +116,7 @@ function M.pick()
         end,
         format = format,
         preview = function(ctx)
-            Snacks.picker.preview.cmd({ cmd, "read", ctx.item.note.id }, ctx, { ft = "markdown" })
+            Snacks.picker.preview.cmd({ cmd, "notes", "read", ctx.item.note.id }, ctx, { ft = "markdown" })
         end,
         confirm = function(picker, item)
             picker:close()
