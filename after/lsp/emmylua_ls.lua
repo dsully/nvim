@@ -37,6 +37,7 @@ return {
                 library = {
                     vim.env.VIMRUNTIME,
                     vim.env.XDG_DATA_HOME .. "/nvim/site/pack/core/opt",
+                    vim.env.XDG_DATA_HOME .. "/rex/types",
                     -- LSP Settings Type Annotations
                     -- https://github.com/neovim/nvim-lspconfig#lsp-settings-type-annotations
                     vim.api.nvim_get_runtime_file("lua/lspconfig", false)[1],
