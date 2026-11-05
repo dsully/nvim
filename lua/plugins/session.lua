@@ -48,6 +48,13 @@ return {
         end, { desc = "Session Load" })
 
         ev.on(ev.VimLeavePre, function()
+            -- An instance launched by git for a commit/rebase message would overwrite the project's session.
+            local arg = vim.fn.argv(0) --[[@as string]]
+
+            if arg ~= "" and vim.tbl_contains({ "gitcommit", "gitrebase" }, vim.filetype.match({ filename = arg })) then
+                return
+            end
+
             local name = root()
             require("resession").save(name, { notify = false })
 
