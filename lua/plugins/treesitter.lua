@@ -55,6 +55,10 @@ return {
 
             -- Template queries inject the filetype under the template extension: `foo.yaml.j2` gets yaml.
             vim.treesitter.query.add_directive("inject-underlying-filetype!", function(_, _, source, _, metadata)
+                if type(source) ~= "number" then
+                    return
+                end
+
                 local name = vim.fn.fnamemodify(vim.api.nvim_buf_get_name(source), ":r")
                 -- Shell detection returns nothing while `did_filetype()` is set, which holds during the first parse.
                 local ft = vim.filetype.match({ filename = name }) or vim.fn.fnamemodify(name, ":e")
