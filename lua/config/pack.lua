@@ -66,7 +66,6 @@ do
         local spec = {
             { import = "plugins" },
             { import = "plugins.ai" },
-            { import = "plugins.filetypes" },
             { import = "plugins.languages" },
             { import = "plugins.snacks" },
         }

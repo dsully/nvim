@@ -327,7 +327,8 @@ end
 ---@return boolean?
 M.is_loaded = function(name)
     local state = require("zpack.state")
-    return not state.unloaded_plugin_names[name]
+    local entry = state.spec_registry[state.name_to_src[name] or ""]
+    return not entry or entry.load_status == "loaded"
 end
 
 ---@param name string
