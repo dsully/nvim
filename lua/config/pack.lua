@@ -81,5 +81,7 @@ do
             },
             spec = spec,
         })
+
+        require("config.emmylua").setup()
     end
 end
