@@ -227,6 +227,7 @@ return {
 
             ---@diagnostic disable-next-line: param-type-mismatch
             require("tiny-cmdline").setup({
+                menu_col_offset = 0,
                 on_reposition = require("tiny-cmdline").adapters.blink,
             })
         end,

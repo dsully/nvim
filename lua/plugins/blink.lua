@@ -102,6 +102,20 @@ return {
 
                     -- Which directions to show the window, falling back to the next direction when there's not enough space
                     direction_priority = { "n", "s" },
+                    -- Anchor to the top border of tiny-cmdline's float, so "n" opens above it. ui_cmdline_pos is the float's
+                    -- inner left edge (menu_col_offset = 0); align the label to the typed text, less one column for 1-based
+                    -- start_col and one for the menu's padding.
+                    cmdline_position = function()
+                        local pos = vim.g.ui_cmdline_pos
+
+                        if not pos then
+                            return { vim.o.lines - math.max(vim.o.cmdheight, 1), 0 }
+                        end
+
+                        local row = vim.api.nvim_win_get_config(require("vim._core.ui2").wins.cmd).row
+
+                        return { row, pos[2] + require("config.ui2").cmdline_col - 2 }
+                    end,
                     ---@type blink.cmp.Draw
                     draw = {
                         align_to = "cursor",

@@ -184,6 +184,11 @@ local cmdline_formats = {
     { pattern = { "^:" }, icon = "\u{f054}", lang = "vim" },
 }
 
+local M = {}
+
+---Display columns before the first byte of getcmdline() in the cmdline window.
+M.cmdline_col = 0
+
 local cmdline = require("vim._core.ui2.cmdline")
 local cmdline_ns = vim.api.nvim_create_namespace("dsully.cmdline")
 local orig_cmdline_show = cmdline.cmdline_show
@@ -253,6 +258,7 @@ local function show_cmdline(content, pos, firstc, prompt, indent, level, hl_id)
 
     if not format or not finish or (prompt and prompt ~= "") then
         hidden[level] = nil
+        M.cmdline_col = vim.fn.strdisplaywidth(firstc .. (prompt or "")) + indent
         orig_cmdline_show(content, pos, firstc, prompt, indent, level, hl_id)
         vim.api.nvim_buf_clear_namespace(ui2.bufs.cmd, cmdline_ns, 0, -1)
         return
@@ -261,6 +267,7 @@ local function show_cmdline(content, pos, firstc, prompt, indent, level, hl_id)
     hidden[level] = format.conceal == false and -#firstc or finish
     text = format.conceal == false and firstc .. text or text:sub(finish + 1)
     prompt = format.icon .. " "
+    M.cmdline_col = vim.fn.strdisplaywidth(prompt) + indent - hidden[level]
 
     orig_cmdline_show({ { 0, text } }, math.max(pos - hidden[level], 0), "", prompt, indent, level, hl_id)
 
@@ -467,3 +474,5 @@ ev.on(ev.LspProgress, function(args)
         title = title,
     })
 end)
+
+return M
