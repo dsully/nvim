@@ -23,6 +23,7 @@ vim.filetype.add({
         jinja = "jinja",
         jinja2 = "jinja",
         jsonl = "json",
+        lini = "lini",
         ndjson = "json",
         pcf = "pkl",
         pkl = "pkl",

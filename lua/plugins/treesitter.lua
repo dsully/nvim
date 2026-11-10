@@ -16,6 +16,7 @@ local parsers = {
     "jinja",
     "json",
     "just",
+    "lini",
     "nix",
     "objc",
     "pkl",
@@ -42,6 +43,14 @@ return {
                 auto_install = true,
                 border = defaults.ui.border.name,
                 ensure_installed = parsers,
+                languages = {
+                    lini = {
+                        install_info = {
+                            url = "https://github.com/monfa-red/lini",
+                            location = "editors/zed/tree-sitter-lini",
+                        },
+                    },
+                },
                 min_width = 120,
                 noauto_install = {
                     "lua",
